@@ -1,0 +1,12 @@
+/gcmrc-ui/target/
+/gcmrc-ui/src/main/webapp/META-INF/
+/gcmrc-labs/${war.dir}/META-INF/
+/gcmrc-services/src/main/webapp/META-INF/
+/gcmrc-services/target/
+/SOS-Endpoint/src/main/webapp/META-INF/
+/SOS-Endpoint/target/
+/gcmrc-sos-endpoint/target/
+/target/
+/gcmrc-db-access/target/
+/gcmrc-photos/src/main/webapp/META-INF/
+/gcmrc-photos/target/

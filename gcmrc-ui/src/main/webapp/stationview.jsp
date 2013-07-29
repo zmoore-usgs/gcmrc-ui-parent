@@ -1,0 +1,340 @@
+<%@page import="gov.usgs.cida.path.PathUtil"%>
+<%@page import="org.apache.commons.lang.StringUtils"%>
+<%@page import="java.util.Map"%>
+<%@page import="org.slf4j.Logger"%>
+<%@page import="org.slf4j.LoggerFactory"%>
+<%@page import="gov.usgs.cida.config.DynamicReadOnlyProperties"%>
+<%@page contentType="text/html" pageEncoding="UTF-8"%>
+
+<%!	private static final Logger log = LoggerFactory.getLogger("stationview_jsp");
+	protected DynamicReadOnlyProperties props = new DynamicReadOnlyProperties();
+
+	{
+		try {
+			props = props.addJNDIContexts(new String[0]);
+		} catch (Exception e) {
+			log.error("Could not find JNDI");
+		}
+	}
+	boolean development = Boolean.parseBoolean(props.getProperty("all.development")) || Boolean.parseBoolean(props.getProperty("${project.artifactId}.development"));
+
+%>
+
+<%
+	request.setAttribute("development", development);
+	request.setAttribute("logLevel", development ? "debug" : "info");
+
+	String pageName = page.getClass().getSimpleName().substring(0, page.getClass().getSimpleName().indexOf("_jsp"));
+	request.setAttribute("pageName", pageName);
+
+	String relativePath = PathUtil.calculateRelativePath(request.getRequestURI(), request.getContextPath());
+	request.setAttribute("relativePath", relativePath);
+
+	String basePath = "station";
+	Map<String, String> restOfPath = PathUtil.calculateRestOfURI(request.getRequestURI(), basePath, "networkName", "stationName");
+	String networkName = restOfPath.get("networkName");
+	if (StringUtils.isEmpty(networkName)) {
+		networkName = "Unknown";
+	}
+	request.setAttribute("networkName", networkName);
+
+	String networkHoursOffset = "7";
+	if ("BIBE".equals(networkName)) {
+		networkHoursOffset = "6";
+	}
+	request.setAttribute("networkHoursOffset", networkHoursOffset);
+
+	String stationName = restOfPath.get("stationName");
+	if (StringUtils.isEmpty(stationName)) {
+		stationName = "00000000";
+	}
+	request.setAttribute("stationName", stationName);
+%>
+
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> <html lang="en" class="no-js"> <!--<![endif]-->
+    <head>
+        <jsp:include page="template/GCMRCHead.jsp">
+			<jsp:param name="relPath" value="${relativePath}" />
+			<jsp:param name="shortName" value="GCMRC" />
+			<jsp:param name="title" value="" />
+			<jsp:param name="description" value="" />
+			<jsp:param name="author" value="" />
+			<jsp:param name="keywords" value="" />
+			<jsp:param name="publisher" value="" />
+			<jsp:param name="revisedDate" value="" />
+			<jsp:param name="nextReview" value="" />
+			<jsp:param name="expires" value="never" />
+			<jsp:param name="development" value="${development}" />
+		</jsp:include>
+
+		<jsp:include page="app/libs.jsp"></jsp:include>
+
+		<jsp:include page="js/bootstrap-datepicker/package.jsp">
+			<jsp:param name="relPath" value="${relativePath}" />
+			<jsp:param name="debug-qualifier" value="<%= development%>" />
+		</jsp:include>
+
+		<script src="${relativePath}js/proj4js/proj4js.js" type="text/javascript"></script>
+		<script type="text/javascript">
+			Proj4js.defs["EPSG:26949"] = "+proj=tmerc +lat_0=31 +lon_0=-111.9166666666667 +k=0.9999 +x_0=213360 +y_0=0 +ellps=GRS80 +datum=NAD83 +units=m +no_defs";
+		</script>
+		<jsp:include page="js/openlayers/openlayers.jsp">
+			<jsp:param name="relPath" value="${relativePath}" />
+			<jsp:param name="debug-qualifier" value="${development}" />
+		</jsp:include>
+		<script src="${relativePath}js/openlayers/extension/Renderer/DeclusterCanvas.js" type="text/javascript"></script>
+
+		<jsp:include page="js/dygraphs/dygraphs.jsp">
+			<jsp:param name="relPath" value="${relativePath}" />
+			<jsp:param name="debug-qualifier" value="${development}" />
+		</jsp:include>
+
+		<script type="text/javascript">
+			var CONFIG = {};
+
+			CONFIG.development = ${development};
+			CONFIG.relativePath = '${relativePath}';
+			CONFIG.networkName = '${networkName}';
+			CONFIG.stationName = '${stationName}';
+			CONFIG.networkHoursOffset = ${networkHoursOffset};
+
+		</script>
+
+		<jsp:include page="app/gcmrc.jsp"></jsp:include>
+		<jsp:include page="js/angular-sortable/package.jsp">
+			<jsp:param name="relPath" value="${relativePath}" />
+			<jsp:param name="debug-qualifier" value="${development}" />
+		</jsp:include>
+		<script type="text/javascript">
+			var gcmrcModule = angular.module('gcmrc', ['ui.sortable']);
+		</script>
+		<script src="${relativePath}services/service/station/jsonp/allsite/?network=${networkName}&jsonp_callback=GCMRC.StationLoad"></script>
+		<jsp:include page="app/graphing/package.jsp">
+			<jsp:param name="relPath" value="${relativePath}" />
+			<jsp:param name="debug-qualifier" value="${development}" />
+		</jsp:include>
+		<jsp:include page="pages/page.jsp">
+			<jsp:param name="relPath" value="${relativePath}" />
+			<jsp:param name="pageName" value="${pageName}" />
+		</jsp:include>
+		<script src="${relativePath}services/service/reach/jsonp/trib?majorTribSite=${stationName}&jsonp_callback=GCMRC.Page.reachLoad"></script>
+		<script src="${relativePath}services/service/station/jsonp/param?site=${stationName}&jsonp_callback=GCMRC.Page.paramsLoad"></script>
+		<script src="${relativePath}services/service/station/jsonp/qw?site=${stationName}&jsonp_callback=GCMRC.Page.qwLoad"></script>
+		<script src="${relativePath}services/service/station/jsonp/credit?site=${stationName}&jsonp_callback=GCMRC.Page.creditLoad"></script>
+		<script src="${relativePath}services/service/station/jsonp/pubs?site=${stationName}&jsonp_callback=GCMRC.Page.pubsLoad"></script>
+		
+		<style type="text/css">
+			.buildButton {
+				-moz-box-shadow:inset 0px 1px 0px 0px #ffffff;
+				-webkit-box-shadow:inset 0px 1px 0px 0px #ffffff;
+				box-shadow:inset 0px 1px 0px 0px #ffffff;
+				background:-webkit-gradient( linear, left top, left bottom, color-stop(0.05, #f9f9f9), color-stop(1, #e9e9e9) );
+				background:-moz-linear-gradient( center top, #f9f9f9 5%, #e9e9e9 100% );
+				filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#f9f9f9', endColorstr='#e9e9e9');
+				background-color:#f9f9f9;
+				-moz-border-radius:8px;
+				-webkit-border-radius:8px;
+				border-radius:8px;
+				border:1px solid #dcdcdc;
+				display:inline-block;
+				color:#666666;
+				font-family:arial;
+				font-size:18px;
+				font-weight:bold;
+				padding:8px 24px;
+				margin: 0px 5px;
+				text-decoration:none;
+				text-shadow:1px 1px 0px #ffffff;
+			}.buildButton:hover {
+				background:-webkit-gradient( linear, left top, left bottom, color-stop(0.05, #e9e9e9), color-stop(1, #f9f9f9) );
+				background:-moz-linear-gradient( center top, #e9e9e9 5%, #f9f9f9 100% );
+				filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#e9e9e9', endColorstr='#f9f9f9');
+				background-color:#e9e9e9;
+			}.buildButton:active {
+				position:relative;
+				top:1px;
+			}
+			/* This imageless css button was generated by CSSButtonGenerator.com */
+		</style>
+    </head>
+    <body ng-app="gcmrc">
+		<div class="container-fluid">
+			<jsp:include page="template/GCMRCHeader.jsp">
+				<jsp:param name="relPath" value="${relativePath}" />
+				<jsp:param name="header-class" value="" />
+			</jsp:include>
+			<jsp:include page="template/GCMRCTopMenu.jsp"></jsp:include>
+			<div>
+				<h2><span id="station-title"></span> <small>${stationName}</small></h2>
+				<div id="breadcrumbs">
+					<span>
+						<span><a href="http://www.gcmrc.gov/gcmrc.aspx">Home</a></span>
+						<span> &gt; </span>
+						<span><a href="${relativePath}index.jsp">Discharge, Sediment and Water Quality</a></span>
+						<span> &gt; </span>
+						<span><a href="${relativePath}stations/${networkName}/"><span class="network-name"></span> Stations</a></span>
+						<span> &gt; </span>
+						<span>${stationName}</span>
+					</span>
+				</div>
+				<div id="content" class="row-fluid">
+					<div class="span3">
+						<div class="innerRightSidebar">
+							<div class="sectionTitle">Parameter Availability</div>
+							<div id="parameterLoading" class="ajaxLoading"><div class="alert alert-info">Loading...</div><div style="margin-bottom: 20px;"><img src="${relativePath}app/ajax-loader-trsp.gif" alt="Loading..." height="32px" width="32px"></div></div>
+							<div id="parameterList" class="rightSidebarText"></div>
+						</div>
+					</div>
+					<div class="span6" id="options-dygraph">
+						<div class="innerRightSidebar">
+							<div class="sectionTitle">Date Range</div>
+							<form class="form-horizontal">
+								<div class="control-group">
+									<label class="control-label" for="beginDatePicker">Start</label>
+									<div class="controls">
+										<div class="input-prepend">
+											<span class="add-on"><i class="icon-calendar"></i> </span>
+											<input type="text" id="beginDatePicker" name="beginPosition" placeholder="Start Date">
+										</div>
+									</div>
+								</div>
+								<div class="control-group">
+									<label class="control-label" for="endDatePicker">End</label>
+									<div class="controls">
+										<div class="input-prepend">
+											<span class="add-on"><i class="icon-calendar"></i> </span>
+											<input type="text" id="endDatePicker" name="endPosition" placeholder="End Date">
+										</div>
+									</div>
+								</div>
+								<div id="build-div" style="text-align:center;"><a href="#" class="buildButton" name="endPosition" id="buildGraph">Build Graph</a><a href="#" class="buildButton" name="endPosition" id="downloadData">Download</a></div>
+							</form>
+						</div>
+						<div id="viz" class="innerRightSidebar">
+							<div class="sectionTitle">Data</div>
+							<div class="rightSidebarText">
+								<div id="errorMsg"></div>
+								<div id="infoMsg">
+									To visualize data in a graph, please select parameters from the left as well as a date range from above.
+								</div>
+								<div id="loading" class="ajaxLoading"><div class="alert alert-info">Your graph is being constructed...</div><div style="margin-bottom: 20px;"><img src="${relativePath}app/ajax-loader-trsp.gif" alt="Loading..." height="32px" width="32px"></div></div>
+								<div id="legend-dygraph"></div>
+								<div id="data-dygraph"></div>
+							</div>
+						</div>
+					</div>
+
+					<div class="span3">
+						<div class="innerRightSidebar">
+							<div class="sectionTitle">Location</div>
+							<div id="locationArea">
+								<div id="station-photo">
+									<a href="${relativePath}photo/${networkName}/${stationName}/${stationName}_01.jpg"><img src="${relativePath}photo/${networkName}/${stationName}/${stationName}_01sm.jpg" width="100%"/></a>
+								</div>
+								<div id="openlayers-map"></div>
+							</div>
+						</div>
+						<div id="addlSources" class="innerRightSidebar">
+							<div class="sectionTitle">Additional Information</div>
+							<ul id="addlSourcesBody">
+							</ul>
+							<ul id="addlPubsBody">
+							</ul>
+						</div>
+						<div id="lastSedDates"></div>
+					</div>
+				</div>
+				<div id="downloadPopup" ng:controller="downloadPopupController" class="modal hide">
+					<div class="modal-header">
+						<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+						<h3>Download Data</h3>
+					</div>
+					<div class="modal-body container-fluid">
+						<!--<div id="downloadCheckOptions" class="row-fluid">
+								<div class="span4">
+									<input type="checkbox">
+									Add other data
+								</div>
+								<div class="span4">
+									<input type="checkbox">
+									Do something else
+								</div>
+								<div class="span4">
+									<input type="checkbox">
+									or this as well
+								</div>
+							</div>-->
+						<div class="row-fluid">
+							<div class="span6">
+								<h5>Ordering</h5>
+								<ul ui:sortable ng:model="columnOrdering" id="downloadColumnOrdering">
+									<li ng:repeat="el in columnOrdering" ng:click="liClicked()" ng-class="{selected:isSelected()}" class="ui-state-default">
+										<span class="ui-icon ui-icon-arrowthick-2-n-s"></span>
+										{{el.name}}
+									</li>
+								</ul>
+							</div>
+							<div id="downloadColumnDetail" class="span6">
+								<h5>Column Options</h5>
+								<div ng-show="columnSelected">
+									{{columnSelected.name}} Options
+									<div ng-show="columnSelected.format">
+										<label for="columnFormat">Format</label>
+										<input type="text" id="columnFormat" ng:model="columnSelected.format">
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="row-fluid">
+							<a href="#" id="stupidlyBigDownloadButton" class='buildButton'>Download Data</a>
+						</div>
+					</div>
+					<div class="hide">
+<pre>
+  Symbol  Meaning                      Presentation  Examples
+  ------  -------                      ------------  -------
+  G       era                          text          AD
+  C       century of era (&gt;=0)         number        20
+  Y       year of era (&gt;=0)            year          1996
+ 
+  x       weekyear                     year          1996
+  w       week of weekyear             number        27
+  e       day of week                  number        2
+  E       day of week                  text          Tuesday; Tue
+ 
+  y       year                         year          1996
+  D       day of year                  number        189
+  M       month of year                month         July; Jul; 07
+  d       day of month                 number        10
+ 
+  a       halfday of day               text          PM
+  K       hour of halfday (0~11)       number        0
+  h       clockhour of halfday (1~12)  number        12
+ 
+  H       hour of day (0~23)           number        0
+  k       clockhour of day (1~24)      number        24
+  m       minute of hour               number        30
+  s       second of minute             number        55
+  S       fraction of second           number        978
+ 
+  z       time zone                    text          Pacific Standard Time; PST
+  Z       time zone offset/id          zone          -0800; -08:00; America/Los_Angeles
+ 
+  '       escape for text              delimiter
+  ''      single quote                 literal       '
+</pre>
+					</div>
+				</div>
+			</div>
+			<jsp:include page="template/GCMRCFooter.jsp">
+				<jsp:param name="relPath" value="${relativePath}" />
+				<jsp:param name="header-class" value="" />
+				<jsp:param name="contact-info" value="" />
+			</jsp:include>
+		</div>
+	</body>
+</html>

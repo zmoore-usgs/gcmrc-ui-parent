@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app version="2.5" xmlns="http://java.sun.com/xml/ns/javaee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd">
+	<display-name>gcmrc-ui</display-name>
+<!--	<listener>
+        <listener-class>
+            gov.usgs.cida.gcmrc.ApplicationInitializer
+        </listener-class>
+    </listener>-->
+    
+<!--	We don't need this because we're not deployed on CIDA's stuff-->
+<!--	<filter>
+		<filter-name>TomcatFilter</filter-name>
+		<filter-class>gov.usgs.cida.tomcatfilters.RequestFilter</filter-class>
+	</filter>
+	<filter-mapping>
+		<filter-name>TomcatFilter</filter-name>
+		<url-pattern>/*</url-pattern>
+	</filter-mapping>-->
+	
+	<servlet>
+		<servlet-name>NetworkStationView</servlet-name>
+		<jsp-file>/networkstationview.jsp</jsp-file>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>NetworkStationView</servlet-name>
+		<url-pattern>/stations/*</url-pattern>
+	</servlet-mapping>
+
+	<servlet>
+		<servlet-name>NetworkReachView</servlet-name>
+		<jsp-file>/networkreachview.jsp</jsp-file>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>NetworkReachView</servlet-name>
+		<url-pattern>/reaches/*</url-pattern>
+	</servlet-mapping>
+
+	<servlet>
+		<servlet-name>StationView</servlet-name>
+		<jsp-file>/stationview.jsp</jsp-file>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>StationView</servlet-name>
+		<url-pattern>/station/*</url-pattern>
+	</servlet-mapping>
+
+	<servlet>
+		<servlet-name>ReachView</servlet-name>
+		<jsp-file>/reachview.jsp</jsp-file>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>ReachView</servlet-name>
+		<url-pattern>/reach/*</url-pattern>
+	</servlet-mapping>
+	
+	<servlet>
+		<servlet-name>GCMRCServicesServlet</servlet-name>
+		<servlet-class>gov.usgs.cida.proxy.AlternateProxyServlet</servlet-class>
+		<init-param>
+			<param-name>forward-url-param</param-name>
+			<param-value>gcmrc.services-url</param-value>
+		</init-param>
+		<init-param>
+			<param-name>forward-url</param-name>
+			<param-value>http://localhost:8080/gcmrc-services/</param-value>
+		</init-param>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>GCMRCServicesServlet</servlet-name>
+		<url-pattern>/services/*</url-pattern>
+	</servlet-mapping>
+	
+<!--	<security-constraint>
+		<web-resource-collection>
+			<web-resource-name>services basic auth</web-resource-name>
+			<url-pattern>/services/*</url-pattern>
+			<http-method>GET</http-method>
+			<http-method>POST</http-method>
+		</web-resource-collection>
+		<auth-constraint>
+			<role-name>testbasicauth</role-name>
+		</auth-constraint>
+
+		<user-data-constraint>
+			 transport-guarantee can be CONFIDENTIAL, INTEGRAL, or NONE 
+			<transport-guarantee>NONE</transport-guarantee>
+		</user-data-constraint>
+	</security-constraint>
+	
+	<security-role>
+		<role-name>testbasicauth</role-name>
+	</security-role>
+	
+	<login-config>
+		<auth-method>BASIC</auth-method>
+	</login-config>-->
+
+	<servlet>
+		<servlet-name>StationPhotoServlet</servlet-name>
+		<servlet-class>gov.usgs.cida.proxy.AlternateProxyServlet</servlet-class>
+		<init-param>
+			<param-name>forward-url-param</param-name>
+			<param-value>gcmrc.photos-url</param-value>
+		</init-param>
+		<init-param>
+			<param-name>forward-url</param-name>
+			<param-value>http://localhost:8080/gcmrc-photos/</param-value>
+		</init-param>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>StationPhotoServlet</servlet-name>
+		<url-pattern>/photo/*</url-pattern>
+	</servlet-mapping>
+	
+<!--	<servlet>
+        <servlet-name>ImageProxyServlet</servlet-name>
+        <servlet-class>gov.usgs.cida.gcmrc.StationPhotoServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>ImageProxyServlet</servlet-name>
+        <url-pattern>/img</url-pattern>
+    </servlet-mapping>-->
+
+	<servlet>
+		<servlet-name>GeoserverServlet</servlet-name>
+		<servlet-class>gov.usgs.cida.proxy.AlternateProxyServlet</servlet-class>
+		<init-param>
+			<param-name>forward-url-param</param-name>
+			<param-value>gcmrc.geoserver-url</param-value>
+		</init-param>
+		<init-param>
+			<param-name>forward-url</param-name>
+			<param-value>http://137.227.237.231:8081/geoserver/</param-value>
+		</init-param>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>GeoserverServlet</servlet-name>
+		<url-pattern>/geoserver/*</url-pattern>
+	</servlet-mapping>
+
+	<session-config>
+		<session-timeout>
+			2
+		</session-timeout>
+	</session-config>
+	<welcome-file-list>
+		<welcome-file>index.jsp</welcome-file>
+	</welcome-file-list>
+</web-app>

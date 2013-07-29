@@ -1,0 +1,78 @@
+.application-body {
+	min-height: 640px;
+	min-width: 1280px;
+}
+#viz {
+	margin-top : 15px;
+}
+#legend-dygraph {
+	position: fixed;
+	right: 5px;
+	bottom: 5px;
+}
+.ajaxLoading {
+	padding-top : 5px;
+	text-align: center;
+}
+#rightSpread {
+	padding-left : 13px;
+	width: 640px;
+}
+#leftSidebar {
+    margin-top: 15px;
+    width: 300px;
+}
+
+#station-photo {
+	text-align: center;
+	padding-top: 3px;
+	padding-bottom: 5px;
+}
+#locationArea {
+	margin: 5px;
+	/*min-height: 448px;*/
+}
+#openlayers-map {
+	height: 227px;
+}
+
+#options-dygraph {
+}
+
+#downloadColumnOrdering { 
+	list-style-type: none; 
+	margin: 0; 
+	padding: 0; 
+	width: 100%; 
+	min-height: 15em;
+}
+
+#downloadColumnOrdering li {
+	margin: 0 3px 3px 3px;
+	padding: 0.4em;
+	padding-left: 1.5em;
+}
+
+#downloadColumnOrdering li span {
+	position: absolute;
+	margin-left: -1.3em;
+}
+
+#downloadColumnOrdering .selected {
+	background: #DDDDDD url(../../js/slider/css/overcast/images/ui-bg_glass_35_dddddd_1x400.png) 50% 50% repeat-x;
+}
+
+a.date {
+	color : #1c94c4;
+}
+
+.olLayerGoogleCopyright, .olLayerGooglePoweredBy, .gmnoprint {
+	display : none
+}
+
+/* Because of a conflict between twitter bootstrap and openlayers */
+img { max-width: none; }
+
+.layersDiv label {
+	display : inline;
+}

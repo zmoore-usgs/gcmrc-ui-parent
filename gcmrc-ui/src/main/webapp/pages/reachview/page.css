@@ -1,0 +1,84 @@
+.application-body {
+	min-height: 640px;
+	min-width: 1280px;
+}
+#viz {
+	margin-top : 15px;
+}
+#viz .rightSidebarText {
+	min-height: 15em;
+}
+
+#legend-dygraph {
+	position: fixed;
+	right: 5px;
+	bottom: 5px;
+}
+.ajaxLoading {
+	padding-top : 5px;
+	text-align: center;
+}
+#rightSpread {
+	padding-left : 13px;
+	width: 640px;
+}
+#leftSidebar {
+    margin-top: 15px;
+    width: 300px;
+}
+
+.ui-slider {
+	margin-left: 2.2em;
+	margin-right: 2.5em;
+}
+
+#station-photo {
+	text-align: center;
+	padding-top: 3px;
+}
+#locationArea {
+	margin: 5px;
+}
+#openlayers-map {
+	height: 227px;
+}
+
+#options-dygraph {
+}
+
+a.date {
+	color : #1c94c4;
+}
+
+.olLayerGoogleCopyright, .olLayerGooglePoweredBy, .gmnoprint {
+	display : none
+}
+
+/* Because of a conflict between twitter bootstrap and openlayers */
+img { max-width: none; }
+
+.layersDiv label {
+	display : inline;
+}
+
+.ui-slider-default-position {
+	border: #000000;
+	margin-left: -0.6em;
+    top: -0.3em;
+	cursor: default;
+    height: 1.2em;
+    position: absolute;
+    width: 1.2em;
+    z-index: 2;
+	border-style: dashed;
+	border-width: 1px;
+}
+
+#porContainer {
+	text-align: center;
+	padding: 1em;
+}
+
+#reachSummaryContainer {
+	text-align: center;
+}

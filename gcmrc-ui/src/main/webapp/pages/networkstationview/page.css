@@ -1,0 +1,51 @@
+.application-body {
+	min-height: 640px;
+}
+
+#openlayers-map {
+	height: 500px;
+	width: 100%;
+}
+
+#stationList {
+	min-height: 31em;
+}
+
+.sitePopup {
+	
+}
+
+@media (min-width: 768px) {
+	.affix {
+		right: 34.188%;
+		left: 20px;
+		top: 20px;
+	}
+}
+@media (max-width: 767px) {
+	.affix {
+		position: relative;
+	}
+}
+
+.sitePopupContent {
+	font-size: 1.4em;
+	text-shadow: 0px 0px 3px white,
+		0px 0px 3px white,
+		0px 0px 3px white,
+		0px 0px 3px white,
+		0px 0px 3px white,
+		0px 0px 3px white;
+	filter:progid:DXImageTransform.Microsoft.dropshadow(Color='white', OffX=0, OffY=0);
+}
+
+/*.olLayerGoogleCopyright, .olLayerGooglePoweredBy, .gmnoprint {
+	display : none
+}*/
+
+/* Because of a conflict between twitter bootstrap and openlayers */
+img { max-width: none; }
+
+.layersDiv label {
+	display : inline;
+}

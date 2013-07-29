@@ -1,0 +1,46 @@
+.application-body {
+	min-height: 640px;
+}
+
+#openlayers-map {
+	height: 36em;
+	width: 100%;
+}
+
+#networkList {
+	min-height: 34em;
+}
+
+#credits div.well.full {
+	min-height: 40em;
+}
+
+#credits div.well.half {
+	min-height: 17em;
+}
+
+.sitePopup {
+	
+}
+
+.sitePopupContent {
+	font-size: 1.4em;
+	text-shadow: 0px 0px 3px white,
+		0px 0px 3px white,
+		0px 0px 3px white,
+		0px 0px 3px white,
+		0px 0px 3px white,
+		0px 0px 3px white;
+	filter:progid:DXImageTransform.Microsoft.dropshadow(Color='white', OffX=0, OffY=0);
+}
+
+/*.olLayerGoogleCopyright, .olLayerGooglePoweredBy, .gmnoprint {
+	display : none
+}*/
+
+/* Because of a conflict between twitter bootstrap and openlayers */
+img { max-width: none; }
+
+.layersDiv label {
+	display : inline;
+}

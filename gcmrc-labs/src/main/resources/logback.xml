@@ -1,0 +1,14 @@
+<configuration>
+	<appender name="stdout" class="ch.qos.logback.core.ConsoleAppender">
+		<encoder>
+			<pattern>%d{HH:mm:ss.SSS} [%t] GCMRC-Labs %5p %logger{20} - %m%n</pattern>
+		</encoder>
+	</appender>
+	<logger name="gov.usgs.webservices.jdbc.spec" level="TRACE"/>
+	<logger name="gov.usgs.cida.nude" level="TRACE"/>
+	<logger name="org.apache" level="INFO"/>
+	<logger name="gov.usgs.cida.proxy" level="INFO"/>
+	<root level="DEBUG">
+		<appender-ref ref="stdout" />
+	</root>
+</configuration>

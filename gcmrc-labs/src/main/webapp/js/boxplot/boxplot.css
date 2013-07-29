@@ -1,0 +1,20 @@
+/* 
+	Copyright (c) 2010, Fabian Dill
+	http://informationandvisualization.de/blog/box-plot
+    http://informationandvisualization.de/files/boxplot.css
+*/
+
+div.boxplot-element {
+	background: #fff;
+	position: absolute;
+	left: 40px;
+	border: thin solid #000;
+	width:30px;
+	height: 0px;
+}
+
+div.boxplot-label {
+	position: absolute;
+	border: none;
+}
+

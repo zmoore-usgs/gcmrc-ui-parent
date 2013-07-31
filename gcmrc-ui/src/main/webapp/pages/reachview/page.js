@@ -310,8 +310,8 @@ GCMRC.Page = {
 			"inst!100600!" + GCMRC.Page.params["100600"]["inst"].tsGroup + "-" + CONFIG.downstreamStationName
 		];
 		if (GCMRC.Page.reach.majorTrib) {
-			sandBudgetColumns.push(
-					"inst!100400!" + GCMRC.Page.params["100400"]["inst"].tsGroup + "-" + GCMRC.Page.reach.majorTrib
+			sandBudgetColumns.push(  //OMG MAJOR HACK. ughhh.
+					"inst!100401!" + GCMRC.Page.params["100400"]["inst"].tsGroup.substr(2) + "-" + GCMRC.Page.reach.majorTrib
 					);
 			finesBudgetColumns.push(
 					"inst!100600!" + GCMRC.Page.params["100600"]["inst"].tsGroup + "-" + GCMRC.Page.reach.majorTrib
@@ -353,7 +353,7 @@ GCMRC.Page = {
 
 					data.success.data.each(function(el) {
 						datas.push([getValue(el, "inst!100400!" + GCMRC.Page.params["100400"]["inst"].tsGroup + "-" + GCMRC.Page.reach.upstreamStation),
-							getValue(el, "inst!100400!" + GCMRC.Page.params["100400"]["inst"].tsGroup + "-" + GCMRC.Page.reach.majorTrib),
+							getValue(el, "inst!100401!" + GCMRC.Page.params["100400"]["inst"].tsGroup.substr(2) + "-" + GCMRC.Page.reach.majorTrib),
 							getValue(el, "inst!100400!" + minorTribHACK + GCMRC.Page.params["100400"]["inst"].tsGroup + "-" + GCMRC.Page.reach.minorTrib),
 							getValue(el, "inst!100400!" + GCMRC.Page.params["100400"]["inst"].tsGroup + "-" + GCMRC.Page.reach.downstreamStation)]);
 						times.push(getValue(el, "time"));

@@ -392,10 +392,16 @@ GCMRC.Page = {
 		var endMillis = Date.create(end).getTime();
 		if (endMillis >= beginMillis) {
 			var expectedGraphColumns = GCMRC.Page.getExpectedGraphColumns();
-			if (GCMRC.Page.hasData(expectedGraphColumns.map(function(el) {return el.pCode;}), begin, end)) {
+			var expectedDownloadColumns = expectedGraphColumns.filter(function(el) {
+				var result = el.columns.some(function(n) {
+					return n.startsWith("inst!") && "Sample-adjusted Modeled" !== GCMRC.Page.params[this.pCode].inst.ppq;
+				}, el);
+				return result;
+			});
+			if (GCMRC.Page.hasData(expectedDownloadColumns.map(function(el) {return el.pCode;}), begin, end)) {
 				var columnOrdering = [];
 				columnOrdering.push({pCode:"time", name:"Time", format:"yyyy-MM-dd HH:mm:ss", timeZoneInHeader:true});
-				expectedGraphColumns.forEach(function(el) {
+				expectedDownloadColumns.forEach(function(el) {
 					columnOrdering.push({pCode : el.pCode, name : GCMRC.Page.params[el.pCode].inst.displayName, reorderable : true});
 				});
 				

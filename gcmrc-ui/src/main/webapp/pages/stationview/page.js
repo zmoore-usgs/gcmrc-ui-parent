@@ -396,7 +396,7 @@ GCMRC.Page = {
 				var columnOrdering = [];
 				columnOrdering.push({pCode:"time", name:"Time", format:"yyyy-MM-dd HH:mm:ss", timeZoneInHeader:true});
 				expectedGraphColumns.forEach(function(el) {
-					columnOrdering.push({pCode : el.pCode, name:GCMRC.Page.params[el.pCode].inst.displayName});
+					columnOrdering.push({pCode : el.pCode, name : GCMRC.Page.params[el.pCode].inst.displayName, reorderable : true});
 				});
 				
 				GCMRC.Page.colOrder.remove(function(n){return true;});

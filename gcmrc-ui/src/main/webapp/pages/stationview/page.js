@@ -579,3 +579,54 @@ gcmrcModule.controller('downloadPopupController', function($scope) {
 		return result;
 	};
 });
+
+gcmrcModule.directive('helpTooltip', function() {
+	return {
+		link: function(scope, element, attrs, ngModel) {
+			element.tooltip({
+				trigger : "focus",
+				html : true,
+				title : "<table>"+
+						"	<thead>"+
+						"		<th>Symbol</th>"+
+						"		<th>Meaning</th>"+
+						"		<th>Example</th>"+
+						"	</thead>"+
+						"	<tbody>"+
+						"		<tr>"+
+						"			<td>y</td><td>year</td><td>1996</td>"+
+						"		</tr>"+
+						"		<tr>"+
+						"			<td>D</td><td>day of year</td><td>189</td>"+
+						"		</tr>"+
+						"		<tr>"+
+						"			<td>d</td><td>day of month</td><td>10</td>"+
+						"		</tr>"+
+						"		<tr>"+
+						"			<td>a</td><td>halfday of day</td><td>PM</td>"+
+						"		</tr>"+
+						"		<tr>"+
+						"			<td>h</td><td>clockhour of halfday (1~12)</td><td>12</td>"+
+						"		</tr>"+
+						"		<tr>"+
+						"			<td>H</td><td>hour of day (0~23)</td><td>0</td>"+
+						"		</tr>"+
+						"		<tr>"+
+						"			<td>m</td><td>minute of hour</td><td>30</td>"+
+						"		</tr>"+
+						"		<tr>"+
+						"			<td>s</td><td>second of minute</td><td>55</td>"+
+						"		</tr>"+
+						"		<tr>"+
+						"			<td>Z</td><td>time zone offset/id</td><td>-0800; -08:00; America/Los_Angeles</td>"+
+						"		</tr>"+
+						"		<tr>"+
+						"			<td>'</td><td>escape for text</td><td></td>"+
+						"		</tr>"+
+						"	</tbody>"+
+						"</table>",
+				placement : 'bottom'
+			});
+		}
+	}
+});

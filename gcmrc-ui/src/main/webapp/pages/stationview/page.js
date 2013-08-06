@@ -527,7 +527,7 @@ GCMRC.Page = {
 			el.color = "#CC9966";
 			el.highlightColor = "#FF9900";
 		} else {
-			el.color = "#333399";
+			el.color = "#9C76B5";
 			el.highlightColor = "#990099";
 		}
 		

@@ -32,6 +32,16 @@ GCMRC.Graphing = function(hoursOffset) {
 		$("#errorMsg").empty();
 	};
 	
+	var isNaN = function(x) {
+		return x !== x;
+	};
+	
+	var isNullUndefinedOrNaN = function(x, undefined) {
+		return (x === null ||
+				x === undefined ||
+				isNaN(x));
+	};
+	
 	var dealWithResponse = function(graphToMake, data, config, buildGraph) {
 		var parseColData = function(str) {
 			var result = null;
@@ -48,11 +58,11 @@ GCMRC.Graphing = function(hoursOffset) {
 				}
 			}
 
-			if (med) {
-				if (!low) {
+			if (!isNullUndefinedOrNaN(med)) {
+				if (isNullUndefinedOrNaN(low)) {
 					low = med;
 				}
-				if (!high) {
+				if (isNullUndefinedOrNaN(high)) {
 					high = med;
 				}
 			}

@@ -131,7 +131,7 @@ GCMRC.Graphing = function(hoursOffset) {
 
 			buildGraph(conf);
 		} else {
-			showInfoMessage("#" + conf.divId + ' div.p' + graphToMake.pCode, "There was no data during this period for " + graphName);
+			showInfoMessage("#" + conf.divId + ' div.p' + graphToMake.pCode, "There were no data during this period for " + graphName);
 		}
 
 	};

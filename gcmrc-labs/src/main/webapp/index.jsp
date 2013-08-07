@@ -72,6 +72,7 @@ boolean development = Boolean.parseBoolean(props.getProperty("all.development"))
 				<li><a href="${relativePath}time">Time Exchanger</a></li>
 				<li><a href="${relativePath}odt">OPeNDAP Time Exchanger</a></li>
 				<li><a href="${relativePath}oboetest.jsp">Oboe Test</a></li>
+				<li><a href="${relativePath}openid/id">OpenID URL Test</a></li>
 			</ul>
 		</div>
 		<jsp:include page="template/USGSFooter.jsp">

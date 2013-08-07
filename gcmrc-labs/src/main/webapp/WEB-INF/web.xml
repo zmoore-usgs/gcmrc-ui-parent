@@ -56,6 +56,20 @@
 		<url-pattern>/services/*</url-pattern>
 	</servlet-mapping>
 	
+	<servlet>
+		<servlet-name>GoToOpenIdServlet</servlet-name>
+		<servlet-class>gov.usgs.cida.proxy.AlternateProxyServlet</servlet-class>
+		<init-param>
+			<param-name>forward-url</param-name>
+			<param-value>https://www.google.com/accounts/o8/id</param-value>
+		</init-param>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>GoToOpenIdServlet</servlet-name>
+		<url-pattern>/openid</url-pattern>
+	</servlet-mapping>
+	
+	
 	<session-config>
 		<session-timeout>
 			30

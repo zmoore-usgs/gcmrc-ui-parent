@@ -70,7 +70,7 @@ GCMRC.Page = {
 		var beginMillis = Date.create(begin).getUTCTime() + (CONFIG.networkHoursOffset * 60 * 60 * 1000);
 		var endMillis = Date.create(end).getUTCTime() + (CONFIG.networkHoursOffset * 60 * 60 * 1000);
 		if (endMillis >= beginMillis) {
-			var expectedGraphColumns = GCMRC.Page.getExpectedGraphColumns()
+			var expectedGraphColumns = GCMRC.Page.getExpectedGraphColumns();
 			var chosenParameters = [];
 			expectedGraphColumns.forEach(function(el) {
 				[].push.apply(this, el.columns.map(function(col) {
@@ -141,6 +141,20 @@ GCMRC.Page = {
 		} else {
 			GCMRC.Graphing.clearErrorMsg();
 			GCMRC.Graphing.showErrorMsg("Please choose an End that is after Start");
+		}
+	},
+	downloadDataClicked : function() {
+		if (GCMRC.Graphing.graphs['data-dygraph']) {
+			var form = $('#exportPost');
+			var tabbedData = "Time\tLow\tMid\tHigh\n";
+			GCMRC.Graphing.graphs['data-dygraph']["sandbudget"].file_.forEach(function(el) {
+				tabbedData += el[0] + '\t' + el[1][0] + '\t' + el[1][1] + '\t' + el[1][2] + '\n';
+			});
+
+			form.find('[name=data]').val(tabbedData)
+			form.submit();
+		} else {
+			LOG.debug("We don't have data to pull from!");
 		}
 	},
 	fromDateClicked: function() {

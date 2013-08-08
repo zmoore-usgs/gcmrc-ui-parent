@@ -20,7 +20,7 @@
 	</appender>
 	<logger name="gov.usgs.webservices.jdbc.spec" level="TRACE"/>
 	<logger name="gov.usgs.cida.nude" level="TRACE"/>
-	<logger name="org.apache" level="TRACE"/>
+	<logger name="org.apache" level="INFO"/>
 	<logger name="gov.usgs.cida.proxy" level="INFO"/>
 	<root level="DEBUG">
 		<appender-ref ref="stdout" />

@@ -18,6 +18,15 @@
 	</filter-mapping>-->
 	
 	<servlet>
+		<servlet-name>ExportServlet</servlet-name>
+		<servlet-class>gov.usgs.cida.export.Export</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>ExportServlet</servlet-name>
+		<url-pattern>/export</url-pattern>
+	</servlet-mapping>
+	
+	<servlet>
 		<servlet-name>NetworkStationView</servlet-name>
 		<jsp-file>/networkstationview.jsp</jsp-file>
 	</servlet>

@@ -8,8 +8,6 @@ GCMRC.Graphing = function(hoursOffset) {
 
 	var isResizeListenerAttached = false;
 
-	var timeColumn = "time";
-
 	var urls = {
 		agg: 'services/agg/'
 	};

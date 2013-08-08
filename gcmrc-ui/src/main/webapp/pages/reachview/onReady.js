@@ -52,6 +52,7 @@ $(document).ready(function() {
 	GCMRC.Page.createParameterList($('#parameterList'), paramList);
 	
 	$('#buildGraph').click(GCMRC.Page.buildGraphClicked);
+	$('#downloadData').click(GCMRC.Page.downloadDataClicked);
 
 	$('#beginDatePicker').attr('value', new Date(GCMRC.Page.latestPosition).utc().addMonths(-1).format('{yyyy}-{MM}-{dd}'));
 	$('#beginDatePicker').datepicker({

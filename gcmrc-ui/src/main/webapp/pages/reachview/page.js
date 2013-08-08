@@ -146,7 +146,7 @@ GCMRC.Page = {
 	downloadDataClicked : function() {
 		if (GCMRC.Graphing.graphs['data-dygraph']) {
 			var form = $('#exportPost');
-			var tabbedData = "Time\tLow\tMid\tHigh\n";
+			var tabbedData = "Time\tLower Uncertainty Bound\tZero Bias Value\tUpper Uncertainty Bound\n";
 			GCMRC.Graphing.graphs['data-dygraph']["sandbudget"].file_.forEach(function(el) {
 				tabbedData += el[0] + '\t' + el[1][0] + '\t' + el[1][1] + '\t' + el[1][2] + '\n';
 			});

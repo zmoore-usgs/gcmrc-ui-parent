@@ -11,7 +11,7 @@ GCMRC.Graphing = function(hoursOffset) {
 	var timeColumn = "time";
 
 	var urls = {
-		agg: '../gcmrc-services/agg/'
+		agg: 'services/agg/'
 	};
 
 	var showInfoMessage = function(locator, msg) {

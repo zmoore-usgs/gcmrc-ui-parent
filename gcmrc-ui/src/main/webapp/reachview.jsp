@@ -228,7 +228,7 @@
 								<div id="build-div" style="text-align:center;"><a href="#" class="buildButton" id="buildGraph">Build Graph</a><a href="#" class="buildButton" id="downloadData">Download</a></div>
 							</form>
 							<form id='exportPost' action="${relativePath}export" method="POST">
-								<input type="hidden" name='filename' value="gcmrc.tsv">
+								<input type="hidden" name='filename' value="gcmrcSedimentBudget.tsv">
 								<input type='hidden' name='type' value='text/tab-separated-values'>
 								<input type='hidden' name='data' value='Hello World'>
 							</form>

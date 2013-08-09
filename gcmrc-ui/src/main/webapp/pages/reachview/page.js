@@ -155,6 +155,8 @@ GCMRC.Page = {
 			form.submit();
 		} else {
 			LOG.debug("We don't have data to pull from!");
+			GCMRC.Graphing.clearErrorMsg();
+			GCMRC.Graphing.showErrorMsg("Please graph the data before downloading");
 		}
 	},
 	fromDateClicked: function() {

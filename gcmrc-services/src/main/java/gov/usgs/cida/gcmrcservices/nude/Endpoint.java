@@ -440,11 +440,33 @@ public abstract class Endpoint extends HttpServlet {
 		return result;
 	}
 	
+	public static String stripColName(String colName) {
+		String result = colName;
+		
+		int columnIdentifierLength = 3; // HACK HAAAAAAAAAAAAAACK
+		String[] tings = colName.split("!", columnIdentifierLength + 1);
+		if (tings.length > columnIdentifierLength) {
+			//Strip the extra tings
+			int restOfInfo = colName.indexOf(tings[columnIdentifierLength]) - 1;
+			if (0 < restOfInfo) {
+				result = colName.substring(0, restOfInfo);
+			} else { 
+				log.error("could not find rest of string in column name");
+			}
+		} else {
+			log.trace("No extra tings.");
+		}
+		
+		return result;
+	}
+	
 	public ColumnMetadata getColumnMetadata(String uncleanName) {
 		ColumnMetadata result = null;
 		
 		String cleanName = StringUtils.trimToNull(uncleanName);
 		if (null != cleanName) {
+			cleanName = stripColName(cleanName);
+			
 			result = CM_LOOKUP.get(cleanName);
 		}
 		

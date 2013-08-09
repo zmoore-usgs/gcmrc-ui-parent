@@ -754,6 +754,7 @@ GCMRC.Page = {
 				description : {
 					pCode : el.pCode,
 					displayName : el.displayName,
+					displayOrder : el.displayOrder,
 					units : el.units,
 					unitsShort : el.unitsShort
 				}
@@ -800,8 +801,15 @@ GCMRC.Page = {
 					"sampleMethod":"inst",
 					"color":"#006666",
 					"highlightColor":"#FF0033"
+				},
+				"description" : {
+					"pCode":"00060",
+					"displayName":"Discharge",
+					"displayOrder":"200",
+					"units":"cubic feet per second",
+					"unitsShort":"cfs"
 				}
-			}
+			};
 		} else if ("09404200" === CONFIG.upstreamStationName) {
 			GCMRC.Page.params["00060"] = {
 				"inst" : {
@@ -819,6 +827,13 @@ GCMRC.Page = {
 					"sampleMethod":"inst",
 					"color":"#006666",
 					"highlightColor":"#FF0033"
+				},
+				"description" : {
+					"pCode":"00060",
+					"displayName":"Discharge",
+					"displayOrder":"200",
+					"units":"cubic feet per second",
+					"unitsShort":"cfs"
 				}
 			};
 		}
@@ -835,6 +850,13 @@ GCMRC.Page = {
 				unitsShort: "Metric Tons",
 				color: "#006666",
 				highlightColor: "#FF0033"
+			},
+			description : {
+				pCode: "finesbudget",
+				displayName: "Silt and Clay Storage Change",
+				displayOrder: "10",
+				units: "Metric Tons",
+				unitsShort: "Metric Tons"
 			}
 		};
 		GCMRC.Page.params["sandbudget"] = {
@@ -850,6 +872,13 @@ GCMRC.Page = {
 				unitsShort: "Metric Tons",
 				color: "#006666",
 				highlightColor: "#FF0033"
+			},
+			description : {
+				pCode: "sandbudget",
+				displayName: "Sand Storage Change",
+				displayOrder: "20",
+				units: "Metric Tons",
+				unitsShort: "Metric Tons"
 			}
 		};
 	}),

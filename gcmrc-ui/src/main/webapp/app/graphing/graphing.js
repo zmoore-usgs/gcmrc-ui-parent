@@ -338,9 +338,9 @@ GCMRC.Graphing = function(hoursOffset) {
 							containerDiv.empty();
 							labelDiv.empty();
 							GCMRC.Page.params.values().sortBy(function(n) {
-								return parseFloat(n.values().sample().displayOrder);
+								return parseFloat(n.description.displayOrder);
 							}).map(function(n) {
-								return n.values().sample().pCode;
+								return n.description.pCode;
 							}).forEach(function(el) {
 								containerDiv.append($('<div class="p' + el + '"></div>'));
 								labelDiv.append($('<div class="p' + el +'"></div>'));

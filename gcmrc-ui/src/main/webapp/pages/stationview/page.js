@@ -9,11 +9,9 @@ GCMRC.Page = {
 		
 		var options = {};
 		GCMRC.Mapping.maps[divId] = new OpenLayers.Map(divId, options);
-//		GCMRC.Mapping.maps[divId].addControl(new OpenLayers.Control.LayerSwitcher());
 		
 		var layersToAdd = [];
 		layersToAdd.push(GCMRC.Mapping.layers.esri.esriTopo);
-//		[].push.apply(layersToAdd, GCMRC.Mapping.layers.esri.values());
 		layersToAdd.push(GCMRC.Mapping.layers.markers);
 		
 		GCMRC.Mapping.maps[divId].addLayers(layersToAdd);

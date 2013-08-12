@@ -13,6 +13,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -47,14 +48,39 @@ public class ColumnMetadata {
 	 * @return 
 	 */
 	public ColumnToXmlMapping getMapping(String station, boolean isDownload) {
+		return getMapping(station, isDownload, null);
+	}
+	
+	/**
+	 * Give a pCode if not a download, give descriptive names if is.
+	 * @param isDownload
+	 * @return 
+	 */
+	public ColumnToXmlMapping getMapping(String station, boolean isDownload, String customName) {
 		ColumnToXmlMapping result = null;
+		
+		String inName = "s" + Math.abs(station.hashCode()) + "p" + Math.abs(this.parameterCode.hashCode());
+		String outName = getDefaultOutName(station, isDownload);
+		
+		String cleanCustomName = StringUtils.trimToNull(customName);
+		if (null != cleanCustomName) {
+			outName = StringUtils.replace(cleanCustomName, "*default*", outName);
+		}
+		
+		result = new ColumnToXmlMapping(inName, outName);
+		
+		return result;
+	}
+	
+	protected String getDefaultOutName(String station, boolean isDownload) {
+		String result = null;
 		
 		String tag = this.pcode;
 		if (isDownload) {
 			tag = this.columnTitle;
 		}
-		
-		result = new ColumnToXmlMapping("s" + Math.abs(station.hashCode()) + "p" + Math.abs(this.parameterCode.hashCode()), tag + "-" + station);
+			
+		result = tag + "-" + station;
 		
 		return result;
 	}

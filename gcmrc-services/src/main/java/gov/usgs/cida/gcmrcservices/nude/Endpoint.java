@@ -371,7 +371,7 @@ public abstract class Endpoint extends HttpServlet {
 		}
 	}
 
-	public static TimeConfig getDateRange(ListMultimap<String, String> params) { //CUTOFF
+	public static TimeConfig getDateRange(ListMultimap<String, String> params) {
 		TimeConfig result = null;
 
 		/**
@@ -465,6 +465,19 @@ public abstract class Endpoint extends HttpServlet {
 		String[] otherThings = restOfStation.split("!");
 		if (1 < otherThings.length) {
 			result = otherThings[1];
+		}
+		
+		return result;
+	}
+	
+	public static String getCustomName(String colName) {
+		String result = null;
+		
+		String stripped = stripColName(colName);
+		String restOfStation = colName.substring(stripped.length());
+		String[] otherThings = restOfStation.split("!");
+		if (2 < otherThings.length) {
+			result = otherThings[2];
 		}
 		
 		return result;

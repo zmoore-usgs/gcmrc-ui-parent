@@ -199,9 +199,10 @@ public class AggregatingEndpoint extends SpecEndpoint {
 		for (String colName : userCols) {
 			ColumnMetadata cmd = getColumnMetadata(colName);
 			String station = getStation(colName);
+			String customName = getCustomName(colName);
 			
 			if (null != cmd && null != station) {
-				colMaps.add(cmd.getMapping(station, isDownload));
+				colMaps.add(cmd.getMapping(station, isDownload, customName));
 			} else {
 				log.debug("No column by the name of: " + colName);
 			}

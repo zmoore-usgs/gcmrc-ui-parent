@@ -412,9 +412,9 @@ GCMRC.Page = {
 			});
 			if (GCMRC.Page.hasData(expectedDownloadColumns.map(function(el) {return el.pCode;}), begin, end)) {
 				var columnOrdering = [];
-				columnOrdering.push({pCode:"time", name:"Time", format:"yyyy-MM-dd HH:mm:ss", timeZoneInHeader:true});
+				columnOrdering.push({pCode:"time", name:"Time", format:"yyyy-MM-dd HH:mm:ss", timeZoneInHeader:true, nameConfig: {useDefault: true}});
 				expectedDownloadColumns.forEach(function(el) {
-					columnOrdering.push({pCode : el.pCode, name : GCMRC.Page.params[el.pCode].inst.displayName, reorderable : true});
+					columnOrdering.push({pCode : el.pCode, name : GCMRC.Page.params[el.pCode].inst.displayName, reorderable : true, nameConfig: {useDefault: true}});
 				});
 				
 				GCMRC.Page.colOrder.remove(function(n){return true;});
@@ -453,7 +453,7 @@ GCMRC.Page = {
 				columnDef = resource.columns.filter(function(col) {
 					return col.startsWith('inst!');
 				}).map(function(col) {
-					return col.split("-")[0] + "!" + CONFIG.stationName;
+					return col;
 				});
 			}
 			
@@ -646,4 +646,13 @@ gcmrcModule.directive('helpTooltip', function() {
 			});
 		}
 	}
+});
+gcmrcModule.directive('inverted', function() {
+  return {
+    require: 'ngModel',
+    link: function(scope, element, attrs, ngModel) {
+      ngModel.$parsers.push(function(val) { return !val; });
+      ngModel.$formatters.push(function(val) { return !val; });
+    }
+  };
 });

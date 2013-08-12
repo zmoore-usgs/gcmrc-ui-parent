@@ -279,12 +279,18 @@
 								</ul>
 							</div>
 							<div id="downloadColumnDetail" class="span6">
-								<h5>Column Options</h5>
 								<div ng-show="columnSelected">
-									{{columnSelected.name}} Options
+									<h5>{{columnSelected.name}} options</h5>
+									<div ng-show="columnSelected.nameConfig">
+										<hr>
+										<h6>Naming</h6>
+										<div><input type="checkbox" ng:model="columnSelected.nameConfig.useDefault">Use default name</div>
+										<div><input type="checkbox" ng:model="columnSelected.nameConfig.useDefault" inverted><input type="text" id="columnNaming" ng:model="columnSelected.nameConfig.customName" ng-disabled="columnSelected.nameConfig.useDefault" placeholder="Specify custom name..."></div>
+									</div>
 									<div ng-show="columnSelected.format">
-										<label for="columnFormat">Format</label>
-										<input type="text" id="columnFormat" help-tooltip ng:model="columnSelected.format">
+										<hr>
+										<h6>Format</h6>
+										<input type="text" id="columnFormat" name="columnFormat" help-tooltip ng:model="columnSelected.format">
 									</div>
 								</div>
 							</div>

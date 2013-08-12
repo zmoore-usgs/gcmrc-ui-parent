@@ -7,7 +7,8 @@ import gov.usgs.cida.gcmrcservices.TimeUtil;
 import gov.usgs.cida.gcmrcservices.jsl.data.ParameterSpec;
 import gov.usgs.cida.gcmrcservices.jsl.data.SpecOptions;
 import static gov.usgs.cida.gcmrcservices.nude.Endpoint.COLUMN_KEYWORD;
-import static gov.usgs.cida.gcmrcservices.nude.Endpoint.STATION_KEYWORD;
+import static gov.usgs.cida.gcmrcservices.nude.Endpoint.getStations;
+import static gov.usgs.cida.gcmrcservices.nude.Endpoint.getStation;
 import gov.usgs.cida.gcmrcservices.nude.time.TimeConfig;
 import gov.usgs.cida.nude.column.Column;
 import gov.usgs.cida.nude.column.SimpleColumn;
@@ -58,7 +59,7 @@ public abstract class SpecEndpoint extends Endpoint {
 		LinkedList<PlanStep> steps = new LinkedList<PlanStep>();
 		
 		if (hasSpecs) {
-			List<String> stations = params.get(STATION_KEYWORD);
+			List<String> stations = getStations(params);
 			steps.addAll(configurePlan(requestId, stations, specs, mux, timeConfig, noDataFilter));
 			if (null != outputTimeFormat) {
 				steps.add(new OutputTimeFormatPlanStep(steps.getLast().getExpectedColumns(), outputTimeFormat));
@@ -87,28 +88,24 @@ public abstract class SpecEndpoint extends Endpoint {
 	public Iterable<Spec> createSpecifiedSpecs(ListMultimap<String, String> params) {
 		Set<Spec> result = new HashSet<Spec>();
 		
-		List<String> stations = params.get(STATION_KEYWORD);
-		
 		SpecOptions specOptions = buildSpecOptions(params);
-		
-		for (String station : stations) {
-			Map<String, String[]> modMap = new HashMap<String, String[]>();
-			modMap.put(ParameterSpec.S_SITE_NO, new String[] {station});
-			
-			List<String> userCols = params.get(COLUMN_KEYWORD);
-			for (String colName : userCols) {
-				ColumnMetadata cmd = getColumnMetadata(colName);
 
-				if (null != cmd) {
-					List<ColumnMetadata.SpecEntry> specEntries = cmd.getSpecEntries();
-					for (ColumnMetadata.SpecEntry se : specEntries) {
-						Spec spec = se.getSpec(station, specOptions);
-						Spec.loadParameters(spec, modMap);
-						result.add(spec);
-					}
-				} else {
-					log.debug("No column by the name of: " + colName);
+		List<String> userCols = params.get(COLUMN_KEYWORD);
+		for (String colName : userCols) {
+			ColumnMetadata cmd = getColumnMetadata(colName);
+			String station = getStation(colName);
+			
+			if (null != cmd && null != station) {
+				Map<String, String[]> modMap = new HashMap<String, String[]>();
+				modMap.put(ParameterSpec.S_SITE_NO, new String[] {station});
+				List<ColumnMetadata.SpecEntry> specEntries = cmd.getSpecEntries();
+				for (ColumnMetadata.SpecEntry se : specEntries) {
+					Spec spec = se.getSpec(station, specOptions);
+					Spec.loadParameters(spec, modMap);
+					result.add(spec);
 				}
+			} else {
+				log.debug("No column by the name of: " + colName);
 			}
 		}
 		
@@ -118,21 +115,18 @@ public abstract class SpecEndpoint extends Endpoint {
 	public Multimap<Column, Column> createSpecMux(ListMultimap<String, String> params) {
 		HashMultimap<Column, Column> result = HashMultimap.<Column, Column>create();
 		
-		List<String> stations = params.get(STATION_KEYWORD);
+		List<String> userCols = params.get(COLUMN_KEYWORD);
+		for (String colName : userCols) {
+			ColumnMetadata cmd = getColumnMetadata(colName);
+			String station = getStation(colName);
 
-		for (String station : stations) {
-			List<String> userCols = params.get(COLUMN_KEYWORD);
-			for (String colName : userCols) {
-				ColumnMetadata cmd = getColumnMetadata(colName);
-
-				if (null != cmd && !result.containsKey(cmd.getColumn(station))) {
-					List<ColumnMetadata.SpecEntry> specEntries = cmd.getSpecEntries();
-					for (ColumnMetadata.SpecEntry se : specEntries) {
-						result.put(cmd.getColumn(station), se.getColumn(station));
-					}
-				} else {
-					log.debug("No column by the name of: " + colName);
+			if (null != cmd && null!= station && !result.containsKey(cmd.getColumn(station))) {
+				List<ColumnMetadata.SpecEntry> specEntries = cmd.getSpecEntries();
+				for (ColumnMetadata.SpecEntry se : specEntries) {
+					result.put(cmd.getColumn(station), se.getColumn(station));
 				}
+			} else {
+				log.debug("No column by the name of: " + colName);
 			}
 		}
 		

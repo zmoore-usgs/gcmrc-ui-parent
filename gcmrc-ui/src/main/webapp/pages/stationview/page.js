@@ -245,7 +245,7 @@ GCMRC.Page = {
 					} else {
 						tsGroupName = "";
 					}
-					return key + "!" + el.name + tsGroupName + "-" + CONFIG.stationName;
+					return key + "!" + el.name + tsGroupName + "!" + CONFIG.stationName;
 				}));
 			} else {
 				var tsGroupName = GCMRC.Page.params[el.name].inst.tsGroup;
@@ -254,7 +254,7 @@ GCMRC.Page = {
 				} else {
 					tsGroupName = "";
 				}
-				cols.push("inst!" + el.name + tsGroupName + "-" + CONFIG.stationName);
+				cols.push("inst!" + el.name + tsGroupName + "!" + CONFIG.stationName);
 			}
 			result.push({
 				pCode : el.name,
@@ -299,12 +299,26 @@ GCMRC.Page = {
 				var chosenParameters = [];
 				expectedGraphColumns.forEach(function(el) {
 					[].push.apply(this, el.columns.map(function(col) {
-						return col.split("-")[0];
+						return col;
 					}));
 				}, chosenParameters);
-
+				
+				expectedGraphColumns.forEach(function(el) {
+					var cols = [];
+					[].push.apply(cols, el.columns.map(function(col) {
+						var result = col;
+						var colSplit = col.split("!");
+						if (3 < colSplit.length) {
+							result = colSplit[0] + "!" + colSplit[1] + "!" + colSplit[2] + "-" + colSplit[3];
+						}
+						
+						return result;
+					}));
+					
+					el.columns = cols;
+				});
+				
 				var serviceOptions = {
-					station: [CONFIG.stationName],
 					beginPosition: begin,
 					endPosition: end,
 					column: chosenParameters,
@@ -441,7 +455,7 @@ GCMRC.Page = {
 				columnDef = resource.columns.filter(function(col) {
 					return col.startsWith('inst!');
 				}).map(function(col) {
-					return col.split("-")[0];
+					return col.split("-")[0] + "!" + CONFIG.stationName;
 				});
 			}
 			
@@ -456,7 +470,6 @@ GCMRC.Page = {
 		var timeZoneInHeader = timeColumn.timeZoneInHeader;
 		
 		var serviceOptions = {
-			station: [CONFIG.stationName],
 			beginPosition: beginClean,
 			endPosition: endClean,
 			column: chosenParameters,

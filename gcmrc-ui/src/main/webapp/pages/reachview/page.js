@@ -1,3 +1,5 @@
+CONFIG.everyPeriod = "P1D";
+
 GCMRC.Page = {
 	createMiniMap: function(config) {
 		if (!config)
@@ -74,9 +76,24 @@ GCMRC.Page = {
 			var chosenParameters = [];
 			expectedGraphColumns.forEach(function(el) {
 				[].push.apply(this, el.columns.map(function(col) {
-					return col.split("-")[0];
+					return col;
 				}).unique());
 			}, chosenParameters);
+			
+			expectedGraphColumns.forEach(function(el) {
+				var cols = [];
+				[].push.apply(cols, el.columns.map(function(col) {
+					var result = col;
+					var colSplit = col.split("!");
+					if (3 < colSplit.length) {
+						result = colSplit[0] + "!" + colSplit[1] + "!" + colSplit[2] + "-" + colSplit[3];
+					}
+
+					return result;
+				}));
+
+				el.columns = cols;
+			});
 
 			var expectedStations = [];
 			if (CONFIG.upstreamStationName) {
@@ -96,7 +113,6 @@ GCMRC.Page = {
 			}
 
 			var serviceOptions = {
-				station: expectedStations,
 				beginPosition: begin,
 				endPosition: end,
 				column: chosenParameters,
@@ -104,7 +120,7 @@ GCMRC.Page = {
 				cutoffBefore: GCMRC.Page.earliestPositionISO,
 				cutoffAfter: GCMRC.Page.latestPositionISO,
 				timeFormat: 'UTCMillis',
-				every: 'P1D',
+				every: CONFIG.everyPeriod,
 				noDataFilter: 'true',
 				useLagged: 'true'
 			};
@@ -318,27 +334,27 @@ GCMRC.Page = {
 	getExpectedGraphColumns: function() {
 		var minorTribHACK = "Minor Trib ";
 		var sandBudgetColumns = [
-			"inst!100400!" + GCMRC.Page.params["100400"]["inst"].tsGroup + "-" + CONFIG.upstreamStationName,
-			"inst!100400!" + GCMRC.Page.params["100400"]["inst"].tsGroup + "-" + CONFIG.downstreamStationName
+			"inst!100400!" + GCMRC.Page.params["100400"]["inst"].tsGroup + "!" + CONFIG.upstreamStationName,
+			"inst!100400!" + GCMRC.Page.params["100400"]["inst"].tsGroup + "!" + CONFIG.downstreamStationName
 		];
 		var finesBudgetColumns = [
-			"inst!100600!" + GCMRC.Page.params["100600"]["inst"].tsGroup + "-" + CONFIG.upstreamStationName,
-			"inst!100600!" + GCMRC.Page.params["100600"]["inst"].tsGroup + "-" + CONFIG.downstreamStationName
+			"inst!100600!" + GCMRC.Page.params["100600"]["inst"].tsGroup + "!" + CONFIG.upstreamStationName,
+			"inst!100600!" + GCMRC.Page.params["100600"]["inst"].tsGroup + "!" + CONFIG.downstreamStationName
 		];
 		if (GCMRC.Page.reach.majorTrib) {
 			sandBudgetColumns.push(  //OMG MAJOR HACK. ughhh.
-					"inst!100401!" + GCMRC.Page.params["100400"]["inst"].tsGroup.substr(2) + "-" + GCMRC.Page.reach.majorTrib
+					"inst!100401!" + GCMRC.Page.params["100400"]["inst"].tsGroup.substr(2) + "!" + GCMRC.Page.reach.majorTrib
 					);
 			finesBudgetColumns.push(
-					"inst!100600!" + GCMRC.Page.params["100600"]["inst"].tsGroup + "-" + GCMRC.Page.reach.majorTrib
+					"inst!100600!" + GCMRC.Page.params["100600"]["inst"].tsGroup + "!" + GCMRC.Page.reach.majorTrib
 					);
 		}
 		if (GCMRC.Page.reach.minorTrib) {
 			sandBudgetColumns.push(
-					"inst!100400!" + minorTribHACK + GCMRC.Page.params["100400"]["inst"].tsGroup + "-" + GCMRC.Page.reach.minorTrib
+					"inst!100400!" + minorTribHACK + GCMRC.Page.params["100400"]["inst"].tsGroup + "!" + GCMRC.Page.reach.minorTrib
 					);
 			finesBudgetColumns.push(
-					"inst!100600!" + minorTribHACK + GCMRC.Page.params["100600"]["inst"].tsGroup + "-" + GCMRC.Page.reach.minorTrib
+					"inst!100600!" + minorTribHACK + GCMRC.Page.params["100600"]["inst"].tsGroup + "!" + GCMRC.Page.reach.minorTrib
 					);
 		}
 
@@ -346,246 +362,167 @@ GCMRC.Page = {
 		var result = [
 			{
 				pCode: "00060",
-				columns: ["inst!00060!" + "Discharge" + "-" + GCMRC.Page.reach.downstreamDischargeStation], //DESPICABLE HACK!
+				columns: ["inst!00060!" + "Discharge" + "!" + GCMRC.Page.reach.downstreamDischargeStation],
 				yAxisLabel: "Discharge (cfs) at " + GCMRC.Page.reach.downstreamDischargeName
 			}
 		];
-		if (GCMRC.Page.reach.pcode.some("100400")) {
-			result.push({
-				pCode: "sandbudget",
-				columns: sandBudgetColumns,
-				yAxisLabel: "Change in Sand Stored in Reach (Metric Tons)",
-				dealWithResponse: function(graphToMake, data, config, buildGraph) {
-					var datas = [];
-					var times = [];
+		
+		var Budget = function(config) {
+			this.config = config;
+			this.pCode = config.budgetType;
+			this.columns = config.budgetColumns;
+			this.yAxisLabel = config.yAxisLabel;
+			this.dealWithResponse = function(graphToMake, data, config, buildGraph) {
+				var self = this;
+				var datas = [];
+				var times = [];
 
-					var getValue = function(row, colName) {
-						var result = 0.0;
-						if (row[colName]) {
-							result = parseFloat(row[colName]);
-						}
-						return result;
+				var getValue = function(row, colName) {
+					var result = 0.0;
+					if (row[colName]) {
+						result = parseFloat(row[colName]);
 					}
+					return result;
+				}
 
-					data.success.data.each(function(el) {
-						datas.push([getValue(el, "inst!100400!" + GCMRC.Page.params["100400"]["inst"].tsGroup + "-" + GCMRC.Page.reach.upstreamStation),
-							getValue(el, "inst!100401!" + GCMRC.Page.params["100400"]["inst"].tsGroup.substr(2) + "-" + GCMRC.Page.reach.majorTrib),
-							getValue(el, "inst!100400!" + minorTribHACK + GCMRC.Page.params["100400"]["inst"].tsGroup + "-" + GCMRC.Page.reach.minorTrib),
-							getValue(el, "inst!100400!" + GCMRC.Page.params["100400"]["inst"].tsGroup + "-" + GCMRC.Page.reach.downstreamStation)]);
-						times.push(getValue(el, "time"));
-					});
+				data.success.data.each(function(el) {
+					datas.push([getValue(el, "inst!" + self.config.sedPcode + "!" + self.config.sedTSGroup + "-" + GCMRC.Page.reach.upstreamStation),
+						getValue(el, "inst!" + self.config.majorTribSedPcode + "!" + self.config.majorTribSedTSGroup + "-" + GCMRC.Page.reach.majorTrib),
+						getValue(el, "inst!" + self.config.minorTribSedPcode + "!" + self.config.minorTribSedTSGroup + "-" + GCMRC.Page.reach.minorTrib),
+						getValue(el, "inst!" + self.config.sedPcode + "!" + self.config.sedTSGroup + "-" + GCMRC.Page.reach.downstreamStation)]);
+					times.push(getValue(el, "time"));
+				});
 
-					GCMRC.Page.sandworker.postMessage({
-						messageType: "setDataArray",
-						divId: config.divId,
-						data: datas,
-						time: times,
-						endStaticRec: config.endStaticRec,
-						newestSuspSed: config.newestSuspSed
-					});
+				GCMRC.Page[self.config.workerName].postMessage({
+					messageType: "setDataArray",
+					divId: config.divId,
+					data: datas,
+					time: times,
+					endStaticRec: config.endStaticRec,
+					newestSuspSed: config.newestSuspSed
+				});
 
-					config.a = parseFloat($('span[name=a_val]').html()) / 100.0;
-					config.b = parseFloat($('span[name=b_val]').html()) / 100.0;
-					config.c = parseFloat($('span[name=c_val]').html()) / 100.0;
-					config.d = parseFloat($('span[name=d_val]').html()) / 100.0;
-					config.e = parseFloat($('span[name=e_val]').html()) / 100.0;
-					config.f = parseFloat($('span[name=f_val]').html()) / 100.0;
-					config.g = parseFloat($('span[name=g_val]').html()) / 100.0;
+				config.a = parseFloat($('span[name=a_val]').html()) / 100.0;
+				config.b = parseFloat($('span[name=b_val]').html()) / 100.0;
+				config.c = parseFloat($('span[name=c_val]').html()) / 100.0;
+				config.d = parseFloat($('span[name=d_val]').html()) / 100.0;
+				config.e = parseFloat($('span[name=e_val]').html()) / 100.0;
+				config.f = parseFloat($('span[name=f_val]').html()) / 100.0;
+				config.g = parseFloat($('span[name=g_val]').html()) / 100.0;
 
-					var createCallback = function(response) {
-						var conf = config.clone();
-						conf.data = response.data.dataArray;
-						conf['yAxisLabel'] = graphToMake.yAxisLabel || GCMRC.Page.params[graphToMake.pCode].inst['displayName'] + " (" + GCMRC.Page.params[graphToMake.pCode].inst['unitsShort'] + ")";
-						conf["labels"] = ["Time", "Sand Storage Change", "High", "Low"];
-						conf['dataformatter'] = GCMRC.Dygraphs.DataFormatter(GCMRC.Page.params[graphToMake.pCode].inst['decimalPlaces']);
-						conf['decimalPlaces'] = GCMRC.Page.params[graphToMake.pCode].inst['decimalPlaces'];
-						conf["parameterName"] = graphToMake.pCode;
-						conf["div"] = $('#' + conf.divId + ' div.p' + graphToMake.pCode).get(0);
-						conf["labelDiv"] = $('#' + conf.labelDivId + ' div.p' + graphToMake.pCode).get(0);
-						conf["colors"] = ["#006666", "#006666", "#006666"];
-						conf["highlightColor"] = {
-							"Sand Storage Change": "#FF0033", //TODO HACK. Can't hardcode this! Rio will have both sand and fines.
-							"High": "#FF0033",
-							"Low": "#FF0033"
-						};
-						conf["series"] = {
-							"High": {
-								strokeWidth: 0.0,
-								drawPoints: false,
-								highlightCircleSize: 3
-							},
-							"Low": {
-								strokeWidth: 0.0,
-								drawPoints: false,
-								highlightCircleSize: 3
-							}
-						};
-						buildGraph(conf);
-
-						//TODO Get these out of the hardcode
-						GCMRC.Graphing.graphs["data-dygraph"].sandbudget.setAnnotations([{
-								x: new Date(GCMRC.Page.reach.endStaticRec).getUTCTime() + (CONFIG.networkHoursOffset * 60 * 60 * 1000), //TODO  This isn't coming out right.
-								shortText:'Incomplete Verification', 
-								series:'Sand Storage Change',
-								attachAtBottom: true,
-								mouseOverHandler : function(annotation) {
-									annotation.div.innerHTML = 'Verification dataset incomplete after this date';
-								},
-								mouseOutHandler : function(annotation) {
-									annotation.div.innerHTML = 'Incomplete verification';
-								}
-							}]);
-						GCMRC.Graphing.graphs["data-dygraph"].sandbudget.setAnnotations([{
-								x: new Date(GCMRC.Page.reach.newestSuspSed).getUTCTime() + (CONFIG.networkHoursOffset * 60 * 60 * 1000), //TODO  This isn't coming out right.
-								shortText:'End Verification', 
-								series:'Sand Storage Change',
-								attachAtBottom: true,
-								width : 97,
-								mouseOverHandler : function(annotation) {
-									annotation.div.innerHTML = 'No verification data processed after this date';
-								},
-								mouseOutHandler : function(annotation) {
-									annotation.div.innerHTML = "End verification";
-								}
-							}]);
+				var createCallback = function(response) {
+					var conf = config.clone();
+					conf.data = response.data.dataArray;
+					conf['yAxisLabel'] = graphToMake.yAxisLabel || GCMRC.Page.params[graphToMake.pCode].inst['displayName'] + " (" + GCMRC.Page.params[graphToMake.pCode].inst['unitsShort'] + ")";
+					conf["labels"] = ["Time", self.config.seriesName, "High", "Low"];
+					conf['dataformatter'] = GCMRC.Dygraphs.DataFormatter(GCMRC.Page.params[graphToMake.pCode].inst['decimalPlaces']);
+					conf['decimalPlaces'] = GCMRC.Page.params[graphToMake.pCode].inst['decimalPlaces'];
+					conf["parameterName"] = graphToMake.pCode;
+					conf["div"] = $('#' + conf.divId + ' div.p' + graphToMake.pCode).get(0);
+					conf["labelDiv"] = $('#' + conf.labelDivId + ' div.p' + graphToMake.pCode).get(0);
+					conf["colors"] = ["#006666", "#006666", "#006666"];
+					conf["highlightColor"] = {
+						"High": "#FF0033",
+						"Low": "#FF0033"
 					};
-
-					GCMRC.Page.sandworker.onmessage = function(response) {
-						if (response.data && GCMRC.Page.latestSandReqId === response.data.reqId) {
-							if (GCMRC.Graphing.graphs[config.divId]["sandbudget"]) {
-								LOG.trace("update");
-								GCMRC.Graphing.graphs[config.divId]["sandbudget"].updateOptions({"file": response.data.dataArray});
-							} else {
-								LOG.trace("create");
-								createCallback(response);
-							}
-							GCMRC.Page.updateSandSummary(response.data.config);
+					conf["highlightColor"][self.config.seriesName] = "#FF0033";
+					conf["series"] = {
+						"High": {
+							strokeWidth: 0.0,
+							drawPoints: false,
+							highlightCircleSize: 3
+						},
+						"Low": {
+							strokeWidth: 0.0,
+							drawPoints: false,
+							highlightCircleSize: 3
 						}
 					};
-					GCMRC.Page.isSandWorkerFed = true;
+					buildGraph(conf);
 
-					GCMRC.Page.drawBudget(config);
-				}
-			});
+					//TODO Get these out of the hardcode
+					GCMRC.Graphing.graphs["data-dygraph"][self.config.budgetType].setAnnotations([{
+							x: new Date(GCMRC.Page.reach.endStaticRec).getUTCTime() + (CONFIG.networkHoursOffset * 60 * 60 * 1000), //TODO  This isn't coming out right.
+							shortText:'Incomplete Verification', 
+							series:self.config.seriesName,
+							attachAtBottom: true,
+							mouseOverHandler : function(annotation) {
+								annotation.div.innerHTML = 'Verification dataset incomplete after this date';
+							},
+							mouseOutHandler : function(annotation) {
+								annotation.div.innerHTML = 'Incomplete verification';
+							}
+						}]);
+					GCMRC.Graphing.graphs["data-dygraph"][self.config.budgetType].setAnnotations([{
+							x: new Date(GCMRC.Page.reach.newestSuspSed).getUTCTime() + (CONFIG.networkHoursOffset * 60 * 60 * 1000), //TODO  This isn't coming out right.
+							shortText:'End Verification', 
+							series:self.config.seriesName,
+							attachAtBottom: true,
+							width : 97,
+							mouseOverHandler : function(annotation) {
+								annotation.div.innerHTML = 'No verification data processed after this date';
+							},
+							mouseOutHandler : function(annotation) {
+								annotation.div.innerHTML = "End verification";
+							}
+						}]);
+				};
+
+				GCMRC.Page[self.config.workerName].onmessage = function(response) {
+					if (response.data && GCMRC.Page[self.config.reqIdName] === response.data.reqId) {
+						if (GCMRC.Graphing.graphs[config.divId][self.config.budgetType]) {
+							LOG.trace("update");
+							GCMRC.Graphing.graphs[config.divId][self.config.budgetType].updateOptions({"file": response.data.dataArray});
+						} else {
+							LOG.trace("create");
+							createCallback(response);
+						}
+						GCMRC.Page[self.config.updateFnName](response.data.config);
+					}
+				};
+				GCMRC.Page[self.config.workerFedName] = true;
+
+				GCMRC.Page.drawBudget(config);
+			};
+		};
+
+		if (GCMRC.Page.reach.pcode.some("100400")) {
+			result.push(new Budget({
+				budgetType : "sandbudget",
+				budgetColumns : sandBudgetColumns,
+				yAxisLabel : "Change in Sand Stored in Reach (Metric Tons)",
+				seriesName : "Sand Storage Change",
+				reqIdName : "latestSandReqId",
+				updateFnName : "updateSandSummary",
+				workerFedName : "isSandWorkerFed",
+				workerName : "sandworker",
+				sedPcode : "100400",
+				sedTSGroup : GCMRC.Page.params["100400"]["inst"].tsGroup,
+				majorTribSedPcode : "100401",
+				majorTribSedTSGroup : GCMRC.Page.params["100400"]["inst"].tsGroup.substr(2),
+				minorTribSedPcode : "100400",
+				minorTribSedTSGroup : minorTribHACK + GCMRC.Page.params["100400"]["inst"].tsGroup
+			}));
 		}
 		if (GCMRC.Page.reach.pcode.some("100600")) {
-			result.push({
-				pCode: "finesbudget",
-				columns: finesBudgetColumns,
-				yAxisLabel: "Change in Silt and Clay Stored in Reach (Metric Tons)",
-				dealWithResponse: function(graphToMake, data, config, buildGraph) {
-					var datas = [];
-					var times = [];
-
-					var getValue = function(row, colName) {
-						var result = 0.0;
-						if (row[colName]) {
-							result = parseFloat(row[colName]);
-						}
-						return result;
-					}
-
-					data.success.data.each(function(el) {
-						datas.push([getValue(el, "inst!100600!" + GCMRC.Page.params["100600"]["inst"].tsGroup + "-" + GCMRC.Page.reach.upstreamStation),
-							getValue(el, "inst!100600!" + GCMRC.Page.params["100600"]["inst"].tsGroup + "-" + GCMRC.Page.reach.majorTrib),
-							getValue(el, "inst!100600!" + minorTribHACK + GCMRC.Page.params["100600"]["inst"].tsGroup + "-" + GCMRC.Page.reach.minorTrib),
-							getValue(el, "inst!100600!" + GCMRC.Page.params["100600"]["inst"].tsGroup + "-" + GCMRC.Page.reach.downstreamStation)]);
-						times.push(getValue(el, "time"));
-					});
-
-					GCMRC.Page.finesworker.postMessage({
-						messageType: "setDataArray",
-						divId: config.divId,
-						data: datas,
-						time: times,
-						endStaticRec: config.endStaticRec,
-						newestSuspSed: config.newestSuspSed
-					});
-
-					config.a = parseFloat($('span[name=a_val]').html()) / 100.0;
-					config.b = parseFloat($('span[name=b_val]').html()) / 100.0;
-					config.c = parseFloat($('span[name=c_val]').html()) / 100.0;
-					config.d = parseFloat($('span[name=d_val]').html()) / 100.0;
-					config.e = parseFloat($('span[name=e_val]').html()) / 100.0;
-					config.f = parseFloat($('span[name=f_val]').html()) / 100.0;
-					config.g = parseFloat($('span[name=g_val]').html()) / 100.0;
-
-					var createCallback = function(response) {
-						var conf = config.clone();
-						conf.data = response.data.dataArray;
-						conf['yAxisLabel'] = graphToMake.yAxisLabel || GCMRC.Page.params[graphToMake.pCode].inst['displayName'] + " (" + GCMRC.Page.params[graphToMake.pCode].inst['unitsShort'] + ")";
-						conf["labels"] = ["Time", "Silt and Clay Storage Change", "High", "Low"];
-						conf['dataformatter'] = GCMRC.Dygraphs.DataFormatter(GCMRC.Page.params[graphToMake.pCode].inst['decimalPlaces']);
-						conf['decimalPlaces'] = GCMRC.Page.params[graphToMake.pCode].inst['decimalPlaces'];
-						conf["parameterName"] = graphToMake.pCode;
-						conf["div"] = $('#' + conf.divId + ' div.p' + graphToMake.pCode).get(0);
-						conf["labelDiv"] = $('#' + conf.labelDivId + ' div.p' + graphToMake.pCode).get(0);
-						conf["colors"] = ["#006666", "#006666", "#006666"];
-						conf["highlightColor"] = {
-							"Silt and Clay Storage Change": "#FF0033", /////HACK
-							"High": "#FF0033",
-							"Low": "#FF0033"
-						};
-						conf["series"] = {
-							"High": {
-								strokeWidth: 0.0,
-								drawPoints: false,
-								highlightCircleSize: 3
-							},
-							"Low": {
-								strokeWidth: 0.0,
-								drawPoints: false,
-								highlightCircleSize: 3
-							}
-						};
-						buildGraph(conf);
-
-						//TODO Get these out of the hardcode
-						GCMRC.Graphing.graphs["data-dygraph"].finesbudget.setAnnotations([{
-								x: new Date(GCMRC.Page.reach.endStaticRec).getUTCTime() + (CONFIG.networkHoursOffset * 60 * 60 * 1000), //TODO  This isn't coming out right.
-								shortText:'Incomplete Verification', 
-								series:'Silt and Clay Storage Change',
-								attachAtBottom: true,
-								mouseOverHandler : function(annotation) {
-									annotation.div.innerHTML = 'Verification dataset incomplete after this date';
-								},
-								mouseOutHandler : function(annotation) {
-									annotation.div.innerHTML = 'Incomplete verification';
-								}
-							}]);
-						GCMRC.Graphing.graphs["data-dygraph"].finesbudget.setAnnotations([{
-								x: new Date(GCMRC.Page.reach.newestSuspSed).getUTCTime() + (CONFIG.networkHoursOffset * 60 * 60 * 1000), //TODO  This isn't coming out right.
-								shortText:'End Verification', 
-								series:'Silt and Clay Storage Change',
-								attachAtBottom: true,
-								width : 97,
-								mouseOverHandler : function(annotation) {
-									annotation.div.innerHTML = 'No verification data processed after this date';
-								},
-								mouseOutHandler : function(annotation) {
-									annotation.div.innerHTML = "End verification";
-								}
-							}]);
-					};
-
-					GCMRC.Page.finesworker.onmessage = function(response) {
-						if (response.data && GCMRC.Page.latestFinesReqId === response.data.reqId) {
-							if (GCMRC.Graphing.graphs[config.divId]["finesbudget"]) {
-								LOG.trace("update");
-								GCMRC.Graphing.graphs[config.divId]["finesbudget"].updateOptions({"file": response.data.dataArray});
-							} else {
-								LOG.trace("create");
-								createCallback(response);
-							}
-							GCMRC.Page.updateFinesSummary(response.data.config);
-						}
-					};
-					GCMRC.Page.isFinesWorkerFed = true;
-
-					GCMRC.Page.drawBudget(config);
-				}
-			});
+			result.push(new Budget({
+				budgetType : "finesbudget",
+				budgetColumns : finesBudgetColumns,
+				yAxisLabel : "Change in Silt and Clay Stored in Reach (Metric Tons)",
+				seriesName : "Silt and Clay Storage Change",
+				reqIdName : "latestFinesReqId",
+				updateFnName : "updateFinesSummary",
+				workerFedName : "isFinesWorkerFed",
+				workerName : "finesworker",
+				sedPcode : "100600",
+				sedTSGroup : GCMRC.Page.params["100600"]["inst"].tsGroup,
+				majorTribSedPcode : "100600",
+				majorTribSedTSGroup : GCMRC.Page.params["100600"]["inst"].tsGroup,
+				minorTribSedPcode : "100500",
+				minorTribSedTSGroup : minorTribHACK + GCMRC.Page.params["100600"]["inst"].tsGroup
+			}));
 		}
+		
 		return result;
 	},
 	createDateList: function(container, dates) {

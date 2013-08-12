@@ -60,7 +60,6 @@ public abstract class Endpoint extends HttpServlet {
 	public static final String DOWNSCALE_KEYWORD = "downscale";
 	public static final String NODATA_FILTER_KEYWORD = "noDataFilter";
 	public static final String INTERVAL_KEYWORD = "timeInt";
-	public static final String STATION_KEYWORD = "station[]";
 	
 	public static final String DOWNLOAD_KEYWORD = "download";
 	public static final String OUTPUT_FORMAT_KEYWORD = "output";
@@ -69,6 +68,9 @@ public abstract class Endpoint extends HttpServlet {
 	public static final String TIMEZONE_IN_HEADER_KEYWORD = "tzInHeader";
 	public static final String CUTOFF_AFTER_KEYWORD = "cutoffAfter";
 	public static final String CUTOFF_BEFORE_KEYWORD = "cutoffBefore";
+	
+	
+	public static final int columnIdentifierLength = 3; // HACK HAAAAAAAAAAAAAACK
 	
 	protected Map<Provider, IProvider> providers;
 	protected Map<String, ColumnMetadata> CM_LOOKUP;
@@ -440,21 +442,51 @@ public abstract class Endpoint extends HttpServlet {
 		return result;
 	}
 	
+	public static List<String> getStations(ListMultimap<String, String> params) {
+		List<String> result = new ArrayList<String>();
+		Set<String> toGo = new HashSet<String>();
+		
+		List<String> columnNames = params.get(COLUMN_KEYWORD);
+		for (String colName : columnNames) {
+			String station = getStation(colName);
+			if (null != station) {
+				toGo.add(station);
+			}
+		}
+		
+		result.addAll(toGo);
+		return result;
+	}
+	public static String getStation(String colName) {
+		String result = null;
+		
+		String stripped = stripColName(colName);
+		String restOfStation = colName.substring(stripped.length());
+		String[] otherThings = restOfStation.split("!");
+		if (1 < otherThings.length) {
+			result = otherThings[1];
+		}
+		
+		return result;
+	}
+	
 	public static String stripColName(String colName) {
 		String result = colName;
 		
-		int columnIdentifierLength = 3; // HACK HAAAAAAAAAAAAAACK
-		String[] tings = colName.split("!", columnIdentifierLength + 1);
-		if (tings.length > columnIdentifierLength) {
-			//Strip the extra tings
-			int restOfInfo = colName.indexOf(tings[columnIdentifierLength]) - 1;
-			if (0 < restOfInfo) {
-				result = colName.substring(0, restOfInfo);
-			} else { 
-				log.error("could not find rest of string in column name");
+		String cleanName = StringUtils.trimToNull(colName);
+		if (null != cleanName) {
+			String[] tings = cleanName.split("!", columnIdentifierLength + 1);
+			if (tings.length > columnIdentifierLength) {
+				//Strip the extra tings
+				int restOfInfo = cleanName.indexOf(tings[columnIdentifierLength]) - 1;
+				if (0 < restOfInfo) {
+					result = cleanName.substring(0, restOfInfo);
+				} else { 
+					log.error("could not find rest of string in column name");
+				}
+			} else {
+				log.trace("No extra tings.");
 			}
-		} else {
-			log.trace("No extra tings.");
 		}
 		
 		return result;
@@ -463,10 +495,8 @@ public abstract class Endpoint extends HttpServlet {
 	public ColumnMetadata getColumnMetadata(String uncleanName) {
 		ColumnMetadata result = null;
 		
-		String cleanName = StringUtils.trimToNull(uncleanName);
+		String cleanName = stripColName(uncleanName);
 		if (null != cleanName) {
-			cleanName = stripColName(cleanName);
-			
 			result = CM_LOOKUP.get(cleanName);
 		}
 		

@@ -4,7 +4,7 @@ import com.google.common.collect.ListMultimap;
 import com.google.common.collect.Multimap;
 import gov.usgs.cida.gcmrcservices.nude.ColumnMetadata.SpecEntry;
 import static gov.usgs.cida.gcmrcservices.nude.Endpoint.COLUMN_KEYWORD;
-import static gov.usgs.cida.gcmrcservices.nude.Endpoint.STATION_KEYWORD;
+import static gov.usgs.cida.gcmrcservices.nude.Endpoint.getStation;
 import static gov.usgs.cida.gcmrcservices.nude.Endpoint.getParameter;
 import gov.usgs.cida.gcmrcservices.nude.time.CutoffTimesPlanStep;
 import gov.usgs.cida.gcmrcservices.nude.time.TimeConfig;
@@ -195,18 +195,15 @@ public class AggregatingEndpoint extends SpecEndpoint {
 			timeDisplayName = "time (" + timezoneCode + ")";
 		}
 		
-		List<String> stations = params.get(STATION_KEYWORD);
-		
-		for (String station : stations) {
-			List<String> userCols = params.get(COLUMN_KEYWORD);
-			for (String colName : userCols) {
-				ColumnMetadata cmd = getColumnMetadata(colName);
-
-				if (null != cmd) {
-					colMaps.add(cmd.getMapping(station, isDownload));
-				} else {
-					log.debug("No column by the name of: " + colName);
-				}
+		List<String> userCols = params.get(COLUMN_KEYWORD);
+		for (String colName : userCols) {
+			ColumnMetadata cmd = getColumnMetadata(colName);
+			String station = getStation(colName);
+			
+			if (null != cmd && null != station) {
+				colMaps.add(cmd.getMapping(station, isDownload));
+			} else {
+				log.debug("No column by the name of: " + colName);
 			}
 		}
 		

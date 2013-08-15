@@ -412,7 +412,7 @@ GCMRC.Page = {
 			});
 			if (GCMRC.Page.hasData(expectedDownloadColumns.map(function(el) {return el.pCode;}), begin, end)) {
 				var columnOrdering = [];
-				columnOrdering.push({pCode:"time", name:"Time", format:"yyyy-MM-dd HH:mm:ss", timeZoneInHeader:true, nameConfig: {useDefault: true}});
+				columnOrdering.push({pCode:"time", name:"Time", reorderable:true, format:"yyyy-MM-dd HH:mm:ss", timeZoneInHeader:true, nameConfig: {useDefault: true}});
 				expectedDownloadColumns.forEach(function(el) {
 					columnOrdering.push({pCode : el.pCode, name : GCMRC.Page.params[el.pCode].inst.displayName, reorderable : true, nameConfig: {useDefault: true}});
 				});
@@ -451,11 +451,22 @@ GCMRC.Page = {
 			var columnDef = null;
 			if (resource) {
 				columnDef = resource.columns.filter(function(col) {
-					return col.startsWith('inst!') || col.startsWith('time');
+					return col.startsWith('inst!');
 				});
+			} else if ("time" === el.pCode) {
+				columnDef = [el.pCode];
 			}
 			
 			if (columnDef) {
+				//HACK!!!!! THIS IS WRONG.
+				columnDef = columnDef.map(function(col) {
+					var displayName = "*default*";
+					if (!el.nameConfig.useDefault) {
+						displayName = el.nameConfig.customName;
+					}
+					return col + "!" + displayName;
+				});
+				
 				var toBeChosen = columnDef.subtract(this.chosen);
 				[].push.apply(this.chosen, toBeChosen);
 			}

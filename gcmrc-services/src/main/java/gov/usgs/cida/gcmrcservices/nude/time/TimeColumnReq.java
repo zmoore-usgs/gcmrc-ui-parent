@@ -39,6 +39,10 @@ public class TimeColumnReq {
 		}
 		
 		if (null != cleanCol && StringUtils.startsWithIgnoreCase(cleanCol, TIME_COLUMN_NAME)) {
+			String[] cleanSplit = cleanCol.split("!");
+			if (1 < cleanSplit.length && null != StringUtils.trimToNull(cleanSplit[1])) {
+				cleanDisplayName = StringUtils.trimToNull(cleanSplit[1]);
+			}
 			result = new TimeColumnReq(cleanDisplayName);
 		} else {
 			log.trace("This isn't a time column request: " + cleanCol);

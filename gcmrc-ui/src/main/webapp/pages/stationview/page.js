@@ -233,7 +233,7 @@ GCMRC.Page = {
 			var whatchaGotForMe = $('[name=dataradio' + el.name + ']:checked');
 			var toGet = whatchaGotForMe.attr("value");
 			
-			var cols = [];
+			var cols = ["time"];
 			if (toGet) { //Freakin Smelly
 				var toGetSplit = toGet.split(",");
 				[].push.apply(cols, toGetSplit.map(function(key) {
@@ -296,10 +296,10 @@ GCMRC.Page = {
 			if (GCMRC.Page.hasData(expectedGraphColumns.map(function(el) {return el.pCode;}), begin, end)) {
 				var chosenParameters = [];
 				expectedGraphColumns.forEach(function(el) {
-					[].push.apply(this, el.columns.map(function(col) {
-						return col;
-					}));
-				}, chosenParameters);
+					[].push.apply(this.chosen, el.columns.filter(function(n) {
+						return !this.chosen.some(n);
+					}, this));
+				}, {chosen : chosenParameters});
 				
 				expectedGraphColumns.forEach(function(el) {
 					var cols = [];
@@ -406,7 +406,7 @@ GCMRC.Page = {
 			var expectedGraphColumns = GCMRC.Page.getExpectedGraphColumns();
 			var expectedDownloadColumns = expectedGraphColumns.filter(function(el) {
 				var result = el.columns.some(function(n) {
-					return n.startsWith("inst!") && "Sample-adjusted Modeled" !== GCMRC.Page.params[this.pCode].inst.ppq;
+					return (n.startsWith("inst!") && "Sample-adjusted Modeled" !== GCMRC.Page.params[this.pCode].inst.ppq) || n.startsWith("time");
 				}, el);
 				return result;
 			});
@@ -451,14 +451,13 @@ GCMRC.Page = {
 			var columnDef = null;
 			if (resource) {
 				columnDef = resource.columns.filter(function(col) {
-					return col.startsWith('inst!');
-				}).map(function(col) {
-					return col;
+					return col.startsWith('inst!') || col.startsWith('time');
 				});
 			}
 			
 			if (columnDef) {
-				[].push.apply(this.chosen, columnDef);
+				var toBeChosen = columnDef.subtract(this.chosen);
+				[].push.apply(this.chosen, toBeChosen);
 			}
 			
 		}, {expected: expectedGraphColumns, chosen: chosenParameters});

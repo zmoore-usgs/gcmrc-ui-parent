@@ -7,6 +7,7 @@ import static gov.usgs.cida.gcmrcservices.nude.Endpoint.COLUMN_KEYWORD;
 import static gov.usgs.cida.gcmrcservices.nude.Endpoint.getStation;
 import static gov.usgs.cida.gcmrcservices.nude.Endpoint.getParameter;
 import gov.usgs.cida.gcmrcservices.nude.time.CutoffTimesPlanStep;
+import gov.usgs.cida.gcmrcservices.nude.time.TimeColumnReq;
 import gov.usgs.cida.gcmrcservices.nude.time.TimeConfig;
 import gov.usgs.cida.gcmrcservices.nude.time.TimeSummaryFilteringPlanStep;
 import gov.usgs.cida.gcmrcservices.nude.transform.ReplaceValueTransform;
@@ -204,15 +205,23 @@ public class AggregatingEndpoint extends SpecEndpoint {
 			if (null != cmd && null != station) {
 				colMaps.add(cmd.getMapping(station, isDownload, customName));
 			} else {
-				log.debug("No column by the name of: " + colName);
+				//try time
+				TimeColumnReq timeCol = TimeColumnReq.parseTimeColumn(colName, timeDisplayName);
+				
+				if (null != timeCol) {
+					colMaps.add(timeCol.getMapping());
+				} else {
+					log.debug("No column by the name of: " + colName);	
+				}
 			}
 		}
 		
 		if (colMaps.isEmpty()) {
 			colMaps.add(new ColumnToXmlMapping("ERROR","ERROR"));
-		} else {
-			colMaps.addFirst(new ColumnToXmlMapping(time.getName(), timeDisplayName));
-		}
+		} 
+//		else {
+//			colMaps.addFirst(new ColumnToXmlMapping(time.getName(), timeDisplayName));
+//		}
 		
 		return colMaps.toArray(new ColumnToXmlMapping[0]);
 	}

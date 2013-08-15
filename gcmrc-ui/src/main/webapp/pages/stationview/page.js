@@ -414,7 +414,7 @@ GCMRC.Page = {
 				var columnOrdering = [];
 				columnOrdering.push({pCode:"time", name:"Time", reorderable:true, format:"yyyy-MM-dd HH:mm:ss", timeZoneInHeader:true, nameConfig: {useDefault: true}});
 				expectedDownloadColumns.forEach(function(el) {
-					columnOrdering.push({pCode : el.pCode, name : GCMRC.Page.params[el.pCode].inst.displayName, reorderable : true, nameConfig: {useDefault: true}});
+					columnOrdering.push({pCode : el.pCode, name : GCMRC.Page.params[el.pCode].inst.displayName, ppq : GCMRC.Page.params[el.pCode].inst.ppq, reorderable : true, nameConfig: {useDefault: true}});
 				});
 				
 				GCMRC.Page.colOrder.remove(function(n){return true;});
@@ -461,6 +461,9 @@ GCMRC.Page = {
 				//HACK!!!!! THIS IS WRONG.
 				columnDef = columnDef.map(function(col) {
 					var displayName = "*default*";
+					if (el.ppq) {
+						displayName = el.ppq + " " + displayName;
+					}
 					if (!el.nameConfig.useDefault) {
 						displayName = el.nameConfig.customName;
 					}

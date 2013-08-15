@@ -41,7 +41,8 @@ public class TimeColumnReq {
 		if (null != cleanCol && StringUtils.startsWithIgnoreCase(cleanCol, TIME_COLUMN_NAME)) {
 			String[] cleanSplit = cleanCol.split("!");
 			if (1 < cleanSplit.length && null != StringUtils.trimToNull(cleanSplit[1])) {
-				cleanDisplayName = StringUtils.trimToNull(cleanSplit[1]);
+				String parsedDisplayName = StringUtils.trimToNull(cleanSplit[1]);
+				cleanDisplayName = parsedDisplayName.replace("*default*", cleanDisplayName);
 			}
 			result = new TimeColumnReq(cleanDisplayName);
 		} else {

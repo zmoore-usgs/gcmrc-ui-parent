@@ -24,7 +24,7 @@ public class TimeColumnReq {
 	public ColumnToXmlMapping getMapping() {
 		ColumnToXmlMapping result = null;
 		
-		result = new ColumnToXmlMapping(ParameterSpec.C_TSM_DT, TIME_COLUMN_NAME);
+		result = new ColumnToXmlMapping(ParameterSpec.C_TSM_DT, displayName);
 		
 		return result;
 	}

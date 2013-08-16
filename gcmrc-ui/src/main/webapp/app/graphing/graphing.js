@@ -94,12 +94,7 @@ GCMRC.Graphing = function(hoursOffset) {
 			return result;
 		});
 		
-		var parameterMetadata = GCMRC.Page.params[graphToMake.pCode].inst;
-		if (!parameterMetadata) {
-			parameterMetadata = Object.reduce(GCMRC.Page.params[graphToMake.pCode], function(a, b) {
-				return b;
-			});
-		}
+		var parameterMetadata = GCMRC.Page.params[graphToMake.pCode].description;
 		var graphName = parameterMetadata['pCodeName'] || parameterMetadata['displayName'];
 		
 		if (hasData) {
@@ -141,7 +136,7 @@ GCMRC.Graphing = function(hoursOffset) {
 		var containerId = config.divId || "unknown";
 		var parameterName = config.parameterName || "unknown";
 		var div = config.div;
-		var labelDiv = config.labelDiv;
+//		var labelDiv = config.labelDiv;
 		
 		var labels = config['labels'];
 		

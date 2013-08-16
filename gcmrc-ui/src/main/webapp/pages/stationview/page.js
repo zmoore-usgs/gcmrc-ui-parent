@@ -308,6 +308,8 @@ GCMRC.Page = {
 						var colSplit = col.split("!");
 						if (3 < colSplit.length) {
 							result = colSplit[0] + "!" + colSplit[1] + "!" + colSplit[2] + "-" + colSplit[3];
+						} else if (2 < colSplit.length) {
+							result = colSplit[0] + "!" + colSplit[1] + "-" + colSplit[2];
 						}
 						
 						return result;

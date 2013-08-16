@@ -488,10 +488,14 @@ public abstract class Endpoint extends HttpServlet {
 		
 		String cleanName = StringUtils.trimToNull(colName);
 		if (null != cleanName) {
-			String[] tings = cleanName.split("!", columnIdentifierLength + 1);
-			if (tings.length > columnIdentifierLength) {
+			int colLength = columnIdentifierLength;
+			if (!cleanName.startsWith("inst")) {
+				colLength--;
+			}
+			String[] tings = cleanName.split("!", colLength + 1);
+			if (tings.length > colLength) {
 				//Strip the extra tings
-				int restOfInfo = cleanName.indexOf(tings[columnIdentifierLength]) - 1;
+				int restOfInfo = cleanName.indexOf(tings[colLength]) - 1;
 				if (0 < restOfInfo) {
 					result = cleanName.substring(0, restOfInfo);
 				} else { 

@@ -73,7 +73,7 @@ GCMRC.Page = {
 		var endMillis = Date.create(end).getUTCTime() + (CONFIG.networkHoursOffset * 60 * 60 * 1000);
 		if (endMillis >= beginMillis) {
 			var expectedGraphColumns = GCMRC.Page.getExpectedGraphColumns();
-			var chosenParameters = [];
+			var chosenParameters = ["time"];
 			expectedGraphColumns.forEach(function(el) {
 				[].push.apply(this, el.columns.map(function(col) {
 					return col;

@@ -8,7 +8,7 @@ importScripts("../../js/closure-library/goog/base.js",
 "../../js/closure-library/goog/math/matrix.js"
 );
 
-importScripts("../../js/sugar/sugar-1.3.4.min.js");
+importScripts("../../js/sugar/sugar-1.3.9.min.js");
 importScripts("../../js/js-utils/binary-search.min.js");
 
 importScripts("../../app/graphing/MatrixWorker.js");

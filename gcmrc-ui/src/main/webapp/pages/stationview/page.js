@@ -408,7 +408,7 @@ GCMRC.Page = {
 			var expectedGraphColumns = GCMRC.Page.getExpectedGraphColumns();
 			var expectedDownloadColumns = expectedGraphColumns.filter(function(el) {
 				var result = el.columns.some(function(n) {
-					return (n.startsWith("inst!") && "Sample-adjusted Modeled" !== GCMRC.Page.params[this.pCode].inst.ppq) || n.startsWith("time");
+					return (n.startsWith("inst!") && "Sample-adjusted Modeled" !== GCMRC.Page.params[this.pCode].inst.ppq);
 				}, el);
 				return result;
 			});

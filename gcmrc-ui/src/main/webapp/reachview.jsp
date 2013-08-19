@@ -225,7 +225,7 @@
 										</div>
 									</div>
 								</div>
-								<div id="build-div" style="text-align:center;"><a href="#" class="buildButton" id="buildGraph">Build Graph</a><a href="#" class="buildButton" id="downloadData">Download</a></div>
+								<div id="build-div" style="text-align:center;"><a href="#" class="buildButton" id="buildGraph">Build Graph</a><!--<a href="#" class="buildButton" id="downloadData">Download</a>--></div>
 							</form>
 							<form id='exportPost' action="${relativePath}export" method="POST">
 								<input type="hidden" name='filename' value="gcmrcSedimentBudget.tsv">

@@ -76,3 +76,11 @@ img { max-width: none; }
 .layersDiv label {
 	display : inline;
 }
+
+.addColumn, .addColumn:hover {
+	color : #00CC00;
+}
+
+.removeColumn, .removeColumn:hover {
+	color : #CC0000;
+}

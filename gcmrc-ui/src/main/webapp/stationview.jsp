@@ -273,8 +273,11 @@
 								<h5>Ordering</h5>
 								<ul ui:sortable="{items:'li.reorderable'}" ng:model="columnOrdering" id="downloadColumnOrdering">
 									<li ng:repeat="el in columnOrdering" ng:click="liClicked()" ng-class="{selected:isSelected(), reorderable:el.reorderable}" class="ui-state-default">
+										<button type="button" class="close removeColumn" ng:click="removeColumn()" aria-hidden="true" title="Remove Column">&times;</button>
+										<button type="button" class="close addColumn" ng:click="addColumn()" aria-hidden="true" title="Copy Column">+</button>
 										<span class="ui-icon ui-icon-arrowthick-2-n-s" ng-show='el.reorderable'></span>
 										{{el.name}}
+										<div ng-hide="el.nameConfig.useDefault" class="ui-state-disabled">({{el.nameConfig.customName}})</div>
 									</li>
 								</ul>
 							</div>
@@ -285,12 +288,12 @@
 										<hr>
 										<h6>Naming</h6>
 										<div><input type="checkbox" ng:model="columnSelected.nameConfig.useDefault">Use default name</div>
-										<div><input type="checkbox" ng:model="columnSelected.nameConfig.useDefault" inverted><input type="text" id="columnNaming" ng:model="columnSelected.nameConfig.customName" ng-disabled="columnSelected.nameConfig.useDefault" placeholder="Specify custom name..."></div>
+										<div><input type="checkbox" ng:model="columnSelected.nameConfig.useDefault" inverted><input type="text" ng:model="columnSelected.nameConfig.customName" ng-disabled="columnSelected.nameConfig.useDefault" placeholder="Specify custom name..."></div>
 									</div>
-									<div ng-show="columnSelected.format">
+									<div ng-show="columnSelected.formatConfig">
 										<hr>
 										<h6>Format</h6>
-										<input type="text" id="columnFormat" name="columnFormat" help-tooltip ng:model="columnSelected.format">
+										<input type="text" help-tooltip ng:model="columnSelected.formatConfig.format">
 									</div>
 								</div>
 							</div>

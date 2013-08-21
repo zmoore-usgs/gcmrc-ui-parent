@@ -414,7 +414,7 @@ GCMRC.Page = {
 			});
 			if (GCMRC.Page.hasData(expectedDownloadColumns.map(function(el) {return el.pCode;}), begin, end)) {
 				var columnOrdering = [];
-				columnOrdering.push({pCode:"time", name:"Time", reorderable:true, format:"yyyy-MM-dd HH:mm:ss", timeZoneInHeader:true, nameConfig: {useDefault: true}});
+				columnOrdering.push({pCode:"time", name:"Time", reorderable:true, formatConfig:{format:"yyyy-MM-dd HH:mm:ss"}, timeZoneInHeader:true, nameConfig: {useDefault: true}});
 				expectedDownloadColumns.forEach(function(el) {
 					columnOrdering.push({pCode : el.pCode, name : GCMRC.Page.params[el.pCode].inst.displayName, ppq : GCMRC.Page.params[el.pCode].inst.ppq, reorderable : true, nameConfig: {useDefault: true}});
 				});
@@ -423,6 +423,7 @@ GCMRC.Page = {
 				columnOrdering.forEach(function(el) {
 					GCMRC.Page.colOrder.push(el);
 				});
+				angular.element($('#downloadColumnOrdering')).scope().columnSelected = null;
 				angular.element($('#downloadColumnOrdering')).scope().$apply()
 				
 				$('#downloadPopup').modal();
@@ -456,7 +457,7 @@ GCMRC.Page = {
 					return col.startsWith('inst!');
 				});
 			} else if ("time" === el.pCode) {
-				columnDef = [el.pCode];
+				columnDef = [el.pCode + "!" + el.formatConfig.format];
 			}
 			
 			if (columnDef) {
@@ -479,7 +480,6 @@ GCMRC.Page = {
 		}, {expected: expectedGraphColumns, chosen: chosenParameters});
 		
 		var timeColumn = GCMRC.Page.colOrder.find(function(n){return "time" === n.pCode;});
-		var timeFormat = timeColumn.format;
 		var timeZoneInHeader = timeColumn.timeZoneInHeader;
 		
 		var serviceOptions = {
@@ -487,7 +487,6 @@ GCMRC.Page = {
 			endPosition: endClean,
 			column: chosenParameters,
 			tz: '-' + CONFIG.networkHoursOffset,
-			timeFormat: timeFormat,
 			tzInHeader: timeZoneInHeader,
 			output: 'tab',
 			download: 'on'
@@ -600,12 +599,18 @@ GCMRC.Page = {
 gcmrcModule.controller('downloadPopupController', function($scope) {
 	$scope.columnOrdering = GCMRC.Page.colOrder;
 	$scope.columnSelected = null;
+	$scope.removeColumn = function() {
+		this.columnOrdering.remove(this.el);
+	};
+	$scope.addColumn = function() {
+		this.columnOrdering.insert(this.el.reject(/\$/).clone(true), this.columnOrdering.indexOf(this.el) + 1);
+	};
 	$scope.liClicked = function() {
 		$scope.columnSelected = this.el;
 	};
 	$scope.isSelected = function() {
 		var result = false;
-		if (Object.reject(this.el, /\$/).equals(Object.reject($scope.columnSelected, /\$/))) {
+		if (this.el === $scope.columnSelected) {
 			result = true;
 		}
 		return result;

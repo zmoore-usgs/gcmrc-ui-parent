@@ -4,23 +4,29 @@ import com.google.common.collect.HashMultimap;
 import com.google.common.collect.ListMultimap;
 import com.google.common.collect.Multimap;
 import gov.usgs.cida.gcmrcservices.TimeUtil;
+import static gov.usgs.cida.gcmrcservices.TimeUtil.TZ_CODE_LOOKUP;
 import gov.usgs.cida.gcmrcservices.jsl.data.ParameterSpec;
 import gov.usgs.cida.gcmrcservices.jsl.data.SpecOptions;
 import static gov.usgs.cida.gcmrcservices.nude.Endpoint.COLUMN_KEYWORD;
+import static gov.usgs.cida.gcmrcservices.nude.Endpoint.TIMEZONE_IN_HEADER_KEYWORD;
+import static gov.usgs.cida.gcmrcservices.nude.Endpoint.TIMEZONE_KEYWORD;
+import static gov.usgs.cida.gcmrcservices.nude.Endpoint.getDateRange;
+import static gov.usgs.cida.gcmrcservices.nude.Endpoint.getParameter;
 import static gov.usgs.cida.gcmrcservices.nude.Endpoint.getStations;
 import static gov.usgs.cida.gcmrcservices.nude.Endpoint.getStation;
+import gov.usgs.cida.gcmrcservices.nude.time.TimeColumnReq;
 import gov.usgs.cida.gcmrcservices.nude.time.TimeConfig;
+import gov.usgs.cida.gcmrcservices.nude.time.TimeSplitPlanStep;
 import gov.usgs.cida.nude.column.Column;
 import gov.usgs.cida.nude.column.SimpleColumn;
 import gov.usgs.cida.nude.plan.ConfigPlanStep;
 import gov.usgs.cida.nude.plan.Plan;
 import gov.usgs.cida.nude.plan.PlanStep;
 import gov.usgs.cida.nude.resultset.inmemory.TableRow;
-import gov.usgs.cida.nude.time.OutputTimeFormatPlanStep;
 import gov.usgs.webservices.jdbc.spec.Spec;
 import java.util.*;
+import org.apache.commons.lang.StringUtils;
 import org.joda.time.DateTimeZone;
-import org.joda.time.format.DateTimeFormatter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -41,10 +47,6 @@ public abstract class SpecEndpoint extends Endpoint {
 		Multimap<Column, Column> mux = createSpecMux(params);
 		Map<String, String[]> modMap = createSpecParameters(params);
 		TimeConfig timeConfig = getDateRange(params);
-		DateTimeFormatter outputTimeFormat = TimeUtil.getDateFormatter(getParameter(params, TIME_FORMAT_KEYWORD, "ISONOZONE"));
-		if (null != outputTimeFormat) {
-			outputTimeFormat = outputTimeFormat.withZone(DateTimeZone.forOffsetHours(timeConfig.getTimezone()));
-		}
 		boolean noDataFilter = (!"false".equals(getParameter(params, NODATA_FILTER_KEYWORD, "false")));
 		
 		modMap.put(BEGIN_KEYWORD, new String[]{timeConfig.getDateRange().getBegin().toString(TimeUtil.DB_DATE_FORMAT.withZone(DATABASE_TIMEZONE))});
@@ -61,9 +63,7 @@ public abstract class SpecEndpoint extends Endpoint {
 		if (hasSpecs) {
 			List<String> stations = getStations(params);
 			steps.addAll(configurePlan(requestId, stations, specs, mux, timeConfig, noDataFilter));
-			if (null != outputTimeFormat) {
-				steps.add(new OutputTimeFormatPlanStep(steps.getLast().getExpectedColumns(), outputTimeFormat));
-			}
+			steps.add(new TimeSplitPlanStep(steps.getLast().getExpectedColumns(), createTimeColumnReqs(params)));
 		} else {
 			List<TableRow> rows = new ArrayList<TableRow>();
 			rows.add(new TableRow(new SimpleColumn("ERROR"), "No Columns Specified"));
@@ -133,6 +133,45 @@ public abstract class SpecEndpoint extends Endpoint {
 		return result;
 	}
 	
+	public List<TimeColumnReq> createTimeColumnReqs(ListMultimap<String, String> params) {
+		List<TimeColumnReq> result = new ArrayList<TimeColumnReq>();
+		
+		boolean timezoneInHeader = !"false".equals(getParameter(params, TIMEZONE_IN_HEADER_KEYWORD, "false"));
+		TimeConfig timeConfig = getDateRange(params);
+
+		String timeDisplayName = "time";
+		if (timezoneInHeader) {
+			String timezoneCode = TZ_CODE_LOOKUP.get(-7);
+
+			String tzStr = getParameter(params, TIMEZONE_KEYWORD);
+			if (StringUtils.isNotBlank(tzStr)) {
+				try {
+					int timezone = Integer.parseInt(tzStr);
+					String tzCode = TZ_CODE_LOOKUP.get(timezone);
+					if (null != tzCode) {
+						timezoneCode = tzCode;
+					} else {
+						log.debug("Unknown tzcode");
+					}
+				} catch (NumberFormatException e) {
+					log.debug("Timezone " + tzStr + " is invalid.");
+				}
+			}
+
+			timeDisplayName = "time (" + timezoneCode + ")";
+		}
+
+		List<String> userCols = params.get(COLUMN_KEYWORD);
+		for (String colName : userCols) {
+			TimeColumnReq timeCol = TimeColumnReq.parseTimeColumn(colName, timeDisplayName, timeConfig.getTimezone());
+			if (null != timeCol) {
+				result.add(timeCol);
+			}
+		}
+
+		return result;
+	}
+
 	protected static SpecOptions buildSpecOptions(ListMultimap<String, String> params) {
 		SpecOptions result = null;
 		

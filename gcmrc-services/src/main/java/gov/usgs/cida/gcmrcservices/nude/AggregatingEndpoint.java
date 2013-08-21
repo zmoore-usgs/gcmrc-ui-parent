@@ -2,8 +2,10 @@ package gov.usgs.cida.gcmrcservices.nude;
 
 import com.google.common.collect.ListMultimap;
 import com.google.common.collect.Multimap;
+import static gov.usgs.cida.gcmrcservices.TimeUtil.TZ_CODE_LOOKUP;
 import gov.usgs.cida.gcmrcservices.nude.ColumnMetadata.SpecEntry;
 import static gov.usgs.cida.gcmrcservices.nude.Endpoint.COLUMN_KEYWORD;
+import static gov.usgs.cida.gcmrcservices.nude.Endpoint.getDateRange;
 import static gov.usgs.cida.gcmrcservices.nude.Endpoint.getStation;
 import static gov.usgs.cida.gcmrcservices.nude.Endpoint.getParameter;
 import gov.usgs.cida.gcmrcservices.nude.time.CutoffTimesPlanStep;
@@ -26,12 +28,9 @@ import gov.usgs.cida.nude.resultset.inmemory.TableRow;
 import gov.usgs.webservices.jdbc.spec.Spec;
 import java.math.BigDecimal;
 import java.util.Collection;
-import java.util.Collections;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 import java.util.UUID;
@@ -47,21 +46,8 @@ public class AggregatingEndpoint extends SpecEndpoint {
 
 	private static final Logger log = LoggerFactory.getLogger(AggregatingEndpoint.class);
 	
-	public static final Map<Integer, String> TZ_CODE_LOOKUP;
-	
 	public static final String BAD_DATA_KEYWORD = "BAD_BAD_DATA";
 	public static final String MINUS_999 = "-999";
-	
-	static {
-		Map<Integer, String> tzLookup = new HashMap<Integer, String>();
-		
-		tzLookup.put(-5, "EST");
-		tzLookup.put(-6, "CST");
-		tzLookup.put(-7, "MST");
-		tzLookup.put(-8, "PST");
-		
-		TZ_CODE_LOOKUP = Collections.unmodifiableMap(tzLookup);
-	}
 	
 	@Override
 	public List<PlanStep> configurePlan(UUID requestId, List<String> stations, Iterable<Spec> specs, Multimap<Column, Column> mux, TimeConfig timeConfig, boolean noDataFilter) {
@@ -173,6 +159,7 @@ public class AggregatingEndpoint extends SpecEndpoint {
 
 		boolean isDownload = getIsDownload(params);
 		boolean timezoneInHeader = !"false".equals(getParameter(params, TIMEZONE_IN_HEADER_KEYWORD, "false"));
+		TimeConfig timeConfig = getDateRange(params);
 		
 		String timeDisplayName = "time";
 		if (timezoneInHeader) {
@@ -206,7 +193,7 @@ public class AggregatingEndpoint extends SpecEndpoint {
 				colMaps.add(cmd.getMapping(station, isDownload, customName));
 			} else {
 				//try time
-				TimeColumnReq timeCol = TimeColumnReq.parseTimeColumn(colName, timeDisplayName);
+				TimeColumnReq timeCol = TimeColumnReq.parseTimeColumn(colName, timeDisplayName, timeConfig.getTimezone());
 				
 				if (null != timeCol) {
 					colMaps.add(timeCol.getMapping());

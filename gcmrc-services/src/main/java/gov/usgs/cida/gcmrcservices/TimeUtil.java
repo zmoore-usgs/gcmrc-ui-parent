@@ -1,5 +1,8 @@
 package gov.usgs.cida.gcmrcservices;
 
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
 import org.apache.commons.lang.StringUtils;
 import org.joda.time.DateTimeZone;
 import org.joda.time.format.DateTimeFormat;
@@ -18,6 +21,7 @@ public class TimeUtil {
 
 	private static final Logger log = LoggerFactory.getLogger(TimeUtil.class);
 	public static final DateTimeZone AZ_TZ = DateTimeZone.forOffsetHours(-7);
+	public static final Map<Integer, String> TZ_CODE_LOOKUP;
 	public static final DateTimeFormatter INPUT_DATE_FORMAT;
 	public static final DateTimeFormatter FILENAME_FORMAT;
 	public static final DateTimeFormatter DB_DATE_FORMAT;
@@ -49,9 +53,18 @@ public class TimeUtil {
 		d.appendSecondOfMinute(2);
 
 		DB_DATE_FORMAT = d.toFormatter();
+		
+		Map<Integer, String> tzLookup = new HashMap<Integer, String>();
+		
+		tzLookup.put(-5, "EST");
+		tzLookup.put(-6, "CST");
+		tzLookup.put(-7, "MST");
+		tzLookup.put(-8, "PST");
+		
+		TZ_CODE_LOOKUP = Collections.unmodifiableMap(tzLookup);
 	}
 
-	public static DateTimeFormatter getDateFormatter(String key) {
+	public static DateTimeFormatter getDateFormatter(String key, Integer tz) {
 		DateTimeFormatter result = TimeFormats.ISONOZONE.getFormat();
 		
 		String cleanName = StringUtils.trimToNull(key);
@@ -67,6 +80,10 @@ public class TimeUtil {
 					log.info("Could not parse date format: " + key);
 				}
 			}
+		}
+		
+		if (null != tz) { 
+			result = result.withZone(DateTimeZone.forOffsetHours(tz));
 		}
 		
 		return result;

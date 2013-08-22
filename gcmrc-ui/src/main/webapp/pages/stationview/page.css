@@ -51,6 +51,7 @@
 	margin: 0 3px 3px 3px;
 	padding: 0.4em;
 	padding-left: 1.5em;
+	cursor: pointer;
 }
 
 #downloadColumnOrdering li span {

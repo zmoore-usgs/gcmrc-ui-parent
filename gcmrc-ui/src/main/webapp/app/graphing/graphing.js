@@ -76,7 +76,7 @@ GCMRC.Graphing = function(hoursOffset) {
 
 			result = [parseInt(el[timeColumn])];
 
-			var dataColumns = graphToMake.columns.filter(function(n){return timeColumn !== n}).map(function(col) {
+			var dataColumns = graphToMake.columns.filter(function(n){return !n.startsWith(timeColumn)}).map(function(col) {
 				return parseColData(el[col]);
 			});
 
@@ -99,7 +99,7 @@ GCMRC.Graphing = function(hoursOffset) {
 		
 		if (hasData) {
 			conf.labels = [timeColumn];
-			[].push.apply(conf.labels, graphToMake.columns.filter(function(n){return timeColumn !== n}).map(function(el) {
+			[].push.apply(conf.labels, graphToMake.columns.filter(function(n){return !n.startsWith(timeColumn)}).map(function(el) {
 				return GCMRC.Page.params[graphToMake.pCode][el.split("!")[0]]['displayName'];
 			}));
 			conf['yAxisLabel'] = graphToMake.yAxisLabel || graphName + " (" + parameterMetadata['unitsShort'] + ")";
@@ -110,14 +110,14 @@ GCMRC.Graphing = function(hoursOffset) {
 			conf["labelDiv"] = $('#' + conf.labelDivId + ' div.p' + graphToMake.pCode).get(0);
 			conf["colors"] = [];
 			conf["highlightColor"] = {};
-			[].push.apply(conf.colors, graphToMake.columns.filter(function(n){return timeColumn !== n}).map(function(el) {
+			[].push.apply(conf.colors, graphToMake.columns.filter(function(n){return !n.startsWith(timeColumn)}).map(function(el) {
 				var param = GCMRC.Page.params[graphToMake.pCode][el.split("!")[0]];
 				this[param['displayName']] = param['highlightColor'];
 				return param['color'];
 			}, conf.highlightColor));
 
 			conf["series"] = {};
-			graphToMake.columns.filter(function(n){return timeColumn !== n}).map(function(el) {
+			graphToMake.columns.filter(function(n){return !n.startsWith(timeColumn)}).map(function(el) {
 				var param = GCMRC.Page.params[graphToMake.pCode][el.split("!")[0]];
 				this[param['displayName']] = param.series;
 			}, conf["series"]);

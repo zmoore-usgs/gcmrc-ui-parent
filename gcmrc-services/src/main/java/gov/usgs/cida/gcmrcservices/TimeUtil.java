@@ -82,7 +82,7 @@ public class TimeUtil {
 			}
 		}
 		
-		if (null != tz) { 
+		if (null != result && null != tz) { 
 			result = result.withZone(DateTimeZone.forOffsetHours(tz));
 		}
 		

@@ -23,6 +23,9 @@ public class TimeColumnReq {
 
 	public TimeColumnReq(String displayName, String timeFormat, Integer timezoneOffset) {
 		this.displayName = displayName;
+		if (null == timeFormat) {
+			timeFormat = "ISONOZONE";
+		}
 		this.timeFormat = timeFormat;
 		this.timezoneOffset = timezoneOffset;
 	}
@@ -30,7 +33,13 @@ public class TimeColumnReq {
 	public ColumnToXmlMapping getMapping() {
 		ColumnToXmlMapping result = null;
 		
-		result = new ColumnToXmlMapping(ParameterSpec.C_TSM_DT + this.getFormat().hashCode(), displayName);
+		String inName = ParameterSpec.C_TSM_DT;
+		
+		if (null != this.getFormatter()) {
+			 inName = inName + this.getFormat().hashCode();
+		}
+		
+		result = new ColumnToXmlMapping(inName, displayName);
 		
 		return result;
 	}

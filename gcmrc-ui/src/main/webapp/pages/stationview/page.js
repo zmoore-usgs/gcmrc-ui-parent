@@ -233,7 +233,7 @@ GCMRC.Page = {
 			var whatchaGotForMe = $('[name=dataradio' + el.name + ']:checked');
 			var toGet = whatchaGotForMe.attr("value");
 			
-			var cols = ["time"];
+			var cols = ["time!UTCMillis"];
 			if (toGet) { //Freakin Smelly
 				var toGetSplit = toGet.split(",");
 				[].push.apply(cols, toGetSplit.map(function(key) {
@@ -323,7 +323,6 @@ GCMRC.Page = {
 					endPosition: end,
 					column: chosenParameters,
 					tz: '-' + CONFIG.networkHoursOffset,
-					timeFormat: 'UTCMillis',
 					every: CONFIG.everyPeriod,
 					noDataFilter: 'true',
 					useLagged: 'true'

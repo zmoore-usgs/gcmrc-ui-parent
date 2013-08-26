@@ -261,6 +261,22 @@ GCMRC.Mapping = function() {
 					displayOutsideMaxExtent: true,
 					yx : {'EPSG:900913' : false}
 				}
+			),
+			zone8374535 : new OpenLayers.Layer.WMS(
+				'Flow Lines',
+				CONFIG.relativePath + 'geoserver/sample/wms',
+				{
+					SRS: 'EPSG:900913',
+					CRS: 'EPSG:900913',
+					LAYERS: 'sample:gcmrc_subset_rio_grande_short',
+					STYLES: 'RG_CLIP_ZONE_8374535',
+					transparent : true
+				},
+				{
+					buffer: 0,
+					displayOutsideMaxExtent: true,
+					yx : {'EPSG:900913' : false}
+				}
 			)
 		}
 	};

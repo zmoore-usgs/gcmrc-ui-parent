@@ -345,7 +345,7 @@ GCMRC.Page = {
 			} else {
 				if (0 < expectedGraphColumns.length) {
 					GCMRC.Graphing.clearErrorMsg();
-					GCMRC.Graphing.showErrorMsg("Please choose a date range that overlaps the selected period of records.<br>Start Date is inclusive, End Date is exclusive.");
+					GCMRC.Graphing.showErrorMsg("Please choose a date range that overlaps the selected period of records.");
 				} else {
 					GCMRC.Graphing.clearErrorMsg();
 					GCMRC.Graphing.showErrorMsg("Please select a parameter to graph!");

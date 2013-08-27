@@ -199,18 +199,18 @@ public abstract class Endpoint extends HttpServlet {
 		Map<String, ColumnMetadata> result = new HashMap<String, ColumnMetadata>();
 		
 		//WAYYY HAAACK
-		result.put("inst!100400!S Sand Cumul Load", new ColumnMetadata("inst!100400!S Sand Cumul Load", "Cumulative Suspended Sand Load (Metric Tons)", 
-				new SpecEntry(ParameterCode.parseParameterCode("inst!100400!S Sand Cumul Load"), SpecType.PARAM)));
-		result.put("inst!100400!Minor Trib S Sand Cumul Load", new ColumnMetadata("inst!100400!Minor Trib S Sand Cumul Load", "Cumulative Suspended Sand Load (Metric Tons)", 
-				new SpecEntry(ParameterCode.parseParameterCode("inst!100400!Minor Trib S Sand Cumul Load"), SpecType.PARAM)));
-		result.put("inst!100600!S Fines Cumul Load", new ColumnMetadata("inst!100600!S Fines Cumul Load", "Cumulative Silt-and-Clay Load (Metric Tons)", 
-				new SpecEntry(ParameterCode.parseParameterCode("inst!100600!S Fines Cumul Load"), SpecType.PARAM)));
-		result.put("inst!100600!Minor Trib S Fines Cumul Load", new ColumnMetadata("inst!100600!Minor Trib S Fines Cumul Load", "Cumulative Silt-and-Clay Load (Metric Tons)", 
-				new SpecEntry(ParameterCode.parseParameterCode("inst!100600!Minor Trib S Fines Cumul Load"), SpecType.PARAM)));
+		result.put("inst!S Sand Cumul Load", new ColumnMetadata("inst!S Sand Cumul Load", "Cumulative Suspended Sand Load (Metric Tons)", 
+				new SpecEntry(ParameterCode.parseParameterCode("inst!S Sand Cumul Load"), SpecType.PARAM)));
+		result.put("inst!Minor Trib S Sand Cumul Load", new ColumnMetadata("inst!Minor Trib S Sand Cumul Load", "Cumulative Suspended Sand Load (Metric Tons)", 
+				new SpecEntry(ParameterCode.parseParameterCode("inst!Minor Trib S Sand Cumul Load"), SpecType.PARAM)));
+		result.put("inst!S Fines Cumul Load", new ColumnMetadata("inst!S Fines Cumul Load", "Cumulative Silt-and-Clay Load (Metric Tons)", 
+				new SpecEntry(ParameterCode.parseParameterCode("inst!S Fines Cumul Load"), SpecType.PARAM)));
+		result.put("inst!Minor Trib S Fines Cumul Load", new ColumnMetadata("inst!Minor Trib S Fines Cumul Load", "Cumulative Silt-and-Clay Load (Metric Tons)", 
+				new SpecEntry(ParameterCode.parseParameterCode("inst!Minor Trib S Fines Cumul Load"), SpecType.PARAM)));
 		
 		//ugh. this is horrible.
-		result.put("inst!100401!Sand Cumul Load", new ColumnMetadata("inst!100401!Sand Cumul Load", "Cumulative Sand Load (Metric Tons)", 
-				new SpecEntry(ParameterCode.parseParameterCode("inst!100401!Sand Cumul Load"), SpecType.PARAM)));
+		result.put("inst!Sand Cumul Load", new ColumnMetadata("inst!Sand Cumul Load", "Cumulative Sand Load (Metric Tons)", 
+				new SpecEntry(ParameterCode.parseParameterCode("inst!Sand Cumul Load"), SpecType.PARAM)));
 		
 		
 		return result;

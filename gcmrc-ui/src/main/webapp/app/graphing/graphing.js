@@ -94,37 +94,38 @@ GCMRC.Graphing = function(hoursOffset) {
 			return result;
 		});
 		
-		var parameterMetadata = GCMRC.Page.params[graphToMake.pCode].description;
+		var identifier = graphToMake.groupId;
+		var parameterMetadata = GCMRC.Page.params[identifier].description;
 		var graphName = parameterMetadata['pCodeName'] || parameterMetadata['displayName'];
 		
 		if (hasData) {
 			conf.labels = [timeColumn];
 			[].push.apply(conf.labels, graphToMake.columns.filter(function(n){return !n.startsWith(timeColumn)}).map(function(el) {
-				return GCMRC.Page.params[graphToMake.pCode][el.split("!")[0]]['displayName'];
+				return GCMRC.Page.params[identifier][el.split("!")[0]]['displayName'];
 			}));
 			conf['yAxisLabel'] = graphToMake.yAxisLabel || graphName + " (" + parameterMetadata['unitsShort'] + ")";
 			conf['dataformatter'] = GCMRC.Dygraphs.DataFormatter(parameterMetadata['decimalPlaces']);
 			conf['decimalPlaces'] = parameterMetadata['decimalPlaces'];
-			conf["parameterName"] = graphToMake.pCode;
-			conf["div"] = $('#' + conf.divId + ' div.p' + graphToMake.pCode).get(0);
-			conf["labelDiv"] = $('#' + conf.labelDivId + ' div.p' + graphToMake.pCode).get(0);
+			conf["parameterName"] = identifier;
+			conf["div"] = $('#' + conf.divId + ' div.p' + identifier).get(0);
+			conf["labelDiv"] = $('#' + conf.labelDivId + ' div.p' + identifier).get(0);
 			conf["colors"] = [];
 			conf["highlightColor"] = {};
 			[].push.apply(conf.colors, graphToMake.columns.filter(function(n){return !n.startsWith(timeColumn)}).map(function(el) {
-				var param = GCMRC.Page.params[graphToMake.pCode][el.split("!")[0]];
+				var param = GCMRC.Page.params[identifier][el.split("!")[0]];
 				this[param['displayName']] = param['highlightColor'];
 				return param['color'];
 			}, conf.highlightColor));
 
 			conf["series"] = {};
 			graphToMake.columns.filter(function(n){return !n.startsWith(timeColumn)}).map(function(el) {
-				var param = GCMRC.Page.params[graphToMake.pCode][el.split("!")[0]];
+				var param = GCMRC.Page.params[identifier][el.split("!")[0]];
 				this[param['displayName']] = param.series;
 			}, conf["series"]);
 
 			buildGraph(conf);
 		} else {
-			showInfoMessage("#" + conf.divId + ' div.p' + graphToMake.pCode, "There were no data during this period for " + graphName);
+			showInfoMessage("#" + conf.divId + ' div.p' + identifier, "There were no data during this period for " + graphName);
 		}
 
 	};
@@ -335,7 +336,7 @@ GCMRC.Graphing = function(hoursOffset) {
 							GCMRC.Page.params.values().sortBy(function(n) {
 								return parseFloat(n.description.displayOrder);
 							}).map(function(n) {
-								return n.description.pCode;
+								return n.description.groupId;
 							}).forEach(function(el) {
 								containerDiv.append($('<div class="p' + el + '"></div>'));
 								labelDiv.append($('<div class="p' + el +'"></div>'));

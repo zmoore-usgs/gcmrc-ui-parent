@@ -14,24 +14,28 @@ public class StationAllSiteSpec extends StationSiteSpec {
 	public String setupTableName() {
 		StringBuilder result = new StringBuilder();
 		
-		result.append("(");
-		result.append("  SELECT DISTINCT S.NWIS_SITE_NO SITE_NO,");
-		result.append("    S.SITE_SHORT_NM SHORT_NM,");
-		result.append("    S.SITE_NM FULL_NM,");
-		result.append("    S.DEC_LAT_VA LAT,");
-		result.append("    S.DEC_LONG_VA LON,");
-		result.append("    S.DISPLAY_ORDER_VA DISPLAY_ORDER,");
-		result.append("    CASE");
-		result.append("      WHEN S.NETWORK_NM='GCDAMP'");
-		result.append("      THEN 'GCDAMP'");
-		result.append("      WHEN S.NETWORK_NM='Dinosaur'");
-		result.append("      THEN 'DINO'");
-		result.append("      WHEN S.NETWORK_NM='BigBend'");
-		result.append("      THEN 'BIBE'");
-		result.append("      ELSE 'GCDAMP'");
-		result.append("    END AS NET");
-		result.append("  FROM SITE S");
-		result.append(") ALLSITES");
+		result.append("(SELECT");
+		result.append("  SITE_ID,");
+		result.append("  CASE");
+		result.append("    WHEN NWIS_SITE_NO IS NULL");
+		result.append("    THEN SHORT_NAME");
+		result.append("    ELSE NWIS_SITE_NO");
+		result.append("  END AS SITE_NAME,");
+		result.append("  NAME AS DISPLAY_NAME,");
+		result.append("  DECIMAL_LATITUDE LAT,");
+		result.append("  DECIMAL_LONGITUDE LON,");
+		result.append("  CASE");
+		result.append("    WHEN NETWORK_NAME='GCDAMP'");
+		result.append("    THEN 'GCDAMP'");
+		result.append("    WHEN NETWORK_NAME='Dinosaur'");
+		result.append("    THEN 'DINO'");
+		result.append("    WHEN NETWORK_NAME='BigBend'");
+		result.append("    THEN 'BIBE'");
+		result.append("    ELSE 'GCDAMP'");
+		result.append("  END AS NET,");
+		result.append("  DISPLAY_ORDER");
+		result.append("  FROM");
+		result.append("    SITE_STAR) T_A_MAIN");
 		
 		return result.toString();
 	}

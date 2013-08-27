@@ -50,7 +50,7 @@ public class QWDataSpec extends DataSpec {
 	@Override
 	public SearchMapping[] setupSearchMap() {
 		SearchMapping[] result = new SearchMapping[] {
-			new SearchMapping(ParameterSpec.S_SITE_NO, C_SITE_NO + "," + C_SHORT_NM, null, WhereClauseType.equals, null, null, null),
+			new SearchMapping(ParameterSpec.S_SITE_NAME, C_SITE_NO + "," + C_SHORT_NM, null, WhereClauseType.equals, null, null, null),
 			new SearchMapping(S_PARM_CD, C_PARM_CD, null, WhereClauseType.equals, null, null, null),
 			new SearchMapping(Endpoint.BEGIN_KEYWORD, C_SAMPLE_START_DT, null, WhereClauseType.special, CleaningOption.none, FIELD_NAME_KEY + " >= TO_DATE(" + USER_VALUE_KEY + ", 'YYYY-MM-DD\"T\"HH24:MI:SS')", null),
 			new SearchMapping(Endpoint.END_KEYWORD, C_SAMPLE_START_DT, null, WhereClauseType.special, CleaningOption.none, FIELD_NAME_KEY + " <= TO_DATE(" + USER_VALUE_KEY + ", 'YYYY-MM-DD\"T\"HH24:MI:SS')", null)
@@ -88,7 +88,7 @@ public class QWDataSpec extends DataSpec {
 		if (null != this.parameterCode) {
 			sb.append("AND QWS.ANL_STAT_CD<>'X' AND SAMP_METH_CD='").append(this.parameterCode.sampleMethod).append("' ");
 			sb.append("AND QWR.ANL_ENT_CD='GCMRRSCH' AND ANL_SCHED_NM='MassPsdXsecCorr' ");
-			sb.append("AND QWR.PARM_CD='").append(this.parameterCode.pcode).append("' ");
+//			sb.append("AND QWR.PARM_CD='").append(this.parameterCode.pcode).append("' ");
 		}
 		sb.append(") T_A_LDVIEW");
 

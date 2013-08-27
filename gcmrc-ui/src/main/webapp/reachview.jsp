@@ -116,7 +116,7 @@
 			<jsp:param name="relPath" value="${relativePath}" />
 			<jsp:param name="debug-qualifier" value="${development}" />
 		</jsp:include>
-		<script src="${relativePath}services/service/station/jsonp/allsite/?network=${networkName}&jsonp_callback=GCMRC.StationLoad"></script>
+		<script src="${relativePath}services/service/station/jsonp/allsite?network=${networkName}&jsonp_callback=GCMRC.StationLoad"></script>
 		<jsp:include page="app/graphing/package.jsp">
 			<jsp:param name="relPath" value="${relativePath}" />
 			<jsp:param name="debug-qualifier" value="${development}" />

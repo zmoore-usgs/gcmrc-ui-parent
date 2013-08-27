@@ -37,9 +37,9 @@ public class StationSiteSpec extends Spec {
 	@Override
 	public ColumnMapping[] setupColumnMap() {
 		return new ColumnMapping[] {
-			new ColumnMapping(C_SITE_NO, S_SITE_NO),
-			new ColumnMapping(C_SHORT_NM, S_SHORT_NM),
-			new ColumnMapping(C_FULL_NM, S_FULL_NM),
+			new ColumnMapping(C_SITE_ID, S_SITE_ID),
+			new ColumnMapping(C_SITE_NAME, S_SITE_NAME),
+			new ColumnMapping(C_DISPLAY_NAME, S_DISPLAY_NAME),
 			new ColumnMapping(C_LAT, S_LAT),
 			new ColumnMapping(C_LON, S_LON),
 			new ColumnMapping(C_NET, S_NET),
@@ -66,49 +66,57 @@ public class StationSiteSpec extends Spec {
 
 	@Override
 	public String setupTableName() {
-		StringBuilder sb = new StringBuilder();
+		StringBuilder result = new StringBuilder();
 		
-		sb.append("  (");
-		sb.append("  SELECT DISTINCT S.NWIS_SITE_NO SITE_NO,");
-		sb.append("    S.SITE_SHORT_NM SHORT_NM,");
-		sb.append("    S.SITE_NM FULL_NM,");
-		sb.append("    S.DEC_LAT_VA LAT,");
-		sb.append("    S.DEC_LONG_VA LON,");
-		sb.append("    S.DISPLAY_ORDER_VA DISPLAY_ORDER,");
-		sb.append("    CASE");
-		sb.append("      WHEN S.NETWORK_NM='GCDAMP'");
-		sb.append("      THEN 'GCDAMP'");
-		sb.append("      WHEN S.NETWORK_NM='Dinosaur'");
-		sb.append("      THEN 'DINO'");
-		sb.append("      WHEN S.NETWORK_NM='BigBend'");
-		sb.append("      THEN 'BIBE'");
-		sb.append("      ELSE 'GCDAMP'");
-		sb.append("    END AS NET");
-		sb.append("  FROM ");
-		sb.append("    SITE S,");
-		sb.append("    (SELECT ");
-		sb.append("        DISTINCT IPTG.SITE_ID");
-		sb.append("      FROM ");
-		sb.append("        INFO_PORTAL_TS_GROUP IPTG");
-		sb.append("      WHERE ");
-		sb.append("        IPTG.PRIORITY_VA <= 10");
-		sb.append("      UNION ");
-		sb.append("      SELECT ");
-		sb.append("        DISTINCT QWP.SITE_ID");
-		sb.append("      FROM ");
-		sb.append("      QW_POR QWP) ALLSITES");
-		sb.append("  WHERE ALLSITES.SITE_ID = S.SITE_ID");
-		sb.append("  ) T_A_SUMMARY");
+		result.append("(SELECT DISTINCT");
+		result.append("  TSD.SITE_ID,");
+		result.append("  CASE");
+		result.append("    WHEN NWIS_SITE_NO IS NULL");
+		result.append("    THEN SHORT_NAME");
+		result.append("    ELSE NWIS_SITE_NO");
+		result.append("  END AS SITE_NAME,");
+		result.append("  NAME AS DISPLAY_NAME,");
+		result.append("  DECIMAL_LATITUDE LAT,");
+		result.append("  DECIMAL_LONGITUDE LON,");
+		result.append("  CASE");
+		result.append("    WHEN NETWORK_NAME='GCDAMP'");
+		result.append("    THEN 'GCDAMP'");
+		result.append("    WHEN NETWORK_NAME='Dinosaur'");
+		result.append("    THEN 'DINO'");
+		result.append("    WHEN NETWORK_NAME='BigBend'");
+		result.append("    THEN 'BIBE'");
+		result.append("    ELSE 'GCDAMP'");
+		result.append("  END AS NET,");
+		result.append("  DISPLAY_ORDER");
+		result.append("  FROM");
+		result.append("    (SELECT");
+		result.append("      SITE_ID,");
+		result.append("      DISPLAY");
+		result.append("    FROM");
+		result.append("      TIME_SERIES_DISPLAY");
+		result.append("    UNION");
+		result.append("    SELECT DISTINCT");
+		result.append("      QWP.SITE_ID,");
+		result.append("      'Y' AS DISPLAY");
+		result.append("    FROM");
+		result.append("      QW_POR QWP");
+		result.append("      ) TSD");
+		result.append("  LEFT OUTER JOIN");
+		result.append("    SITE_STAR");
+		result.append("  ON");
+		result.append("    TSD.SITE_ID = SITE_STAR.SITE_ID");
+		result.append("  WHERE");
+		result.append("    DISPLAY = 'Y') T_A_MAIN");
 		
-		return sb.toString();
+		return result.toString();
 	}
 
-	public static final String C_SITE_NO = "SITE_NO";
-	public static final String S_SITE_NO = "nwisSite";
-	public static final String C_SHORT_NM = "SHORT_NM";
-	public static final String S_SHORT_NM = "shortName";
-	public static final String C_FULL_NM = "FULL_NM";
-	public static final String S_FULL_NM = "displayName";
+	public static final String C_SITE_ID = "SITE_ID";
+	public static final String S_SITE_ID = "";
+	public static final String C_SITE_NAME = "SITE_NAME";
+	public static final String S_SITE_NAME = "siteName";
+	public static final String C_DISPLAY_NAME = "DISPLAY_NAME";
+	public static final String S_DISPLAY_NAME = "displayName";
 	public static final String C_LAT = "LAT";
 	public static final String S_LAT = "lat";
 	public static final String C_LON = "LON";

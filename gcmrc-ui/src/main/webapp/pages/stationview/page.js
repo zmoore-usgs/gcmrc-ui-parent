@@ -73,7 +73,7 @@ GCMRC.Page = {
 		var displayName = description["displayName"];
 		var fromDate = description.earliestMethod.split("T")[0];
 		var toDate = description.latestMethod.split("T")[0];
-		var ppq = instParam["ppq"];
+		var ppq = instParam["ppq"]; //PPQ's going away
 		var units = description["units"];
 		var unitsShort = description["unitsShort"];
 
@@ -128,10 +128,12 @@ GCMRC.Page = {
 		$("input[name=dataradio" + el + "]").first().attr("checked", true);
 	},
 	addParameters : function() {
-		GCMRC.Page.params.values().sortBy(function(n) {
-			return parseFloat(n.values().sample().displayOrder);
+		GCMRC.Page.params.values().filter(function(n) {
+			return "Y" === n.description.isVisible;
+		}).sortBy(function(n) {
+			return parseFloat(n.description.displayOrder);
 		}).map(function(n) {
-			return n.values().sample().pCode;
+			return n.description.groupId;
 		}).forEach(GCMRC.Page.addParamToList);
 		
 		$('.fromdate').click(GCMRC.Page.fromDateClicked);
@@ -234,28 +236,23 @@ GCMRC.Page = {
 			var toGet = whatchaGotForMe.attr("value");
 			
 			var cols = ["time!UTCMillis"];
-			if (toGet) { //Freakin Smelly
-				var toGetSplit = toGet.split(",");
-				[].push.apply(cols, toGetSplit.map(function(key) {
-					var tsGroupName = GCMRC.Page.params[el.name][key].tsGroup;
-					if (tsGroupName) {
-						tsGroupName = "!" + tsGroupName;
-					} else {
-						tsGroupName = "";
-					}
-					return key + "!" + el.name + tsGroupName + "!" + CONFIG.stationName;
-				}));
-			} else {
-				var tsGroupName = GCMRC.Page.params[el.name].inst.tsGroup;
-				if (tsGroupName) {
-					tsGroupName = "!" + tsGroupName;
-				} else {
-					tsGroupName = "";
-				}
-				cols.push("inst!" + el.name + tsGroupName + "!" + CONFIG.stationName);
-			}
+//			if (toGet) { //Freakin Smelly
+//				var toGetSplit = toGet.split(",");
+//				[].push.apply(cols, toGetSplit.map(function(key) {
+//					var tsGroupName = GCMRC.Page.params[el.name][key].groupName;
+//					if (tsGroupName) {
+//						tsGroupName = "!" + tsGroupName;
+//					} else {
+//						tsGroupName = "";
+//					}
+//					return key + "!" + el.name + tsGroupName + "!" + CONFIG.stationName;
+//				}));
+//			} else {
+				var groupName = GCMRC.Page.params[el.name].inst.groupName;
+				cols.push("inst!" + groupName + "!" + CONFIG.stationName);
+//			}
 			result.push({
-				pCode : el.name,
+				groupId : el.name,
 				columns : cols
 			});
 			return result;
@@ -293,22 +290,24 @@ GCMRC.Page = {
 		var endMillis = Date.create(end).getUTCTime() + (CONFIG.networkHoursOffset * 60 * 60 * 1000);
 		if (endMillis >= beginMillis) {
 			var expectedGraphColumns = GCMRC.Page.getExpectedGraphColumns();
-			if (GCMRC.Page.hasData(expectedGraphColumns.map(function(el) {return el.pCode;}), begin, end)) {
+			if (GCMRC.Page.hasData(expectedGraphColumns.map(function(el) {return el.groupId;}), begin, end)) {
 				var chosenParameters = [];
-				expectedGraphColumns.forEach(function(el) {
-					[].push.apply(this.chosen, el.columns.filter(function(n) {
-						return !this.chosen.some(n);
-					}, this));
-				}, {chosen : chosenParameters});
+				expectedGraphColumns.each(function(el) {
+					[].push.apply(chosenParameters, el.columns.filter(function(n) {//Can this be swapped out for .unique()?
+						return !chosenParameters.some(n);
+					}));
+				});
 				
 				expectedGraphColumns.forEach(function(el) {
 					var cols = [];
 					[].push.apply(cols, el.columns.map(function(col) {
 						var result = col;
 						var colSplit = col.split("!");
-						if (3 < colSplit.length) {
-							result = colSplit[0] + "!" + colSplit[1] + "!" + colSplit[2] + "-" + colSplit[3];
-						} else if (2 < colSplit.length) {
+						//no pcode
+//						if (3 < colSplit.length) {
+//							result = colSplit[0] + "!" + colSplit[1] + "!" + colSplit[2] + "-" + colSplit[3];
+//						} else 
+						if (2 < colSplit.length) {
 							result = colSplit[0] + "!" + colSplit[1] + "-" + colSplit[2];
 						}
 						
@@ -407,21 +406,25 @@ GCMRC.Page = {
 			var expectedGraphColumns = GCMRC.Page.getExpectedGraphColumns();
 			var expectedDownloadColumns = expectedGraphColumns.filter(function(el) {
 				var result = el.columns.some(function(n) {
-					return (n.startsWith("inst!") && "Sample-adjusted Modeled" !== GCMRC.Page.params[this.pCode].inst.ppq);
+					return (
+							n.startsWith("inst!") && 
+							"Sample-adjusted Modeled" !== GCMRC.Page.params[this.groupId].inst.ppq //TODO, this will no longer work (no ppq)
+							); 
 				}, el);
 				return result;
 			});
-			if (GCMRC.Page.hasData(expectedDownloadColumns.map(function(el) {return el.pCode;}), begin, end)) {
+			if (GCMRC.Page.hasData(expectedDownloadColumns.map(function(el) {return el.groupId;}), begin, end)) {
 				var columnOrdering = [];
-				columnOrdering.push({pCode:"time", name:"Time", reorderable:true, formatConfig:{format:"yyyy-MM-dd HH:mm:ss"}, timeZoneInHeader:true, nameConfig: {useDefault: true}});
+				columnOrdering.push({groupId:"time", name:"Time", reorderable:true, formatConfig:{format:"yyyy-MM-dd HH:mm:ss"}, timeZoneInHeader:true, nameConfig: {useDefault: true}});
 				expectedDownloadColumns.forEach(function(el) {
-					columnOrdering.push({pCode : el.pCode, name : GCMRC.Page.params[el.pCode].inst.displayName, ppq : GCMRC.Page.params[el.pCode].inst.ppq, reorderable : true, nameConfig: {useDefault: true}});
+					columnOrdering.push({groupId : el.groupId, name : GCMRC.Page.params[el.groupId].inst.displayName, reorderable : true, nameConfig: {useDefault: true}});
 				});
 				
-				GCMRC.Page.colOrder.remove(function(n){return true;});
-				columnOrdering.forEach(function(el) {
+				GCMRC.Page.colOrder.remove(function(n){return true;}); //substitute for removeAll
+				columnOrdering.each(function(el) {
 					GCMRC.Page.colOrder.push(el);
 				});
+				
 				angular.element($('#downloadColumnOrdering')).scope().columnSelected = null;
 				angular.element($('#downloadColumnOrdering')).scope().$apply()
 				
@@ -447,7 +450,7 @@ GCMRC.Page = {
 		var chosenParameters = [];
 		GCMRC.Page.colOrder.forEach(function(el) {
 			var resource = this.expected.find(function(n){
-				return n.pCode === el.pCode;
+				return n.groupId === el.groupId;
 			});
 			
 			var columnDef = null;
@@ -455,13 +458,13 @@ GCMRC.Page = {
 				columnDef = resource.columns.filter(function(col) {
 					return col.startsWith('inst!');
 				});
-			} else if ("time" === el.pCode) {
-				columnDef = [el.pCode + "!" + el.formatConfig.format];
+			} else if ("time" === el.groupId) {
+				columnDef = [el.groupId + "!" + el.formatConfig.format];
 			}
 			
 			if (columnDef) {
 				//HACK!!!!! THIS IS WRONG.
-				columnDef = columnDef.map(function(col) {
+				columnDef = columnDef.map(function(col) { //No more PPQ?
 					var displayName = "*default*";
 					if (el.ppq) {
 						displayName = el.ppq + " " + displayName;
@@ -478,7 +481,7 @@ GCMRC.Page = {
 			
 		}, {expected: expectedGraphColumns, chosen: chosenParameters});
 		
-		var timeColumn = GCMRC.Page.colOrder.find(function(n){return "time" === n.pCode;});
+		var timeColumn = GCMRC.Page.colOrder.find(function(n){return "time" === n.groupId;});
 		var timeZoneInHeader = timeColumn.timeZoneInHeader;
 		
 		var serviceOptions = {
@@ -498,12 +501,15 @@ GCMRC.Page = {
 	latestPosition : null,
 	params : {},
 	paramsLoad : JSL.ResourceLoad(function(el) {
-		if (!GCMRC.Page.params[el.pCode]) {
-			GCMRC.Page.params[el.pCode] = {
+		var identifier = el.groupId;
+		if (!GCMRC.Page.params[identifier]) {
+			GCMRC.Page.params[identifier] = {
 				description : {
-					pCode : el.pCode,
+					groupId : el.groupId,
+					groupName : el.groupName,
 					displayName : el.displayName,
 					displayOrder : el.displayOrder,
+					isVisible : el.isVisible,
 					units : el.units,
 					unitsShort : el.unitsShort,
 					earliestMethod : el.beginPosition,
@@ -514,31 +520,33 @@ GCMRC.Page = {
 		el.sampleMethod = 'inst';
 		el.color = "#006666";
 		el.highlightColor = "#FF0033";
-		GCMRC.Page.params[el.pCode][el.sampleMethod] = el;
+		GCMRC.Page.params[identifier][el.sampleMethod] = el;
 		
 		var thisBeginPosition = new Date(el.beginPosition).getTime();
 		if (!GCMRC.Page.earliestPosition || thisBeginPosition < new Date(GCMRC.Page.earliestPosition).getTime()) {
 			GCMRC.Page.earliestPosition = el.beginPosition;
 		}
-		if (thisBeginPosition < new Date(GCMRC.Page.params[el.pCode].description.earliestMethod).getTime()) {
-			GCMRC.Page.params[el.pCode].description.earliestMethod = el.beginPosition;
+		if (thisBeginPosition < new Date(GCMRC.Page.params[identifier].description.earliestMethod).getTime()) {
+			GCMRC.Page.params[identifier].description.earliestMethod = el.beginPosition;
 		}
 		
 		var thisEndPosition = new Date(el.endPosition).getTime();
 		if (!GCMRC.Page.latestPosition || thisEndPosition > new Date(GCMRC.Page.latestPosition).getTime()) {
 			GCMRC.Page.latestPosition = el.endPosition;
 		}
-		if (thisEndPosition > new Date(GCMRC.Page.params[el.pCode].description.latestMethod).getTime()) {
-			GCMRC.Page.params[el.pCode].description.latestMethod = el.endPosition;
+		if (thisEndPosition > new Date(GCMRC.Page.params[identifier].description.latestMethod).getTime()) {
+			GCMRC.Page.params[identifier].description.latestMethod = el.endPosition;
 		}
 	}),
 	qwLoad : JSL.ResourceLoad(function(el) {
-		if (!GCMRC.Page.params[el.pCode]) {
-			GCMRC.Page.params[el.pCode] = {
+		var identifier = el.pCode;
+		if (!GCMRC.Page.params[identifier]) {
+			GCMRC.Page.params[identifier] = {
 				description : {
-					pCode : el.pCode,
+					groupId : el.pCode,
 					displayName : el.pCodeName,
 					displayOrder : el.displayOrder,
+					isVisible : 'N',
 					units : el.units,
 					unitsShort : el.unitsShort,
 					earliestMethod : el.beginPosition,
@@ -563,22 +571,22 @@ GCMRC.Page = {
 			plotter: GCMRC.Dygraphs.DotPlotter
 		};
 		
-		GCMRC.Page.params[el.pCode][el.sampleMethod] = el;
+		GCMRC.Page.params[identifier][el.sampleMethod] = el;
 		
 		var thisBeginPosition = new Date(el.beginPosition).getTime();
 		if (!GCMRC.Page.earliestPosition || thisBeginPosition < new Date(GCMRC.Page.earliestPosition).getTime()) {
 			GCMRC.Page.earliestPosition = el.beginPosition;
 		}
-		if (thisBeginPosition < new Date(GCMRC.Page.params[el.pCode].description.earliestMethod).getTime()) {
-			GCMRC.Page.params[el.pCode].description.earliestMethod = el.beginPosition;
+		if (thisBeginPosition < new Date(GCMRC.Page.params[identifier].description.earliestMethod).getTime()) {
+			GCMRC.Page.params[identifier].description.earliestMethod = el.beginPosition;
 		}
 		
 		var thisEndPosition = new Date(el.endPosition).getTime();
 		if (!GCMRC.Page.latestPosition || thisEndPosition > new Date(GCMRC.Page.latestPosition).getTime()) {
 			GCMRC.Page.latestPosition = el.endPosition;
 		}
-		if (thisEndPosition > new Date(GCMRC.Page.params[el.pCode].description.latestMethod).getTime()) {
-			GCMRC.Page.params[el.pCode].description.latestMethod = el.endPosition;
+		if (thisEndPosition > new Date(GCMRC.Page.params[identifier].description.latestMethod).getTime()) {
+			GCMRC.Page.params[identifier].description.latestMethod = el.endPosition;
 		}
 	}),
 	credits : [],

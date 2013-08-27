@@ -96,10 +96,11 @@ public abstract class SpecEndpoint extends Endpoint {
 			String station = getStation(colName);
 			
 			if (null != cmd && null != station) {
-				Map<String, String[]> modMap = new HashMap<String, String[]>();
-				modMap.put(ParameterSpec.S_SITE_NO, new String[] {station});
 				List<ColumnMetadata.SpecEntry> specEntries = cmd.getSpecEntries();
 				for (ColumnMetadata.SpecEntry se : specEntries) {
+					Map<String, String[]> modMap = new HashMap<String, String[]>();
+					modMap.put(ParameterSpec.S_SITE_NAME, new String[] {station});
+					modMap.put(ParameterSpec.S_GROUP_NAME, new String[] {se.parameterCode.groupName});
 					Spec spec = se.getSpec(station, specOptions);
 					Spec.loadParameters(spec, modMap);
 					result.add(spec);

@@ -13,20 +13,17 @@ import org.slf4j.LoggerFactory;
 public class ParameterCode {
 	private static final Logger log = LoggerFactory.getLogger(ParameterCode.class);
 	
-	public final String pcode;
 	public final String sampleMethod;
-	public final String tsGroupName;
+	public final String groupName;
 
-	public ParameterCode(String pcode, String sampleMethod, String tsGroupName) {
-		this.pcode = pcode;
+	public ParameterCode(String sampleMethod, String groupName) {
 		this.sampleMethod = sampleMethod;
-		this.tsGroupName = tsGroupName;
+		this.groupName = groupName;
 	}
 	
 	public static ParameterCode parseParameterCode(String parseThis) {
 		ParameterCode result = null;
 		
-		String param = null;
 		String sampleMethod = null;
 		String tsGrpNm = null;
 		if (null != parseThis) {
@@ -34,14 +31,12 @@ public class ParameterCode {
 			if (null != split && 0 < split.length) {
 				sampleMethod = split[0];
 				if (1 < split.length) {
-					param = split[1];
-					if (2 < split.length) {
-						tsGrpNm = split[2];
-					}
+					tsGrpNm = split[1];
 				}
 			}
+			result = new ParameterCode(sampleMethod, tsGrpNm);
 		}
-		result = new ParameterCode(param, sampleMethod, tsGrpNm);
+		
 		
 		return result;
 	}
@@ -51,9 +46,8 @@ public class ParameterCode {
 		String result = null;
 		
 		result = Objects.toStringHelper(ParameterCode.class)
-				.add("pcode", this.pcode)
 				.add("sampleMethod", this.sampleMethod)
-				.add("tsGroupName", this.tsGroupName)
+				.add("groupName", this.groupName)
 				.toString();
 		
 		return result;
@@ -62,9 +56,8 @@ public class ParameterCode {
 	@Override
 	public int hashCode() {
 		int result = new HashCodeBuilder()
-				.append(this.pcode)
 				.append(this.sampleMethod)
-				.append(this.tsGroupName)
+				.append(this.groupName)
 				.toHashCode();
 		return result;
 	}
@@ -76,9 +69,8 @@ public class ParameterCode {
 		if (obj instanceof ParameterCode) {
 			ParameterCode rhs = (ParameterCode) obj;
 			return new EqualsBuilder()
-					.append(this.pcode, rhs.pcode)
 					.append(this.sampleMethod, rhs.sampleMethod)
-					.append(this.tsGroupName, rhs.tsGroupName)
+					.append(this.groupName, rhs.groupName)
 					.isEquals();
 		}
 		return false;

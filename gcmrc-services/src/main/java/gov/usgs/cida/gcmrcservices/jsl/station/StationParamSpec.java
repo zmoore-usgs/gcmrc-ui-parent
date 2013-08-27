@@ -37,15 +37,14 @@ public class StationParamSpec extends Spec {
 	@Override
 	public ColumnMapping[] setupColumnMap() {
 		return new ColumnMapping[] {
-			new ColumnMapping(C_PCODE, S_PCODE),
-			new ColumnMapping(C_TS_GRP_NM, S_TS_GRP_NM),
+			new ColumnMapping(C_GROUP_ID, S_GROUP_ID),
+			new ColumnMapping(C_GROUP_NAME, S_GROUP_NAME),
 			new ColumnMapping(C_START_DT, S_START_DT),
 			new ColumnMapping(C_END_DT, S_END_DT),
-			new ColumnMapping(C_SITE_NO, S_SITE_NO),
-			new ColumnMapping(C_SHORT_NM, S_SHORT_NM),
+			new ColumnMapping(C_SITE_NAME, S_SITE_NAME),
 			new ColumnMapping(C_DISPLAY_ORDER, S_DISPLAY_ORDER),
 			new ColumnMapping(C_DISPLAY_NAME, S_DISPLAY_NAME),
-			new ColumnMapping(C_PUBLIC_PORTAL_QUALIFIER, S_PUBLIC_PORTAL_QUALIFIER),
+			new ColumnMapping(C_IS_VISIBLE, S_IS_VISIBLE),
 			new ColumnMapping(C_UNITS, S_UNITS),
 			new ColumnMapping(C_UNITS_SHORT, S_UNITS_SHORT),
 			new ColumnMapping(C_DECIMAL_PLACES, S_DECIMAL_PLACES)
@@ -65,68 +64,91 @@ public class StationParamSpec extends Spec {
 	@Override
 	public SearchMapping[] setupSearchMap() {
 		return new SearchMapping[] {
-			new SearchMapping(S_PCODE, C_PCODE, null, WhereClauseType.equals, null, null, null),
-			new SearchMapping(S_SITE_NO, C_SITE_NO, null, WhereClauseType.equals, null, null, null),
-			new SearchMapping(S_SHORT_NM, C_SHORT_NM, null, WhereClauseType.equals, null, null, null),
-			new SearchMapping(S_SITE, C_SITE_NO + "," + C_SHORT_NM, null, WhereClauseType.equals, null, null, null)
+			new SearchMapping(S_SITE_NAME, C_SITE_NAME, null, WhereClauseType.equals, null, null, null),
+			new SearchMapping(S_IS_VISIBLE, C_IS_VISIBLE, null, WhereClauseType.equals, null, null, null)
 		};
 	}
 
 	@Override
 	public String setupTableName() {
-		StringBuilder sb = new StringBuilder();
+		StringBuilder result = new StringBuilder();
 		
-		sb.append("(SELECT TGP.PARM_CD PCODE,");
-		sb.append("    TGP.TS_GRP_NM,");
-		sb.append("    TO_CHAR(TGP.EARLIEST_DT, 'YYYY-MM-DD\"T\"HH24:MI:SS') START_DT,");
-		sb.append("    TO_CHAR(TGP.LATEST_DT, 'YYYY-MM-DD\"T\"HH24:MI:SS') END_DT,");
-		sb.append("    S.NWIS_SITE_NO SITE_NO,");
-		sb.append("    S.SITE_SHORT_NM SHORT_NM,");
-		sb.append("    IPTG.PORTAL_TS_PUBLIC_DS PUBLIC_PORTAL_QUALIFIER,");
-		sb.append("    IPTG.DISPLAY_ORDER_VA DISPLAY_ORDER,");
-		sb.append("    P.PARM_ESSENCE_NM DISPLAY_NAME,");
-		sb.append("    P.UNITS_NM UNITS,");
-		sb.append("    P.UNITS_SHORT_NM UNITS_SHORT,");
-		sb.append("    P.BASIC_NUM_DEC_PLACES_VA DECIMAL_PLACES");
-		sb.append("  FROM TS_GROUP_POR TGP,");
-		sb.append("    PARM P,");
-		sb.append("    SITE S,");
-		sb.append("    INFO_PORTAL_TS_GROUP IPTG");
-		sb.append("  WHERE TGP.SITE_ID = S.SITE_ID");
-		sb.append("  AND IPTG.SITE_ID = TGP.SITE_ID");
-		sb.append("  AND IPTG.TS_GRP_NM = TGP.TS_GRP_NM");
-		sb.append("  AND IPTG.PARM_CD = TGP.PARM_CD");
-		sb.append("  AND TGP.PARM_CD = P.PARM_CD");
-		sb.append("  AND IPTG.PRIORITY_VA <= 10");
-		sb.append("  ) T_A_SUMMARY");
+		result.append("  (SELECT");
+		result.append("    TIME_SERIES_DISPLAY.GROUP_ID,");
+		result.append("    GROUP_NAME,");
+		result.append("    SITE_NAME,");
+		result.append("    TO_CHAR(EARLIEST_DT, 'YYYY-MM-DD\"T\"HH24:MI:SS') AS START_DT,");
+		result.append("    TO_CHAR(LATEST_DT, 'YYYY-MM-DD\"T\"HH24:MI:SS') AS END_DT,");
+		result.append("    DISPLAY_ORDER,");
+		result.append("    DISPLAY_NAME,");
+		result.append("    UNITS,");
+		result.append("    UNITS_SHORT,");
+		result.append("    DECIMAL_PLACES,");
+		result.append("    DISPLAY AS IS_VISIBLE");
+		result.append("  FROM");
+		result.append("    TIME_SERIES_DISPLAY");
+		result.append("  LEFT OUTER JOIN");
+		result.append("    (SELECT");
+		result.append("      SITE_ID,");
+		result.append("      CASE");
+		result.append("        WHEN NWIS_SITE_NO IS NULL");
+		result.append("        THEN SHORT_NAME");
+		result.append("        ELSE NWIS_SITE_NO");
+		result.append("      END AS SITE_NAME");
+		result.append("    FROM");
+		result.append("      SITE_STAR) SITE");
+		result.append("  ON");
+		result.append("    TIME_SERIES_DISPLAY.SITE_ID = SITE.SITE_ID");
+		result.append("  LEFT OUTER JOIN");
+		result.append("    (SELECT");
+		result.append("      GROUP_ID,");
+		result.append("      NAME AS GROUP_NAME,");
+		result.append("      DISPLAY_ORDER,");
+		result.append("      NAME_DISPLAY AS DISPLAY_NAME,");
+		result.append("      UNITS_NAME AS UNITS,");
+		result.append("      UNITS_NAME_SHORT AS UNITS_SHORT,");
+		result.append("      DECIMAL_PLACES");
+		result.append("    FROM");
+		result.append("      GROUP_NAME) T_GROUP");
+		result.append("  ON");
+		result.append("    TIME_SERIES_DISPLAY.GROUP_ID = T_GROUP.GROUP_ID");
+		result.append("  LEFT OUTER JOIN");
+		result.append("    (SELECT");
+		result.append("      SITE_ID,");
+		result.append("      GROUP_ID,");
+		result.append("      EARLIEST_DT,");
+		result.append("      LATEST_DT");
+		result.append("    FROM ");
+		result.append("      TIME_SERIES_POR");
+		result.append("    ) T_POR");
+		result.append("  ON");
+		result.append("    TIME_SERIES_DISPLAY.GROUP_ID = T_POR.GROUP_ID");
+		result.append("    AND TIME_SERIES_DISPLAY.SITE_ID = T_POR.SITE_ID");
+		result.append("  ) T_A_MAIN");
 		
-		return sb.toString();
+		return result.toString();
 	}
 
-	
-	public static final String S_START_DT = "beginPosition";
+	public static final String C_GROUP_ID = "GROUP_ID";
+	public static final String S_GROUP_ID = "groupId";
+	public static final String C_GROUP_NAME = "GROUP_NAME";
+	public static final String S_GROUP_NAME = "groupName";
 	public static final String C_START_DT = "START_DT";
-	public static final String S_END_DT = "endPosition";
+	public static final String S_START_DT = "beginPosition";
 	public static final String C_END_DT = "END_DT";
-	public static final String S_PCODE = "pCode";
-	public static final String C_PCODE = "PCODE";
-	public static final String S_TS_GRP_NM = "tsGroup";
-	public static final String C_TS_GRP_NM = "TS_GRP_NM";
-	public static final String S_SITE = "site";
-	public static final String S_SITE_NO = "nwisSite";
-	public static final String C_SITE_NO = "SITE_NO";
-	public static final String S_SHORT_NM = "shortName";
-	public static final String C_SHORT_NM = "SHORT_NM";
-	public static final String S_PUBLIC_PORTAL_QUALIFIER = "ppq";
-	public static final String C_PUBLIC_PORTAL_QUALIFIER = "PUBLIC_PORTAL_QUALIFIER";
-	public static final String S_DISPLAY_ORDER = "displayOrder";
+	public static final String S_END_DT = "endPosition";
+	public static final String C_SITE_NAME = "SITE_NAME";
+	public static final String S_SITE_NAME = "site";
 	public static final String C_DISPLAY_ORDER = "DISPLAY_ORDER";
-	public static final String S_DISPLAY_NAME = "displayName";
+	public static final String S_DISPLAY_ORDER = "displayOrder";
 	public static final String C_DISPLAY_NAME = "DISPLAY_NAME";
-	public static final String S_UNITS = "units";
+	public static final String S_DISPLAY_NAME = "displayName";
+	public static final String C_IS_VISIBLE = "IS_VISIBLE";
+	public static final String S_IS_VISIBLE = "isVisible";
 	public static final String C_UNITS = "UNITS";
-	public static final String S_UNITS_SHORT = "unitsShort";
+	public static final String S_UNITS = "units";
 	public static final String C_UNITS_SHORT = "UNITS_SHORT";
-	public static final String S_DECIMAL_PLACES = "decimalPlaces";
+	public static final String S_UNITS_SHORT = "unitsShort";
 	public static final String C_DECIMAL_PLACES = "DECIMAL_PLACES";
+	public static final String S_DECIMAL_PLACES = "decimalPlaces";
 }

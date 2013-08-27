@@ -70,7 +70,7 @@ public abstract class Endpoint extends HttpServlet {
 	public static final String CUTOFF_BEFORE_KEYWORD = "cutoffBefore";
 	
 	
-	public static final int columnIdentifierLength = 3; // HACK HAAAAAAAAAAAAAACK
+	public static final int columnIdentifierLength = 2; // HACK HAAAAAAAAAAAAAACK
 	
 	protected Map<Provider, IProvider> providers;
 	protected Map<String, ColumnMetadata> CM_LOOKUP;
@@ -102,7 +102,6 @@ public abstract class Endpoint extends HttpServlet {
 		try {
 			Column pCode = new SimpleColumn("PARM_CD");
 			Column tsGrpNm = new SimpleColumn("TS_GRP_NM");
-//			Column ppq = new SimpleColumn("PORTAL_TS_PUBLIC_DS");
 			Column nwisName = new SimpleColumn("PARM_NM");
 			Column displayName = new SimpleColumn("PARM_ESSENCE_NM");
 			Column units = new SimpleColumn("UNITS_NM");
@@ -111,7 +110,6 @@ public abstract class Endpoint extends HttpServlet {
 			ParameterizedString ps = new ParameterizedString();
 			ps.append("  SELECT DISTINCT PARM.").append(pCode.getName()).append(",");
 			ps.append("    TS_GROUP_POR.").append(tsGrpNm.getName()).append(",");
-//			ps.append("    INFO_PORTAL_TS_GROUP.").append(ppq.getName()).append(",");
 			ps.append("    PARM.").append(nwisName.getName()).append(",");
 			ps.append("    PARM.").append(displayName.getName()).append(",");
 			ps.append("    PARM.").append(units.getName()).append(",");
@@ -129,16 +127,10 @@ public abstract class Endpoint extends HttpServlet {
 			while (rs.next()) {
 				TableRow row = TableRow.buildTableRow(rs);
 				
-				String columnPCode = row.getValue(pCode);
 				String columnTsGroupName = row.getValue(tsGrpNm);
-				String parameterCode = "inst!" + columnPCode + "!" + columnTsGroupName;
+				String parameterCode = "inst!" + columnTsGroupName;
 				
 				String columnDisplayName = row.getValue(displayName);
-//				String columnPPQ = row.getValue(ppq);
-//				
-//				if (StringUtils.isNotBlank(columnPPQ)) {
-//					columnDisplayName = columnPPQ + " " + columnDisplayName;
-//				}
 				
 				String columnTitle = columnDisplayName + "(" + row.getValue(unitsShort) + ")";
 				

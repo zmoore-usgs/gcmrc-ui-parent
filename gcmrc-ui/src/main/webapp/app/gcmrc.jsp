@@ -23,12 +23,8 @@ GCMRC.Stations = {
 GCMRC.StationLoad = JSL.ResourceLoad(function(el) {
 	var name = "00000000";
 			
-	if (el.nwisSite) {
-		name = el.nwisSite;
-	} else if (el.shortName) {
-		name = el.shortName;
-	} else {
-		LOG.error("No nwisSite or shortName for station!");
+	if (el.siteName) {
+		name = el.siteName;
 	}
 
 	GCMRC.Stations[name] = Object.merge({}, GCMRC.Stations[name], true).merge(el, true);

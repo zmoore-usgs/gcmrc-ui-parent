@@ -24,7 +24,7 @@ GCMRC.Page = {
 						);
 
 				var siteFeature = new OpenLayers.Feature.Vector(sitePoint, {
-					siteName: station.nwisSite || station.shortName
+					siteName: station.siteName
 				});
 				GCMRC.Mapping.layers.vector.addFeatures([siteFeature]);
 			}

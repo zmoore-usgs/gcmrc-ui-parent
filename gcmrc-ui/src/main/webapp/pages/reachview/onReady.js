@@ -11,8 +11,8 @@ $(document).ready(function() {
 	GCMRC.Page.addCredits();
 
 	GCMRC.Page.createMiniMap({
-		upstreamStationName: (!upstreamStation) ? null : upstreamStation.nwisSite || upstreamStation.shortName,
-		downstreamStationName: (!downstreamStation) ? null : downstreamStation.nwisSite || downstreamStation.shortName
+		upstreamStationName: (!upstreamStation) ? null : upstreamStation.siteName,
+		downstreamStationName: (!downstreamStation) ? null : downstreamStation.siteName
 	});
 
 	if ("BIBE" === CONFIG.networkName) {

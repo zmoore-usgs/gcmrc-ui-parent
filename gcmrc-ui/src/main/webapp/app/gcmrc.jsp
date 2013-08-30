@@ -29,6 +29,12 @@ GCMRC.StationLoad = JSL.ResourceLoad(function(el) {
 
 	GCMRC.Stations[name] = Object.merge({}, GCMRC.Stations[name], true).merge(el, true);
 });
+CONFIG.instColor = "#4DAF4A";
+CONFIG.instHiColor = "#FF0033";
+CONFIG.pumpColor = "#A6CEE3";
+CONFIG.pumpHiColor = "#1F78B4";
+CONFIG.sampColor = "#FF7F00";
+CONFIG.sampHiColor = "#FF9900";
 </script>
 <script type="text/javascript" src="${relativePath}app/networkdata.js"></script>
 <script type="text/javascript" src="${relativePath}app/mapping.js"></script>

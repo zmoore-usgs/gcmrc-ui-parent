@@ -42,7 +42,7 @@ GCMRC.Dygraphs.DotPlotter = function(e) {
 					&& point.y_top !== point.y_bottom) {
 				var topY = convertToCanvasY(point.y_top, area.h, area.y);
 				var bottomY = convertToCanvasY(point.y_bottom, area.h, area.y);
-
+				
 				//Draw Line
 				ctx.strokeStyle = 'rgba(' + rgb.r + ',' + rgb.g + ',' + rgb.b + ',1)';
 				ctx.lineWidth = 2;

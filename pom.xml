@@ -76,6 +76,18 @@
 			<organizationUrl>http://az.water.usgs.gov</organizationUrl>
 			<timezone>-7</timezone>
 		</developer>
+		<developer>
+			<id>drsteini</id>
+			<name>Dave Steinich</name>
+			<email>drsteini@usgs.gov</email>
+			<roles>
+				<role>Software Developer</role>
+				<role>Database Manager</role>
+			</roles>
+			<organization>Center for Integrated Data Analytics</organization>
+			<organizationUrl>http://cida.usgs.gov</organizationUrl>
+			<timezone>-6</timezone>
+		</developer>
 	</developers>
 	
 	<properties>

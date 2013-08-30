@@ -423,12 +423,12 @@ GCMRC.Page = {
 					conf["parameterName"] = graphToMake.pCode;
 					conf["div"] = $('#' + conf.divId + ' div.p' + graphToMake.pCode).get(0);
 					conf["labelDiv"] = $('#' + conf.labelDivId + ' div.p' + graphToMake.pCode).get(0);
-					conf["colors"] = ["#006666", "#006666", "#006666"];
+					conf["colors"] = [CONFIG.instColor, CONFIG.instColor, CONFIG.instColor];
 					conf["highlightColor"] = {
-						"High": "#FF0033",
-						"Low": "#FF0033"
+						"High": CONFIG.instHiColor,
+						"Low": CONFIG.instHiColor
 					};
-					conf["highlightColor"][self.config.seriesName] = "#FF0033";
+					conf["highlightColor"][self.config.seriesName] = CONFIG.instHiColor;
 					conf["series"] = {
 						"High": {
 							strokeWidth: 0.0,
@@ -703,8 +703,8 @@ GCMRC.Page = {
 			};
 		}
 		el.sampleMethod = 'inst';
-		el.color = "#006666";
-		el.highlightColor = "#FF0033";
+		el.color = CONFIG.instColor;
+		el.highlightColor = CONFIG.instHiColor;
 		GCMRC.Page.params[el.pCode][el.sampleMethod] = el;
 
 		if ('100400' === el.pCode) {
@@ -741,8 +741,8 @@ GCMRC.Page = {
 					"unitsShort":"cfs",
 					"decimalPlaces":"0",
 					"sampleMethod":"inst",
-					"color":"#006666",
-					"highlightColor":"#FF0033"
+					"color":CONFIG.instColor,
+					"highlightColor":CONFIG.instHiColor
 				},
 				"description" : {
 					"pCode":"00060",
@@ -767,8 +767,8 @@ GCMRC.Page = {
 					"unitsShort":"cfs",
 					"decimalPlaces":"0",
 					"sampleMethod":"inst",
-					"color":"#006666",
-					"highlightColor":"#FF0033"
+					"color":CONFIG.instColor,
+					"highlightColor":CONFIG.instHiColor
 				},
 				"description" : {
 					"pCode":"00060",
@@ -790,8 +790,8 @@ GCMRC.Page = {
 				beginPosition: GCMRC.Page.earliestPositionISO.split("T")[0],
 				units: "Metric Tons",
 				unitsShort: "Metric Tons",
-				color: "#006666",
-				highlightColor: "#FF0033"
+				color: CONFIG.instColor,
+				highlightColor: CONFIG.instHiColor
 			},
 			description : {
 				pCode: "finesbudget",
@@ -812,8 +812,8 @@ GCMRC.Page = {
 				beginPosition: GCMRC.Page.earliestPositionISO.split("T")[0],
 				units: "Metric Tons",
 				unitsShort: "Metric Tons",
-				color: "#006666",
-				highlightColor: "#FF0033"
+				color: CONFIG.instColor,
+				highlightColor: CONFIG.instHiColor
 			},
 			description : {
 				pCode: "sandbudget",

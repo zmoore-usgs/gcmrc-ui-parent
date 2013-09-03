@@ -697,6 +697,7 @@ GCMRC.Page = {
 					pCode : el.pCode,
 					displayName : el.displayName,
 					displayOrder : el.displayOrder,
+					decimalPlaces : el.decimalPlaces,
 					units : el.units,
 					unitsShort : el.unitsShort
 				}

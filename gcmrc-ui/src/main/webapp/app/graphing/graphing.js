@@ -155,7 +155,7 @@ GCMRC.Graphing = function(hoursOffset) {
 		var dataformatter = config['dataformatter'] || GCMRC.Dygraphs.DataFormatter(0);
 		var decimalPlaces = config['decimalPlaces'] || 0;
 		
-		var confColors = config['colors'] || ["#006666", "#333399", "#CC9966", "#CC9966"];
+		var confColors = config['colors'] || [CONFIG.instColor, CONFIG.pumpColor, CONFIG.sampColor, CONFIG.sampColor];
 		var highlightColor = config['highlightColor'];
 
 		var axes = {

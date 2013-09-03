@@ -506,6 +506,7 @@ GCMRC.Page = {
 					pCode : el.pCode,
 					displayName : el.displayName,
 					displayOrder : el.displayOrder,
+					decimalPlaces : el.decimalPlaces,
 					units : el.units,
 					unitsShort : el.unitsShort,
 					earliestMethod : el.beginPosition,
@@ -514,8 +515,8 @@ GCMRC.Page = {
 			};
 		}
 		el.sampleMethod = 'inst';
-		el.color = "#006666";
-		el.highlightColor = "#FF0033";
+		el.color = CONFIG.instColor;
+		el.highlightColor = CONFIG.instHiColor;
 		GCMRC.Page.params[el.pCode][el.sampleMethod] = el;
 		
 		var thisBeginPosition = new Date(el.beginPosition).getTime();
@@ -541,6 +542,7 @@ GCMRC.Page = {
 					pCode : el.pCode,
 					displayName : el.pCodeName,
 					displayOrder : el.displayOrder,
+					decimalPlaces : el.decimalPlaces,
 					units : el.units,
 					unitsShort : el.unitsShort,
 					earliestMethod : el.beginPosition,
@@ -550,11 +552,11 @@ GCMRC.Page = {
 		}
 		
 		if ("EDI" === el.sampleMethod || "EWI" === el.sampleMethod || "s vert" === el.sampleMethod || "m vert" === el.sampleMethod) {
-			el.color = "#CC9966";
-			el.highlightColor = "#FF9900";
+			el.color = CONFIG.sampColor;
+			el.highlightColor = CONFIG.sampHiColor;
 		} else {
-			el.color = "#9C76B5";
-			el.highlightColor = "#990099";
+			el.color = CONFIG.pumpColor;
+			el.highlightColor = CONFIG.pumpHiColor;
 		}
 		
 		el.series = {

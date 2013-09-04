@@ -314,7 +314,7 @@
 							<webResource>
 								<directory>${war.dir}</directory>
 								<includes>
-									<include>*.jsp</include>
+									<include>**/*.jsp</include>
 								</includes>
 								<filtering>true</filtering>
 							</webResource>

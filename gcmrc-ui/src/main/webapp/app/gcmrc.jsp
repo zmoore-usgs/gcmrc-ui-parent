@@ -1,7 +1,8 @@
 <script type="text/javascript">
-	var GCMRC = {
-		administrator : 'cida_gcmrc'
-	};
+var GCMRC = {
+	administrator : 'cida_gcmrc',
+	version : '${version}'
+};
 </script>
 <link rel="shortcut icon" type="image/ico" href="${relativePath}app/favicon.ico" />
 

@@ -45,6 +45,7 @@ public class StationParamSpec extends Spec {
 			new ColumnMapping(C_DISPLAY_ORDER, S_DISPLAY_ORDER),
 			new ColumnMapping(C_DISPLAY_NAME, S_DISPLAY_NAME),
 			new ColumnMapping(C_IS_VISIBLE, S_IS_VISIBLE),
+			new ColumnMapping(C_IS_DOWNLOADABLE, S_IS_DOWNLOADABLE),
 			new ColumnMapping(C_UNITS, S_UNITS),
 			new ColumnMapping(C_UNITS_SHORT, S_UNITS_SHORT),
 			new ColumnMapping(C_DECIMAL_PLACES, S_DECIMAL_PLACES)
@@ -65,7 +66,8 @@ public class StationParamSpec extends Spec {
 	public SearchMapping[] setupSearchMap() {
 		return new SearchMapping[] {
 			new SearchMapping(S_SITE_NAME, C_SITE_NAME, null, WhereClauseType.equals, null, null, null),
-			new SearchMapping(S_IS_VISIBLE, C_IS_VISIBLE, null, WhereClauseType.equals, null, null, null)
+			new SearchMapping(S_IS_VISIBLE, C_IS_VISIBLE, null, WhereClauseType.equals, null, null, null),
+			new SearchMapping(S_IS_DOWNLOADABLE, C_IS_DOWNLOADABLE, null, WhereClauseType.equals, null, null, null)
 		};
 	}
 
@@ -73,57 +75,45 @@ public class StationParamSpec extends Spec {
 	public String setupTableName() {
 		StringBuilder result = new StringBuilder();
 		
-		result.append("  (SELECT");
-		result.append("    TIME_SERIES_DISPLAY.GROUP_ID,");
+		result.append("  (SELECT T_POR.GROUP_ID,");
 		result.append("    GROUP_NAME,");
 		result.append("    SITE_NAME,");
 		result.append("    TO_CHAR(EARLIEST_DT, 'YYYY-MM-DD\"T\"HH24:MI:SS') AS START_DT,");
-		result.append("    TO_CHAR(LATEST_DT, 'YYYY-MM-DD\"T\"HH24:MI:SS') AS END_DT,");
+		result.append("    TO_CHAR(LATEST_DT, 'YYYY-MM-DD\"T\"HH24:MI:SS')   AS END_DT,");
 		result.append("    DISPLAY_ORDER,");
 		result.append("    DISPLAY_NAME,");
 		result.append("    UNITS,");
 		result.append("    UNITS_SHORT,");
 		result.append("    DECIMAL_PLACES,");
-		result.append("    DISPLAY AS IS_VISIBLE");
-		result.append("  FROM");
-		result.append("    TIME_SERIES_DISPLAY");
+		result.append("    DISPLAY AS IS_VISIBLE,");
+		result.append("    DOWNLOADABLE AS IS_DOWNLOADABLE");
+		result.append("  FROM (SELECT SITE_ID, GROUP_ID, EARLIEST_DT, LATEST_DT FROM TIME_SERIES_POR");
+		result.append("    ) T_POR");
 		result.append("  LEFT OUTER JOIN");
-		result.append("    (SELECT");
-		result.append("      SITE_ID,");
+		result.append("    (SELECT SITE_ID,");
 		result.append("      CASE");
 		result.append("        WHEN NWIS_SITE_NO IS NULL");
 		result.append("        THEN SHORT_NAME");
 		result.append("        ELSE NWIS_SITE_NO");
 		result.append("      END AS SITE_NAME");
-		result.append("    FROM");
-		result.append("      SITE_STAR) SITE");
-		result.append("  ON");
-		result.append("    TIME_SERIES_DISPLAY.SITE_ID = SITE.SITE_ID");
+		result.append("    FROM SITE_STAR");
+		result.append("    ) SITE");
+		result.append("  ON T_POR.SITE_ID = SITE.SITE_ID");
 		result.append("  LEFT OUTER JOIN");
-		result.append("    (SELECT");
-		result.append("      GROUP_ID,");
+		result.append("    (SELECT GROUP_ID,");
 		result.append("      NAME AS GROUP_NAME,");
 		result.append("      DISPLAY_ORDER,");
-		result.append("      NAME_DISPLAY AS DISPLAY_NAME,");
-		result.append("      UNITS_NAME AS UNITS,");
+		result.append("      NAME_DISPLAY     AS DISPLAY_NAME,");
+		result.append("      UNITS_NAME       AS UNITS,");
 		result.append("      UNITS_NAME_SHORT AS UNITS_SHORT,");
 		result.append("      DECIMAL_PLACES");
-		result.append("    FROM");
-		result.append("      GROUP_NAME) T_GROUP");
-		result.append("  ON");
-		result.append("    TIME_SERIES_DISPLAY.GROUP_ID = T_GROUP.GROUP_ID");
+		result.append("    FROM GROUP_NAME");
+		result.append("    ) T_GROUP");
+		result.append("  ON T_POR.GROUP_ID = T_GROUP.GROUP_ID");
 		result.append("  LEFT OUTER JOIN");
-		result.append("    (SELECT");
-		result.append("      SITE_ID,");
-		result.append("      GROUP_ID,");
-		result.append("      EARLIEST_DT,");
-		result.append("      LATEST_DT");
-		result.append("    FROM ");
-		result.append("      TIME_SERIES_POR");
-		result.append("    ) T_POR");
-		result.append("  ON");
-		result.append("    TIME_SERIES_DISPLAY.GROUP_ID = T_POR.GROUP_ID");
-		result.append("    AND TIME_SERIES_DISPLAY.SITE_ID = T_POR.SITE_ID");
+		result.append("    TIME_SERIES_DISPLAY");
+		result.append("  ON TIME_SERIES_DISPLAY.GROUP_ID = T_POR.GROUP_ID");
+		result.append("  AND TIME_SERIES_DISPLAY.SITE_ID = T_POR.SITE_ID");
 		result.append("  ) T_A_MAIN");
 		
 		return result.toString();
@@ -145,6 +135,8 @@ public class StationParamSpec extends Spec {
 	public static final String S_DISPLAY_NAME = "displayName";
 	public static final String C_IS_VISIBLE = "IS_VISIBLE";
 	public static final String S_IS_VISIBLE = "isVisible";
+	public static final String C_IS_DOWNLOADABLE = "IS_DOWNLOADABLE";
+	public static final String S_IS_DOWNLOADABLE = "isDownloadable";
 	public static final String C_UNITS = "UNITS";
 	public static final String S_UNITS = "units";
 	public static final String C_UNITS_SHORT = "UNITS_SHORT";

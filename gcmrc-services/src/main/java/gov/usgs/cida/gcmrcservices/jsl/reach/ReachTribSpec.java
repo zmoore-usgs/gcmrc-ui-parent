@@ -47,13 +47,14 @@ public class ReachTribSpec extends Spec {
 			new ColumnMapping(C_DISPLAY_NAME_DOWN, S_DISPLAY_NAME_DOWN),
 			new ColumnMapping(C_MAJOR_TRIB_RIVER, S_MAJOR_TRIB_RIVER),
 			new ColumnMapping(C_MAJOR_TRIB_SITE, S_MAJOR_TRIB_SITE),
+			new ColumnMapping(C_MAJOR_GROUP, S_MAJOR_GROUP),
+			new ColumnMapping(C_MINOR_TRIB_SITE, S_MINOR_TRIB_SITE),
+			new ColumnMapping(C_MINOR_GROUP, S_MINOR_GROUP),
 			new ColumnMapping(C_DISCHARGE_DOWN, S_DISCHARGE_DOWN),
 			new ColumnMapping(C_DISCHARGE_DISPLAY_DOWN, S_DISCHARGE_DISPLAY_DOWN),
-			new ColumnMapping(C_MAJOR_TRIB, S_MAJOR_TRIB),
-			new ColumnMapping(C_MINOR_TRIB, S_MINOR_TRIB),
 			new ColumnMapping(C_NETWORK_NAME, S_NETWORK_NAME),
 			new ColumnMapping(C_DISPLAY_ORDER, S_DISPLAY_ORDER),
-			new ColumnMapping(new ReachTribPCodeAuxSpec(), "pcode"),
+			new ColumnMapping(new ReachTribPCodeAuxSpec(), "groupName"),
 			new ColumnMapping(C_END_STATIC_REC, S_END_STATIC_REC),
 			new ColumnMapping(C_NEWEST_SUSPSED, S_NEWEST_SUSPSED)
 		};
@@ -74,7 +75,7 @@ public class ReachTribSpec extends Spec {
 	@Override
 	public List<String[]> getRepeatedTags() {
 		List<String[]> result = super.getRepeatedTags();
-		result.add(new String[] {"data", "pcode"});
+		result.add(new String[] {"data", "groupName"});
 		return result;
 	}
 	
@@ -88,8 +89,8 @@ public class ReachTribSpec extends Spec {
 			new SearchMapping(S_DISPLAY_NAME_DOWN, C_DISPLAY_NAME_DOWN, null, WhereClauseType.equals, CleaningOption.none, null, null),
 			new SearchMapping(S_MAJOR_TRIB_RIVER, C_MAJOR_TRIB_RIVER, null, WhereClauseType.equals, CleaningOption.none, null, null),
 			new SearchMapping(S_MAJOR_TRIB_SITE, C_MAJOR_TRIB_SITE, null, WhereClauseType.equals, CleaningOption.none, null, null),
-			new SearchMapping(S_MAJOR_TRIB, C_MAJOR_TRIB, null, WhereClauseType.equals, CleaningOption.none, null, null),
-			new SearchMapping(S_MINOR_TRIB, C_MINOR_TRIB, null, WhereClauseType.equals, CleaningOption.none, null, null),
+			new SearchMapping(S_MAJOR_GROUP, C_MAJOR_GROUP, null, WhereClauseType.equals, CleaningOption.none, null, null),
+			new SearchMapping(S_MINOR_GROUP, C_MINOR_GROUP, null, WhereClauseType.equals, CleaningOption.none, null, null),
 			new SearchMapping(S_NETWORK_NAME, C_NETWORK_NAME, null, WhereClauseType.equals, CleaningOption.none, null, null),
 			new SearchMapping(S_DISPLAY_ORDER, C_DISPLAY_ORDER, null, WhereClauseType.equals, CleaningOption.none, null, null)
 		};
@@ -101,79 +102,86 @@ public class ReachTribSpec extends Spec {
 	public String setupTableName() {
 		StringBuilder result = new StringBuilder();
 
-		result.append("  (SELECT DISTINCT RTD.REACH_NM,");
+		result.append("(SELECT DISTINCT RTD.REACH_NAME,");
 		result.append("    (SELECT (");
 		result.append("      CASE");
 		result.append("        WHEN NWIS_SITE_NO IS NOT NULL");
 		result.append("        THEN NWIS_SITE_NO");
-		result.append("        ELSE SITE_SHORT_NM");
+		result.append("        ELSE SHORT_NAME");
 		result.append("      END) SITE_UP");
-		result.append("    FROM SITE S");
+		result.append("    FROM SITE_STAR S");
 		result.append("    WHERE S.SITE_ID = RTD.SITE_ID_UP");
 		result.append("    ) SITE_UP,");
-		result.append("    (SELECT S.SITE_NM FROM SITE S WHERE S.SITE_ID = RTD.SITE_ID_UP");
+		result.append("    (SELECT S.NAME FROM SITE_STAR S WHERE S.SITE_ID = RTD.SITE_ID_UP");
 		result.append("    ) DISPLAY_NAME_UP,");
 		result.append("    (SELECT (");
 		result.append("      CASE");
 		result.append("        WHEN NWIS_SITE_NO IS NOT NULL");
 		result.append("        THEN NWIS_SITE_NO");
-		result.append("        ELSE SITE_SHORT_NM");
+		result.append("        ELSE SHORT_NAME");
 		result.append("      END)");
-		result.append("    FROM SITE S");
+		result.append("    FROM SITE_STAR S");
 		result.append("    WHERE S.SITE_ID = RTD.SITE_ID_DOWN");
 		result.append("    ) SITE_DOWN,");
-		result.append("    (SELECT S.SITE_NM FROM SITE S WHERE S.SITE_ID = RTD.SITE_ID_DOWN");
+		result.append("    (SELECT S.NAME FROM SITE_STAR S WHERE S.SITE_ID = RTD.SITE_ID_DOWN");
 		result.append("    ) DISPLAY_NAME_DOWN,");
 		result.append("    (SELECT (");
 		result.append("      CASE");
 		result.append("        WHEN NWIS_SITE_NO IS NOT NULL");
 		result.append("        THEN NWIS_SITE_NO");
-		result.append("        ELSE SITE_SHORT_NM");
+		result.append("        ELSE SHORT_NAME");
 		result.append("      END)");
-		result.append("    FROM SITE S");
+		result.append("    FROM SITE_STAR S");
 		result.append("    WHERE S.SITE_ID = RTD.DISCHARGE_DOWN");
 		result.append("    ) DISCHARGE_SITE_DOWN,");
-		result.append("    (SELECT S.SITE_NM FROM SITE S WHERE S.SITE_ID = RTD.DISCHARGE_DOWN");
+		result.append("    (SELECT S.NAME FROM SITE_STAR S WHERE S.SITE_ID = RTD.DISCHARGE_DOWN");
 		result.append("    ) DISCHARGE_DISPLAY_NAME_DOWN,");
-		result.append("    (SELECT ");
-		result.append("        S.RIVER_NM ");
-		result.append("      FROM ");
-		result.append("        SITE S, ");
-		result.append("        TS ");
-		result.append("      WHERE ");
-		result.append("        RTD.MAJOR_TRIB = TS.TS_ID");
-		result.append("        AND TS.SITE_ID = S.SITE_ID) AS MAJOR_TRIB_RIVER,");
+		result.append("    (SELECT S.RIVER_NAME");
+		result.append("    FROM SITE_STAR S");
+		result.append("    WHERE RTD.MAJOR_SITE = S.SITE_ID");
+		result.append("    ) AS MAJOR_TRIB_RIVER,");
 		result.append("    (SELECT (");
 		result.append("      CASE");
 		result.append("        WHEN NWIS_SITE_NO IS NOT NULL");
 		result.append("        THEN NWIS_SITE_NO");
-		result.append("        ELSE SITE_SHORT_NM");
+		result.append("        ELSE SHORT_NAME");
 		result.append("      END)");
-		result.append("    FROM SITE S");
-		result.append("    WHERE S.SITE_ID = RTD.MAJOR_TRIB_SITE");
-		result.append("    ) MAJOR_TRIB_SITE_NM,");
-		result.append("    RTD.MAJOR_TRIB,");
-		result.append("    RTD.MINOR_TRIB,");
+		result.append("    FROM SITE_STAR S");
+		result.append("    WHERE S.SITE_ID = RTD.MAJOR_SITE");
+		result.append("    ) MAJOR_TRIB_SITE_NAME,");
+		result.append("    (SELECT NAME FROM GROUP_NAME WHERE RTD.MAJOR_GROUP = GROUP_NAME.GROUP_ID) MAJOR_GROUP,");
+		result.append("    (SELECT (");
+		result.append("      CASE");
+		result.append("        WHEN NWIS_SITE_NO IS NOT NULL");
+		result.append("        THEN NWIS_SITE_NO");
+		result.append("        ELSE SHORT_NAME");
+		result.append("      END)");
+		result.append("    FROM SITE_STAR S");
+		result.append("    WHERE S.SITE_ID = RTD.MINOR_SITE");
+		result.append("    ) MINOR_TRIB_SITE_NAME,");
+		result.append("    (SELECT NAME FROM GROUP_NAME WHERE GROUP_NAME.GROUP_ID = RTD.MINOR_GROUP) MINOR_GROUP,");
 		result.append("    CASE");
-		result.append("      WHEN RTD.NETWORK_NM='GCDAMP'");
+		result.append("      WHEN RTD.NETWORK_NAME='GCDAMP'");
 		result.append("      THEN 'GCDAMP'");
-		result.append("      WHEN RTD.NETWORK_NM='Dinosaur'");
+		result.append("      WHEN RTD.NETWORK_NAME='Dinosaur'");
 		result.append("      THEN 'DINO'");
-		result.append("      WHEN RTD.NETWORK_NM='BigBend'");
+		result.append("      WHEN RTD.NETWORK_NAME='BigBend'");
 		result.append("      THEN 'BIBE'");
 		result.append("      ELSE 'GCDAMP'");
 		result.append("    END AS NETWORK_NAME,");
-		result.append("    RTD.DISPLAY_ORDER_VA DISPLAY_ORDER,");
+		result.append("    RTD.DISPLAY_ORDER,");
 		result.append("    TO_CHAR(END_STATIC_REC, 'YYYY-MM-DD\"T\"HH24:MI:SS') END_STATIC_REC,");
 		result.append("    TO_CHAR(NEWEST_SUSPSED, 'YYYY-MM-DD\"T\"HH24:MI:SS') NEWEST_SUSPSED");
-		result.append("  FROM REACH_TRIBS_DISPLAY RTD");
+		result.append("  FROM REACH_DISPLAY RTD");
 		result.append("  ) T_A_REACHES");
 
 		return result.toString();
 	}
 	
-	public static final String C_REACH_NM = "REACH_NM";
+	public static final String C_REACH_NM = "REACH_NAME";
 	public static final String S_REACH_NM = "reachName";
+//	public static final String C_REACH_GROUP = "REACH_GROUP";
+//	public static final String S_REACH_GROUP = "reachGroup";
 	public static final String C_SITE_UP = "SITE_UP";
 	public static final String S_SITE_UP = "upstreamStation";
 	public static final String C_DISPLAY_NAME_UP = "DISPLAY_NAME_UP";
@@ -184,12 +192,14 @@ public class ReachTribSpec extends Spec {
 	public static final String S_DISPLAY_NAME_DOWN = "downstreamDisplayName";
 	public static final String C_MAJOR_TRIB_RIVER = "MAJOR_TRIB_RIVER";
 	public static final String S_MAJOR_TRIB_RIVER = "majorTribRiver";
-	public static final String C_MAJOR_TRIB_SITE = "MAJOR_TRIB_SITE_NM";
+	public static final String C_MAJOR_TRIB_SITE = "MAJOR_TRIB_SITE_NAME";
 	public static final String S_MAJOR_TRIB_SITE = "majorTribSite";
-	public static final String C_MAJOR_TRIB = "MAJOR_TRIB";
-	public static final String S_MAJOR_TRIB = "majorTrib";
-	public static final String C_MINOR_TRIB = "MINOR_TRIB";
-	public static final String S_MINOR_TRIB = "minorTrib";
+	public static final String C_MAJOR_GROUP = "MAJOR_GROUP";
+	public static final String S_MAJOR_GROUP = "majorGroup";
+	public static final String C_MINOR_TRIB_SITE = "MINOR_TRIB_SITE_NAME";
+	public static final String S_MINOR_TRIB_SITE = "minorTribSite";
+	public static final String C_MINOR_GROUP = "MINOR_GROUP";
+	public static final String S_MINOR_GROUP = "minorGroup";
 	public static final String C_NETWORK_NAME = "NETWORK_NAME";
 	public static final String S_NETWORK_NAME = "network";
 	public static final String C_DISPLAY_ORDER = "DISPLAY_ORDER";
@@ -198,8 +208,6 @@ public class ReachTribSpec extends Spec {
 	public static final String S_END_STATIC_REC = "endStaticRec";
 	public static final String C_NEWEST_SUSPSED = "NEWEST_SUSPSED";
 	public static final String S_NEWEST_SUSPSED = "newestSuspSed";
-	public static final String C_PARM_CD = "PARM_CD";
-	public static final String S_PARM_CD = "pcode";
 	public static final String C_DISCHARGE_DOWN = "DISCHARGE_SITE_DOWN";
 	public static final String S_DISCHARGE_DOWN = "downstreamDischargeStation";
 	public static final String C_DISCHARGE_DISPLAY_DOWN = "DISCHARGE_DISPLAY_NAME_DOWN";

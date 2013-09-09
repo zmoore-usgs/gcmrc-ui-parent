@@ -391,7 +391,7 @@ GCMRC.Page = {
 				var result = el.columns.some(function(n) {
 					return (
 							n.startsWith("inst!") && 
-							"Sample-adjusted Modeled" !== GCMRC.Page.params[this.groupId].inst.ppq //TODO, this will no longer work (no ppq)
+							GCMRC.Page.params[this.groupId].inst.isDownloadable === "Y"
 							); 
 				}, el);
 				return result;

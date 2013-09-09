@@ -73,7 +73,7 @@ GCMRC.Page = {
 		var endMillis = Date.create(end).getUTCTime() + (CONFIG.networkHoursOffset * 60 * 60 * 1000);
 		if (endMillis >= beginMillis) {
 			var expectedGraphColumns = GCMRC.Page.getExpectedGraphColumns();
-			var chosenParameters = ["time"];
+			var chosenParameters = ["time!UTCMillis"];
 			expectedGraphColumns.forEach(function(el) {
 				[].push.apply(this, el.columns.map(function(col) {
 					return col;
@@ -119,7 +119,6 @@ GCMRC.Page = {
 				tz: '-' + CONFIG.networkHoursOffset,
 				cutoffBefore: GCMRC.Page.earliestPositionISO,
 				cutoffAfter: GCMRC.Page.latestPositionISO,
-				timeFormat: 'UTCMillis',
 				every: CONFIG.everyPeriod,
 				noDataFilter: 'true',
 				useLagged: 'true'
@@ -335,44 +334,41 @@ GCMRC.Page = {
 		}
 	},
 	getExpectedGraphColumns: function() {
-		var minorTribHACK = "Minor Trib ";
-		var sandBudgetColumns = [
-			"inst!100400!" + GCMRC.Page.params["100400"]["inst"].tsGroup + "!" + CONFIG.upstreamStationName,
-			"inst!100400!" + GCMRC.Page.params["100400"]["inst"].tsGroup + "!" + CONFIG.downstreamStationName
-		];
-		var finesBudgetColumns = [
-			"inst!100600!" + GCMRC.Page.params["100600"]["inst"].tsGroup + "!" + CONFIG.upstreamStationName,
-			"inst!100600!" + GCMRC.Page.params["100600"]["inst"].tsGroup + "!" + CONFIG.downstreamStationName
-		];
-		if (GCMRC.Page.reach.majorTrib) {
-			sandBudgetColumns.push(  //OMG MAJOR HACK. ughhh.
-					"inst!100401!" + GCMRC.Page.params["100400"]["inst"].tsGroup.substr(2) + "!" + GCMRC.Page.reach.majorTrib
-					);
-			finesBudgetColumns.push(
-					"inst!100600!" + GCMRC.Page.params["100600"]["inst"].tsGroup + "!" + GCMRC.Page.reach.majorTrib
-					);
-		}
-		if (GCMRC.Page.reach.minorTrib) {
-			sandBudgetColumns.push(
-					"inst!100400!" + minorTribHACK + GCMRC.Page.params["100400"]["inst"].tsGroup + "!" + GCMRC.Page.reach.minorTrib
-					);
-			finesBudgetColumns.push(
-					"inst!100600!" + minorTribHACK + GCMRC.Page.params["100600"]["inst"].tsGroup + "!" + GCMRC.Page.reach.minorTrib
-					);
-		}
-
+		var reach = GCMRC.Page.reach;
+		var budgetColumns = {};
+		var responseColumns = {};
+		//TODO Build Columns
+		reach.groupName.each(function(el) {
+			budgetColumns[el] = [];
+			budgetColumns[el].push("inst!" + el + "!" + reach.upstreamStation);
+			budgetColumns[el].push("inst!" + el + "!" + reach.downstreamStation);
+			if (reach.majorTribSite) {
+				budgetColumns[el].push("inst!" + reach.majorGroup + "!" + reach.majorTribSite);
+			}
+			if (reach.minorTribSite) {
+				budgetColumns[el].push("inst!" + reach.minorGroup + "!" + reach.minorTribSite);
+			}
+			
+			responseColumns[el] = []
+			responseColumns[el].push("inst!" + el + "-" + reach.upstreamStation);
+			responseColumns[el].push("inst!" + reach.majorGroup + "-" + reach.majorTribSite);
+			responseColumns[el].push("inst!" + reach.minorGroup + "-" + reach.minorTribSite);
+			responseColumns[el].push("inst!" + el + "-" + reach.downstreamStation);
+		});
 
 		var result = [
 			{
-				pCode: "00060",
-				columns: ["inst!00060!" + "Discharge" + "!" + GCMRC.Page.reach.downstreamDischargeStation],
+				groupId : 2,
+				groupName: "Discharge",
+				columns: ["inst!" + "Discharge" + "!" + GCMRC.Page.reach.downstreamDischargeStation],
+				responseColumns : ["inst!" + "Discharge" + "-" + GCMRC.Page.reach.downstreamDischargeStation],
 				yAxisLabel: "Discharge (cfs) at " + GCMRC.Page.reach.downstreamDischargeName
 			}
 		];
 		
 		var Budget = function(config) {
 			this.config = config;
-			this.pCode = config.budgetType;
+			this.groupId = config.budgetType;
 			this.columns = config.budgetColumns;
 			this.yAxisLabel = config.yAxisLabel;
 			this.dealWithResponse = function(graphToMake, data, config, buildGraph) {
@@ -389,10 +385,10 @@ GCMRC.Page = {
 				}
 
 				data.success.data.each(function(el) {
-					datas.push([getValue(el, "inst!" + self.config.sedPcode + "!" + self.config.sedTSGroup + "-" + GCMRC.Page.reach.upstreamStation),
-						getValue(el, "inst!" + self.config.majorTribSedPcode + "!" + self.config.majorTribSedTSGroup + "-" + GCMRC.Page.reach.majorTrib),
-						getValue(el, "inst!" + self.config.minorTribSedPcode + "!" + self.config.minorTribSedTSGroup + "-" + GCMRC.Page.reach.minorTrib),
-						getValue(el, "inst!" + self.config.sedPcode + "!" + self.config.sedTSGroup + "-" + GCMRC.Page.reach.downstreamStation)]);
+					datas.push([getValue(el, self.config.responseColumns[0]),
+						getValue(el, self.config.responseColumns[1]),
+						getValue(el, self.config.responseColumns[2]),
+						getValue(el, self.config.responseColumns[3])]);
 					times.push(getValue(el, "time"));
 				});
 
@@ -405,7 +401,7 @@ GCMRC.Page = {
 					newestSuspSed: config.newestSuspSed
 				});
 
-				config.a = parseFloat($('span[name=a_val]').html()) / 100.0;
+				config.a = parseFloat($('span[name=a_val]').html()) / 100.0; //Consider not using these crappy alphabet vars?
 				config.b = parseFloat($('span[name=b_val]').html()) / 100.0;
 				config.c = parseFloat($('span[name=c_val]').html()) / 100.0;
 				config.d = parseFloat($('span[name=d_val]').html()) / 100.0;
@@ -416,13 +412,13 @@ GCMRC.Page = {
 				var createCallback = function(response) {
 					var conf = config.clone();
 					conf.data = response.data.dataArray;
-					conf['yAxisLabel'] = graphToMake.yAxisLabel || GCMRC.Page.params[graphToMake.pCode].inst['displayName'] + " (" + GCMRC.Page.params[graphToMake.pCode].inst['unitsShort'] + ")";
+					conf['yAxisLabel'] = graphToMake.yAxisLabel;
 					conf["labels"] = ["Time", self.config.seriesName, "High", "Low"];
-					conf['dataformatter'] = GCMRC.Dygraphs.DataFormatter(GCMRC.Page.params[graphToMake.pCode].inst['decimalPlaces']);
-					conf['decimalPlaces'] = GCMRC.Page.params[graphToMake.pCode].inst['decimalPlaces'];
-					conf["parameterName"] = graphToMake.pCode;
-					conf["div"] = $('#' + conf.divId + ' div.p' + graphToMake.pCode).get(0);
-					conf["labelDiv"] = $('#' + conf.labelDivId + ' div.p' + graphToMake.pCode).get(0);
+					conf['dataformatter'] = GCMRC.Dygraphs.DataFormatter(0);
+					conf['decimalPlaces'] = 0;
+					conf["parameterName"] = graphToMake.groupId;
+					conf["div"] = $('#' + conf.divId + ' div.p' + graphToMake.groupId).get(0);
+					conf["labelDiv"] = $('#' + conf.labelDivId + ' div.p' + graphToMake.groupId).get(0);
 					conf["colors"] = [CONFIG.instColor, CONFIG.instColor, CONFIG.instColor];
 					conf["highlightColor"] = {
 						"High": CONFIG.instHiColor,
@@ -442,33 +438,6 @@ GCMRC.Page = {
 						}
 					};
 					buildGraph(conf);
-
-					//TODO Get these out of the hardcode
-					GCMRC.Graphing.graphs["data-dygraph"][self.config.budgetType].setAnnotations([{
-							x: new Date(GCMRC.Page.reach.endStaticRec).getUTCTime() + (CONFIG.networkHoursOffset * 60 * 60 * 1000), //TODO  This isn't coming out right.
-							shortText:'Incomplete Verification', 
-							series:self.config.seriesName,
-							attachAtBottom: true,
-							mouseOverHandler : function(annotation) {
-								annotation.div.innerHTML = 'Verification dataset incomplete after this date';
-							},
-							mouseOutHandler : function(annotation) {
-								annotation.div.innerHTML = 'Incomplete verification';
-							}
-						}]);
-					GCMRC.Graphing.graphs["data-dygraph"][self.config.budgetType].setAnnotations([{
-							x: new Date(GCMRC.Page.reach.newestSuspSed).getUTCTime() + (CONFIG.networkHoursOffset * 60 * 60 * 1000), //TODO  This isn't coming out right.
-							shortText:'End Verification', 
-							series:self.config.seriesName,
-							attachAtBottom: true,
-							width : 97,
-							mouseOverHandler : function(annotation) {
-								annotation.div.innerHTML = 'No verification data processed after this date';
-							},
-							mouseOutHandler : function(annotation) {
-								annotation.div.innerHTML = "End verification";
-							}
-						}]);
 				};
 
 				GCMRC.Page[self.config.workerName].onmessage = function(response) {
@@ -489,40 +458,31 @@ GCMRC.Page = {
 			};
 		};
 
-		if (GCMRC.Page.reach.pcode.some("100400")) {
+		if (GCMRC.Page.reach.groupName.some("S Sand Cumul Load")) {
 			result.push(new Budget({
 				budgetType : "sandbudget",
-				budgetColumns : sandBudgetColumns,
+				budgetColumns : budgetColumns["S Sand Cumul Load"],
+				responseColumns : responseColumns["S Sand Cumul Load"],
 				yAxisLabel : "Change in Sand Stored in Reach (Metric Tons)",
 				seriesName : "Sand Storage Change",
 				reqIdName : "latestSandReqId",
 				updateFnName : "updateSandSummary",
 				workerFedName : "isSandWorkerFed",
-				workerName : "sandworker",
-				sedPcode : "100400",
-				sedTSGroup : GCMRC.Page.params["100400"]["inst"].tsGroup,
-				majorTribSedPcode : "100401",
-				majorTribSedTSGroup : GCMRC.Page.params["100400"]["inst"].tsGroup.substr(2),
-				minorTribSedPcode : "100400",
-				minorTribSedTSGroup : minorTribHACK + GCMRC.Page.params["100400"]["inst"].tsGroup
+				workerName : "sandworker"
 			}));
 		}
-		if (GCMRC.Page.reach.pcode.some("100600")) {
+		
+		if (GCMRC.Page.reach.groupName.some("S Fines Cumul Load")) {
 			result.push(new Budget({
 				budgetType : "finesbudget",
-				budgetColumns : finesBudgetColumns,
+				budgetColumns : budgetColumns["S Fines Cumul Load"],
+				responseColumns : responseColumns["S Fines Cumul Load"],
 				yAxisLabel : "Change in Silt and Clay Stored in Reach (Metric Tons)",
 				seriesName : "Silt and Clay Storage Change",
 				reqIdName : "latestFinesReqId",
 				updateFnName : "updateFinesSummary",
 				workerFedName : "isFinesWorkerFed",
-				workerName : "finesworker",
-				sedPcode : "100600",
-				sedTSGroup : GCMRC.Page.params["100600"]["inst"].tsGroup,
-				majorTribSedPcode : "100600",
-				majorTribSedTSGroup : GCMRC.Page.params["100600"]["inst"].tsGroup,
-				minorTribSedPcode : "100500",
-				minorTribSedTSGroup : minorTribHACK + GCMRC.Page.params["100600"]["inst"].tsGroup
+				workerName : "finesworker"
 			}));
 		}
 		
@@ -659,134 +619,32 @@ GCMRC.Page = {
 	latestPosition: null,
 	latestPositionISO: null,
 	reachPORLoad : JSL.ResourceLoad(function(el) {
-		if (el.majorTribBeginPosition) {
-			var majorBeginPosition = new Date(el.majorTribBeginPosition).getTime();
-			if (!GCMRC.Page.earliestPosition || majorBeginPosition > GCMRC.Page.earliestPosition) { //LATEST EARLIEST POSITION!
-				GCMRC.Page.earliestPosition = majorBeginPosition;
-				GCMRC.Page.earliestPositionISO = el.majorTribBeginPosition;
-			}
-		}
-		if (el.minorTribBeginPosition) {
-			var minorBeginPosition = new Date(el.minorTribBeginPosition).getTime();
-			if (!GCMRC.Page.earliestPosition || minorBeginPosition > GCMRC.Page.earliestPosition) { //LATEST EARLIEST POSITION!
-				GCMRC.Page.earliestPosition = minorBeginPosition;
-				GCMRC.Page.earliestPositionISO = el.minorTribBeginPosition;
-			}
-		}
+		var streams = ["upstream", "downstream", "majorTrib", "minorTrib"];
 		
-		if (el.majorTribEndPosition) {
-			var majorEndPosition = new Date(el.majorTribEndPosition).getTime();
-			if (!GCMRC.Page.latestPosition || majorEndPosition < GCMRC.Page.latestPosition) { ///EARLIEST LATEST POSITION!
-				GCMRC.Page.latestPosition = majorEndPosition;
-				GCMRC.Page.latestPositionISO = el.majorTribEndPosition;
-			}
-		}
-		if (el.minorTribEndPosition) {
-			var minorEndPosition = new Date(el.minorTribEndPosition).getTime();
-			if (!GCMRC.Page.latestPosition || minorEndPosition < GCMRC.Page.latestPosition) { ///EARLIEST LATEST POSITION!
-				GCMRC.Page.latestPosition = minorEndPosition;
-				GCMRC.Page.latestPositionISO = el.minorTribEndPosition;
-			}
-		}
-	}),
-	params: {},
-	paramsLoad: JSL.ResourceLoad(function(el) {
-		if (!GCMRC.Page.params[el.pCode]) {
-			GCMRC.Page.params[el.pCode] = {
-				description : {
-					pCode : el.pCode,
-					displayName : el.displayName,
-					displayOrder : el.displayOrder,
-					decimalPlaces : el.decimalPlaces,
-					units : el.units,
-					unitsShort : el.unitsShort
+		streams.each(function(stream) {
+			if (el[stream + "BeginPosition"]) {
+				var beginPosition = new Date(el[stream + "BeginPosition"]).getTime();
+				if (!GCMRC.Page.earliestPosition || beginPosition > GCMRC.Page.earliestPosition) { //LATEST EARLIEST POSITION!
+					GCMRC.Page.earliestPosition = beginPosition;
+					GCMRC.Page.earliestPositionISO = el[stream + "BeginPosition"];
 				}
-			};
-		}
-		el.sampleMethod = 'inst';
-		el.color = CONFIG.instColor;
-		el.highlightColor = CONFIG.instHiColor;
-		GCMRC.Page.params[el.pCode][el.sampleMethod] = el;
-
-		if ('100400' === el.pCode) {
-			var thisBeginPosition = new Date(el.beginPosition).getTime();
-			if (!GCMRC.Page.earliestPosition || thisBeginPosition > GCMRC.Page.earliestPosition) { //LATEST EARLIEST POSITION!
-				GCMRC.Page.earliestPosition = thisBeginPosition;
-				GCMRC.Page.earliestPositionISO = el.beginPosition;
 			}
-
-			var thisEndPosition = new Date(el.endPosition).getTime();
-			if (!GCMRC.Page.latestPosition || thisEndPosition < GCMRC.Page.latestPosition) { ///EARLIEST LATEST POSITION!
-				GCMRC.Page.latestPosition = thisEndPosition;
-				GCMRC.Page.latestPositionISO = el.endPosition;
+			if (el[stream + "EndPosition"]) {
+				var endPosition = new Date(el[stream + "EndPosition"]).getTime();
+				if (!GCMRC.Page.latestPosition || endPosition < GCMRC.Page.latestPosition) { ///EARLIEST LATEST POSITION!
+					GCMRC.Page.latestPosition = endPosition;
+					GCMRC.Page.latestPositionISO = el[stream + "EndPosition"];
+				}
 			}
-		}
-	}, function(data) {
-		if (!GCMRC.Page.earliestPosition)
-			GCMRC.Page.earliestPosition = new Date().addMonths(-1).getTime();
-		if (!GCMRC.Page.latestPosition)
-			GCMRC.Page.latestPosition = new Date().getTime();
-
-		if ("BIBE" === CONFIG.networkName) { //HORRIFIC HACK!
-			GCMRC.Page.params["00060"] = {
-				"inst" : {
-					"pCode":"00060",
-					"tsGroup":"Discharge",
-					"beginPosition":"2007-10-01",
-					"endPosition":"2014-04-17",
-					"nwisSite":"08375300",
-					"shortName":"Rio Grande Village",
-					"displayOrder":"200",
-					"displayName":"Discharge",
-					"units":"cubic feet per second",
-					"unitsShort":"cfs",
-					"decimalPlaces":"0",
-					"sampleMethod":"inst",
-					"color":CONFIG.instColor,
-					"highlightColor":CONFIG.instHiColor
-				},
-				"description" : {
-					"pCode":"00060",
-					"displayName":"Discharge",
-					"displayOrder":"200",
-					"units":"cubic feet per second",
-					"unitsShort":"cfs"
-				}
-			};
-		} else if ("09404200" === CONFIG.upstreamStationName) {
-			GCMRC.Page.params["00060"] = {
-				"inst" : {
-					"pCode":"00060",
-					"tsGroup":"Discharge",
-					"beginPosition":"1983-10-01",
-					"endPosition":"2014-04-17",
-					"nwisSite":"09404200",
-					"shortName":"Above Diamond",
-					"displayOrder":"200",
-					"displayName":"Discharge",
-					"units":"cubic feet per second",
-					"unitsShort":"cfs",
-					"decimalPlaces":"0",
-					"sampleMethod":"inst",
-					"color":CONFIG.instColor,
-					"highlightColor":CONFIG.instHiColor
-				},
-				"description" : {
-					"pCode":"00060",
-					"displayName":"Discharge",
-					"displayOrder":"200",
-					"units":"cubic feet per second",
-					"unitsShort":"cfs"
-				}
-			};
-		}
+		});
+	}, function() {
 		GCMRC.Page.params["finesbudget"] = {
 			inst: {
 				decimalPlaces: "0",
 				displayName: "Silt and Clay Storage Change",
 				displayOrder: "10",
 				endPosition: GCMRC.Page.latestPositionISO.split("T")[0],
-				pCode: "finesbudget",
+				groupId: "finesbudget",
 				sampleMethod: "inst",
 				beginPosition: GCMRC.Page.earliestPositionISO.split("T")[0],
 				units: "Metric Tons",
@@ -795,7 +653,7 @@ GCMRC.Page = {
 				highlightColor: CONFIG.instHiColor
 			},
 			description : {
-				pCode: "finesbudget",
+				groupId: "finesbudget",
 				displayName: "Silt and Clay Storage Change",
 				displayOrder: "10",
 				units: "Metric Tons",
@@ -808,7 +666,7 @@ GCMRC.Page = {
 				displayName: "Sand Storage Change",
 				displayOrder: "20",
 				endPosition: GCMRC.Page.latestPositionISO.split("T")[0],
-				pCode: "sandbudget",
+				groupId: "sandbudget",
 				sampleMethod: "inst",
 				beginPosition: GCMRC.Page.earliestPositionISO.split("T")[0],
 				units: "Metric Tons",
@@ -817,20 +675,45 @@ GCMRC.Page = {
 				highlightColor: CONFIG.instHiColor
 			},
 			description : {
-				pCode: "sandbudget",
+				groupId: "sandbudget",
 				displayName: "Sand Storage Change",
 				displayOrder: "20",
 				units: "Metric Tons",
 				unitsShort: "Metric Tons"
 			}
 		};
+		GCMRC.Page.params["2"] = {
+			inst: {
+				decimalPlaces: "0",
+				displayName: "Discharge",
+				displayOrder: "200",
+				endPosition: GCMRC.Page.latestPositionISO.split("T")[0],
+				groupId: "2",
+				groupName: "Discharge",
+				sampleMethod: "inst",
+				beginPosition: GCMRC.Page.earliestPositionISO.split("T")[0],
+				units: "Cubic feet per second",
+				unitsShort: "cfs",
+				color: CONFIG.instColor,
+				highlightColor: CONFIG.instHiColor
+			},
+			description : {
+				groupId: "2",
+				groupName: "Discharge",
+				displayName: "Discharge",
+				displayOrder: "200",
+				units: "Cubic feet per second",
+				unitsShort: "cfs"
+			}
+		}
 	}),
+	params: {},
 	credits: ["USGSGCMR"],
 	creditLoad: JSL.ResourceLoad(function(el) {
 		if (GCMRC.Page.credits.none(el.orgCode)) {
 			GCMRC.Page.credits.push(el.orgCode);
 		} else {
-			// bah, no log at this point LOG.info("Credits already contain " + el.orgCode);
+			// LOG.info("Credits already contain " + el.orgCode);
 		}
 	}),
 	reach: {},

@@ -33,17 +33,17 @@ $(document).ready(function() {
 	var paramList = [
 		GCMRC.Page.sliderConfig.riverLoad
 	];
-	if (GCMRC.Page.reach.pcode.some("100600")) {
+	if (GCMRC.Page.reach.groupName.some("S Fines Cumul Load")) { //HACK
 		paramList.push(GCMRC.Page.sliderConfig.riverFinesLoad);
 	}
-	if (GCMRC.Page.reach.majorTrib) {
-		if (GCMRC.Page.reach.pcode.some("100600")) {
+	if (GCMRC.Page.reach.majorTribSite) {
+		if (GCMRC.Page.reach.groupName.some("S Fines Cumul Load")) {
 			paramList.push(GCMRC.Page.sliderConfig.majorTribFinesLoad);
 		}
 		paramList.push(GCMRC.Page.sliderConfig.majorTribLoad);
 	}
-	if (GCMRC.Page.reach.minorTrib) {
-		if (GCMRC.Page.reach.pcode.some("100600")) {
+	if (GCMRC.Page.reach.minorTribSite) {
+		if (GCMRC.Page.reach.groupName.some("S Fines Cumul Load")) {
 			paramList.push(GCMRC.Page.sliderConfig.minorTribFinesLoad);
 		}
 		paramList.push(GCMRC.Page.sliderConfig.minorTribLoad);

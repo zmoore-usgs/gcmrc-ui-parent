@@ -40,6 +40,11 @@ public class ReachTribPORSpec extends Spec {
 		return new ColumnMapping[] {
 			new ColumnMapping(C_SITE_UP, S_SITE_UP),
 			new ColumnMapping(C_SITE_DOWN, S_SITE_DOWN),
+			new ColumnMapping(C_GROUP_NAME, S_GROUP_NAME),
+			new ColumnMapping(C_UP_EARLIEST_DT, S_UP_EARLIEST_DT),
+			new ColumnMapping(C_UP_LATEST_DT, S_UP_LATEST_DT),
+			new ColumnMapping(C_DOWN_EARLIEST_DT, S_DOWN_EARLIEST_DT),
+			new ColumnMapping(C_DOWN_LATEST_DT, S_DOWN_LATEST_DT),
 			new ColumnMapping(C_EARLIEST_DT_MAJOR_TRIB, S_EARLIEST_DT_MAJOR_TRIB),
 			new ColumnMapping(C_LATEST_DT_MAJOR_TRIB, S_LATEST_DT_MAJOR_TRIB),
 			new ColumnMapping(C_EARLIEST_DT_MINOR_TRIB, S_EARLIEST_DT_MINOR_TRIB),
@@ -61,7 +66,8 @@ public class ReachTribPORSpec extends Spec {
 	public SearchMapping[] setupSearchMap() {
 		return new SearchMapping[] {
 			new SearchMapping(S_SITE_UP, C_SITE_UP, null, WhereClauseType.equals, CleaningOption.none, null, null),
-			new SearchMapping(S_SITE_DOWN, C_SITE_DOWN, null, WhereClauseType.equals, CleaningOption.none, null, null)
+			new SearchMapping(S_SITE_DOWN, C_SITE_DOWN, null, WhereClauseType.equals, CleaningOption.none, null, null),
+			new SearchMapping(S_GROUP_NAME, C_GROUP_NAME, null, WhereClauseType.equals, CleaningOption.none, null, null)
 		};
 	}
 
@@ -100,6 +106,7 @@ public class ReachTribPORSpec extends Spec {
 		result.append("  WHERE ");
 		result.append("    TSP.SITE_ID = D.SITE_ID_DOWN ");
 		result.append("    AND TSP.GROUP_ID = D.REACH_GROUP) DOWN_LATEST_DT, ");
+		result.append("  (SELECT NAME FROM GROUP_NAME G WHERE D.REACH_GROUP = G.GROUP_ID) GROUP_NAME,");
 		result.append("  (SELECT CASE WHEN NWIS_SITE_NO IS NULL THEN SHORT_NAME ELSE NWIS_SITE_NO END FROM SITE_STAR WHERE DISCHARGE_DOWN = SITE_ID) DISCHARGE_DOWN, ");
 		result.append("  (SELECT ");
 		result.append("    TO_CHAR(EARLIEST_DT, 'YYYY-MM-DD\"T\"HH24:MI:SS') ");
@@ -151,8 +158,18 @@ public class ReachTribPORSpec extends Spec {
 	
 	public static final String S_SITE_UP = "upstreamStation";
 	public static final String C_SITE_UP = "SITE_UP";
+	public static final String S_UP_EARLIEST_DT = "upstreamBeginPosition";
+	public static final String C_UP_EARLIEST_DT = "UP_EARLIEST_DT";
+	public static final String S_UP_LATEST_DT = "upstreamEndPosition";
+	public static final String C_UP_LATEST_DT = "UP_LATEST_DT";
 	public static final String S_SITE_DOWN = "downstreamStation";
 	public static final String C_SITE_DOWN = "SITE_DOWN";
+	public static final String S_DOWN_EARLIEST_DT = "downstreamBeginPosition";
+	public static final String C_DOWN_EARLIEST_DT = "DOWN_EARLIEST_DT";
+	public static final String S_DOWN_LATEST_DT = "downstreamEndPosition";
+	public static final String C_DOWN_LATEST_DT = "DOWN_LATEST_DT";
+	public static final String S_GROUP_NAME = "groupName";
+	public static final String C_GROUP_NAME = "GROUP_NAME";
 	public static final String S_LATEST_DT_MAJOR_TRIB = "majorTribEndPosition";
 	public static final String C_LATEST_DT_MAJOR_TRIB = "LATEST_DT_MAJOR_TRIB";
 	public static final String S_EARLIEST_DT_MAJOR_TRIB = "majorTribBeginPosition";

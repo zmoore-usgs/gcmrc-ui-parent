@@ -125,9 +125,8 @@
 			<jsp:param name="relPath" value="${relativePath}" />
 			<jsp:param name="pageName" value="${pageName}" />
 		</jsp:include>
-		<script src="${relativePath}services/service/reach/jsonp/trib?upstreamStation=${upstreamStationName}&jsonp_callback=GCMRC.Page.reachLoad"></script>
+		<script src="${relativePath}services/service/reach/jsonp/trib?upstreamStation=${upstreamStationName}&jsonp_callback=GCMRC.Page.reachLoad"></script>  <!--Can we put these together?-->
 		<script src="${relativePath}services/service/reach/jsonp/por?upstreamStation=${upstreamStationName}&jsonp_callback=GCMRC.Page.reachPORLoad"></script>
-		<script src="${relativePath}services/service/station/jsonp/param?site=${upstreamStationName}&site=${downstreamStationName}&jsonp_callback=GCMRC.Page.paramsLoad"></script>
 		<script src="${relativePath}services/service/station/jsonp/credit?site=${upstreamStationName}&site=${downstreamStationName}&jsonp_callback=GCMRC.Page.creditLoad"></script>
 
 		<style type="text/css">

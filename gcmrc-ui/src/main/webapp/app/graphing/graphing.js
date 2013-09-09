@@ -75,8 +75,9 @@ GCMRC.Graphing = function(hoursOffset) {
 			var result;
 
 			result = [parseInt(el[timeColumn])];
-
-			var dataColumns = graphToMake.columns.filter(function(n){return !n.startsWith(timeColumn)}).map(function(col) {
+			
+			var columns = graphToMake.responseColumns || graphToMake.columns;
+			var dataColumns = columns.filter(function(n){return !n.startsWith(timeColumn)}).map(function(col) {
 				return parseColData(el[col]);
 			});
 
@@ -334,7 +335,7 @@ GCMRC.Graphing = function(hoursOffset) {
 							containerDiv.empty();
 							labelDiv.empty();
 							GCMRC.Page.params.values().sortBy(function(n) {
-								return parseFloat(n.description.displayOrder);
+								return parseInt(n.description.displayOrder || 9999999);
 							}).map(function(n) {
 								return n.description.groupId;
 							}).forEach(function(el) {

@@ -236,21 +236,8 @@ GCMRC.Page = {
 			var toGet = whatchaGotForMe.attr("value");
 			
 			var cols = ["time!UTCMillis"];
-//			if (toGet) { //Freakin Smelly
-//				var toGetSplit = toGet.split(",");
-//				[].push.apply(cols, toGetSplit.map(function(key) {
-//					var tsGroupName = GCMRC.Page.params[el.name][key].groupName;
-//					if (tsGroupName) {
-//						tsGroupName = "!" + tsGroupName;
-//					} else {
-//						tsGroupName = "";
-//					}
-//					return key + "!" + el.name + tsGroupName + "!" + CONFIG.stationName;
-//				}));
-//			} else {
-				var groupName = GCMRC.Page.params[el.name].inst.groupName;
-				cols.push("inst!" + groupName + "!" + CONFIG.stationName);
-//			}
+			var groupName = GCMRC.Page.params[el.name].inst.groupName;
+			cols.push("inst!" + groupName + "!" + CONFIG.stationName);
 			result.push({
 				groupId : el.name,
 				columns : cols
@@ -303,10 +290,6 @@ GCMRC.Page = {
 					[].push.apply(cols, el.columns.map(function(col) {
 						var result = col;
 						var colSplit = col.split("!");
-						//no pcode
-//						if (3 < colSplit.length) {
-//							result = colSplit[0] + "!" + colSplit[1] + "!" + colSplit[2] + "-" + colSplit[3];
-//						} else 
 						if (2 < colSplit.length) {
 							result = colSplit[0] + "!" + colSplit[1] + "-" + colSplit[2];
 						}

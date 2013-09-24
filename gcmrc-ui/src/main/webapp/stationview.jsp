@@ -254,20 +254,6 @@
 						<h3>Download Data</h3>
 					</div>
 					<div class="modal-body container-fluid">
-						<!--<div id="downloadCheckOptions" class="row-fluid">
-								<div class="span4">
-									<input type="checkbox">
-									Add other data
-								</div>
-								<div class="span4">
-									<input type="checkbox">
-									Do something else
-								</div>
-								<div class="span4">
-									<input type="checkbox">
-									or this as well
-								</div>
-							</div>-->
 						<div class="row-fluid">
 							<div class="span6">
 								<h5>Ordering</h5>

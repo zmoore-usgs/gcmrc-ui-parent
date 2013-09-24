@@ -37,18 +37,18 @@ public class StationQWSpec extends Spec {
 	@Override
 	public ColumnMapping[] setupColumnMap() {
 		return new ColumnMapping[] {
-			new ColumnMapping(C_PCODE, S_PCODE),
-			new ColumnMapping(C_SAMPLE_METHOD, S_SAMPLE_METHOD),
+			new ColumnMapping(C_GROUP_ID, S_GROUP_ID),
 			new ColumnMapping(C_START_DT, S_START_DT),
 			new ColumnMapping(C_END_DT, S_END_DT),
-			new ColumnMapping(C_SITE_NO, null),
-			new ColumnMapping(C_SHORT_NM, null),
-			new ColumnMapping(C_PCODE_NAME, S_PCODE_NAME),
+			new ColumnMapping(C_SITE_NAME, S_SITE_NAME),
+			new ColumnMapping(C_SAMPLE_METHOD, S_SAMPLE_METHOD),
+			new ColumnMapping(C_GROUP_NAME, S_GROUP_NAME),
 			new ColumnMapping(C_DISPLAY_NAME, S_DISPLAY_NAME),
-			new ColumnMapping(C_DISPLAY_ORDER, S_DISPLAY_ORDER),
 			new ColumnMapping(C_UNITS, S_UNITS),
 			new ColumnMapping(C_UNITS_SHORT, S_UNITS_SHORT),
-			new ColumnMapping(C_DECIMAL_PLACES, S_DECIMAL_PLACES)
+			new ColumnMapping(C_DECIMAL_PLACES, S_DECIMAL_PLACES),
+			new ColumnMapping(C_DISPLAY_ORDER, S_DISPLAY_ORDER),
+			new ColumnMapping(C_IS_VISIBLE, S_IS_VISIBLE)
 		};
 	}
 
@@ -65,76 +65,62 @@ public class StationQWSpec extends Spec {
 	@Override
 	public SearchMapping[] setupSearchMap() {
 		return new SearchMapping[] {
-			new SearchMapping(S_PCODE, C_PCODE, null, WhereClauseType.equals, null, null, null),
-			new SearchMapping(S_SITE_NO, C_SITE_NO, null, WhereClauseType.equals, null, null, null),
-			new SearchMapping(S_SHORT_NM, C_SHORT_NM, null, WhereClauseType.equals, null, null, null),
-			new SearchMapping(S_SITE, C_SITE_NO + "," + C_SHORT_NM, null, WhereClauseType.equals, null, null, null),
-			new SearchMapping(S_SAMPLE_METHOD, C_SAMPLE_METHOD, null, WhereClauseType.equals, null, null, null)
+			new SearchMapping(S_GROUP_ID, C_GROUP_ID, null, WhereClauseType.equals, null, null, null),
+			new SearchMapping(S_SITE_NAME, C_SITE_NAME, null, WhereClauseType.equals, null, null, null),
+			new SearchMapping(S_SAMPLE_METHOD, C_SAMPLE_METHOD, null, WhereClauseType.equals, null, null, null),
+			new SearchMapping(S_GROUP_NAME, C_GROUP_NAME, null, WhereClauseType.equals, null, null, null),
+			new SearchMapping(S_DISPLAY_NAME, C_DISPLAY_NAME, null, WhereClauseType.equals, null, null, null)
 		};
 	}
 
 	@Override
 	public String setupTableName() {
-		StringBuilder sb = new StringBuilder();
+		StringBuilder result = new StringBuilder();
 		
-		sb.append("  (SELECT QWP.PARM_CD PCODE,");
-		sb.append("    TO_CHAR(EARLIEST_DT, 'YYYY-MM-DD') START_DT,");
-		sb.append("    TO_CHAR(LATEST_DT, 'YYYY-MM-DD') END_DT,");
-		sb.append("    NWIS_SITE_NO SITE_NO,");
-		sb.append("    SITE_SHORT_NM SHORT_NM,");
-		sb.append("    QWP.SAMP_METH_CD SAMPLE_METHOD,");
-		sb.append("    SMT.SAMP_METH_DISP_NM DISPLAY_NAME,");
-		sb.append("    P.PARM_ESSENCE_NM PCODE_NAME,");
-		sb.append("    P.UNITS_NM UNITS,");
-		sb.append("    P.UNITS_SHORT_NM UNITS_SHORT,");
-		sb.append("    P.BASIC_NUM_DEC_PLACES_VA DECIMAL_PLACES,");
-		sb.append("    CASE");
-		sb.append("      WHEN QWP.PARM_CD='80222'");
-		sb.append("      THEN 700");
-		sb.append("      WHEN QWP.PARM_CD='80220'");
-		sb.append("      THEN 800");
-		sb.append("      WHEN QWP.PARM_CD='100200'");
-		sb.append("      THEN 900");
-		sb.append("      ELSE 9999");
-		sb.append("    END AS DISPLAY_ORDER");
-		sb.append("  FROM QW_POR QWP,");
-		sb.append("    SITE S,");
-		sb.append("    PARM P,");
-		sb.append("    SAMP_METH_TP SMT");
-		sb.append("  WHERE QWP.SITE_ID = S.SITE_ID");
-		sb.append("  AND QWP.PARM_CD = P.PARM_CD");
-		sb.append("  AND QWP.SAMP_METH_CD = SMT.SAMP_METH_CD");
-		sb.append("  ) T_A_SUMMARY");
+		result.append("(");
+		result.append("  SELECT QWP.GROUP_ID,");
+		result.append("    TO_CHAR(EARLIEST_DT, 'YYYY-MM-DD') START_DT,");
+		result.append("    TO_CHAR(LATEST_DT, 'YYYY-MM-DD') END_DT,");
+		result.append("    SITE_NAME,");
+		result.append("    QWP.SAMPLE_METHOD SAMPLE_METHOD,");
+		result.append("    QWP.GROUP_NAME DISPLAY_NAME,");
+		result.append("    G.NAME GROUP_NAME,");
+		result.append("    G.UNITS_NAME UNITS,");
+		result.append("    G.UNITS_NAME_SHORT UNITS_SHORT,");
+		result.append("    G.DECIMAL_PLACES,");
+		result.append("    G.DISPLAY_ORDER,");
+		result.append("    'Y' IS_VISIBLE");
+		result.append("  FROM QW_POR_STAR QWP,");
+		result.append("    GROUP_NAME G");
+		result.append("  WHERE QWP.GROUP_ID = G.GROUP_ID");
+		result.append("  AND QWP.GROUP_ID IN (89, 90, 92)");
+		result.append(") T_A_SUMMARY");
 		
-		return sb.toString();
+		return result.toString();
 	}
 
-	
+	public static final String S_GROUP_ID = "groupId";
+	public static final String C_GROUP_ID = "GROUP_ID";
 	public static final String S_START_DT = "beginPosition";
 	public static final String C_START_DT = "START_DT";
 	public static final String S_END_DT = "endPosition";
 	public static final String C_END_DT = "END_DT";
-	public static final String S_PCODE = "pCode";
-	public static final String C_PCODE = "PCODE";
-	public static final String S_SITE = "site";
-	public static final String S_SITE_NO = "nwisSite";
-	public static final String C_SITE_NO = "SITE_NO";
-	public static final String S_SHORT_NM = "shortName";
-	public static final String C_SHORT_NM = "SHORT_NM";
-	public static final String S_PUBLIC_PORTAL_QUALIFIER = "ppq";
-	public static final String C_PUBLIC_PORTAL_QUALIFIER = "PUBLIC_PORTAL_QUALIFIER";
-	public static final String S_DISPLAY_ORDER = "displayOrder";
-	public static final String C_DISPLAY_ORDER = "DISPLAY_ORDER";
+	public static final String S_SITE_NAME = "site";
+	public static final String C_SITE_NAME = "SITE_NAME";
 	public static final String S_SAMPLE_METHOD = "sampleMethod";
 	public static final String C_SAMPLE_METHOD = "SAMPLE_METHOD";
-	public static final String S_PCODE_NAME = "pCodeName";
-	public static final String C_PCODE_NAME = "PCODE_NAME";
 	public static final String S_DISPLAY_NAME = "displayName";
 	public static final String C_DISPLAY_NAME = "DISPLAY_NAME";
+	public static final String S_GROUP_NAME = "groupName";
+	public static final String C_GROUP_NAME = "GROUP_NAME";
 	public static final String S_UNITS = "units";
 	public static final String C_UNITS = "UNITS";
 	public static final String S_UNITS_SHORT = "unitsShort";
 	public static final String C_UNITS_SHORT = "UNITS_SHORT";
 	public static final String S_DECIMAL_PLACES = "decimalPlaces";
 	public static final String C_DECIMAL_PLACES = "DECIMAL_PLACES";
+	public static final String S_DISPLAY_ORDER = "displayOrder";
+	public static final String C_DISPLAY_ORDER = "DISPLAY_ORDER";
+	public static final String S_IS_VISIBLE = "isVisible";
+	public static final String C_IS_VISIBLE = "IS_VISIBLE";
 }

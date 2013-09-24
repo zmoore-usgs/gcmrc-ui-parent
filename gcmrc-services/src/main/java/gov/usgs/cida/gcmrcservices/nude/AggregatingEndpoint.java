@@ -205,10 +205,7 @@ public class AggregatingEndpoint extends SpecEndpoint {
 		
 		if (colMaps.isEmpty()) {
 			colMaps.add(new ColumnToXmlMapping("ERROR","ERROR"));
-		} 
-//		else {
-//			colMaps.addFirst(new ColumnToXmlMapping(time.getName(), timeDisplayName));
-//		}
+		}
 		
 		return colMaps.toArray(new ColumnToXmlMapping[0]);
 	}

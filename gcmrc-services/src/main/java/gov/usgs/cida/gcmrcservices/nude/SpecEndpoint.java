@@ -6,6 +6,7 @@ import com.google.common.collect.Multimap;
 import gov.usgs.cida.gcmrcservices.TimeUtil;
 import static gov.usgs.cida.gcmrcservices.TimeUtil.TZ_CODE_LOOKUP;
 import gov.usgs.cida.gcmrcservices.jsl.data.ParameterSpec;
+import gov.usgs.cida.gcmrcservices.jsl.data.QWDataSpec;
 import gov.usgs.cida.gcmrcservices.jsl.data.SpecOptions;
 import static gov.usgs.cida.gcmrcservices.nude.Endpoint.COLUMN_KEYWORD;
 import static gov.usgs.cida.gcmrcservices.nude.Endpoint.TIMEZONE_IN_HEADER_KEYWORD;
@@ -101,6 +102,7 @@ public abstract class SpecEndpoint extends Endpoint {
 					Map<String, String[]> modMap = new HashMap<String, String[]>();
 					modMap.put(ParameterSpec.S_SITE_NAME, new String[] {station});
 					modMap.put(ParameterSpec.S_GROUP_NAME, new String[] {se.parameterCode.groupName});
+					modMap.put(QWDataSpec.S_SAMPLE_METHOD, new String[] {se.parameterCode.sampleMethod});
 					Spec spec = se.getSpec(station, specOptions);
 					Spec.loadParameters(spec, modMap);
 					result.add(spec);

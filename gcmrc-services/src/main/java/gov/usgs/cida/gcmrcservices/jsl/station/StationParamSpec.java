@@ -66,6 +66,7 @@ public class StationParamSpec extends Spec {
 	public SearchMapping[] setupSearchMap() {
 		return new SearchMapping[] {
 			new SearchMapping(S_SITE_NAME, C_SITE_NAME, null, WhereClauseType.equals, null, null, null),
+			new SearchMapping(S_GROUP_NAME, C_GROUP_NAME, null, WhereClauseType.equals, null, null, null),
 			new SearchMapping(S_IS_VISIBLE, C_IS_VISIBLE, null, WhereClauseType.equals, null, null, null),
 			new SearchMapping(S_IS_DOWNLOADABLE, C_IS_DOWNLOADABLE, null, WhereClauseType.equals, null, null, null)
 		};

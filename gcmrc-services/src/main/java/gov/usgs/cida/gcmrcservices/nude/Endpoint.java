@@ -100,28 +100,17 @@ public abstract class Endpoint extends HttpServlet {
 		Map<String, ColumnMetadata> result = new HashMap<String, ColumnMetadata>();
 		ResultSet rs = null;
 		try {
-			Column pCode = new SimpleColumn("PARM_CD");
-			Column tsGrpNm = new SimpleColumn("TS_GRP_NM");
-			Column nwisName = new SimpleColumn("PARM_NM");
-			Column displayName = new SimpleColumn("PARM_ESSENCE_NM");
-			Column units = new SimpleColumn("UNITS_NM");
-			Column unitsShort = new SimpleColumn("UNITS_SHORT_NM");
+			Column tsGrpNm = new SimpleColumn("NAME");
+			Column displayName = new SimpleColumn("NAME_DISPLAY");
+			Column unitsShort = new SimpleColumn("UNITS_NAME_SHORT");
 			
 			ParameterizedString ps = new ParameterizedString();
-			ps.append("  SELECT DISTINCT PARM.").append(pCode.getName()).append(",");
-			ps.append("    TS_GROUP_POR.").append(tsGrpNm.getName()).append(",");
-			ps.append("    PARM.").append(nwisName.getName()).append(",");
-			ps.append("    PARM.").append(displayName.getName()).append(",");
-			ps.append("    PARM.").append(units.getName()).append(",");
-			ps.append("    PARM.").append(unitsShort.getName());
-			ps.append("  FROM PARM,");
-			ps.append("    TS_GROUP_POR,");
-			ps.append("    INFO_PORTAL_TS_GROUP");
-			ps.append("  WHERE PARM.PARM_CD = TS_GROUP_POR.PARM_CD");
-			ps.append("  AND TS_GROUP_POR.PARM_CD = INFO_PORTAL_TS_GROUP.PARM_CD");
-			ps.append("  AND TS_GROUP_POR.TS_GRP_NM = INFO_PORTAL_TS_GROUP.TS_GRP_NM");
-			ps.append("  AND INFO_PORTAL_TS_GROUP.PRIORITY_VA <= 11");
-			ps.append("  ORDER BY PARM_CD");
+			ps.append("  SELECT DISTINCT GROUP_ID,");
+			ps.append("    NAME,");
+			ps.append("    NAME_DISPLAY,");
+			ps.append("    UNITS_NAME,");
+			ps.append("    UNITS_NAME_SHORT");
+			ps.append("  FROM GROUP_NAME");
 			
 			rs = sqlProvider.getResults(null, ps);
 			while (rs.next()) {
@@ -150,27 +139,27 @@ public abstract class Endpoint extends HttpServlet {
 		Map<String, ColumnMetadata> result = new HashMap<String, ColumnMetadata>();
 		ResultSet rs = null;
 		try {
-			Column pCode = new SimpleColumn("PARM_CD");
-			Column sampleMethod = new SimpleColumn("SAMP_METH_CD");
-			Column displayName = new SimpleColumn("PARM_ESSENCE_NM");
-			Column unitsShort = new SimpleColumn("UNITS_SHORT_NM");
+			Column sampleMethod = new SimpleColumn("SAMPLE_METHOD");
+			Column pCode = new SimpleColumn("NAME");
+			Column displayName = new SimpleColumn("NAME_DISPLAY");
+			Column unitsShort = new SimpleColumn("UNITS_NAME_SHORT");
 			
 			ParameterizedString ps = new ParameterizedString();
-			ps.append("SELECT ");
-			ps.append("  QWP.PARM_CD, ");
-			ps.append("  QWP.SAMP_METH_CD,");
-			ps.append("  P.PARM_ESSENCE_NM,");
-			ps.append("  P.UNITS_SHORT_NM");
+			ps.append("SELECT");
+			ps.append("  QWP.SAMPLE_METHOD,");
+			ps.append("  G.NAME,");
+			ps.append("  G.NAME_DISPLAY,");
+			ps.append("  G.UNITS_NAME_SHORT");
 			ps.append(" FROM ");
-			ps.append("  QW_POR QWP,");
-			ps.append("  PARM P");
+			ps.append("  QW_POR_STAR QWP,");
+			ps.append("  GROUP_NAME G");
 			ps.append(" WHERE");
-			ps.append("  QWP.PARM_CD = P.PARM_CD");
+			ps.append("  QWP.GROUP_ID = G.GROUP_ID");
 			ps.append(" GROUP BY ");
-			ps.append("  QWP.PARM_CD, ");
-			ps.append("  QWP.SAMP_METH_CD,");
-			ps.append("  P.PARM_ESSENCE_NM,");
-			ps.append("  P.UNITS_SHORT_NM");
+			ps.append("  G.NAME,");
+			ps.append("  QWP.SAMPLE_METHOD,");
+			ps.append("  G.NAME_DISPLAY,");
+			ps.append("  G.UNITS_NAME_SHORT");
 			
 			rs = sqlProvider.getResults(null, ps);
 			while (rs.next()) {
@@ -481,7 +470,7 @@ public abstract class Endpoint extends HttpServlet {
 		String cleanName = StringUtils.trimToNull(colName);
 		if (null != cleanName) {
 			int colLength = columnIdentifierLength;
-			if (!cleanName.startsWith("inst")) {
+			if (cleanName.startsWith("time")) {
 				colLength--;
 			}
 			String[] tings = cleanName.split("!", colLength + 1);

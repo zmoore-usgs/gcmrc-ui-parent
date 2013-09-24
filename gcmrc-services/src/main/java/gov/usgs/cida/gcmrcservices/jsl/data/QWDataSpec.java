@@ -30,15 +30,10 @@ public class QWDataSpec extends DataSpec {
 			result = new ColumnMapping[] {
 				new ColumnMapping(C_SAMPLE_ID, S_SAMPLE_ID),
 				new ColumnMapping(ParameterSpec.C_TSM_DT, ParameterSpec.S_TSM_DT, ASCENDING_ORDER, ParameterSpec.S_TSM_DT, null, null, null, "CASE WHEN USE_LAGGED = 'true' THEN TO_CHAR(" + C_LAGGED_SAMPLE_START_DT + ", 'YYYY-MM-DD\"T\"HH24:MI:SS') ELSE TO_CHAR(" + C_SAMPLE_START_DT + ", 'YYYY-MM-DD\"T\"HH24:MI:SS') END", null, null),
-				new ColumnMapping("s" + Math.abs(this.stationName.hashCode()) + "p" + Math.abs(this.parameterCode.hashCode()), S_RESULT_VA, ASCENDING_ORDER, S_RESULT_VA, null, null, null, "CASE WHEN TOTAL_95CONF_VA IS NOT NULL THEN (CASE WHEN ERRORBAR_LOWER_VA < 0 THEN 0 ELSE ERRORBAR_LOWER_VA END) || ';' || RESULT_VA || ';' || ERRORBAR_UPPER_VA ELSE TO_CHAR(RESULT_VA) END", null, null),
-				new ColumnMapping(C_ERRORBAR_UPPER_VA, S_ERRORBAR_UPPER_VA),
-				new ColumnMapping(C_ERRORBAR_LOWER_VA, S_ERRORBAR_LOWER_VA),
-				new ColumnMapping(C_SAMP_METH_CD, S_SAMP_METH_CD),
-				new ColumnMapping(C_TOTAL_95CONF_VA, S_TOTAL_95CONF_VA),
-				new ColumnMapping(C_LAB_BIAS_CORR_VA, S_LAB_BIAS_CORR_VA),
-				new ColumnMapping(C_SITE_NO, null),
-				new ColumnMapping(C_SHORT_NM, null),
-				new ColumnMapping(C_PARM_CD, null)
+				new ColumnMapping("s" + Math.abs(this.stationName.hashCode()) + "p" + Math.abs(this.parameterCode.hashCode()), S_RESULT_VA, ASCENDING_ORDER, S_RESULT_VA, null, null, null, "CASE WHEN TOTAL_95CONF IS NOT NULL THEN (CASE WHEN ERRORBAR_LOWER_VA < 0 THEN 0 ELSE ERRORBAR_LOWER_VA END) || ';' || RESULT_VA || ';' || ERRORBAR_UPPER_VA ELSE TO_CHAR(RESULT_VA) END", null, null),
+				new ColumnMapping(C_SITE_NAME, S_SITE_NAME),
+				new ColumnMapping(C_SAMPLE_METHOD, S_SAMPLE_METHOD),
+				new ColumnMapping(C_GROUP_NAME, S_GROUP_NAME)
 			};
 		} else {
 			log.trace("setupColumnMap stationName=" + this.stationName + " parameterCode=" + this.parameterCode);
@@ -50,8 +45,9 @@ public class QWDataSpec extends DataSpec {
 	@Override
 	public SearchMapping[] setupSearchMap() {
 		SearchMapping[] result = new SearchMapping[] {
-			new SearchMapping(ParameterSpec.S_SITE_NAME, C_SITE_NO + "," + C_SHORT_NM, null, WhereClauseType.equals, null, null, null),
-			new SearchMapping(S_PARM_CD, C_PARM_CD, null, WhereClauseType.equals, null, null, null),
+			new SearchMapping(S_SITE_NAME, S_SITE_NAME, null, WhereClauseType.equals, null, null, null),
+			new SearchMapping(ParameterSpec.S_GROUP_NAME, C_GROUP_NAME, null, WhereClauseType.equals, null, null, null),
+			new SearchMapping(S_SAMPLE_METHOD, C_SAMPLE_METHOD, null, WhereClauseType.equals, null, null, null),
 			new SearchMapping(Endpoint.BEGIN_KEYWORD, C_SAMPLE_START_DT, null, WhereClauseType.special, CleaningOption.none, FIELD_NAME_KEY + " >= TO_DATE(" + USER_VALUE_KEY + ", 'YYYY-MM-DD\"T\"HH24:MI:SS')", null),
 			new SearchMapping(Endpoint.END_KEYWORD, C_SAMPLE_START_DT, null, WhereClauseType.special, CleaningOption.none, FIELD_NAME_KEY + " <= TO_DATE(" + USER_VALUE_KEY + ", 'YYYY-MM-DD\"T\"HH24:MI:SS')", null)
 		};
@@ -61,38 +57,43 @@ public class QWDataSpec extends DataSpec {
 
 	@Override
 	public String setupTableName() {
-		StringBuilder sb = new StringBuilder();
+		StringBuilder result = new StringBuilder();
 
-		sb.append("(SELECT QWS.SAMPLE_ID, ");
-		sb.append("QWS.SAMPLE_START_DT AS SAMP_START_DT, ");
-		sb.append("QWS.SAMPLE_START_DT + NUMTODSINTERVAL(SUBSITE.TIME_LAG_CORR_SEC_VA, 'second') AS LAGGED_SAMP_START_DT, ");
-		if (null != this.options) {
-			sb.append("'").append(this.options.useLaggedTime).append("' AS USE_LAGGED, ");
-		} else {
-			log.trace("null options");
-		}
-		sb.append("QWR.RESULT_VA, ");
-		sb.append("CASE WHEN QWR.LAB_BIAS_CORR_VA IS NULL THEN QWR.RESULT_VA + QWR.TOTAL_95CONF_VA ");
-		sb.append("ELSE QWR.RESULT_VA + QWR.TOTAL_95CONF_VA + QWR.LAB_BIAS_CORR_VA ");
-		sb.append("END AS ERRORBAR_UPPER_VA, ");
-		sb.append("CASE WHEN QWR.LAB_BIAS_CORR_VA IS NULL THEN QWR.RESULT_VA - QWR.TOTAL_95CONF_VA ");
-		sb.append("ELSE QWR.RESULT_VA - QWR.TOTAL_95CONF_VA + QWR.LAB_BIAS_CORR_VA ");
-		sb.append("END AS ERRORBAR_LOWER_VA, ");
-		sb.append("QWS.SAMP_METH_CD, QWR.TOTAL_95CONF_VA, QWR.LAB_BIAS_CORR_VA, QWS.SITE_ID, QWR.PARM_CD, SITE.NWIS_SITE_NO, SITE.SITE_SHORT_NM, ");
-		sb.append("SUBSITE.SUBSITE_NM, SUBSITE.TIME_LAG_CORR_SEC_VA AS DISPLAY_TIME_OFFSET ");
-		sb.append("FROM QW_SAMPLE QWS, QW_RESULT QWR, SITE, SUBSITE ");
-		sb.append("WHERE QWS.SAMPLE_ID=QWR.SAMPLE_ID ");
-		sb.append("AND SITE.SITE_ID = QWS.SITE_ID ");
-		sb.append("AND SUBSITE.SITE_ID = QWS.SITE_ID ");
-		sb.append("AND SUBSITE.SUBSITE_NM = QWS.SUBSITE_NM ");
-		if (null != this.parameterCode) {
-			sb.append("AND QWS.ANL_STAT_CD<>'X' AND SAMP_METH_CD='").append(this.parameterCode.sampleMethod).append("' ");
-			sb.append("AND QWR.ANL_ENT_CD='GCMRRSCH' AND ANL_SCHED_NM='MassPsdXsecCorr' ");
-//			sb.append("AND QWR.PARM_CD='").append(this.parameterCode.pcode).append("' ");
-		}
-		sb.append(") T_A_LDVIEW");
+		result.append("(");
+		result.append("  SELECT QWS.SAMPLE_ID,");
+		result.append("  NVL(S.nwis_site_no, S.short_name) site_name,");
+		result.append("  QWS.START_DATE AS SAMP_START_DT,");
+		result.append("  QWS.START_DATE + NUMTODSINTERVAL(SS.TIME_LAG_SECONDS, 'second') AS LAGGED_SAMP_START_DT,");
+		result.append("  'true' AS USE_LAGGED,");
+		result.append("  QWR.SUSPSED_VALUE RESULT_VA,");
+		result.append("  CASE");
+		result.append("    WHEN QWR.BIAS_CORRECTION IS NULL");
+		result.append("    THEN QWR.SUSPSED_VALUE + QWR.TOTAL_95CONF");
+		result.append("    ELSE QWR.SUSPSED_VALUE + QWR.TOTAL_95CONF + QWR.BIAS_CORRECTION");
+		result.append("  END AS ERRORBAR_UPPER_VA,");
+		result.append("  CASE");
+		result.append("    WHEN QWR.BIAS_CORRECTION IS NULL");
+		result.append("    THEN QWR.SUSPSED_VALUE - QWR.TOTAL_95CONF");
+		result.append("    ELSE QWR.SUSPSED_VALUE - QWR.TOTAL_95CONF + QWR.BIAS_CORRECTION");
+		result.append("  END AS ERRORBAR_LOWER_VA,");
+		result.append("  SMS.SAMPLE_METHOD,");
+		result.append("  QWR.TOTAL_95CONF,");
+		result.append("  QWR.GROUP_ID,");
+		result.append("  G.NAME AS GROUP_NAME");
+		result.append(" FROM SAMPLE_STAR QWS,");
+		result.append("  RESULT_STAR QWR,");
+		result.append("  SITE_STAR S,");
+		result.append("  SAMPLE_METHOD_STAR SMS,");
+		result.append("  SUBSITE_STAR SS,");
+		result.append("  GROUP_NAME G");
+		result.append(" WHERE QWS.SAMPLE_ID      = QWR.SAMPLE_ID");
+		result.append("  AND QWS.SITE_ID          = S.SITE_ID");
+		result.append("  AND QWS.SAMPLE_METHOD_ID = SMS.SAMPLE_METHOD_ID");
+		result.append("  AND QWS.SUBSITE_ID       = SS.SUBSITE_ID");
+		result.append("  AND QWR.GROUP_ID         = G.GROUP_ID");
+		result.append(") T_A_INNER");
 
-		return sb.toString();
+		return result.toString();
 	}
 	
 	@Override
@@ -120,29 +121,16 @@ public class QWDataSpec extends DataSpec {
 	public static final String C_SAMPLE_START_DT = "SAMP_START_DT";
 	public static final String C_LAGGED_SAMPLE_START_DT = "LAGGED_SAMP_START_DT";
 	public static final String C_RESULT_VA = "RESULT_VA";
-	public static final String C_ERRORBAR_UPPER_VA = "ERRORBAR_UPPER_VA";
-	public static final String C_ERRORBAR_LOWER_VA = "ERRORBAR_LOWER_VA";
-	public static final String C_PLOT_COLOR_CD = "PLOT_COLOR_CD";
-	public static final String C_SAMP_METH_CD = "SAMP_METH_CD";
-	public static final String C_TOTAL_95CONF_VA = "TOTAL_95CONF_VA";
-	public static final String C_LAB_BIAS_CORR_VA = "LAB_BIAS_CORR_VA";
-	public static final String C_SITE_ID = "SITE_ID";
-	public static final String C_SITE_NO = "NWIS_SITE_NO";
-	public static final String C_SHORT_NM = "SITE_SHORT_NM";
-	public static final String C_PARM_CD = "PARM_CD";
 	
 	public static final String S_SAMPLE_ID = "SAMPLE_ID";
 	public static final String S_SAMPLE_START_DT = "SAMP_START_DT";
 	public static final String S_LAGGED_SAMPLE_START_DT = "LAGGED_SAMP_START_DT";
 	public static final String S_RESULT_VA = "RESULT_VA";
-	public static final String S_ERRORBAR_UPPER_VA = "ERRORBAR_UPPER_VA";
-	public static final String S_ERRORBAR_LOWER_VA = "ERRORBAR_LOWER_VA";
-	public static final String S_PLOT_COLOR_CD = "PLOT_COLOR_CD";
-	public static final String S_SAMP_METH_CD = "SAMP_METH_CD";
-	public static final String S_TOTAL_95CONF_VA = "TOTAL_95CONF_VA";
-	public static final String S_LAB_BIAS_CORR_VA = "LAB_BIAS_CORR_VA";
-	public static final String S_SITE_ID = "SITE_ID";
-	public static final String S_SITE_NO = "NWIS_SITE_NO";
-	public static final String S_SHORT_NM = "SITE_SHORT_NM";
-	public static final String S_PARM_CD = "PARM_CD";
+	
+	public static final String S_SITE_NAME = "site";
+	public static final String C_SITE_NAME = "SITE_NAME";
+	public static final String S_SAMPLE_METHOD = "sampleMethod";
+	public static final String C_SAMPLE_METHOD = "SAMPLE_METHOD";
+	public static final String S_GROUP_NAME = "groupName";
+	public static final String C_GROUP_NAME = "GROUP_NAME";
 }

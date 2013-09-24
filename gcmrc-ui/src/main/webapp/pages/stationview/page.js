@@ -234,13 +234,20 @@ GCMRC.Page = {
 			var result = [];
 			var whatchaGotForMe = $('[name=dataradio' + el.name + ']:checked');
 			var toGet = whatchaGotForMe.attr("value");
-			
 			var cols = ["time!UTCMillis"];
-			var groupName = GCMRC.Page.params[el.name].inst.groupName;
-			cols.push("inst!" + groupName + "!" + CONFIG.stationName);
+			if (toGet) {
+				var toGetSplit = toGet.split(",");
+				[].push.apply(cols, toGetSplit.map(function(key) {
+					var groupName = GCMRC.Page.params[el.name][key].groupName;
+					return key + "!" + groupName + "!" + CONFIG.stationName;
+				}));
+			} else {
+				var groupName = GCMRC.Page.params[el.name].inst.groupName;
+				cols.push("inst!" + groupName + "!" + CONFIG.stationName);
+			}
 			result.push({
-				groupId : el.name,
-				columns : cols
+				groupId: el.name,
+				columns: cols
 			});
 			return result;
 		});
@@ -506,32 +513,34 @@ GCMRC.Page = {
 		el.highlightColor = CONFIG.instHiColor;
 		GCMRC.Page.params[identifier][el.sampleMethod] = el;
 		
-		var thisBeginPosition = new Date(el.beginPosition).getTime();
-		if (!GCMRC.Page.earliestPosition || thisBeginPosition < new Date(GCMRC.Page.earliestPosition).getTime()) {
-			GCMRC.Page.earliestPosition = el.beginPosition;
-		}
-		if (thisBeginPosition < new Date(GCMRC.Page.params[identifier].description.earliestMethod).getTime()) {
-			GCMRC.Page.params[identifier].description.earliestMethod = el.beginPosition;
-		}
-		
-		var thisEndPosition = new Date(el.endPosition).getTime();
-		if (!GCMRC.Page.latestPosition || thisEndPosition > new Date(GCMRC.Page.latestPosition).getTime()) {
-			GCMRC.Page.latestPosition = el.endPosition;
-		}
-		if (thisEndPosition > new Date(GCMRC.Page.params[identifier].description.latestMethod).getTime()) {
-			GCMRC.Page.params[identifier].description.latestMethod = el.endPosition;
+		if (el.isVisible) {
+			var thisBeginPosition = new Date(el.beginPosition).getTime();
+			if (!GCMRC.Page.earliestPosition || thisBeginPosition < new Date(GCMRC.Page.earliestPosition).getTime()) {
+				GCMRC.Page.earliestPosition = el.beginPosition;
+			}
+			if (thisBeginPosition < new Date(GCMRC.Page.params[identifier].description.earliestMethod).getTime()) {
+				GCMRC.Page.params[identifier].description.earliestMethod = el.beginPosition;
+			}
+
+			var thisEndPosition = new Date(el.endPosition).getTime();
+			if (!GCMRC.Page.latestPosition || thisEndPosition > new Date(GCMRC.Page.latestPosition).getTime()) {
+				GCMRC.Page.latestPosition = el.endPosition;
+			}
+			if (thisEndPosition > new Date(GCMRC.Page.params[identifier].description.latestMethod).getTime()) {
+				GCMRC.Page.params[identifier].description.latestMethod = el.endPosition;
+			}
 		}
 	}),
 	qwLoad : JSL.ResourceLoad(function(el) {
-		var identifier = el.pCode;
+		var identifier = el.groupId;
 		if (!GCMRC.Page.params[identifier]) {
 			GCMRC.Page.params[identifier] = {
 				description : {
-					groupId : el.pCode,
-					displayName : el.pCodeName,
+					groupId : identifier,
+					displayName : el.displayName,
 					displayOrder : el.displayOrder,
 					decimalPlaces : el.decimalPlaces,
-					isVisible : 'N',
+					isVisible : el.isVisible,
 					units : el.units,
 					unitsShort : el.unitsShort,
 					earliestMethod : el.beginPosition,

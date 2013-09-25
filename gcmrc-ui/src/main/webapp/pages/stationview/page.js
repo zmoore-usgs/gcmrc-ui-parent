@@ -533,6 +533,15 @@ GCMRC.Page = {
 	}),
 	qwLoad : JSL.ResourceLoad(function(el) {
 		var identifier = el.groupId;
+		
+		if ("89" === identifier) {
+			identifier = "7";
+			el.groupId = "7";
+		} else if ("90" === identifier) {
+			identifier = "6";
+			el.groupId = "6";
+		}
+		
 		if (!GCMRC.Page.params[identifier]) {
 			GCMRC.Page.params[identifier] = {
 				description : {

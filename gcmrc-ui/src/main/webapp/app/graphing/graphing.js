@@ -97,12 +97,14 @@ GCMRC.Graphing = function(hoursOffset) {
 		
 		var identifier = graphToMake.groupId;
 		var parameterMetadata = GCMRC.Page.params[identifier].description;
-		var graphName = parameterMetadata['pCodeName'] || parameterMetadata['displayName'];
+		var graphName = parameterMetadata['displayName'];
 		
 		if (hasData) {
 			conf.labels = [timeColumn];
 			[].push.apply(conf.labels, graphToMake.columns.filter(function(n){return !n.startsWith(timeColumn)}).map(function(el) {
-				return GCMRC.Page.params[identifier][el.split("!")[0]]['displayName'];
+				var param = GCMRC.Page.params[identifier][el.split("!")[0]];
+				var result = ("inst" === param.sampleMethod) ? param.displayName : param.sampleMethod;
+				return result;
 			}));
 			conf['yAxisLabel'] = graphToMake.yAxisLabel || graphName + " (" + parameterMetadata['unitsShort'] + ")";
 			conf['dataformatter'] = GCMRC.Dygraphs.DataFormatter(parameterMetadata['decimalPlaces']);
@@ -114,14 +116,16 @@ GCMRC.Graphing = function(hoursOffset) {
 			conf["highlightColor"] = {};
 			[].push.apply(conf.colors, graphToMake.columns.filter(function(n){return !n.startsWith(timeColumn)}).map(function(el) {
 				var param = GCMRC.Page.params[identifier][el.split("!")[0]];
-				this[param['displayName']] = param['highlightColor'];
+				var idiot = ("inst" === param.sampleMethod) ? param.displayName : param.sampleMethod;
+				this[idiot] = param['highlightColor'];
 				return param['color'];
 			}, conf.highlightColor));
 
 			conf["series"] = {};
 			graphToMake.columns.filter(function(n){return !n.startsWith(timeColumn)}).map(function(el) {
 				var param = GCMRC.Page.params[identifier][el.split("!")[0]];
-				this[param['displayName']] = param.series;
+				var idiot = ("inst" === param.sampleMethod) ? param.displayName : param.sampleMethod;
+				this[idiot] = param.series;
 			}, conf["series"]);
 
 			buildGraph(conf);

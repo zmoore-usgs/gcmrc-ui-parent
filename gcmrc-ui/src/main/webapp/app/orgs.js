@@ -99,7 +99,7 @@ GCMRC.Organizations = {
 		}
 	},
 	"USIBWC" : {
-		displayName : "U.S. International Boundary and Water Comission",
+		displayName : "U.S. International Boundary and Water Commission",
 		url : "http://www.ibwc.gov/home.html",
 		logo : {
 			url : CONFIG.relativePath + "app/sources/source-ibwc.jpg",

@@ -19,6 +19,9 @@ GCMRC.Stations = {
 	},
 	"08374500" : {
 		"moreData" : '<li>Find data for this site in the <a href="http://www.ibwc.gov/wad/DDQTERLI.htm">IBWC historical dataset</a> or the <a href="http://www.ibwc.gov/wad/374500_a.txt">IBWC realtime dataset</a></li>'
+	},
+	"08375000" : {
+		"moreData" : '<li>Find data for this site in the <a href="http://www.ibwc.gov/wad/DDQJOHNS.htm">IBWC historical dataset</a> or the <a href="http://www.ibwc.gov/wad/375000_a.txt">IBWC realtime dataset</a></li>'
 	}
 };
 GCMRC.StationLoad = JSL.ResourceLoad(function(el) {

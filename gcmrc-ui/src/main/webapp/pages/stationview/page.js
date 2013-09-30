@@ -84,6 +84,23 @@ GCMRC.Page = {
 			displayName,
 			'</h5>',
 			'<ul>'];
+		
+		var fixOrder = function(arr) {
+			var result = arr;
+			
+			result = result.map(function(el) {
+							var result = (el === 'EDI' || el === 'EWI' || el === 's vert' || el === 'm vert')?'ZZZZ--' + el: el;
+							result = (el === 'inst')?'AAAA--' + el: result;
+							return result;
+						});
+			result = result.sortBy();
+			result = result.map(function(el) {
+							var result = (el.startsWith('ZZZZ--') || el.startsWith('AAAA--'))?el.substring(6):el;
+							return result;
+						});
+			
+			return result;
+		};
 
 		if (allMethods.some(function(e){return "inst" !== e})) {
 			var ppqualifier = ppq || "Instantaneous";
@@ -96,7 +113,7 @@ GCMRC.Page = {
 						'<input type="radio" name="dataradio',
 						el,
 						'" value="',
-						allMethods.join(","),
+						fixOrder(allMethods).join(","),
 						'">' + ppqualifier + ' Data and Physical Samples',
 						'</li>'
 					);
@@ -106,7 +123,7 @@ GCMRC.Page = {
 					'<input type="radio" name="dataradio',
 					el,
 					'" value="',
-					allMethods.filter(function(e){return "inst" !== e}).join(","),
+					fixOrder(allMethods).filter(function(e){return "inst" !== e}).join(","),
 					'">Physical Samples Only',
 					'</li></ul>'
 				);

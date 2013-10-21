@@ -3,7 +3,11 @@ $(document).ready(function() {
 	GCMRC.Page.createLargeMap();
 	
 	var $stationList = $('#stationList');
-	GCMRC.Stations.keys(function(key) {
+	
+	GCMRC.Stations.map(function(key, val) {return {key : key, val : val}})
+			.values().sortBy(function(el){return el.val.displayOrder})
+			.map(function(el){return el.key})
+			.each(function(key) {
 		if (!GCMRC.Stations[key].hidden && GCMRC.Stations[key].network === CONFIG.networkName) {
 //			$stationList.append('<li><a href="' + CONFIG.relativePath + 'station/' + CONFIG.networkName + '/' + key + '">' + GCMRC.Stations[key].displayName + ' - ' + key + '</a></li>')
 			

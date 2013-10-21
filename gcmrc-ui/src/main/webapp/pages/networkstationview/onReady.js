@@ -5,7 +5,7 @@ $(document).ready(function() {
 	var $stationList = $('#stationList');
 	
 	GCMRC.Stations.map(function(key, val) {return {key : key, val : val}})
-			.values().sortBy(function(el){return el.val.displayOrder})
+			.values().sortBy(function(el){return el.val.displayOrder || "99999999999"})
 			.map(function(el){return el.key})
 			.each(function(key) {
 		if (!GCMRC.Stations[key].hidden && GCMRC.Stations[key].network === CONFIG.networkName) {

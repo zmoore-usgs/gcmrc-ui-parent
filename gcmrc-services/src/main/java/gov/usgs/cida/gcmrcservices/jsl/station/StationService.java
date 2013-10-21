@@ -1,5 +1,6 @@
 package gov.usgs.cida.gcmrcservices.jsl.station;
 
+import gov.usgs.cida.gcmrcservices.jsl.data.QWDownloadSpec;
 import gov.usgs.webservices.jdbc.routing.InvalidServiceException;
 import gov.usgs.webservices.jdbc.routing.UriRouter;
 import gov.usgs.webservices.jdbc.service.WebService;
@@ -20,6 +21,7 @@ public class StationService extends WebService {
 	public StationService() {
 		this.specMapping.put("param", StationParamSpec.class);
 		this.specMapping.put("qw", StationQWSpec.class);
+		this.specMapping.put("qwdownload", QWDownloadSpec.class);
 		this.specMapping.put("allsite", StationAllSiteSpec.class);
 		this.specMapping.put("site", StationSiteSpec.class);
 		this.specMapping.put("credit", StationCreditSpec.class);

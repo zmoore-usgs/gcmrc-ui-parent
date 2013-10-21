@@ -110,7 +110,7 @@
 			<jsp:param name="debug-qualifier" value="${development}" />
 		</jsp:include>
 		<script type="text/javascript">
-			var gcmrcModule = angular.module('gcmrc', ['ui.sortable']);
+			var gcmrcModule = angular.module('gcmrc', ['ui.sortable', "ui.bootstrap"]);
 		</script>
 		<script src="${relativePath}services/service/station/jsonp/allsite?network=${networkName}&jsonp_callback=GCMRC.StationLoad"></script>
 		<jsp:include page="app/graphing/package.jsp">
@@ -254,39 +254,48 @@
 						<h3>Download Data</h3>
 					</div>
 					<div class="modal-body container-fluid">
-						<div class="row-fluid">
-							<div class="span6">
-								<h5>Ordering</h5>
-								<ul ui:sortable="{items:'li.reorderable'}" ng:model="columnOrdering" id="downloadColumnOrdering">
-									<li ng:repeat="el in columnOrdering" ng:click="liClicked()" ng-class="{selected:isSelected(), reorderable:el.reorderable}" class="ui-state-default">
-										<button type="button" class="close removeColumn" ng:click="removeColumn()" aria-hidden="true" title="Remove Column">&times;</button>
-										<button type="button" class="close addColumn" ng:click="addColumn()" aria-hidden="true" title="Copy Column">+</button>
-										<span class="ui-icon ui-icon-arrowthick-2-n-s" ng-show='el.reorderable'></span>
-										{{el.name}}
-										<div ng-hide="el.nameConfig.useDefault" class="ui-state-disabled">({{el.nameConfig.customName}})</div>
-									</li>
-								</ul>
-							</div>
-							<div id="downloadColumnDetail" class="span6">
-								<div ng-show="columnSelected">
-									<h5>{{columnSelected.name}} options</h5>
-									<div ng-show="columnSelected.nameConfig">
-										<hr>
-										<h6>Naming</h6>
-										<div><input type="checkbox" ng:model="columnSelected.nameConfig.useDefault">Use default name</div>
-										<div><input type="checkbox" ng:model="columnSelected.nameConfig.useDefault" inverted><input type="text" ng:model="columnSelected.nameConfig.customName" ng-disabled="columnSelected.nameConfig.useDefault" placeholder="Specify custom name..."></div>
+						<tabset>
+							<tab heading="Continuous Data">
+								<div class="row-fluid">
+									<div class="span6">
+										<h5>Ordering</h5>
+										<ul ui:sortable="{items:'li.reorderable'}" ng:model="columnOrdering" id="downloadColumnOrdering">
+											<li ng:repeat="el in columnOrdering" ng:click="liClicked()" ng-class="{selected:isSelected(), reorderable:el.reorderable}" class="ui-state-default">
+												<button type="button" class="close removeColumn" ng:click="removeColumn()" aria-hidden="true" title="Remove Column">&times;</button>
+												<button type="button" class="close addColumn" ng:click="addColumn()" aria-hidden="true" title="Copy Column">+</button>
+												<span class="ui-icon ui-icon-arrowthick-2-n-s" ng-show='el.reorderable'></span>
+												{{el.name}}
+												<div ng-hide="el.nameConfig.useDefault" class="ui-state-disabled">({{el.nameConfig.customName}})</div>
+											</li>
+										</ul>
 									</div>
-									<div ng-show="columnSelected.formatConfig">
-										<hr>
-										<h6>Format</h6>
-										<input type="text" help-tooltip ng:model="columnSelected.formatConfig.format">
+									<div id="downloadColumnDetail" class="span6">
+										<div ng-show="columnSelected">
+											<h5>{{columnSelected.name}} options</h5>
+											<div ng-show="columnSelected.nameConfig">
+												<hr>
+												<h6>Naming</h6>
+												<div><input type="checkbox" ng:model="columnSelected.nameConfig.useDefault">Use default name</div>
+												<div><input type="checkbox" ng:model="columnSelected.nameConfig.useDefault" inverted><input type="text" ng:model="columnSelected.nameConfig.customName" ng-disabled="columnSelected.nameConfig.useDefault" placeholder="Specify custom name..."></div>
+											</div>
+											<div ng-show="columnSelected.formatConfig">
+												<hr>
+												<h6>Format</h6>
+												<input type="text" help-tooltip ng:model="columnSelected.formatConfig.format">
+											</div>
+										</div>
 									</div>
 								</div>
-							</div>
-						</div>
-						<div class="row-fluid">
-							<a href="#" id="stupidlyBigDownloadButton" class='buildButton'>Download Data</a>
-						</div>
+								<div class="row-fluid">
+									<a href="#" id="stupidlyBigDownloadButton" class='buildButton'>Download Data</a>
+								</div>
+							</tab>
+							<tab heading="Physical Samples">
+								<div class="row-fluid">
+									<a href="#" id="physicalDownloadButton" class='buildButton'>Download Data</a>
+								</div>
+							</tab>
+						</tabset>
 					</div>
 				</div>
 			</div>

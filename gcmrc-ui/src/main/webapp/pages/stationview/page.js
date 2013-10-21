@@ -84,6 +84,23 @@ GCMRC.Page = {
 			displayName,
 			'</h5>',
 			'<ul>'];
+		
+		var fixOrder = function(arr) {
+			var result = arr;
+			
+			result = result.map(function(el) {
+							var result = (el === 'EDI' || el === 'EWI' || el === 's vert' || el === 'm vert')?'ZZZZ--' + el: el;
+							result = (el === 'inst')?'AAAA--' + el: result;
+							return result;
+						});
+			result = result.sortBy();
+			result = result.map(function(el) {
+							var result = (el.startsWith('ZZZZ--') || el.startsWith('AAAA--'))?el.substring(6):el;
+							return result;
+						});
+			
+			return result;
+		};
 
 		if (allMethods.some(function(e){return "inst" !== e})) {
 			var ppqualifier = ppq || "Instantaneous";
@@ -96,7 +113,7 @@ GCMRC.Page = {
 						'<input type="radio" name="dataradio',
 						el,
 						'" value="',
-						allMethods.join(","),
+						fixOrder(allMethods).join(","),
 						'">' + ppqualifier + ' Data and Physical Samples',
 						'</li>'
 					);
@@ -106,7 +123,7 @@ GCMRC.Page = {
 					'<input type="radio" name="dataradio',
 					el,
 					'" value="',
-					allMethods.filter(function(e){return "inst" !== e}).join(","),
+					fixOrder(allMethods.filter(function(e){return "inst" !== e})).join(","),
 					'">Physical Samples Only',
 					'</li></ul>'
 				);
@@ -131,7 +148,7 @@ GCMRC.Page = {
 		GCMRC.Page.params.values().filter(function(n) {
 			return "Y" === n.description.isVisible;
 		}).sortBy(function(n) {
-			return parseFloat(n.description.displayOrder);
+			return (n.description.displayOrder)?parseFloat(n.description.displayOrder):9999999;
 		}).map(function(n) {
 			return n.description.groupId;
 		}).forEach(GCMRC.Page.addParamToList);
@@ -485,6 +502,22 @@ GCMRC.Page = {
 		};
 
 		document.location = document.location.href.first(document.location.href.lastIndexOf('/') + 1) + CONFIG.relativePath + 'services/agg?' + $.param(serviceOptions);
+	},
+	downloadSamplesClicked : function() {
+		var begin = $("input[name='beginPosition']").val();
+		var end = $("input[name='endPosition']").val();
+		
+		//Make absolutely sure they're formatted correctly for the services.
+		var beginClean = Date.create(begin).format('{yyyy}-{MM}-{dd}');
+		var endClean = Date.create(end).format('{yyyy}-{MM}-{dd}');
+		
+		var serviceOptions = {
+			startDate: beginClean,
+			endDate: endClean,
+			stationNum: CONFIG.stationName
+		};
+
+		document.location = document.location.href.first(document.location.href.lastIndexOf('/') + 1) + CONFIG.relativePath + 'services/service/station/tab/qwdownload?' + $.param(serviceOptions);
 	},
 	colOrder: [],
 	earliestPosition : null,

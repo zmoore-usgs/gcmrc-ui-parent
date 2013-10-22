@@ -30,6 +30,8 @@ GCMRC.StationLoad = JSL.ResourceLoad(function(el) {
 	if (el.siteName) {
 		name = el.siteName;
 	}
+	
+	el.key = name;
 
 	GCMRC.Stations[name] = Object.merge({}, GCMRC.Stations[name], true).merge(el, true);
 });

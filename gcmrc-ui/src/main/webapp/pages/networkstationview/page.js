@@ -154,3 +154,27 @@ GCMRC.Page = {
 		});
 	}
 };
+
+gcmrcModule.controller('StationListCtrl', function($scope) {
+	$scope.CONFIG = CONFIG;
+	$scope.GCMRC = GCMRC;
+	
+	$scope.getActive = function(stations) {
+		return stations.filter(function(el) {return el.active === 'Y'});
+	}
+	$scope.getInactive = function(stations) {
+		return stations.filter(function(el) {return el.active === 'N'});
+	}
+	$scope.getVisible = function(stations) {
+		return stations.exclude(function(el) {
+			return el.hidden;
+		});
+	}
+	$scope.getNetwork = function(stations, network) {
+		return stations.filter(function(el) {return el.network === network});
+	}
+	
+	$scope.sortToArray = function(stations) {
+		return stations.values().sortBy(function(el){return el.displayOrder || "99999999999"})
+	}
+});

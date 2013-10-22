@@ -33,6 +33,7 @@ public class StationAllSiteSpec extends StationSiteSpec {
 		result.append("    THEN 'BIBE'");
 		result.append("    ELSE 'GCDAMP'");
 		result.append("  END AS NET,");
+		result.append("  ACTIVE,");
 		result.append("  DISPLAY_ORDER");
 		result.append("  FROM");
 		result.append("    SITE_STAR) T_A_MAIN");

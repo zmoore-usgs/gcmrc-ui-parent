@@ -43,6 +43,7 @@ public class StationSiteSpec extends Spec {
 			new ColumnMapping(C_LAT, S_LAT),
 			new ColumnMapping(C_LON, S_LON),
 			new ColumnMapping(C_NET, S_NET),
+			new ColumnMapping(C_ACTIVE, S_ACTIVE),
 			new ColumnMapping(C_DISPLAY_ORDER, S_DISPLAY_ORDER)
 		};
 	}
@@ -87,6 +88,7 @@ public class StationSiteSpec extends Spec {
 		result.append("    THEN 'BIBE'");
 		result.append("    ELSE 'GCDAMP'");
 		result.append("  END AS NET,");
+		result.append("  ACTIVE,");
 		result.append("  DISPLAY_ORDER");
 		result.append("  FROM");
 		result.append("    (SELECT");
@@ -123,6 +125,8 @@ public class StationSiteSpec extends Spec {
 	public static final String S_LON = "lon";
 	public static final String C_NET = "NET";
 	public static final String S_NET = "network";
+	public static final String C_ACTIVE = "ACTIVE";
+	public static final String S_ACTIVE = "active";
 	public static final String C_DISPLAY_ORDER = "DISPLAY_ORDER";
 	public static final String S_DISPLAY_ORDER = "displayOrder";
 }

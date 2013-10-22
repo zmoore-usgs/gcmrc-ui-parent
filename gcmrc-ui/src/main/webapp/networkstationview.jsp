@@ -5,7 +5,7 @@
 <%@page import="org.slf4j.LoggerFactory"%>
 <%@page import="gov.usgs.cida.config.DynamicReadOnlyProperties"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
-<%!	
+<%!
 	private static final Logger log = LoggerFactory.getLogger("networkstationview_jsp");
 	protected DynamicReadOnlyProperties props = new DynamicReadOnlyProperties();
 
@@ -21,14 +21,14 @@
 
 <%
 	request.setAttribute("development", development);
-	request.setAttribute("logLevel", development?"debug":"info");
-	
+	request.setAttribute("logLevel", development ? "debug" : "info");
+
 	String pageName = page.getClass().getSimpleName().substring(0, page.getClass().getSimpleName().indexOf("_jsp"));
 	request.setAttribute("pageName", pageName);
 
 	String relativePath = PathUtil.calculateRelativePath(request.getRequestURI(), request.getContextPath());
 	request.setAttribute("relativePath", relativePath);
-	
+
 	String basePath = "stations";
 	Map<String, String> restOfPath = PathUtil.calculateRestOfURI(request.getRequestURI(), basePath, "networkName");
 	String networkName = restOfPath.get("networkName");
@@ -58,7 +58,7 @@
 			<jsp:param name="development" value="${development}" />
 		</jsp:include>
 		<jsp:include page="app/libs.jsp"></jsp:include>
-				
+
 		<jsp:include page="js/openlayers/openlayers.jsp">
 			<jsp:param name="relPath" value="${relativePath}" />
 			<jsp:param name="debug-qualifier" value="<%= development%>" />
@@ -66,37 +66,44 @@
 		<script src="${relativePath}js/openlayers/extension/Renderer/DeclusterCanvas.js" type="text/javascript"></script>
 		<script type="text/javascript">
 			var CONFIG = {};
-			
+
 			CONFIG.development = ${development};
 			CONFIG.relativePath = '${relativePath}';
 			CONFIG.networkName = '${networkName}';
 		</script>
 
 		<jsp:include page="app/gcmrc.jsp"></jsp:include>
+		<jsp:include page="js/angular-sortable/package.jsp">
+			<jsp:param name="relPath" value="${relativePath}" />
+			<jsp:param name="debug-qualifier" value="${development}" />
+		</jsp:include>
+		<script type="text/javascript">
+			var gcmrcModule = angular.module('gcmrc', ["ui.bootstrap"]);
+		</script>
 		<script src="${relativePath}services/service/station/jsonp/site/?network=${networkName}&jsonp_callback=GCMRC.StationLoad"></script>
 		<jsp:include page="pages/page.jsp">
 			<jsp:param name="relPath" value="${relativePath}" />
 			<jsp:param name="pageName" value="${pageName}" />
 		</jsp:include>
-		
+
     </head>
-    <body>
+    <body ng-app="gcmrc">
 		<div class="container-fluid">
 			<jsp:include page="template/GCMRCHeader.jsp">
 				<jsp:param name="relPath" value="${relativePath}" />
 				<jsp:param name="header-class" value="" />
 			</jsp:include>
 			<jsp:include page="template/GCMRCTopMenu.jsp"></jsp:include>
-			<!--[if lt IE 7]>
-            <p class="chromeframe">You are using an outdated browser. <a href="http://browsehappy.com/">Upgrade your browser today</a> or <a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a> to better experience this site.</p>
-			<![endif]-->
-			<div class="application-body">
-				<h2><span class="network-name"></span> Stations</h2>
-				<div id="breadcrumbs">
-					<span>
-						<span><a href="http://www.gcmrc.gov/gcmrc.aspx">Home</a></span>
-						<span> &gt; </span>
-						<span><a href="${relativePath}index.jsp">Discharge, Sediment and Water Quality</a></span>
+				<!--[if lt IE 7]>
+				<p class="chromeframe">You are using an outdated browser. <a href="http://browsehappy.com/">Upgrade your browser today</a> or <a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a> to better experience this site.</p>
+				<![endif]-->
+				<div class="application-body">
+					<h2><span class="network-name"></span> Stations</h2>
+					<div id="breadcrumbs">
+						<span>
+							<span><a href="http://www.gcmrc.gov/gcmrc.aspx">Home</a></span>
+							<span> &gt; </span>
+							<span><a href="${relativePath}index.jsp">Discharge, Sediment and Water Quality</a></span>
 						<span> &gt; </span>
 						<span><span class="network-name"></span> Stations</span>
 					</span>
@@ -109,9 +116,36 @@
 					</div>
 					<div class="span4">
 						<div class="sectionWideTitle">Stations</div>
-						<div class="well"><div id="stationList">
-
-						</div></div>
+						<div class="well" ng-controller="StationListCtrl">
+							<tabset>
+								<tab heading="Active">
+									<div class="media" ng-repeat="el in getActive(getVisible(getNetwork(sortToArray(GCMRC.Stations), CONFIG.networkName)))">
+										<a href="{{CONFIG.relativePath}}station/{{CONFIG.networkName}}/{{el.key}}">
+											<img width="128px" height="128px" alt="" src="{{CONFIG.relativePath}}photo/{{CONFIG.networkName}}/{{el.key}}/{{el.key}}_01sm.jpg" class="pull-left">
+										</a>
+										<div class="media-body">
+											<a href="{{CONFIG.relativePath}}station/{{CONFIG.networkName}}/{{el.key}}">
+												<h4 class="media-heading">{{el.displayName}}</h4>
+											</a>
+											{{el.key}}
+										</div>
+									</div>
+								</tab>
+								<tab heading="Inactive">
+									<div class="media" ng-repeat="el in getInactive(getVisible(getNetwork(sortToArray(GCMRC.Stations), CONFIG.networkName)))">
+										<a href="{{CONFIG.relativePath}}station/{{CONFIG.networkName}}/{{el.key}}">
+											<img width="128px" height="128px" alt="" src="{{CONFIG.relativePath}}photo/{{CONFIG.networkName}}/{{el.key}}/{{el.key}}_01sm.jpg" class="pull-left">
+										</a>
+										<div class="media-body">
+											<a href="{{CONFIG.relativePath}}station/{{CONFIG.networkName}}/{{el.key}}">
+												<h4 class="media-heading">{{el.displayName}}</h4>
+											</a>
+											{{el.key}}
+										</div>
+									</div>
+								</tab>
+							</tabset>
+						</div>
 					</div>
 				</div>
 			</div>

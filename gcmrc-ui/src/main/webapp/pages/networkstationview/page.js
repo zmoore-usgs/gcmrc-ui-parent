@@ -66,7 +66,7 @@ GCMRC.Page = {
 					var lonLat = new OpenLayers.LonLat(event.feature.geometry.x, event.feature.geometry.y);
 					
 					var clusterFeatures = event.feature.layer.renderer.clusterFeatures;
-					if (clusterFeatures) {
+					if (clusterFeatures && clusterFeatures[event.feature.id]) {
 						lonLat = new OpenLayers.LonLat(
 							clusterFeatures[event.feature.id][0].geometry.x,
 							clusterFeatures[event.feature.id][0].geometry.y);

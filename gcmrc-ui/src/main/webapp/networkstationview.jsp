@@ -70,6 +70,16 @@
 			CONFIG.development = ${development};
 			CONFIG.relativePath = '${relativePath}';
 			CONFIG.networkName = '${networkName}';
+			CONFIG.styleRules = {
+				active: {
+					'Y' : {fillColor:'orange'},
+					'N' : {fillColor:'grey'}
+				},
+				inactive: {
+					'Y' : {fillColor:'orange'},
+					'N' : {fillColor:'grey'}
+				}
+			};
 		</script>
 
 		<jsp:include page="app/gcmrc.jsp"></jsp:include>
@@ -120,11 +130,11 @@
 							<tabset>
 								<tab heading="Active">
 									<div class="media" ng-repeat="el in getActive(getVisible(getNetwork(sortToArray(GCMRC.Stations), CONFIG.networkName)))">
-										<a href="{{CONFIG.relativePath}}station/{{CONFIG.networkName}}/{{el.key}}">
-											<img width="128px" height="128px" alt="" src="{{CONFIG.relativePath}}photo/{{CONFIG.networkName}}/{{el.key}}/{{el.key}}_01sm.jpg" class="pull-left">
+										<a ng-href="{{CONFIG.relativePath}}station/{{CONFIG.networkName}}/{{el.key}}">
+											<img width="128px" height="128px" alt="" ng-src="{{CONFIG.relativePath}}photo/{{CONFIG.networkName}}/{{el.key}}/{{el.key}}_01sm.jpg" class="pull-left">
 										</a>
 										<div class="media-body">
-											<a href="{{CONFIG.relativePath}}station/{{CONFIG.networkName}}/{{el.key}}">
+											<a ng-href="{{CONFIG.relativePath}}station/{{CONFIG.networkName}}/{{el.key}}">
 												<h4 class="media-heading">{{el.displayName}}</h4>
 											</a>
 											{{el.key}}
@@ -133,11 +143,11 @@
 								</tab>
 								<tab heading="Inactive">
 									<div class="media" ng-repeat="el in getInactive(getVisible(getNetwork(sortToArray(GCMRC.Stations), CONFIG.networkName)))">
-										<a href="{{CONFIG.relativePath}}station/{{CONFIG.networkName}}/{{el.key}}">
-											<img width="128px" height="128px" alt="" src="{{CONFIG.relativePath}}photo/{{CONFIG.networkName}}/{{el.key}}/{{el.key}}_01sm.jpg" class="pull-left">
+										<a ng-href="{{CONFIG.relativePath}}station/{{CONFIG.networkName}}/{{el.key}}">
+											<img width="128px" height="128px" alt="" ng-src="{{CONFIG.relativePath}}photo/{{CONFIG.networkName}}/{{el.key}}/{{el.key}}_01sm.jpg" class="pull-left">
 										</a>
 										<div class="media-body">
-											<a href="{{CONFIG.relativePath}}station/{{CONFIG.networkName}}/{{el.key}}">
+											<a ng-href="{{CONFIG.relativePath}}station/{{CONFIG.networkName}}/{{el.key}}">
 												<h4 class="media-heading">{{el.displayName}}</h4>
 											</a>
 											{{el.key}}

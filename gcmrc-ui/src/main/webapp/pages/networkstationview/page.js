@@ -8,27 +8,32 @@ GCMRC.Page = {
 		var options = {
 			//controls : []
 		};
+		
+		GCMRC.Mapping.layers.vector.styleMap.addUniqueValueRules("default", "active", CONFIG.styleRules.active);
+		
 		GCMRC.Mapping.maps[divId] = new OpenLayers.Map(divId, options);
-//		GCMRC.Mapping.maps[divId].addControl(new OpenLayers.Control.LayerSwitcher());
 		var layersToAdd = [];
 		layersToAdd.push(GCMRC.Mapping.layers.esri.esriTopo);
-//		[].push.apply(layersToAdd, GCMRC.Mapping.layers.esri.values());
 		layersToAdd.push(GCMRC.Mapping.layers.vector);
 		GCMRC.Mapping.maps[divId].addLayers(layersToAdd);
 
-		GCMRC.Stations.values(function(station) {
-			if (!station.hidden && station.network === CONFIG.networkName) {
+		GCMRC.Stations.values(
+			).filter(function(station) {
+				return (!station.hidden && station.network === CONFIG.networkName);
+			}).sortBy(function(station) {
+				return station.active || 'N';
+			}).each(function(station) {
 				var sitePoint = new OpenLayers.Geometry.Point(station.lon, station.lat).transform(
 						new OpenLayers.Projection("EPSG:4326"),
 						GCMRC.Mapping.maps[divId].getProjectionObject()
 						);
 
 				var siteFeature = new OpenLayers.Feature.Vector(sitePoint, {
-					siteName: station.siteName
+					siteName: station.siteName,
+					active : station.active
 				});
 				GCMRC.Mapping.layers.vector.addFeatures([siteFeature]);
-			}
-		});
+			});
 
 		var resizeToDefault = true;
 		if (1 < GCMRC.Mapping.layers.vector.features.length) {

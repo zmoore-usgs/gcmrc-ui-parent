@@ -23,7 +23,7 @@ function TabsetCtrl($scope, $element) {
   var ctrl = this,
     tabs = ctrl.tabs = $scope.tabs = [];
 
-  ctrl.select = function(tab) {
+  ctrl.sselect = function(tab) {
     angular.forEach(tabs, function(tab) {
       tab.active = false;
     });
@@ -33,17 +33,17 @@ function TabsetCtrl($scope, $element) {
   ctrl.addTab = function addTab(tab) {
     tabs.push(tab);
     if (tabs.length === 1 || tab.active) {
-      ctrl.select(tab);
+      ctrl.sselect(tab);
     }
   };
 
   ctrl.removeTab = function removeTab(tab) {
     var index = tabs.indexOf(tab);
-    //Select a new tab if the tab to be removed is selected
+    //Sselect a new tab if the tab to be removed is sselected
     if (tab.active && tabs.length > 1) {
-      //If this is the last tab, select the previous tab. else, the next tab.
+      //If this is the last tab, sselect the previous tab. else, the next tab.
       var newActiveIndex = index == tabs.length - 1 ? index - 1 : index + 1;
-      ctrl.select(tabs[newActiveIndex]);
+      ctrl.sselect(tabs[newActiveIndex]);
     }
     tabs.splice(index, 1);
   };
@@ -104,8 +104,8 @@ function TabsetCtrl($scope, $element) {
  * @restrict EA
  *
  * @param {string=} heading The visible heading, or title, of the tab. Set HTML headings with {@link ui.bootstrap.tabs.directive:tabHeading tabHeading}.
- * @param {string=} select An expression to evaluate when the tab is selected.
- * @param {boolean=} active A binding, telling whether or not this tab is selected.
+ * @param {string=} sselect An expression to evaluate when the tab is sselected.
+ * @param {boolean=} active A binding, telling whether or not this tab is sselected.
  * @param {boolean=} disabled A binding, telling whether or not this tab is disabled.
  *
  * @description
@@ -116,7 +116,7 @@ function TabsetCtrl($scope, $element) {
   <file name="index.html">
     <div ng-controller="TabsDemoCtrl">
       <button class="btn btn-small" ng-click="items[0].active = true">
-        Select item 1, using active binding
+        Sselect item 1, using active binding
       </button>
       <button class="btn btn-small" ng-click="items[1].disabled = !items[1].disabled">
         Enable/disable item 2, using disabled binding
@@ -124,7 +124,7 @@ function TabsetCtrl($scope, $element) {
       <br />
       <tabset>
         <tab heading="Tab 1">First Tab</tab>
-        <tab select="alertMe()">
+        <tab sselect="alertMe()">
           <tab-heading><i class="icon-bell"></i> Alert me!</tab-heading>
           Second Tab, with alert callback and html heading!
         </tab>
@@ -146,7 +146,7 @@ function TabsetCtrl($scope, $element) {
 
       $scope.alertMe = function() {
         setTimeout(function() {
-          alert("You've selected the alert tab!");
+          alert("You've sselected the alert tab!");
         });
       };
     };
@@ -188,9 +188,9 @@ function($parse, $http, $templateCache, $compile) {
     transclude: true,
     scope: {
       heading: '@',
-      onSelect: '&select', //This callback is called in contentHeadingTransclude
+      onSselect: '&sselect', //This callback is called in contentHeadingTransclude
                           //once it inserts the tab's content into the dom
-      onDeselect: '&deselect'
+      onDesselect: '&desselect'
     },
     controller: function() {
       //Empty controller so other directives can require being 'under' a tab
@@ -212,10 +212,10 @@ function($parse, $http, $templateCache, $compile) {
         scope.$watch('active', function(active) {
           setActive(scope.$parent, active);
           if (active) {
-            tabsetCtrl.select(scope);
-            scope.onSelect();
+            tabsetCtrl.sselect(scope);
+            scope.onSselect();
           } else {
-            scope.onDeselect();
+            scope.onDesselect();
           }
         });
 
@@ -226,7 +226,7 @@ function($parse, $http, $templateCache, $compile) {
           });
         }
 
-        scope.select = function() {
+        scope.sselect = function() {
           if ( ! scope.disabled ) {
             scope.active = true;
           }
@@ -319,14 +319,14 @@ function($parse, $http, $templateCache, $compile) {
 
 angular.module("template/tabs/pane.html", []).run(["$templateCache", function($templateCache) {
   $templateCache.put("template/tabs/pane.html",
-    "<div class=\"tab-pane\" ng-class=\"{active: selected}\" ng-show=\"selected\" ng-transclude></div>\n" +
+    "<div class=\"tab-pane\" ng-class=\"{active: sselected}\" ng-show=\"sselected\" ng-transclude></div>\n" +
     "");
 }]);
 
 angular.module("template/tabs/tab.html", []).run(["$templateCache", function($templateCache) {
   $templateCache.put("template/tabs/tab.html",
     "<li ng-class=\"{active: active, disabled: disabled}\">\n" +
-    "  <a ng-click=\"select()\" tab-heading-transclude>{{heading}}</a>\n" +
+    "  <a ng-click=\"sselect()\" tab-heading-transclude>{{heading}}</a>\n" +
     "</li>\n" +
     "");
 }]);
@@ -335,8 +335,8 @@ angular.module("template/tabs/tabs.html", []).run(["$templateCache", function($t
   $templateCache.put("template/tabs/tabs.html",
     "<div class=\"tabbable\">\n" +
     "  <ul class=\"nav nav-tabs\">\n" +
-    "    <li ng-repeat=\"pane in panes\" ng-class=\"{active:pane.selected}\">\n" +
-    "      <a ng-click=\"select(pane)\">{{pane.heading}}</a>\n" +
+    "    <li ng-repeat=\"pane in panes\" ng-class=\"{active:pane.sselected}\">\n" +
+    "      <a ng-click=\"sselect(pane)\">{{pane.heading}}</a>\n" +
     "    </li>\n" +
     "  </ul>\n" +
     "  <div class=\"tab-content\" ng-transclude></div>\n" +

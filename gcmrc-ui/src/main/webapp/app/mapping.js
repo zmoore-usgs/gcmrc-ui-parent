@@ -1,6 +1,16 @@
 GCMRC.Mapping = function() {
 	var map = {};
 	
+	var activeStyle = function(main, alt) {
+		return function(feature, prop) {
+			var result = main;
+			if (feature.data.active !== GCMRC.Page.activeSelect) {
+				result = alt;
+			}
+			return result;
+		}
+	}
+	
 	var layers = {
 		esri : {
 		esriWorldImagery: new OpenLayers.Layer.XYZ("World Imagery",
@@ -81,22 +91,33 @@ GCMRC.Mapping = function() {
 						strokeOpacity : .8,
 						strokeWidth : 2,
 						pointRadius : 6,
-						fillColor : 'orange',
+//						fillColor : 'orange',
 						fillOpacity : 1,
-						cursor : 'pointer'
-					}, OpenLayers.Feature.Vector.style["default"])),
+						cursor : 'pointer',
+						graphicZIndex : "${getZIndex}",
+						fillColor : "${getColor}"
+					}, OpenLayers.Feature.Vector.style["default"]),{
+						context : {
+							getColor : activeStyle("orange", "lightgrey"),
+							getZIndex : activeStyle(100, 10)
+						}
+					}),
 					"select": new OpenLayers.Style(OpenLayers.Util.applyDefaults({
 						strokeColor : 'black',
 						strokeOpacity : .8,
 						strokeWidth : 2,
 						pointRadius : 6,
 						fillColor : 'yellow',
-						fillOpacity : 1
+						fillOpacity : 1,
+						cursor : 'pointer',
+						graphicZIndex : 1000
 					}, OpenLayers.Feature.Vector.style["select"]))
 				}),
 				renderers: ["DeclusterCanvas"],
 				rendererOptions : {
-					declusterStrokeColor : "#000000"
+					declusterStrokeColor : "#000000",
+					zIndexing: true,
+					yOrdering: true
 				}
 			}),
 		network : new OpenLayers.Layer.Vector(
@@ -281,10 +302,33 @@ GCMRC.Mapping = function() {
 		}
 	};
 	
+	var styleTemplates = {
+				active: {
+					'Y' : {
+						fillColor:'orange',
+						graphicZIndex: 10
+					},
+					'N' : {
+						fillColor:'grey',
+						graphicZIndex: 100
+					}
+				},
+				inactive: {
+					'Y' : {
+						fillColor:'grey',
+						graphicZIndex: 100
+					},
+					'N' : {
+						fillColor:'orange',
+						graphicZIndex: 10
+					}
+				}
+			};
 	
 	return {
 		maps : map,
-		layers : layers
+		layers : layers,
+		styleTemplates : styleTemplates
 	};
 }();
 

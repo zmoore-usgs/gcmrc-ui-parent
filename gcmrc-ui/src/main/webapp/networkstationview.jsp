@@ -63,23 +63,15 @@
 			<jsp:param name="relPath" value="${relativePath}" />
 			<jsp:param name="debug-qualifier" value="<%= development%>" />
 		</jsp:include>
-		<script src="${relativePath}js/openlayers/extension/Renderer/DeclusterCanvas.js" type="text/javascript"></script>
+		<script src="${relativePath}app/CanvasOverride.js" type="text/javascript"></script>
+		<script src="${relativePath}app/DeclusterCanvas.js" type="text/javascript"></script>
 		<script type="text/javascript">
 			var CONFIG = {};
 
 			CONFIG.development = ${development};
 			CONFIG.relativePath = '${relativePath}';
 			CONFIG.networkName = '${networkName}';
-			CONFIG.styleRules = {
-				active: {
-					'Y' : {fillColor:'orange'},
-					'N' : {fillColor:'grey'}
-				},
-				inactive: {
-					'Y' : {fillColor:'orange'},
-					'N' : {fillColor:'grey'}
-				}
-			};
+			
 		</script>
 
 		<jsp:include page="app/gcmrc.jsp"></jsp:include>
@@ -128,7 +120,8 @@
 						<div class="sectionWideTitle">Stations</div>
 						<div class="well" ng-controller="StationListCtrl">
 							<tabset>
-								<tab heading="Active">
+								<tab sselect="selectActiveTab()">
+									<tab-heading>Active</tab-heading>
 									<div class="media" ng-repeat="el in getActive(getVisible(getNetwork(sortToArray(GCMRC.Stations), CONFIG.networkName)))">
 										<a ng-href="{{CONFIG.relativePath}}station/{{CONFIG.networkName}}/{{el.key}}">
 											<img width="128px" height="128px" alt="" ng-src="{{CONFIG.relativePath}}photo/{{CONFIG.networkName}}/{{el.key}}/{{el.key}}_01sm.jpg" class="pull-left">
@@ -141,7 +134,8 @@
 										</div>
 									</div>
 								</tab>
-								<tab heading="Inactive">
+								<tab sselect="selectInactiveTab()">
+									<tab-heading>Inactive</tab-heading>
 									<div class="media" ng-repeat="el in getInactive(getVisible(getNetwork(sortToArray(GCMRC.Stations), CONFIG.networkName)))">
 										<a ng-href="{{CONFIG.relativePath}}station/{{CONFIG.networkName}}/{{el.key}}">
 											<img width="128px" height="128px" alt="" ng-src="{{CONFIG.relativePath}}photo/{{CONFIG.networkName}}/{{el.key}}/{{el.key}}_01sm.jpg" class="pull-left">

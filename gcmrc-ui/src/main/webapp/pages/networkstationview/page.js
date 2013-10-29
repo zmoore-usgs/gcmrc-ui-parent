@@ -1,4 +1,5 @@
 GCMRC.Page = {
+	activeSelect : 'Y',
 	createLargeMap: function(config) {
 		if (!config)
 			config = {};
@@ -8,8 +9,6 @@ GCMRC.Page = {
 		var options = {
 			//controls : []
 		};
-		
-		GCMRC.Mapping.layers.vector.styleMap.addUniqueValueRules("default", "active", CONFIG.styleRules.active);
 		
 		GCMRC.Mapping.maps[divId] = new OpenLayers.Map(divId, options);
 		var layersToAdd = [];
@@ -181,5 +180,15 @@ gcmrcModule.controller('StationListCtrl', function($scope) {
 	
 	$scope.sortToArray = function(stations) {
 		return stations.values().sortBy(function(el){return el.displayOrder || "99999999999"})
+	}
+	
+	$scope.selectActiveTab = function() {
+		GCMRC.Page.activeSelect = 'Y';
+		GCMRC.Mapping.layers.vector.redraw();
+	}
+	
+	$scope.selectInactiveTab = function() {
+		GCMRC.Page.activeSelect = 'N';
+		GCMRC.Mapping.layers.vector.redraw();
 	}
 });

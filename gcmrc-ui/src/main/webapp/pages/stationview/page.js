@@ -573,7 +573,10 @@ GCMRC.Page = {
 		} else if ("90" === identifier) {
 			identifier = "6";
 			el.groupId = "6";
-		}
+		} else if ("92" === identifier) {
+			identifier = "8";
+			el.groupId = "8";
+		} 
 		
 		if (!GCMRC.Page.params[identifier]) {
 			GCMRC.Page.params[identifier] = {

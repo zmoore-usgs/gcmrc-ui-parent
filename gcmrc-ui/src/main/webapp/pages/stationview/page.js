@@ -89,7 +89,7 @@ GCMRC.Page = {
 			var result = arr;
 			
 			result = result.map(function(el) {
-							var result = (el === 'EDI' || el === 'EWI' || el === 's vert' || el === 'm vert')?'ZZZZ--' + el: el;
+							var result = (el === 'EDI' || el === 'EWI' || el === 'single vertical' || el === 'multiple verticals')?'ZZZZ--' + el: el;
 							result = (el === 'inst')?'AAAA--' + el: result;
 							return result;
 						});
@@ -594,7 +594,7 @@ GCMRC.Page = {
 			};
 		}
 		
-		if ("EDI" === el.sampleMethod || "EWI" === el.sampleMethod || "s vert" === el.sampleMethod || "m vert" === el.sampleMethod) {
+		if ("EDI" === el.sampleMethod || "EWI" === el.sampleMethod || "single vertical" === el.sampleMethod || "multiple verticals" === el.sampleMethod) {
 			el.color = CONFIG.sampColor;
 			el.highlightColor = CONFIG.sampHiColor;
 		} else {

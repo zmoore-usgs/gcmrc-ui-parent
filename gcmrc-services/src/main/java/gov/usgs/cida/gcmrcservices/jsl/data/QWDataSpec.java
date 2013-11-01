@@ -79,7 +79,8 @@ public class QWDataSpec extends DataSpec {
 		result.append("  SMS.SAMPLE_METHOD,");
 		result.append("  QWR.TOTAL_95CONF,");
 		result.append("  QWR.GROUP_ID,");
-		result.append("  G.NAME AS GROUP_NAME");
+		result.append("  G.NAME AS GROUP_NAME,");
+		result.append("  QWS.SERVE");
 		result.append(" FROM SAMPLE_STAR QWS,");
 		result.append("  RESULT_STAR QWR,");
 		result.append("  SITE_STAR S,");
@@ -91,6 +92,7 @@ public class QWDataSpec extends DataSpec {
 		result.append("  AND QWS.SAMPLE_METHOD_ID = SMS.SAMPLE_METHOD_ID");
 		result.append("  AND QWS.SUBSITE_ID       = SS.SUBSITE_ID");
 		result.append("  AND QWR.GROUP_ID         = G.GROUP_ID");
+		result.append("  AND QWS.SERVE = 'YES'");
 		result.append(") T_A_INNER");
 
 		return result.toString();

@@ -255,7 +255,8 @@
 					</div>
 					<div class="modal-body container-fluid">
 						<tabset>
-							<tab heading="Continuous Data">
+							<tab>
+								<tab-heading>Continuous Data</tab-heading>
 								<div class="row-fluid">
 									<div class="span6">
 										<h5>Ordering</h5>
@@ -290,7 +291,8 @@
 									<a href="#" id="stupidlyBigDownloadButton" class='buildButton'>Download Data</a>
 								</div>
 							</tab>
-							<tab heading="Physical Samples">
+							<tab>
+								<tab-heading>Physical Samples</tab-heading>
 								<div class="row-fluid">
 									<a href="#" id="physicalDownloadButton" class='buildButton'>Download Data</a>
 								</div>

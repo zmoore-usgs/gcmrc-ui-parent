@@ -1,5 +1,6 @@
 package gov.usgs.cida.gcmrcservices.jsl.data;
 
+import gov.usgs.cida.gcmrcservices.nude.Endpoint;
 import gov.usgs.webservices.jdbc.spec.Spec;
 import static gov.usgs.webservices.jdbc.spec.Spec.FIELD_NAME_KEY;
 import static gov.usgs.webservices.jdbc.spec.Spec.USER_VALUE_KEY;
@@ -148,8 +149,8 @@ public class QWDownloadSpec extends Spec {
 			new SearchMapping(S_SAMPLE_ID, C_SAMPLE_ID, null, WhereClauseType.equals, null, null, null),
 			new SearchMapping(S_STATION_NAME, C_STATION_NAME, null, WhereClauseType.equals, null, null, null),
 			new SearchMapping(S_STATION_NUM, C_STATION_NUM, null, WhereClauseType.equals, null, null, null),
-			new SearchMapping(S_START_DATE, C_START_DATE, null, WhereClauseType.special, CleaningOption.none, FIELD_NAME_KEY + " >= TO_DATE(" + USER_VALUE_KEY + ", 'YYYY-MM-DD\"T\"HH24:MI:SS')", null),
-			new SearchMapping(S_END_DATE, C_END_DATE, null, WhereClauseType.special, CleaningOption.none, FIELD_NAME_KEY + " >= TO_DATE(" + USER_VALUE_KEY + ", 'YYYY-MM-DD\"T\"HH24:MI:SS')", null),
+			new SearchMapping(Endpoint.BEGIN_KEYWORD, C_START_DATE, null, WhereClauseType.special, CleaningOption.none, FIELD_NAME_KEY + " >= TO_DATE(" + USER_VALUE_KEY + ", 'YYYY-MM-DD\"T\"HH24:MI:SS')", null),
+			new SearchMapping(Endpoint.END_KEYWORD, C_START_DATE, null, WhereClauseType.special, CleaningOption.none, FIELD_NAME_KEY + " <= TO_DATE(" + USER_VALUE_KEY + ", 'YYYY-MM-DD\"T\"HH24:MI:SS')", null),
 			new SearchMapping(S_USGS_DATA_LEAD, C_USGS_DATA_LEAD, null, WhereClauseType.equals, null, null, null),
 			new SearchMapping(S_SAMPLE_METHOD, C_SAMPLE_METHOD, null, WhereClauseType.equals, null, null, null),
 			new SearchMapping(S_SAMPLE_LOCATION, C_SAMPLE_LOCATION, null, WhereClauseType.equals, null, null, null),

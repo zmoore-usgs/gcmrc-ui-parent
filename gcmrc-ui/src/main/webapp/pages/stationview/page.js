@@ -73,7 +73,7 @@ GCMRC.Page = {
 		var displayName = description["displayName"];
 		var fromDate = description.earliestMethod.split("T")[0];
 		var toDate = description.latestMethod.split("T")[0];
-		var ppq = instParam["ppq"]; //PPQ's going away
+		var ppq = instParam["ppq"];
 		var units = description["units"];
 		var unitsShort = description["unitsShort"];
 
@@ -270,6 +270,36 @@ GCMRC.Page = {
 		});
 		return result;
 	},
+	getExpectedDownloadColumns : function() {
+		var expectedGraphColumns = GCMRC.Page.getExpectedGraphColumns();
+		var result = expectedGraphColumns.filter(function(el) {
+			var result = el.columns.some(function(n) {
+				var result = ((n.startsWith("inst!") 
+							&& GCMRC.Page.params[this.groupId].inst.isDownloadable === "Y"
+						) || (
+							!n.startsWith("inst!")
+							&& !n.startsWith("time!")
+						));
+				return result;
+			}, el);
+			return result;
+		}).map(function(el) {
+			var result = {
+				groupId : el.groupId,
+				columns : []
+			}
+
+			result.columns = el.columns.filter(function(n) {
+				var result = ((n.startsWith("inst!") 
+							&& GCMRC.Page.params[this.groupId].inst.isDownloadable === "Y"
+						) || !n.startsWith("inst!"));
+				return result;
+			}, el);
+
+			return result;
+		});
+		return result;
+	},
 	hasData : function(params, reqBegin, reqEnd) {
 		var result = false;
 		
@@ -410,21 +440,16 @@ GCMRC.Page = {
 		var beginMillis = Date.create(begin).getTime();
 		var endMillis = Date.create(end).getTime();
 		if (endMillis >= beginMillis) {
-			var expectedGraphColumns = GCMRC.Page.getExpectedGraphColumns();
-			var expectedDownloadColumns = expectedGraphColumns.filter(function(el) {
-				var result = el.columns.some(function(n) {
-					return (
-							n.startsWith("inst!") && 
-							GCMRC.Page.params[this.groupId].inst.isDownloadable === "Y"
-							); 
-				}, el);
-				return result;
-			});
+			var expectedDownloadColumns = GCMRC.Page.getExpectedDownloadColumns();
 			if (GCMRC.Page.hasData(expectedDownloadColumns.map(function(el) {return el.groupId;}), begin, end)) {
 				var columnOrdering = [];
 				columnOrdering.push({groupId:"time", name:"Time", reorderable:true, formatConfig:{format:"yyyy-MM-dd HH:mm:ss"}, timeZoneInHeader:true, nameConfig: {useDefault: true}});
 				expectedDownloadColumns.forEach(function(el) {
-					columnOrdering.push({groupId : el.groupId, name : GCMRC.Page.params[el.groupId].inst.displayName, reorderable : true, nameConfig: {useDefault: true}});
+					if (el.columns.some(function(n) {
+						return n.startsWith('inst!');
+					})) {
+						columnOrdering.push({groupId : el.groupId, name : GCMRC.Page.params[el.groupId].description.displayName, reorderable : true, nameConfig: {useDefault: true}});
+					}
 				});
 				
 				GCMRC.Page.colOrder.remove(function(n){return true;}); //substitute for removeAll
@@ -508,12 +533,12 @@ GCMRC.Page = {
 		var end = $("input[name='endPosition']").val();
 		
 		//Make absolutely sure they're formatted correctly for the services.
-		var beginClean = Date.create(begin).format('{yyyy}-{MM}-{dd}');
-		var endClean = Date.create(end).format('{yyyy}-{MM}-{dd}');
+		var beginClean = Date.create(begin).format('{yyyy}-{MM}-{dd}') + 'T00:00:00';
+		var endClean = Date.create(end).format('{yyyy}-{MM}-{dd}') + 'T23:59:59';
 		
 		var serviceOptions = {
-			startDate: beginClean,
-			endDate: endClean,
+			beginPosition: beginClean,
+			endPosition: endClean,
 			stationNum: CONFIG.stationName
 		};
 
@@ -661,6 +686,8 @@ gcmrcModule.controller('downloadPopupController', function($scope) {
 		}
 		return result;
 	};
+	$scope.disableContinuous = GCMRC.Page.disableContinuous;
+	$scope.disableDiscrete = GCMRC.Page.disableDiscrete;
 });
 
 gcmrcModule.directive('helpTooltip', function() {

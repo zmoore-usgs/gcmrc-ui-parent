@@ -118,7 +118,7 @@
 					</div>
 					<div class="span4">
 						<div class="sectionWideTitle">Stations</div>
-						<div class="well" ng-controller="StationListCtrl">
+						<div class="well" ng-controller="StationListCtrl" ng-cloak>
 							<tabset>
 								<tab sselect="selectActiveTab()">
 									<tab-heading>Active</tab-heading>

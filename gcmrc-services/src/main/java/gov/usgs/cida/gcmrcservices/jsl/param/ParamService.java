@@ -1,6 +1,7 @@
 package gov.usgs.cida.gcmrcservices.jsl.param;
 
 import gov.usgs.cida.gcmrcservices.jsl.station.StationParamSpec;
+import gov.usgs.cida.gcmrcservices.jsl.station.StationQWSpec;
 import gov.usgs.webservices.jdbc.routing.InvalidServiceException;
 import gov.usgs.webservices.jdbc.routing.UriRouter;
 import gov.usgs.webservices.jdbc.service.WebService;
@@ -21,6 +22,7 @@ public class ParamService extends WebService {
 	public ParamService() {
 		this.specMapping.put("default", StationParamSpec.class);
 		this.specMapping.put("param", StationParamSpec.class);
+		this.specMapping.put("qw", StationQWSpec.class);
 	}
 
 	@Override

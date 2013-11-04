@@ -48,7 +48,8 @@ public class StationParamSpec extends Spec {
 			new ColumnMapping(C_IS_DOWNLOADABLE, S_IS_DOWNLOADABLE),
 			new ColumnMapping(C_UNITS, S_UNITS),
 			new ColumnMapping(C_UNITS_SHORT, S_UNITS_SHORT),
-			new ColumnMapping(C_DECIMAL_PLACES, S_DECIMAL_PLACES)
+			new ColumnMapping(C_DECIMAL_PLACES, S_DECIMAL_PLACES),
+			new ColumnMapping(C_PPQ, S_PPQ)
 		};
 	}
 
@@ -87,7 +88,8 @@ public class StationParamSpec extends Spec {
 		result.append("    UNITS_SHORT,");
 		result.append("    DECIMAL_PLACES,");
 		result.append("    DISPLAY AS IS_VISIBLE,");
-		result.append("    DOWNLOADABLE AS IS_DOWNLOADABLE");
+		result.append("    DOWNLOADABLE AS IS_DOWNLOADABLE,");
+		result.append("    TIME_SERIES_DISPLAY.DESCRIPTION");
 		result.append("  FROM (SELECT SITE_ID, GROUP_ID, EARLIEST_DT, LATEST_DT FROM TIME_SERIES_POR");
 		result.append("    ) T_POR");
 		result.append("  LEFT OUTER JOIN");
@@ -144,4 +146,6 @@ public class StationParamSpec extends Spec {
 	public static final String S_UNITS_SHORT = "unitsShort";
 	public static final String C_DECIMAL_PLACES = "DECIMAL_PLACES";
 	public static final String S_DECIMAL_PLACES = "decimalPlaces";
+	public static final String C_PPQ = "DESCRIPTION";
+	public static final String S_PPQ = "ppq";
 }

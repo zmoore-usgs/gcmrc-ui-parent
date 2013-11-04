@@ -90,7 +90,9 @@ public class TimeSummaryFilteringResultSet extends PeekingResultSet {
 				} else {
 					in.close();
 				}
-
+				
+				syncReqTimes();
+				
 				if (isReadyToFlush() || in.isClosed()) {
 					nextRow.addAll(buildNextOutRows());
 				} else {
@@ -139,6 +141,24 @@ public class TimeSummaryFilteringResultSet extends PeekingResultSet {
 		}
 	}
 	
+	protected boolean syncReqTimes() {
+		boolean result = false; //things synced?
+		
+		if (!requestedTimes.isEmpty() && !bufferedRows.isEmpty()) {
+			DateTime firstTime = getPrimaryKey(bufferedRows.peekFirst());
+			
+			for (DateTime reqTime = requestedTimes.peekFirst(); 
+				null != reqTime 
+					&& reqTime.compareTo(firstTime) <= 0 
+					&& reqTime.plus(duration).compareTo(firstTime) <= 0; 
+				reqTime = requestedTimes.peekFirst()) {
+				requestedTimes.pollFirst();
+			}
+		}
+		
+		return result;
+	}
+	
 	/**
 	 * Creates the list of outgoing rows that abide by the following rules:
 	 * <ul>
@@ -176,11 +196,11 @@ public class TimeSummaryFilteringResultSet extends PeekingResultSet {
 				}
 			}
 			
-			if (-1 < rowsWithinTimeFrame) {
-				sortedResult.addAll(maxOutRows.values());
-				sortedResult.addAll(minOutRows.values());
-				sortedResult.addAll(exemptRows);
-			} else {
+				if (-1 < rowsWithinTimeFrame) {
+					sortedResult.addAll(maxOutRows.values());
+					sortedResult.addAll(minOutRows.values());
+					sortedResult.addAll(exemptRows);
+			} else { 
 				log.trace("we didn't get anything this time");
 			}
 			

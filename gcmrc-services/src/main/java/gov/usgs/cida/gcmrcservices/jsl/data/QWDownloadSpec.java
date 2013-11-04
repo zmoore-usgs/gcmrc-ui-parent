@@ -146,34 +146,34 @@ public class QWDownloadSpec extends Spec {
 	@Override
 	public SearchMapping[] setupSearchMap() {
 		return new SearchMapping[] {
-			new SearchMapping(S_SAMPLE_ID, C_SAMPLE_ID, null, WhereClauseType.equals, null, null, null),
-			new SearchMapping(S_STATION_NAME, C_STATION_NAME, null, WhereClauseType.equals, null, null, null),
-			new SearchMapping(S_STATION_NUM, C_STATION_NUM, null, WhereClauseType.equals, null, null, null),
+			new SearchMapping(SE_SAMPLE_ID, C_SAMPLE_ID, null, WhereClauseType.equals, null, null, null),
+			new SearchMapping(SE_STATION_NAME, C_STATION_NAME, null, WhereClauseType.equals, null, null, null),
+			new SearchMapping(SE_STATION_NUM, C_STATION_NUM, null, WhereClauseType.equals, null, null, null),
 			new SearchMapping(Endpoint.BEGIN_KEYWORD, C_START_DATE, null, WhereClauseType.special, CleaningOption.none, FIELD_NAME_KEY + " >= TO_DATE(" + USER_VALUE_KEY + ", 'YYYY-MM-DD\"T\"HH24:MI:SS')", null),
 			new SearchMapping(Endpoint.END_KEYWORD, C_START_DATE, null, WhereClauseType.special, CleaningOption.none, FIELD_NAME_KEY + " <= TO_DATE(" + USER_VALUE_KEY + ", 'YYYY-MM-DD\"T\"HH24:MI:SS')", null),
-			new SearchMapping(S_USGS_DATA_LEAD, C_USGS_DATA_LEAD, null, WhereClauseType.equals, null, null, null),
-			new SearchMapping(S_SAMPLE_METHOD, C_SAMPLE_METHOD, null, WhereClauseType.equals, null, null, null),
-			new SearchMapping(S_SAMPLE_LOCATION, C_SAMPLE_LOCATION, null, WhereClauseType.equals, null, null, null),
-			new SearchMapping(S_SAMPLER_NAME, C_SAMPLER_NAME, null, WhereClauseType.equals, null, null, null),
-			new SearchMapping(S_NOZZLE, C_NOZZLE, null, WhereClauseType.equals, null, null, null),
-			new SearchMapping(S_NUM_VERTICALS, C_NUM_VERTICALS, null, WhereClauseType.equals, null, null, null),
-			new SearchMapping(S_TRANSITS_EACH_VERTICAL, C_TRANSITS_EACH_VERTICAL, null, WhereClauseType.equals, null, null, null),
-			new SearchMapping(S_CABLEWAY_STATION_LOC, C_CABLEWAY_STATION_LOC, null, WhereClauseType.equals, null, null, null),
-			new SearchMapping(S_WATER_DEPTH, C_WATER_DEPTH, null, WhereClauseType.equals, null, null, null),
-			new SearchMapping(S_ELEVATION_ABOVE_BED, C_ELEVATION_ABOVE_BED, null, WhereClauseType.equals, null, null, null),
-			new SearchMapping(S_SAMPLING_DURATION, C_SAMPLING_DURATION, null, WhereClauseType.equals, null, null, null),
-			new SearchMapping(S_PUMP_SAMPLER, C_PUMP_SAMPLER, null, WhereClauseType.equals, null, null, null),
-			new SearchMapping(S_PUMP_CAROUSEL_NUM, C_PUMP_CAROUSEL_NUM, null, WhereClauseType.equals, null, null, null),
-			new SearchMapping(S_DATASET_COMPLETE, C_DATASET_COMPLETE, null, WhereClauseType.equals, null, null, null),
-			new SearchMapping(S_CROSS_SECT_CALIB_REQ, C_CROSS_SECT_CALIB_REQ, null, WhereClauseType.equals, null, null, null),
-			new SearchMapping(S_USE_FOR_LOAD_CALC, C_USE_FOR_LOAD_CALC, null, WhereClauseType.equals, null, null, null),
-			new SearchMapping(S_SERVE, C_SERVE, null, WhereClauseType.equals, null, null, null),
-			new SearchMapping(S_NOTES, C_NOTES, null, WhereClauseType.equals, null, null, null),
-			new SearchMapping(S_SILT_CLAY_COLOR, C_SILT_CLAY_COLOR, null, WhereClauseType.equals, null, null, null),
-			new SearchMapping(S_CONC_LABORATORY, C_CONC_LABORATORY, null, WhereClauseType.equals, null, null, null),
-			new SearchMapping(S_GRAIN_SIZE_LABORATORY, C_GRAIN_SIZE_LABORATORY, null, WhereClauseType.equals, null, null, null),
-			new SearchMapping(S_LAB_NOTES, C_LAB_NOTES, null, WhereClauseType.equals, null, null, null),
-			new SearchMapping(S_LAB_METHOD, C_LAB_METHOD, null, WhereClauseType.equals, null, null, null)
+			new SearchMapping(SE_USGS_DATA_LEAD, C_USGS_DATA_LEAD, null, WhereClauseType.equals, null, null, null),
+			new SearchMapping(SE_SAMPLE_METHOD, C_SAMPLE_METHOD, null, WhereClauseType.equals, null, null, null),
+			new SearchMapping(SE_SAMPLE_LOCATION, C_SAMPLE_LOCATION, null, WhereClauseType.equals, null, null, null),
+			new SearchMapping(SE_SAMPLER_NAME, C_SAMPLER_NAME, null, WhereClauseType.equals, null, null, null),
+			new SearchMapping(SE_NOZZLE, C_NOZZLE, null, WhereClauseType.equals, null, null, null),
+			new SearchMapping(SE_NUM_VERTICALS, C_NUM_VERTICALS, null, WhereClauseType.equals, null, null, null),
+			new SearchMapping(SE_TRANSITS_EACH_VERTICAL, C_TRANSITS_EACH_VERTICAL, null, WhereClauseType.equals, null, null, null),
+			new SearchMapping(SE_CABLEWAY_STATION_LOC, C_CABLEWAY_STATION_LOC, null, WhereClauseType.equals, null, null, null),
+			new SearchMapping(SE_WATER_DEPTH, C_WATER_DEPTH, null, WhereClauseType.equals, null, null, null),
+			new SearchMapping(SE_ELEVATION_ABOVE_BED, C_ELEVATION_ABOVE_BED, null, WhereClauseType.equals, null, null, null),
+			new SearchMapping(SE_SAMPLING_DURATION, C_SAMPLING_DURATION, null, WhereClauseType.equals, null, null, null),
+			new SearchMapping(SE_PUMP_SAMPLER, C_PUMP_SAMPLER, null, WhereClauseType.equals, null, null, null),
+			new SearchMapping(SE_PUMP_CAROUSEL_NUM, C_PUMP_CAROUSEL_NUM, null, WhereClauseType.equals, null, null, null),
+			new SearchMapping(SE_DATASET_COMPLETE, C_DATASET_COMPLETE, null, WhereClauseType.equals, null, null, null),
+			new SearchMapping(SE_CROSS_SECT_CALIB_REQ, C_CROSS_SECT_CALIB_REQ, null, WhereClauseType.equals, null, null, null),
+			new SearchMapping(SE_USE_FOR_LOAD_CALC, C_USE_FOR_LOAD_CALC, null, WhereClauseType.equals, null, null, null),
+			new SearchMapping(SE_SERVE, C_SERVE, null, WhereClauseType.equals, null, null, null),
+			new SearchMapping(SE_NOTES, C_NOTES, null, WhereClauseType.equals, null, null, null),
+			new SearchMapping(SE_SILT_CLAY_COLOR, C_SILT_CLAY_COLOR, null, WhereClauseType.equals, null, null, null),
+			new SearchMapping(SE_CONC_LABORATORY, C_CONC_LABORATORY, null, WhereClauseType.equals, null, null, null),
+			new SearchMapping(SE_GRAIN_SIZE_LABORATORY, C_GRAIN_SIZE_LABORATORY, null, WhereClauseType.equals, null, null, null),
+			new SearchMapping(SE_LAB_NOTES, C_LAB_NOTES, null, WhereClauseType.equals, null, null, null),
+			new SearchMapping(SE_LAB_METHOD, C_LAB_METHOD, null, WhereClauseType.equals, null, null, null)
 		};
 	}
 
@@ -496,93 +496,183 @@ public class QWDownloadSpec extends Spec {
 	public static final String C_SAND_D50_TOT_95ER = "SAND_D50_TOT_95ER";
 
 	public static final String S_SAMPLE_ID = "sampleId";
-	public static final String S_STATION_NAME = "stationName";
-	public static final String S_STATION_NUM = "stationNum";
-	public static final String S_START_DATE = "startDate";
-	public static final String S_END_DATE = "endDate";
-	public static final String S_USGS_DATA_LEAD = "usgsDataLead";
-	public static final String S_SAMPLE_METHOD = "sampleMethod";
-	public static final String S_SAMPLE_LOCATION = "sampleLocation";
-	public static final String S_SAMPLER_NAME = "samplerName";
-	public static final String S_NOZZLE = "nozzle";
-	public static final String S_NUM_VERTICALS = "numVerticals";
-	public static final String S_TRANSITS_EACH_VERTICAL = "transitsEachVertical";
-	public static final String S_CABLEWAY_STATION_LOC = "cablewayStationLoc";
-	public static final String S_WATER_DEPTH = "waterDepth";
-	public static final String S_ELEVATION_ABOVE_BED = "elevationAboveBed";
-	public static final String S_SAMPLING_DURATION = "samplingDuration";
-	public static final String S_PUMP_SAMPLER = "pumpSampler";
-	public static final String S_PUMP_CAROUSEL_NUM = "pumpCarouselNum";
-	public static final String S_DATASET_COMPLETE = "datasetComplete";
-	public static final String S_CROSS_SECT_CALIB_REQ = "crossSectCalibReq";
-	public static final String S_USE_FOR_LOAD_CALC = "useForLoadCalc";
-	public static final String S_SERVE = "serve";
-	public static final String S_NOTES = "notes";
-	public static final String S_SILT_CLAY_COLOR = "siltClayColor";
-	public static final String S_CONC_LABORATORY = "concLaboratory";
-	public static final String S_GRAIN_SIZE_LABORATORY = "grainSizeLaboratory";
-	public static final String S_LAB_NOTES = "labNotes";
-	public static final String S_LAB_METHOD = "labMethod";
-	public static final String S_SPEC_COND = "specCond";
-	public static final String S_AIR_TEMP = "airTemp";
-	public static final String S_WATER_TEMP = "waterTemp";
-	public static final String S_SILT_CLAY_CONC_LAB = "siltClayConcLab";
-	public static final String S_SAND_CONC_LAB = "sandConcLab";
-	public static final String S_SAMPLE_MASS = "sampleMass";
-	public static final String S_MASS_LE_63 = "massLe63";
-	public static final String S_MASS_GT_63 = "massGt63";
-	public static final String S_CONC_LE_63 = "concLe63";
-	public static final String S_CONC_GT_63 = "concGt63";
-	public static final String S_TDS = "tds";
-	public static final String S_SAND_D16_LAB = "sandD16Lab";
-	public static final String S_SAND_D50_LAB = "sandD50Lab";
-	public static final String S_SAND_D84_LAB = "sandD84Lab";
-	public static final String S_SAND_PCT_LT_074_LAB = "sandPctLt074Lab";
-	public static final String S_SAND_PCT_LT_088_LAB = "sandPctLt088Lab";
-	public static final String S_SAND_PCT_LT_105_LAB = "sandPctLt105Lab";
-	public static final String S_SAND_PCT_LT_125_LAB = "sandPctLt125Lab";
-	public static final String S_SAND_PCT_LT_149_LAB = "sandPctLt149Lab";
-	public static final String S_SAND_PCT_LT_177_LAB = "sandPctLt177Lab";
-	public static final String S_SAND_PCT_LT_210_LAB = "sandPctLt210Lab";
-	public static final String S_SAND_PCT_LT_250_LAB = "sandPctLt250Lab";
-	public static final String S_SAND_PCT_LT_297_LAB = "sandPctLt297Lab";
-	public static final String S_SAND_PCT_LT_354_LAB = "sandPctLt354Lab";
-	public static final String S_SAND_PCT_LT_420_LAB = "sandPctLt420Lab";
-	public static final String S_SAND_PCT_LT_500_LAB = "sandPctLt500Lab";
-	public static final String S_SAND_PCT_LT_595_LAB = "sandPctLt595Lab";
-	public static final String S_SAND_PCT_LT_707_LAB = "sandPctLt707Lab";
-	public static final String S_SAND_PCT_LT_841_LAB = "sandPctLt841Lab";
-	public static final String S_SAND_PCT_LT_1000_LAB = "sandPctLt1000Lab";
-	public static final String S_SILT_CLAY_CONC_XS = "siltClayConcXs";
-	public static final String S_SAND_CONC_XS = "sandConcXs";
-	public static final String S_SAND_D16_XS = "sandD16Xs";
-	public static final String S_SAND_D50_XS = "sandD50Xs";
-	public static final String S_SAND_D84_XS = "sandD84Xs";
-	public static final String S_SAND_PCT_LT_074_XS = "sandPctLt074Xs";
-	public static final String S_SAND_PCT_LT_088_XS = "sandPctLt088Xs";
-	public static final String S_SAND_PCT_LT_105_XS = "sandPctLt105Xs";
-	public static final String S_SAND_PCT_LT_125_XS = "sandPctLt125Xs";
-	public static final String S_SAND_PCT_LT_149_XS = "sandPctLt149Xs";
-	public static final String S_SAND_PCT_LT_177_XS = "sandPctLt177Xs";
-	public static final String S_SAND_PCT_LT_210_XS = "sandPctLt210Xs";
-	public static final String S_SAND_PCT_LT_250_XS = "sandPctLt250Xs";
-	public static final String S_SAND_PCT_LT_297_XS = "sandPctLt297Xs";
-	public static final String S_SAND_PCT_LT_354_XS = "sandPctLt354Xs";
-	public static final String S_SAND_PCT_LT_420_XS = "sandPctLt420Xs";
-	public static final String S_SAND_PCT_LT_500_XS = "sandPctLt500Xs";
-	public static final String S_SAND_PCT_LT_595_XS = "sandPctLt595Xs";
-	public static final String S_SAND_PCT_LT_707_XS = "sandPctLt707Xs";
-	public static final String S_SAND_PCT_LT_841_XS = "sandPctLt841Xs";
-	public static final String S_SAND_PCT_LT_1000_XS = "sandPctLt1000Xs";
-	public static final String S_SILT_CLAY_FIELD_95ER = "siltClayField95Er";
-	public static final String S_SAND_FIELD_95ER = "sandField95Er";
-	public static final String S_SAND_D50_FIELD_95ER = "sandD50Field95Er";
-	public static final String S_SILT_CLAY_LAB_BIAS_COR = "siltClayLabBiasCor";
-	public static final String S_SILT_CLAY_LAB_95ER = "siltClayLab95Er";
-	public static final String S_SAND_LAB_95ER = "sandLab95Er";
-	public static final String S_SAND_D50_LAB_95ER = "sandD50Lab95Er";
-	public static final String S_SILT_CLAY_TOT_95ER = "siltClayTot95Er";
-	public static final String S_SAND_TOT_95ER = "sandTot95Er";
-	public static final String S_SAND_D50_TOT_95ER = "sandD50Tot95Er";
+	public static final String S_STATION_NAME = "Station name STATION_NAME";
+	public static final String S_STATION_NUM = "USGS Station # STATION_NUM";
+	public static final String S_START_DATE = "start time or mean time (MST) START_OR_MEAN_TIME";
+	public static final String S_END_DATE = "end time (MST) END_TIME";
+	public static final String S_USGS_DATA_LEAD = "USGS data lead USGS_DATA_LEAD";
+	public static final String S_SAMPLE_METHOD = "Sampling method SAMPLING_METHOD";
+	public static final String S_SAMPLE_LOCATION = "Location SAMPLE_LOCATION";
+	public static final String S_SAMPLER_NAME = "Sampler SAMPLER_USED";
+	public static final String S_NOZZLE = "Nozzle NOZZLE";
+	public static final String S_NUM_VERTICALS = "Verticals NUM_VERTICALS";
+	public static final String S_TRANSITS_EACH_VERTICAL = "Transits at each vertical TRANSITS_EACH_VERTICAL";
+	public static final String S_CABLEWAY_STATION_LOC = "Cableway station location (ft) CABLEWAY_STATION_LOC";
+	public static final String S_WATER_DEPTH = "Water depth (m) WATER_DEPTH";
+	public static final String S_ELEVATION_ABOVE_BED = "Sample elevation above bed (m) SAMPLE_ELEV_ABOVE_BED";
+	public static final String S_SAMPLING_DURATION = "Sampling duration (s) SAMPLING_DURATION";
+	public static final String S_PUMP_SAMPLER = "Pump sampler A or B PUMP_SAMPLER";
+	public static final String S_PUMP_CAROUSEL_NUM = "Pump carousel number PUMP_CAROUSEL_NUM";
+	public static final String S_DATASET_COMPLETE = "DATASET COMPLETE THROUGH THIS SAMPLE DATASET_COMPLETE";
+	public static final String S_CROSS_SECT_CALIB_REQ = "Cross-section calibration needed CROSS_SECT_CALIB_REQ";
+	public static final String S_USE_FOR_LOAD_CALC = "Use in load calculations USE_FOR_LOAD_CALC";
+	public static final String S_SERVE = "SERVE? SERVE";
+	public static final String S_NOTES = "Notes NOTES";
+	public static final String S_SILT_CLAY_COLOR = "Color of silt&clay SILT_CLAY_COLOR";
+	public static final String S_CONC_LABORATORY = "Concentration analysis laboratory CONC_LABORATORY";
+	public static final String S_GRAIN_SIZE_LABORATORY = "Grain-size analysis laboratory GRAIN_SIZE_LABORATORY";
+	public static final String S_LAB_NOTES = "Lab notes LAB_NOTES";
+	public static final String S_LAB_METHOD = "Method used for determining sand or fines break and sand grain-size distribution LAB_METHOD";
+	public static final String S_SPEC_COND = "Specific conductance (microsiemens per cm at 25 deg. C) SPEC_COND";
+	public static final String S_AIR_TEMP = "Air temp (deg C) AIR_TEMP";
+	public static final String S_WATER_TEMP = "Water temp (deg C) WATER_TEMP";
+	public static final String S_SILT_CLAY_CONC_LAB = "Laboratory-determined values silt&clay concentration (mg per l) SILT_CLAY_CONC_LAB";
+	public static final String S_SAND_CONC_LAB = "sand concentration (mg per l) SAND_CONC_LAB";
+	public static final String S_SAMPLE_MASS = "Sample Mass (g) SAMPLE_MASS";
+	public static final String S_MASS_LE_63 = "Mass passing through 63 micron sieve (g) MASS_LE_63";
+	public static final String S_MASS_GT_63 = "Mass retained on 63 micron sieve (g) MASS_GT_63";
+	public static final String S_CONC_LE_63 = "concentration <63 micron sieve (mg per l) CONC_LE_63";
+	public static final String S_CONC_GT_63 = "concentration >63 micron sieve (mg per l) CONC_GT_63";
+	public static final String S_TDS = "TDS (mg per l) TDS";
+	public static final String S_SAND_D16_LAB = "sand D16(mm) SAND_D16_LAB";
+	public static final String S_SAND_D50_LAB = "sand D50(mm) SAND_D50_LAB";
+	public static final String S_SAND_D84_LAB = "sand D84(mm) SAND_D84_LAB";
+	public static final String S_SAND_PCT_LT_074_LAB = "sand %< 0.074mm SAND_PCT_LT_074_LAB";
+	public static final String S_SAND_PCT_LT_088_LAB = "sand %< 0.088 mm SAND_PCT_LT_088_LAB";
+	public static final String S_SAND_PCT_LT_105_LAB = "sand %< 0.105 mm SAND_PCT_LT_105_LAB";
+	public static final String S_SAND_PCT_LT_125_LAB = "sand %< 0.125 mm SAND_PCT_LT_125_LAB";
+	public static final String S_SAND_PCT_LT_149_LAB = "sand %< 0.149 mm SAND_PCT_LT_149_LAB";
+	public static final String S_SAND_PCT_LT_177_LAB = "sand %< 0.177 mm SAND_PCT_LT_177_LAB";
+	public static final String S_SAND_PCT_LT_210_LAB = "sand %< 0.210 mm SAND_PCT_LT_210_LAB";
+	public static final String S_SAND_PCT_LT_250_LAB = "sand %< 0.250 mm SAND_PCT_LT_250_LAB";
+	public static final String S_SAND_PCT_LT_297_LAB = "sand %< 0.297 mm SAND_PCT_LT_297_LAB";
+	public static final String S_SAND_PCT_LT_354_LAB = "sand %< 0.354 mm SAND_PCT_LT_354_LAB";
+	public static final String S_SAND_PCT_LT_420_LAB = "sand %< 0.420 mm SAND_PCT_LT_420_LAB";
+	public static final String S_SAND_PCT_LT_500_LAB = "sand %< 0.500 mm SAND_PCT_LT_500_LAB";
+	public static final String S_SAND_PCT_LT_595_LAB = "sand %< 0.595 mm SAND_PCT_LT_595_LAB";
+	public static final String S_SAND_PCT_LT_707_LAB = "sand %< 0.707 mm SAND_PCT_LT_707_LAB";
+	public static final String S_SAND_PCT_LT_841_LAB = "sand %< 0.841 mm SAND_PCT_LT_841_LAB";
+	public static final String S_SAND_PCT_LT_1000_LAB = "sand % < 1.0 mm SAND_PCT_LT_1000_LAB";
+	public static final String S_SILT_CLAY_CONC_XS = "Cross-section values silt&clay concentration (mg per l) SILT_CLAY_CONC_XS";
+	public static final String S_SAND_CONC_XS = "sand concentration (mg per l) SAND_CONC_XS";
+	public static final String S_SAND_D16_XS = "sand D16(mm) SAND_D16_XS";
+	public static final String S_SAND_D50_XS = "sand D50(mm) SAND_D50_XS";
+	public static final String S_SAND_D84_XS = "sand D84(mm) SAND_D84_XS";
+	public static final String S_SAND_PCT_LT_074_XS = "sand %< 0.074mm SAND_PCT_LT_074_XS";
+	public static final String S_SAND_PCT_LT_088_XS = "sand %< 0.088 mm SAND_PCT_LT_088_XS";
+	public static final String S_SAND_PCT_LT_105_XS = "sand %< 0.105 mm SAND_PCT_LT_105_XS";
+	public static final String S_SAND_PCT_LT_125_XS = "sand %< 0.125 mm SAND_PCT_LT_125_XS";
+	public static final String S_SAND_PCT_LT_149_XS = "sand %< 0.149 mm SAND_PCT_LT_149_XS";
+	public static final String S_SAND_PCT_LT_177_XS = "sand %< 0.177 mm SAND_PCT_LT_177_XS";
+	public static final String S_SAND_PCT_LT_210_XS = "sand %< 0.210 mm SAND_PCT_LT_210_XS";
+	public static final String S_SAND_PCT_LT_250_XS = "sand %< 0.250 mm SAND_PCT_LT_250_XS";
+	public static final String S_SAND_PCT_LT_297_XS = "sand %< 0.297 mm SAND_PCT_LT_297_XS";
+	public static final String S_SAND_PCT_LT_354_XS = "sand %< 0.354 mm SAND_PCT_LT_354_XS";
+	public static final String S_SAND_PCT_LT_420_XS = "sand %< 0.420 mm SAND_PCT_LT_420_XS";
+	public static final String S_SAND_PCT_LT_500_XS = "sand %< 0.500 mm SAND_PCT_LT_500_XS";
+	public static final String S_SAND_PCT_LT_595_XS = "sand %< 0.595 mm SAND_PCT_LT_595_XS";
+	public static final String S_SAND_PCT_LT_707_XS = "sand %< 0.707 mm SAND_PCT_LT_707_XS";
+	public static final String S_SAND_PCT_LT_841_XS = "sand %< 0.841 mm SAND_PCT_LT_841_XS";
+	public static final String S_SAND_PCT_LT_1000_XS = "sand % < 1.0 mm SAND_PCT_LT_1000_XS";
+	public static final String S_SILT_CLAY_FIELD_95ER = "95%-confidence-level field error in silt&clay concentration (mg per l) SILT_CLAY_FIELD_95ER";
+	public static final String S_SAND_FIELD_95ER = "95%-confidence-level field error in sand concentration (mg per l) SAND_FIELD_95ER";
+	public static final String S_SAND_D50_FIELD_95ER = "95%-confidence-level field error in sand D50 (mm) SAND_D50_FIELD_95ER";
+	public static final String S_SILT_CLAY_LAB_BIAS_COR = "Correction for negative laboratory bias in silt&clay conc. (mg per l) SILT_CLAY_LAB_BIAS_COR";
+	public static final String S_SILT_CLAY_LAB_95ER = "95%-confidence-level lab error in bias-corr. silt&clay concentration (mg per l) SILT_CLAY_LAB_95ER";
+	public static final String S_SAND_LAB_95ER = "95%-confidence-level lab error in sand concentration (mg per l) SAND_LAB_95ER";
+	public static final String S_SAND_D50_LAB_95ER = "95%-confidence-level lab error in sand D50 (mm) SAND_D50_LAB_95ER";
+	public static final String S_SILT_CLAY_TOT_95ER = "95%-confidence-level total error in bias-corr. silt&clay concentration (mg per l) SILT_CLAY_TOT_95ER";
+	public static final String S_SAND_TOT_95ER = "95%-confidence-level total error in sand concentration (mg per l) SAND_TOT_95ER";
+	public static final String S_SAND_D50_TOT_95ER = "95%-confidence-level total error in sand D50(mm)SAND_D50_TOT_95ER";
+	
+	public static final String SE_SAMPLE_ID = "sampleId";
+	public static final String SE_STATION_NAME = "stationName";
+	public static final String SE_STATION_NUM = "stationNum";
+	public static final String SE_START_DATE = "startDate";
+	public static final String SE_END_DATE = "endDate";
+	public static final String SE_USGS_DATA_LEAD = "usgsDataLead";
+	public static final String SE_SAMPLE_METHOD = "sampleMethod";
+	public static final String SE_SAMPLE_LOCATION = "sampleLocation";
+	public static final String SE_SAMPLER_NAME = "samplerName";
+	public static final String SE_NOZZLE = "nozzle";
+	public static final String SE_NUM_VERTICALS = "numVerticals";
+	public static final String SE_TRANSITS_EACH_VERTICAL = "transitsEachVertical";
+	public static final String SE_CABLEWAY_STATION_LOC = "cablewayStationLoc";
+	public static final String SE_WATER_DEPTH = "waterDepth";
+	public static final String SE_ELEVATION_ABOVE_BED = "elevationAboveBed";
+	public static final String SE_SAMPLING_DURATION = "samplingDuration";
+	public static final String SE_PUMP_SAMPLER = "pumpSampler";
+	public static final String SE_PUMP_CAROUSEL_NUM = "pumpCarouselNum";
+	public static final String SE_DATASET_COMPLETE = "datasetComplete";
+	public static final String SE_CROSS_SECT_CALIB_REQ = "crossSectCalibReq";
+	public static final String SE_USE_FOR_LOAD_CALC = "useForLoadCalc";
+	public static final String SE_SERVE = "serve";
+	public static final String SE_NOTES = "notes";
+	public static final String SE_SILT_CLAY_COLOR = "siltClayColor";
+	public static final String SE_CONC_LABORATORY = "concLaboratory";
+	public static final String SE_GRAIN_SIZE_LABORATORY = "grainSizeLaboratory";
+	public static final String SE_LAB_NOTES = "labNotes";
+	public static final String SE_LAB_METHOD = "labMethod";
+	public static final String SE_SPEC_COND = "specCond";
+	public static final String SE_AIR_TEMP = "airTemp";
+	public static final String SE_WATER_TEMP = "waterTemp";
+	public static final String SE_SILT_CLAY_CONC_LAB = "siltClayConcLab";
+	public static final String SE_SAND_CONC_LAB = "sandConcLab";
+	public static final String SE_SAMPLE_MASS = "sampleMass";
+	public static final String SE_MASS_LE_63 = "massLe63";
+	public static final String SE_MASS_GT_63 = "massGt63";
+	public static final String SE_CONC_LE_63 = "concLe63";
+	public static final String SE_CONC_GT_63 = "concGt63";
+	public static final String SE_TDS = "tds";
+	public static final String SE_SAND_D16_LAB = "sandD16Lab";
+	public static final String SE_SAND_D50_LAB = "sandD50Lab";
+	public static final String SE_SAND_D84_LAB = "sandD84Lab";
+	public static final String SE_SAND_PCT_LT_074_LAB = "sandPctLt074Lab";
+	public static final String SE_SAND_PCT_LT_088_LAB = "sandPctLt088Lab";
+	public static final String SE_SAND_PCT_LT_105_LAB = "sandPctLt105Lab";
+	public static final String SE_SAND_PCT_LT_125_LAB = "sandPctLt125Lab";
+	public static final String SE_SAND_PCT_LT_149_LAB = "sandPctLt149Lab";
+	public static final String SE_SAND_PCT_LT_177_LAB = "sandPctLt177Lab";
+	public static final String SE_SAND_PCT_LT_210_LAB = "sandPctLt210Lab";
+	public static final String SE_SAND_PCT_LT_250_LAB = "sandPctLt250Lab";
+	public static final String SE_SAND_PCT_LT_297_LAB = "sandPctLt297Lab";
+	public static final String SE_SAND_PCT_LT_354_LAB = "sandPctLt354Lab";
+	public static final String SE_SAND_PCT_LT_420_LAB = "sandPctLt420Lab";
+	public static final String SE_SAND_PCT_LT_500_LAB = "sandPctLt500Lab";
+	public static final String SE_SAND_PCT_LT_595_LAB = "sandPctLt595Lab";
+	public static final String SE_SAND_PCT_LT_707_LAB = "sandPctLt707Lab";
+	public static final String SE_SAND_PCT_LT_841_LAB = "sandPctLt841Lab";
+	public static final String SE_SAND_PCT_LT_1000_LAB = "sandPctLt1000Lab";
+	public static final String SE_SILT_CLAY_CONC_XS = "siltClayConcXs";
+	public static final String SE_SAND_CONC_XS = "sandConcXs";
+	public static final String SE_SAND_D16_XS = "sandD16Xs";
+	public static final String SE_SAND_D50_XS = "sandD50Xs";
+	public static final String SE_SAND_D84_XS = "sandD84Xs";
+	public static final String SE_SAND_PCT_LT_074_XS = "sandPctLt074Xs";
+	public static final String SE_SAND_PCT_LT_088_XS = "sandPctLt088Xs";
+	public static final String SE_SAND_PCT_LT_105_XS = "sandPctLt105Xs";
+	public static final String SE_SAND_PCT_LT_125_XS = "sandPctLt125Xs";
+	public static final String SE_SAND_PCT_LT_149_XS = "sandPctLt149Xs";
+	public static final String SE_SAND_PCT_LT_177_XS = "sandPctLt177Xs";
+	public static final String SE_SAND_PCT_LT_210_XS = "sandPctLt210Xs";
+	public static final String SE_SAND_PCT_LT_250_XS = "sandPctLt250Xs";
+	public static final String SE_SAND_PCT_LT_297_XS = "sandPctLt297Xs";
+	public static final String SE_SAND_PCT_LT_354_XS = "sandPctLt354Xs";
+	public static final String SE_SAND_PCT_LT_420_XS = "sandPctLt420Xs";
+	public static final String SE_SAND_PCT_LT_500_XS = "sandPctLt500Xs";
+	public static final String SE_SAND_PCT_LT_595_XS = "sandPctLt595Xs";
+	public static final String SE_SAND_PCT_LT_707_XS = "sandPctLt707Xs";
+	public static final String SE_SAND_PCT_LT_841_XS = "sandPctLt841Xs";
+	public static final String SE_SAND_PCT_LT_1000_XS = "sandPctLt1000Xs";
+	public static final String SE_SILT_CLAY_FIELD_95ER = "siltClayField95Er";
+	public static final String SE_SAND_FIELD_95ER = "sandField95Er";
+	public static final String SE_SAND_D50_FIELD_95ER = "sandD50Field95Er";
+	public static final String SE_SILT_CLAY_LAB_BIAS_COR = "siltClayLabBiasCor";
+	public static final String SE_SILT_CLAY_LAB_95ER = "siltClayLab95Er";
+	public static final String SE_SAND_LAB_95ER = "sandLab95Er";
+	public static final String SE_SAND_D50_LAB_95ER = "sandD50Lab95Er";
+	public static final String SE_SILT_CLAY_TOT_95ER = "siltClayTot95Er";
+	public static final String SE_SAND_TOT_95ER = "sandTot95Er";
+	public static final String SE_SAND_D50_TOT_95ER = "sandD50Tot95Er";
 	
 }

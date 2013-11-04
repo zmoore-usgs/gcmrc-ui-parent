@@ -457,6 +457,16 @@ GCMRC.Page = {
 					GCMRC.Page.colOrder.push(el);
 				});
 				
+				if (columnOrdering.length < 2) {
+					GCMRC.Page.angularDownloadTypes.continuousActive = false;
+					GCMRC.Page.angularDownloadTypes.physicalActive = true;
+					GCMRC.Page.angularDownloadTypes.isOnlyPhysical = true;
+				} else {
+					GCMRC.Page.angularDownloadTypes.continuousActive = true;
+					GCMRC.Page.angularDownloadTypes.physicalActive = false;
+					GCMRC.Page.angularDownloadTypes.isOnlyPhysical = false;
+				}
+				
 				angular.element($('#downloadColumnOrdering')).scope().columnSelected = null;
 				angular.element($('#downloadColumnOrdering')).scope().$apply()
 				
@@ -664,11 +674,18 @@ GCMRC.Page = {
 	reach: {},
 	reachLoad: JSL.ResourceLoad(function(el) {
 		GCMRC.Page.reach = el;
-	})
+	}),
+	angularDownloadTypes : {
+		continuousActive : true,
+		physicalActive : true,
+		isOnlyContinuous : false,
+		isOnlyPhysical : false
+	}
 };
 
 gcmrcModule.controller('downloadPopupController', function($scope) {
 	$scope.columnOrdering = GCMRC.Page.colOrder;
+	$scope.downloadTypes = GCMRC.Page.angularDownloadTypes;
 	$scope.columnSelected = null;
 	$scope.removeColumn = function() {
 		this.columnOrdering.remove(this.el);
@@ -686,8 +703,6 @@ gcmrcModule.controller('downloadPopupController', function($scope) {
 		}
 		return result;
 	};
-	$scope.disableContinuous = GCMRC.Page.disableContinuous;
-	$scope.disableDiscrete = GCMRC.Page.disableDiscrete;
 });
 
 gcmrcModule.directive('helpTooltip', function() {

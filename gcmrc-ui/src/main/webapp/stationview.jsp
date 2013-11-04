@@ -255,7 +255,7 @@
 					</div>
 					<div class="modal-body container-fluid">
 						<tabset>
-							<tab>
+							<tab active="downloadTypes.continuousActive" disabled="downloadTypes.isOnlyPhysical">
 								<tab-heading>Continuous Data</tab-heading>
 								<div class="row-fluid">
 									<div class="span6">
@@ -291,7 +291,7 @@
 									<a href="#" id="stupidlyBigDownloadButton" class='buildButton'>Download Data</a>
 								</div>
 							</tab>
-							<tab>
+							<tab active="downloadTypes.physicalActive" disabled="downloadTypes.isOnlyContinuous">
 								<tab-heading>Physical Samples</tab-heading>
 								<div class="row-fluid">
 									<a href="#" id="physicalDownloadButton" class='buildButton'>Download Data</a>

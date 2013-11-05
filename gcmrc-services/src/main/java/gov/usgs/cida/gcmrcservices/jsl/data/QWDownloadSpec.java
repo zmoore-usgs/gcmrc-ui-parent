@@ -62,45 +62,18 @@ public class QWDownloadSpec extends Spec {
 			new ColumnMapping(C_DATASET_COMPLETE, S_DATASET_COMPLETE),
 			new ColumnMapping(C_CROSS_SECT_CALIB_REQ, S_CROSS_SECT_CALIB_REQ),
 			new ColumnMapping(C_USE_FOR_LOAD_CALC, S_USE_FOR_LOAD_CALC),
-			new ColumnMapping(C_SERVE, S_SERVE),
 			new ColumnMapping(C_NOTES, S_NOTES),
+			new ColumnMapping(C_AIR_TEMP, S_AIR_TEMP),
+			new ColumnMapping(C_WATER_TEMP, S_WATER_TEMP),
+			new SlashOkColumnMapping(C_SPEC_COND, S_SPEC_COND),
+			new SlashOkColumnMapping(C_TDS, S_TDS),
 			new ColumnMapping(C_SILT_CLAY_COLOR, S_SILT_CLAY_COLOR),
 			new ColumnMapping(C_CONC_LABORATORY, S_CONC_LABORATORY),
 			new ColumnMapping(C_GRAIN_SIZE_LABORATORY, S_GRAIN_SIZE_LABORATORY),
 			new ColumnMapping(C_LAB_NOTES, S_LAB_NOTES),
-			new ColumnMapping(C_LAB_METHOD, S_LAB_METHOD),
-			new ColumnMapping(C_SPEC_COND, S_SPEC_COND),
-			new ColumnMapping(C_AIR_TEMP, S_AIR_TEMP),
-			new ColumnMapping(C_WATER_TEMP, S_WATER_TEMP),
-			new ColumnMapping(C_SILT_CLAY_CONC_LAB, S_SILT_CLAY_CONC_LAB),
-			new ColumnMapping(C_SAND_CONC_LAB, S_SAND_CONC_LAB),
-			new ColumnMapping(C_SAMPLE_MASS, S_SAMPLE_MASS),
-			new ColumnMapping(C_MASS_LE_63, S_MASS_LE_63),
-			new ColumnMapping(C_MASS_GT_63, S_MASS_GT_63),
-			new ColumnMapping(C_CONC_LE_63, S_CONC_LE_63),
-			new ColumnMapping(C_CONC_GT_63, S_CONC_GT_63),
-			new ColumnMapping(C_TDS, S_TDS),
-			new ColumnMapping(C_SAND_D16_LAB, S_SAND_D16_LAB),
-			new ColumnMapping(C_SAND_D50_LAB, S_SAND_D50_LAB),
-			new ColumnMapping(C_SAND_D84_LAB, S_SAND_D84_LAB),
-			new ColumnMapping(C_SAND_PCT_LT_074_LAB, S_SAND_PCT_LT_074_LAB),
-			new ColumnMapping(C_SAND_PCT_LT_088_LAB, S_SAND_PCT_LT_088_LAB),
-			new ColumnMapping(C_SAND_PCT_LT_105_LAB, S_SAND_PCT_LT_105_LAB),
-			new ColumnMapping(C_SAND_PCT_LT_125_LAB, S_SAND_PCT_LT_125_LAB),
-			new ColumnMapping(C_SAND_PCT_LT_149_LAB, S_SAND_PCT_LT_149_LAB),
-			new ColumnMapping(C_SAND_PCT_LT_177_LAB, S_SAND_PCT_LT_177_LAB),
-			new ColumnMapping(C_SAND_PCT_LT_210_LAB, S_SAND_PCT_LT_210_LAB),
-			new ColumnMapping(C_SAND_PCT_LT_250_LAB, S_SAND_PCT_LT_250_LAB),
-			new ColumnMapping(C_SAND_PCT_LT_297_LAB, S_SAND_PCT_LT_297_LAB),
-			new ColumnMapping(C_SAND_PCT_LT_354_LAB, S_SAND_PCT_LT_354_LAB),
-			new ColumnMapping(C_SAND_PCT_LT_420_LAB, S_SAND_PCT_LT_420_LAB),
-			new ColumnMapping(C_SAND_PCT_LT_500_LAB, S_SAND_PCT_LT_500_LAB),
-			new ColumnMapping(C_SAND_PCT_LT_595_LAB, S_SAND_PCT_LT_595_LAB),
-			new ColumnMapping(C_SAND_PCT_LT_707_LAB, S_SAND_PCT_LT_707_LAB),
-			new ColumnMapping(C_SAND_PCT_LT_841_LAB, S_SAND_PCT_LT_841_LAB),
-			new ColumnMapping(C_SAND_PCT_LT_1000_LAB, S_SAND_PCT_LT_1000_LAB),
-			new ColumnMapping(C_SILT_CLAY_CONC_XS, S_SILT_CLAY_CONC_XS),
-			new ColumnMapping(C_SAND_CONC_XS, S_SAND_CONC_XS),
+			new SlashOkColumnMapping(C_LAB_METHOD, S_LAB_METHOD),
+			new SlashOkColumnMapping(C_SILT_CLAY_CONC_XS, S_SILT_CLAY_CONC_XS),
+			new SlashOkColumnMapping(C_SAND_CONC_XS, S_SAND_CONC_XS),
 			new ColumnMapping(C_SAND_D16_XS, S_SAND_D16_XS),
 			new ColumnMapping(C_SAND_D50_XS, S_SAND_D50_XS),
 			new ColumnMapping(C_SAND_D84_XS, S_SAND_D84_XS),
@@ -120,15 +93,41 @@ public class QWDownloadSpec extends Spec {
 			new ColumnMapping(C_SAND_PCT_LT_707_XS, S_SAND_PCT_LT_707_XS),
 			new ColumnMapping(C_SAND_PCT_LT_841_XS, S_SAND_PCT_LT_841_XS),
 			new ColumnMapping(C_SAND_PCT_LT_1000_XS, S_SAND_PCT_LT_1000_XS),
-			new ColumnMapping(C_SILT_CLAY_FIELD_95ER, S_SILT_CLAY_FIELD_95ER),
-			new ColumnMapping(C_SAND_FIELD_95ER, S_SAND_FIELD_95ER),
+			new ColumnMapping(C_SAMPLE_MASS, S_SAMPLE_MASS),
+			new ColumnMapping(C_MASS_LE_63, S_MASS_LE_63),
+			new ColumnMapping(C_MASS_GT_63, S_MASS_GT_63),
+			new SlashOkColumnMapping(C_CONC_LE_63, S_CONC_LE_63),
+			new SlashOkColumnMapping(C_CONC_GT_63, S_CONC_GT_63),
+			new SlashOkColumnMapping(C_SILT_CLAY_CONC_LAB, S_SILT_CLAY_CONC_LAB),
+			new SlashOkColumnMapping(C_SAND_CONC_LAB, S_SAND_CONC_LAB),
+			new ColumnMapping(C_SAND_D16_LAB, S_SAND_D16_LAB),
+			new ColumnMapping(C_SAND_D50_LAB, S_SAND_D50_LAB),
+			new ColumnMapping(C_SAND_D84_LAB, S_SAND_D84_LAB),
+			new ColumnMapping(C_SAND_PCT_LT_074_LAB, S_SAND_PCT_LT_074_LAB),
+			new ColumnMapping(C_SAND_PCT_LT_088_LAB, S_SAND_PCT_LT_088_LAB),
+			new ColumnMapping(C_SAND_PCT_LT_105_LAB, S_SAND_PCT_LT_105_LAB),
+			new ColumnMapping(C_SAND_PCT_LT_125_LAB, S_SAND_PCT_LT_125_LAB),
+			new ColumnMapping(C_SAND_PCT_LT_149_LAB, S_SAND_PCT_LT_149_LAB),
+			new ColumnMapping(C_SAND_PCT_LT_177_LAB, S_SAND_PCT_LT_177_LAB),
+			new ColumnMapping(C_SAND_PCT_LT_210_LAB, S_SAND_PCT_LT_210_LAB),
+			new ColumnMapping(C_SAND_PCT_LT_250_LAB, S_SAND_PCT_LT_250_LAB),
+			new ColumnMapping(C_SAND_PCT_LT_297_LAB, S_SAND_PCT_LT_297_LAB),
+			new ColumnMapping(C_SAND_PCT_LT_354_LAB, S_SAND_PCT_LT_354_LAB),
+			new ColumnMapping(C_SAND_PCT_LT_420_LAB, S_SAND_PCT_LT_420_LAB),
+			new ColumnMapping(C_SAND_PCT_LT_500_LAB, S_SAND_PCT_LT_500_LAB),
+			new ColumnMapping(C_SAND_PCT_LT_595_LAB, S_SAND_PCT_LT_595_LAB),
+			new ColumnMapping(C_SAND_PCT_LT_707_LAB, S_SAND_PCT_LT_707_LAB),
+			new ColumnMapping(C_SAND_PCT_LT_841_LAB, S_SAND_PCT_LT_841_LAB),
+			new ColumnMapping(C_SAND_PCT_LT_1000_LAB, S_SAND_PCT_LT_1000_LAB),
+			new SlashOkColumnMapping(C_SILT_CLAY_FIELD_95ER, S_SILT_CLAY_FIELD_95ER),
+			new SlashOkColumnMapping(C_SAND_FIELD_95ER, S_SAND_FIELD_95ER),
 			new ColumnMapping(C_SAND_D50_FIELD_95ER, S_SAND_D50_FIELD_95ER),
-			new ColumnMapping(C_SILT_CLAY_LAB_BIAS_COR, S_SILT_CLAY_LAB_BIAS_COR),
-			new ColumnMapping(C_SILT_CLAY_LAB_95ER, S_SILT_CLAY_LAB_95ER),
-			new ColumnMapping(C_SAND_LAB_95ER, S_SAND_LAB_95ER),
+			new SlashOkColumnMapping(C_SILT_CLAY_LAB_BIAS_COR, S_SILT_CLAY_LAB_BIAS_COR),
+			new SlashOkColumnMapping(C_SILT_CLAY_LAB_95ER, S_SILT_CLAY_LAB_95ER),
+			new SlashOkColumnMapping(C_SAND_LAB_95ER, S_SAND_LAB_95ER),
 			new ColumnMapping(C_SAND_D50_LAB_95ER, S_SAND_D50_LAB_95ER),
-			new ColumnMapping(C_SILT_CLAY_TOT_95ER, S_SILT_CLAY_TOT_95ER),
-			new ColumnMapping(C_SAND_TOT_95ER, S_SAND_TOT_95ER),
+			new SlashOkColumnMapping(C_SILT_CLAY_TOT_95ER, S_SILT_CLAY_TOT_95ER),
+			new SlashOkColumnMapping(C_SAND_TOT_95ER, S_SAND_TOT_95ER),
 			new ColumnMapping(C_SAND_D50_TOT_95ER, S_SAND_D50_TOT_95ER)
 		};
 	}
@@ -496,94 +495,94 @@ public class QWDownloadSpec extends Spec {
 	public static final String C_SAND_D50_TOT_95ER = "SAND_D50_TOT_95ER";
 
 	public static final String S_SAMPLE_ID = "sampleId";
-	public static final String S_STATION_NAME = "Station name STATION_NAME";
-	public static final String S_STATION_NUM = "USGS Station # STATION_NUM";
-	public static final String S_START_DATE = "start time or mean time (MST) START_OR_MEAN_TIME";
-	public static final String S_END_DATE = "end time (MST) END_TIME";
-	public static final String S_USGS_DATA_LEAD = "USGS data lead USGS_DATA_LEAD";
-	public static final String S_SAMPLE_METHOD = "Sampling method SAMPLING_METHOD";
-	public static final String S_SAMPLE_LOCATION = "Location SAMPLE_LOCATION";
-	public static final String S_SAMPLER_NAME = "Sampler SAMPLER_USED";
-	public static final String S_NOZZLE = "Nozzle NOZZLE";
-	public static final String S_NUM_VERTICALS = "Verticals NUM_VERTICALS";
-	public static final String S_TRANSITS_EACH_VERTICAL = "Transits at each vertical TRANSITS_EACH_VERTICAL";
-	public static final String S_CABLEWAY_STATION_LOC = "Cableway station location (ft) CABLEWAY_STATION_LOC";
-	public static final String S_WATER_DEPTH = "Water depth (m) WATER_DEPTH";
-	public static final String S_ELEVATION_ABOVE_BED = "Sample elevation above bed (m) SAMPLE_ELEV_ABOVE_BED";
-	public static final String S_SAMPLING_DURATION = "Sampling duration (s) SAMPLING_DURATION";
-	public static final String S_PUMP_SAMPLER = "Pump sampler A or B PUMP_SAMPLER";
-	public static final String S_PUMP_CAROUSEL_NUM = "Pump carousel number PUMP_CAROUSEL_NUM";
-	public static final String S_DATASET_COMPLETE = "DATASET COMPLETE THROUGH THIS SAMPLE DATASET_COMPLETE";
-	public static final String S_CROSS_SECT_CALIB_REQ = "Cross-section calibration needed CROSS_SECT_CALIB_REQ";
-	public static final String S_USE_FOR_LOAD_CALC = "Use in load calculations USE_FOR_LOAD_CALC";
-	public static final String S_SERVE = "SERVE? SERVE";
-	public static final String S_NOTES = "Notes NOTES";
-	public static final String S_SILT_CLAY_COLOR = "Color of silt&clay SILT_CLAY_COLOR";
-	public static final String S_CONC_LABORATORY = "Concentration analysis laboratory CONC_LABORATORY";
-	public static final String S_GRAIN_SIZE_LABORATORY = "Grain-size analysis laboratory GRAIN_SIZE_LABORATORY";
-	public static final String S_LAB_NOTES = "Lab notes LAB_NOTES";
-	public static final String S_LAB_METHOD = "Method used for determining sand or fines break and sand grain-size distribution LAB_METHOD";
-	public static final String S_SPEC_COND = "Specific conductance (microsiemens per cm at 25 deg. C) SPEC_COND";
-	public static final String S_AIR_TEMP = "Air temp (deg C) AIR_TEMP";
-	public static final String S_WATER_TEMP = "Water temp (deg C) WATER_TEMP";
-	public static final String S_SILT_CLAY_CONC_LAB = "Laboratory-determined values silt&clay concentration (mg per l) SILT_CLAY_CONC_LAB";
-	public static final String S_SAND_CONC_LAB = "sand concentration (mg per l) SAND_CONC_LAB";
-	public static final String S_SAMPLE_MASS = "Sample Mass (g) SAMPLE_MASS";
-	public static final String S_MASS_LE_63 = "Mass passing through 63 micron sieve (g) MASS_LE_63";
-	public static final String S_MASS_GT_63 = "Mass retained on 63 micron sieve (g) MASS_GT_63";
-	public static final String S_CONC_LE_63 = "concentration <63 micron sieve (mg per l) CONC_LE_63";
-	public static final String S_CONC_GT_63 = "concentration >63 micron sieve (mg per l) CONC_GT_63";
-	public static final String S_TDS = "TDS (mg per l) TDS";
-	public static final String S_SAND_D16_LAB = "sand D16(mm) SAND_D16_LAB";
-	public static final String S_SAND_D50_LAB = "sand D50(mm) SAND_D50_LAB";
-	public static final String S_SAND_D84_LAB = "sand D84(mm) SAND_D84_LAB";
-	public static final String S_SAND_PCT_LT_074_LAB = "sand %< 0.074mm SAND_PCT_LT_074_LAB";
-	public static final String S_SAND_PCT_LT_088_LAB = "sand %< 0.088 mm SAND_PCT_LT_088_LAB";
-	public static final String S_SAND_PCT_LT_105_LAB = "sand %< 0.105 mm SAND_PCT_LT_105_LAB";
-	public static final String S_SAND_PCT_LT_125_LAB = "sand %< 0.125 mm SAND_PCT_LT_125_LAB";
-	public static final String S_SAND_PCT_LT_149_LAB = "sand %< 0.149 mm SAND_PCT_LT_149_LAB";
-	public static final String S_SAND_PCT_LT_177_LAB = "sand %< 0.177 mm SAND_PCT_LT_177_LAB";
-	public static final String S_SAND_PCT_LT_210_LAB = "sand %< 0.210 mm SAND_PCT_LT_210_LAB";
-	public static final String S_SAND_PCT_LT_250_LAB = "sand %< 0.250 mm SAND_PCT_LT_250_LAB";
-	public static final String S_SAND_PCT_LT_297_LAB = "sand %< 0.297 mm SAND_PCT_LT_297_LAB";
-	public static final String S_SAND_PCT_LT_354_LAB = "sand %< 0.354 mm SAND_PCT_LT_354_LAB";
-	public static final String S_SAND_PCT_LT_420_LAB = "sand %< 0.420 mm SAND_PCT_LT_420_LAB";
-	public static final String S_SAND_PCT_LT_500_LAB = "sand %< 0.500 mm SAND_PCT_LT_500_LAB";
-	public static final String S_SAND_PCT_LT_595_LAB = "sand %< 0.595 mm SAND_PCT_LT_595_LAB";
-	public static final String S_SAND_PCT_LT_707_LAB = "sand %< 0.707 mm SAND_PCT_LT_707_LAB";
-	public static final String S_SAND_PCT_LT_841_LAB = "sand %< 0.841 mm SAND_PCT_LT_841_LAB";
-	public static final String S_SAND_PCT_LT_1000_LAB = "sand % < 1.0 mm SAND_PCT_LT_1000_LAB";
-	public static final String S_SILT_CLAY_CONC_XS = "Cross-section values silt&clay concentration (mg per l) SILT_CLAY_CONC_XS";
-	public static final String S_SAND_CONC_XS = "sand concentration (mg per l) SAND_CONC_XS";
-	public static final String S_SAND_D16_XS = "sand D16(mm) SAND_D16_XS";
-	public static final String S_SAND_D50_XS = "sand D50(mm) SAND_D50_XS";
-	public static final String S_SAND_D84_XS = "sand D84(mm) SAND_D84_XS";
-	public static final String S_SAND_PCT_LT_074_XS = "sand %< 0.074mm SAND_PCT_LT_074_XS";
-	public static final String S_SAND_PCT_LT_088_XS = "sand %< 0.088 mm SAND_PCT_LT_088_XS";
-	public static final String S_SAND_PCT_LT_105_XS = "sand %< 0.105 mm SAND_PCT_LT_105_XS";
-	public static final String S_SAND_PCT_LT_125_XS = "sand %< 0.125 mm SAND_PCT_LT_125_XS";
-	public static final String S_SAND_PCT_LT_149_XS = "sand %< 0.149 mm SAND_PCT_LT_149_XS";
-	public static final String S_SAND_PCT_LT_177_XS = "sand %< 0.177 mm SAND_PCT_LT_177_XS";
-	public static final String S_SAND_PCT_LT_210_XS = "sand %< 0.210 mm SAND_PCT_LT_210_XS";
-	public static final String S_SAND_PCT_LT_250_XS = "sand %< 0.250 mm SAND_PCT_LT_250_XS";
-	public static final String S_SAND_PCT_LT_297_XS = "sand %< 0.297 mm SAND_PCT_LT_297_XS";
-	public static final String S_SAND_PCT_LT_354_XS = "sand %< 0.354 mm SAND_PCT_LT_354_XS";
-	public static final String S_SAND_PCT_LT_420_XS = "sand %< 0.420 mm SAND_PCT_LT_420_XS";
-	public static final String S_SAND_PCT_LT_500_XS = "sand %< 0.500 mm SAND_PCT_LT_500_XS";
-	public static final String S_SAND_PCT_LT_595_XS = "sand %< 0.595 mm SAND_PCT_LT_595_XS";
-	public static final String S_SAND_PCT_LT_707_XS = "sand %< 0.707 mm SAND_PCT_LT_707_XS";
-	public static final String S_SAND_PCT_LT_841_XS = "sand %< 0.841 mm SAND_PCT_LT_841_XS";
-	public static final String S_SAND_PCT_LT_1000_XS = "sand % < 1.0 mm SAND_PCT_LT_1000_XS";
-	public static final String S_SILT_CLAY_FIELD_95ER = "95%-confidence-level field error in silt&clay concentration (mg per l) SILT_CLAY_FIELD_95ER";
-	public static final String S_SAND_FIELD_95ER = "95%-confidence-level field error in sand concentration (mg per l) SAND_FIELD_95ER";
-	public static final String S_SAND_D50_FIELD_95ER = "95%-confidence-level field error in sand D50 (mm) SAND_D50_FIELD_95ER";
-	public static final String S_SILT_CLAY_LAB_BIAS_COR = "Correction for negative laboratory bias in silt&clay conc. (mg per l) SILT_CLAY_LAB_BIAS_COR";
-	public static final String S_SILT_CLAY_LAB_95ER = "95%-confidence-level lab error in bias-corr. silt&clay concentration (mg per l) SILT_CLAY_LAB_95ER";
-	public static final String S_SAND_LAB_95ER = "95%-confidence-level lab error in sand concentration (mg per l) SAND_LAB_95ER";
-	public static final String S_SAND_D50_LAB_95ER = "95%-confidence-level lab error in sand D50 (mm) SAND_D50_LAB_95ER";
-	public static final String S_SILT_CLAY_TOT_95ER = "95%-confidence-level total error in bias-corr. silt&clay concentration (mg per l) SILT_CLAY_TOT_95ER";
-	public static final String S_SAND_TOT_95ER = "95%-confidence-level total error in sand concentration (mg per l) SAND_TOT_95ER";
-	public static final String S_SAND_D50_TOT_95ER = "95%-confidence-level total error in sand D50(mm)SAND_D50_TOT_95ER";
+	public static final String S_STATION_NAME = "Station name";
+	public static final String S_STATION_NUM = "USGS Station #";
+	public static final String S_START_DATE = "start time or mean time (MST)";
+	public static final String S_END_DATE = "end time (MST)";
+	public static final String S_USGS_DATA_LEAD = "USGS data lead";
+	public static final String S_SAMPLE_METHOD = "Sampling method";
+	public static final String S_SAMPLE_LOCATION = "Location";
+	public static final String S_SAMPLER_NAME = "Sampler";
+	public static final String S_NOZZLE = "Nozzle";
+	public static final String S_NUM_VERTICALS = "Verticals";
+	public static final String S_TRANSITS_EACH_VERTICAL = "Transits at each vertical";
+	public static final String S_CABLEWAY_STATION_LOC = "Cableway station location (ft)";
+	public static final String S_WATER_DEPTH = "Water depth (m)";
+	public static final String S_ELEVATION_ABOVE_BED = "Sample elevation above bed (m)";
+	public static final String S_SAMPLING_DURATION = "Sampling duration (s)";
+	public static final String S_PUMP_SAMPLER = "Pump sampler A or B";
+	public static final String S_PUMP_CAROUSEL_NUM = "Pump carousel number";
+	public static final String S_DATASET_COMPLETE = "DATASET COMPLETE THROUGH THIS SAMPLE";
+	public static final String S_CROSS_SECT_CALIB_REQ = "Cross-section calibration needed";
+	public static final String S_USE_FOR_LOAD_CALC = "Use in load calculations";
+	public static final String S_SERVE = "SERVE?";
+	public static final String S_NOTES = "Notes";
+	public static final String S_SILT_CLAY_COLOR = "Color of silt&clay";
+	public static final String S_CONC_LABORATORY = "Concentration analysis laboratory";
+	public static final String S_GRAIN_SIZE_LABORATORY = "Grain-size analysis laboratory";
+	public static final String S_LAB_NOTES = "Lab notes";
+	public static final String S_LAB_METHOD = "Method used for determining sand/fines break and sand grain-size distribution";
+	public static final String S_SPEC_COND = "Specific conductance (microsiemens/cm at 25 deg. C)";
+	public static final String S_AIR_TEMP = "Air temp (deg C)";
+	public static final String S_WATER_TEMP = "Water temp (deg C)";
+	public static final String S_SILT_CLAY_CONC_LAB = "Laboratory silt&clay concentration (mg/L)";
+	public static final String S_SAND_CONC_LAB = "Laboratory sand concentration (mg/L)";
+	public static final String S_SAMPLE_MASS = "Sample Mass (g)";
+	public static final String S_MASS_LE_63 = "Mass passing through 63 micron sieve (g)";
+	public static final String S_MASS_GT_63 = "Mass retained on 63 micron sieve (g)";
+	public static final String S_CONC_LE_63 = "concentration <63 micron sieve (mg/L)";
+	public static final String S_CONC_GT_63 = "concentration >63 micron sieve (mg/L)";
+	public static final String S_TDS = "TDS (mg/L)";
+	public static final String S_SAND_D16_LAB = "Raw lab sand D16(mm)";
+	public static final String S_SAND_D50_LAB = "Raw lab sand D50(mm)";
+	public static final String S_SAND_D84_LAB = "Raw lab sand D84(mm)";
+	public static final String S_SAND_PCT_LT_074_LAB = "Raw lab sand %< 0.074 mm";
+	public static final String S_SAND_PCT_LT_088_LAB = "Raw lab sand %< 0.088 mm";
+	public static final String S_SAND_PCT_LT_105_LAB = "Raw lab sand %< 0.105 mm";
+	public static final String S_SAND_PCT_LT_125_LAB = "Raw lab sand %< 0.125 mm";
+	public static final String S_SAND_PCT_LT_149_LAB = "Raw lab sand %< 0.149 mm";
+	public static final String S_SAND_PCT_LT_177_LAB = "Raw lab sand %< 0.177 mm";
+	public static final String S_SAND_PCT_LT_210_LAB = "Raw lab sand %< 0.210 mm";
+	public static final String S_SAND_PCT_LT_250_LAB = "Raw lab sand %< 0.250 mm";
+	public static final String S_SAND_PCT_LT_297_LAB = "Raw lab sand %< 0.297 mm";
+	public static final String S_SAND_PCT_LT_354_LAB = "Raw lab sand %< 0.354 mm";
+	public static final String S_SAND_PCT_LT_420_LAB = "Raw lab sand %< 0.420 mm";
+	public static final String S_SAND_PCT_LT_500_LAB = "Raw lab sand %< 0.500 mm";
+	public static final String S_SAND_PCT_LT_595_LAB = "Raw lab sand %< 0.595 mm";
+	public static final String S_SAND_PCT_LT_707_LAB = "Raw lab sand %< 0.707 mm";
+	public static final String S_SAND_PCT_LT_841_LAB = "Raw lab sand %< 0.841 mm";
+	public static final String S_SAND_PCT_LT_1000_LAB = "Raw lab sand %< 1.0 mm";
+	public static final String S_SILT_CLAY_CONC_XS = "Cross-section silt&clay concentration (mg/L)";
+	public static final String S_SAND_CONC_XS = "Cross-section sand concentration (mg/L)";
+	public static final String S_SAND_D16_XS = "Cross-section sand D16(mm)";
+	public static final String S_SAND_D50_XS = "Cross-section sand D50(mm)";
+	public static final String S_SAND_D84_XS = "Cross-section sand D84(mm)";
+	public static final String S_SAND_PCT_LT_074_XS = "Cross-section sand %< 0.074 mm";
+	public static final String S_SAND_PCT_LT_088_XS = "Cross-section sand %< 0.088 mm";
+	public static final String S_SAND_PCT_LT_105_XS = "Cross-section sand %< 0.105 mm";
+	public static final String S_SAND_PCT_LT_125_XS = "Cross-section sand %< 0.125 mm";
+	public static final String S_SAND_PCT_LT_149_XS = "Cross-section sand %< 0.149 mm";
+	public static final String S_SAND_PCT_LT_177_XS = "Cross-section sand %< 0.177 mm";
+	public static final String S_SAND_PCT_LT_210_XS = "Cross-section sand %< 0.210 mm";
+	public static final String S_SAND_PCT_LT_250_XS = "Cross-section sand %< 0.250 mm";
+	public static final String S_SAND_PCT_LT_297_XS = "Cross-section sand %< 0.297 mm";
+	public static final String S_SAND_PCT_LT_354_XS = "Cross-section sand %< 0.354 mm";
+	public static final String S_SAND_PCT_LT_420_XS = "Cross-section sand %< 0.420 mm";
+	public static final String S_SAND_PCT_LT_500_XS = "Cross-section sand %< 0.500 mm";
+	public static final String S_SAND_PCT_LT_595_XS = "Cross-section sand %< 0.595 mm";
+	public static final String S_SAND_PCT_LT_707_XS = "Cross-section sand %< 0.707 mm";
+	public static final String S_SAND_PCT_LT_841_XS = "Cross-section sand %< 0.841 mm";
+	public static final String S_SAND_PCT_LT_1000_XS = "Cross-section sand %< 1.0 mm";
+	public static final String S_SILT_CLAY_FIELD_95ER = "95%-confidence-level field error in silt&clay concentration (mg/L)";
+	public static final String S_SAND_FIELD_95ER = "95%-confidence-level field error in sand concentration (mg/L)";
+	public static final String S_SAND_D50_FIELD_95ER = "95%-confidence-level field error in sand D50 (mm)";
+	public static final String S_SILT_CLAY_LAB_BIAS_COR = "Correction for negative laboratory bias in silt&clay conc. (mg/L)";
+	public static final String S_SILT_CLAY_LAB_95ER = "95%-confidence-level lab error in bias-corr. silt&clay concentration (mg/L)";
+	public static final String S_SAND_LAB_95ER = "95%-confidence-level lab error in sand concentration (mg/L)";
+	public static final String S_SAND_D50_LAB_95ER = "95%-confidence-level lab error in sand D50 (mm)";
+	public static final String S_SILT_CLAY_TOT_95ER = "95%-confidence-level total error in bias-corr. silt&clay concentration (mg/L)";
+	public static final String S_SAND_TOT_95ER = "95%-confidence-level total error in sand concentration (mg/L)";
+	public static final String S_SAND_D50_TOT_95ER = "95%-confidence-level total error in sand D50(mm)";
 	
 	public static final String SE_SAMPLE_ID = "sampleId";
 	public static final String SE_STATION_NAME = "stationName";
@@ -675,4 +674,20 @@ public class QWDownloadSpec extends Spec {
 	public static final String SE_SAND_TOT_95ER = "sandTot95Er";
 	public static final String SE_SAND_D50_TOT_95ER = "sandD50Tot95Er";
 	
+	protected static class SlashOkColumnMapping extends ColumnMapping {
+		
+		public SlashOkColumnMapping(String columnName, String modsElementString) {
+			super(columnName, modsElementString);
+		}
+
+		@Override
+		public String getXmlElement(int depthParam) {
+			return super.getXmlElementString();
+		}
+
+		@Override
+		public int getDepth() {
+			return 1;
+		}
+	}
 }

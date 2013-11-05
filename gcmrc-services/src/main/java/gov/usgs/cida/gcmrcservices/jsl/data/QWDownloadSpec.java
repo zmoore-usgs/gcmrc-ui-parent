@@ -512,8 +512,8 @@ public class QWDownloadSpec extends Spec {
 	public static final String S_SAMPLING_DURATION = "Sampling duration (s)";
 	public static final String S_PUMP_SAMPLER = "Pump sampler A or B";
 	public static final String S_PUMP_CAROUSEL_NUM = "Pump carousel number";
-	public static final String S_DATASET_COMPLETE = "DATASET COMPLETE THROUGH THIS SAMPLE";
-	public static final String S_CROSS_SECT_CALIB_REQ = "Cross-section calibration needed";
+	public static final String S_DATASET_COMPLETE = "Dataset complete through this sample";
+	public static final String S_CROSS_SECT_CALIB_REQ = "Cross-section calibration applied";
 	public static final String S_USE_FOR_LOAD_CALC = "Use in load calculations";
 	public static final String S_SERVE = "SERVE?";
 	public static final String S_NOTES = "Notes";
@@ -530,8 +530,8 @@ public class QWDownloadSpec extends Spec {
 	public static final String S_SAMPLE_MASS = "Sample Mass (g)";
 	public static final String S_MASS_LE_63 = "Mass passing through 63 micron sieve (g)";
 	public static final String S_MASS_GT_63 = "Mass retained on 63 micron sieve (g)";
-	public static final String S_CONC_LE_63 = "concentration <63 micron sieve (mg/L)";
-	public static final String S_CONC_GT_63 = "concentration >63 micron sieve (mg/L)";
+	public static final String S_CONC_LE_63 = "Concentration <63 micron sieve (mg/L)";
+	public static final String S_CONC_GT_63 = "Concentration >63 micron sieve (mg/L)";
 	public static final String S_TDS = "TDS (mg/L)";
 	public static final String S_SAND_D16_LAB = "Raw lab sand D16(mm)";
 	public static final String S_SAND_D50_LAB = "Raw lab sand D50(mm)";

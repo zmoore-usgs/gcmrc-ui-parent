@@ -101,7 +101,7 @@ public class StationSiteSpec extends Spec {
 		result.append("      QWP.SITE_ID,");
 		result.append("      'Y' AS DISPLAY");
 		result.append("    FROM");
-		result.append("      QW_POR QWP");
+		result.append("      QW_POR_STAR QWP");
 		result.append("      ) TSD");
 		result.append("  LEFT OUTER JOIN");
 		result.append("    SITE_STAR");

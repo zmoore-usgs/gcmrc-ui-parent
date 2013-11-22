@@ -69,22 +69,22 @@ public class StationCreditSpec extends Spec {
 
 	@Override
 	public String setupTableName() {
-		StringBuilder sb = new StringBuilder();
+		StringBuilder result = new StringBuilder();
 		
-		sb.append("(");
-		sb.append(" SELECT");
-		sb.append("  S.NWIS_SITE_NO SITE_NO,");
-		sb.append("  S.SITE_SHORT_NM SHORT_NM,");
-		sb.append("  CCS.PROTO_ORG_CD ORG_CD,");
-		sb.append("  CCS.PRIORITY_VA DISPLAY_ORDER");
-		sb.append(" FROM");
-		sb.append("  COLLECTION_CRED_SITE CCS,");
-		sb.append("  SITE S");
-		sb.append(" WHERE");
-		sb.append("  CCS.SITE_ID = S.SITE_ID");
-		sb.append(") T_A_CREDIT");
+		result.append("(");
+		result.append(" SELECT");
+		result.append("  S.NWIS_SITE_NO SITE_NO,");
+		result.append("  S.SHORT_NAME SHORT_NM,");
+		result.append("  CCS.PROTO_ORG_CD ORG_CD,");
+		result.append("  CCS.PRIORITY_VA DISPLAY_ORDER");
+		result.append(" FROM");
+		result.append("  COLLECTION_CRED_SITE CCS,");
+		result.append("  SITE_STAR S");
+		result.append(" WHERE");
+		result.append("  CCS.SITE_ID = S.SITE_ID");
+		result.append(") T_A_CREDIT");
 		
-		return sb.toString();
+		return result.toString();
 	}
 	
 	public static final String S_SITE = "site";

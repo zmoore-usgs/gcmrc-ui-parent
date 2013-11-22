@@ -74,14 +74,14 @@ public class StationPubsSpec extends Spec {
 		result.append(" CASE");
 		result.append("   WHEN S.NWIS_SITE_NO IS NOT NULL");
 		result.append("   THEN S.NWIS_SITE_NO");
-		result.append("   ELSE S.SITE_SHORT_NM");
+		result.append("   ELSE S.SHORT_NAME");
 		result.append("  END AS SITE_NM,");
 		result.append("  P.PUB_LINK URL,");
 		result.append("  P.PUB_NM DISPLAY_NAME,");
 		result.append("  P.PRIORITY_VA DISPLAY_ORDER");
 		result.append(" FROM");
 		result.append("  PUB_SITE P,");
-		result.append("  SITE S");
+		result.append("  SITE_STAR S");
 		result.append(" WHERE");
 		result.append("  P.SITE_ID = S.SITE_ID");
 		result.append(") T_A_PUBS");

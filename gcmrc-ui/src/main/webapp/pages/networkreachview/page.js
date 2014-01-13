@@ -66,7 +66,7 @@ GCMRC.Page = {
 			var result = [];
 
 			var backgroundColor = '#FFFFFF';
-			var linkit = !("09402500" === el.upstreamStation || "09404120" === el.upstreamStation);
+			var linkit = true; //!("09402500" === el.upstreamStation || "09404120" === el.upstreamStation);
 			if (this.index < GCMRC.Page.reachColoring.length) {
 				backgroundColor = GCMRC.Page.reachColoring[this.index];
 				this.index++;

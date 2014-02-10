@@ -5,9 +5,9 @@
 		</encoder>
 	</appender>
 	<appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
-		<!--		<filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+		<filter class="ch.qos.logback.classic.filter.ThresholdFilter">
 			<level>DEBUG</level>
-		</filter>-->
+		</filter>
 		<file>${catalina.base}/logs/gcmrc.log</file>
 		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
 			<fileNamePattern>${catalina.base}/logs/gcmrc/gcmrc-services.%d{yyyy-MM-dd}.log</fileNamePattern>

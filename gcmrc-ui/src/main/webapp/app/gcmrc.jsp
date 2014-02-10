@@ -41,6 +41,10 @@ CONFIG.pumpColor = "#A6CEE3";
 CONFIG.pumpHiColor = "#1F78B4";
 CONFIG.sampColor = "#FF7F00";
 CONFIG.sampHiColor = "#FF9900";
+
+CONFIG.delims = {
+	sampleMethod : "!"
+};
 </script>
 <script type="text/javascript" src="${relativePath}app/networkdata.js"></script>
 <script type="text/javascript" src="${relativePath}app/mapping.js"></script>

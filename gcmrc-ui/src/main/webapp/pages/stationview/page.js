@@ -113,7 +113,7 @@ GCMRC.Page = {
 						'<input type="radio" name="dataradio',
 						el,
 						'" value="',
-						fixOrder(allMethods).join(","),
+						fixOrder(allMethods).join(CONFIG.delims.sampleMethod),
 						'">' + ppqualifier + ' Data and Physical Samples',
 						'</li>'
 					);
@@ -123,7 +123,7 @@ GCMRC.Page = {
 					'<input type="radio" name="dataradio',
 					el,
 					'" value="',
-					fixOrder(allMethods.filter(function(e){return "inst" !== e})).join(","),
+					fixOrder(allMethods.filter(function(e){return "inst" !== e})).join(CONFIG.delims.sampleMethod),
 					'">Physical Samples Only',
 					'</li></ul>'
 				);
@@ -253,7 +253,7 @@ GCMRC.Page = {
 			var toGet = whatchaGotForMe.attr("value");
 			var cols = ["time!UTCMillis"];
 			if (toGet) {
-				var toGetSplit = toGet.split(",");
+				var toGetSplit = toGet.split(CONFIG.delims.sampleMethod);
 				[].push.apply(cols, toGetSplit.map(function(key) {
 					var groupName = GCMRC.Page.params[el.name][key].groupName;
 					return key + "!" + groupName + "!" + CONFIG.stationName;

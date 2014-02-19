@@ -15,7 +15,7 @@ public class DownloadService extends WebService {
 		this.specMapping.put("samples", QWDownloadSpec.class);
 		this.specMapping.put("GCDAMPsamples", QWDownloadSpec.class);
 		this.specMapping.put("BIBEsamples", CentralQWDownloadSpec.class);
-		this.specMapping.put("DINOsamples", CentralQWDownloadSpec.class);
+		this.specMapping.put("DINOsamples", QWDownloadSpec.class);
 	}
 	
 }

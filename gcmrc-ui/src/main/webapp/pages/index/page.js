@@ -8,7 +8,10 @@ GCMRC.Page = {
 		var popups = [];
 		var options = {
 			controls : [
-//				new OpenLayers.Control.LayerSwitcher()
+//				new OpenLayers.Control.LayerSwitcher(),
+//				new OpenLayers.Control.MousePosition({
+//					displayProjection : new OpenLayers.Projection("EPSG:4326")
+//				})
 			]
 		};
 		GCMRC.Mapping.maps[divId] = new OpenLayers.Map(divId, options);
@@ -20,41 +23,34 @@ GCMRC.Page = {
 		GCMRC.Mapping.maps[divId].addLayers(layersToAdd);
 
 		OpenLayers.Popup.COLOR = "transparent";
-		var sitePopupClass = OpenLayers.Class(OpenLayers.Popup.Anchored, {
-			autoSize: true,
-			relativePosition: "tr",
-			contentDisplayClass: "sitePopupContent",
-			displayClass: "sitePopup",
-			calculateRelativePosition: function(px) {
-				return "tl";
-			}
-		});
-
+		
 		GCMRC.Networks.keys(function(key, network) {
-			if (!network.hidden) {
-				var leftTop = new OpenLayers.Geometry.Point(network.bbox.left, network.bbox.top).transform(
+			if (GCMRC.Features.checkFeature(network)) {
+				var box = {
+					tl : new OpenLayers.Geometry.Point(network.bbox.left, network.bbox.top).transform(
 						new OpenLayers.Projection("EPSG:4326"),
 						GCMRC.Mapping.maps[divId].getProjectionObject()
-						);
-				var rightTop = new OpenLayers.Geometry.Point(network.bbox.right, network.bbox.top).transform(
+						),
+					tr : new OpenLayers.Geometry.Point(network.bbox.right, network.bbox.top).transform(
 						new OpenLayers.Projection("EPSG:4326"),
 						GCMRC.Mapping.maps[divId].getProjectionObject()
-						);
-				var rightBottom = new OpenLayers.Geometry.Point(network.bbox.right, network.bbox.bottom).transform(
+						),
+					br : new OpenLayers.Geometry.Point(network.bbox.right, network.bbox.bottom).transform(
 						new OpenLayers.Projection("EPSG:4326"),
 						GCMRC.Mapping.maps[divId].getProjectionObject()
-						);
-				var leftBottom = new OpenLayers.Geometry.Point(network.bbox.left, network.bbox.bottom).transform(
+						),
+					bl : new OpenLayers.Geometry.Point(network.bbox.left, network.bbox.bottom).transform(
 						new OpenLayers.Projection("EPSG:4326"),
 						GCMRC.Mapping.maps[divId].getProjectionObject()
-						);
+						)
+				};
 
 				var networkBBox = new OpenLayers.Geometry.Polygon([
 					new OpenLayers.Geometry.LinearRing([
-						leftTop,
-						rightTop,
-						rightBottom,
-						leftBottom
+						box.tl,
+						box.tr,
+						box.br,
+						box.bl
 					])
 				]);
 				var siteFeature = new OpenLayers.Feature.Vector(networkBBox, {
@@ -62,13 +58,36 @@ GCMRC.Page = {
 					networkDisplayName: network.displayName
 				});
 				GCMRC.Mapping.layers.network.addFeatures([siteFeature]);
-
+				
+				var labelLoc = (network.labelLoc)?network.labelLoc : "tr";
+				var oppositeLoc = function(loc) {
+					var result = loc;
+					
+					if (loc && loc.length > 1) {
+						var side = loc.charAt(1);
+						if (side === 'r') {
+							result = loc.charAt(0) + "l";
+						} else if (side === 'l') {
+							result = loc.charAt(0) + "r";
+						} else {
+							// what the heck?
+						}
+					}
+					
+					return result;
+				};
+				var sitePopupClass = OpenLayers.Class(OpenLayers.Popup.Anchored, {
+					autoSize: true,
+					contentDisplayClass: "sitePopupContent",
+					displayClass: "sitePopup",
+					calculateRelativePosition: function(px) {
+						return oppositeLoc(labelLoc);
+					}
+				});
+				
 				popups.push(new sitePopupClass(
 						"hoverPopup",
-						new OpenLayers.LonLat(network.bbox.right, network.bbox.top).transform(
-						new OpenLayers.Projection("EPSG:4326"),
-						GCMRC.Mapping.maps[divId].getProjectionObject()
-						),
+						new OpenLayers.LonLat(box[labelLoc].x, box[labelLoc].y),
 						new OpenLayers.Size(80, 12),
 						siteFeature.attributes.networkDisplayName,
 						null,

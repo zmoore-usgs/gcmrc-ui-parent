@@ -12,12 +12,25 @@ GCMRC.Networks = function() {
 	return {
 		"GCDAMP" : {
 			displayName : 'Grand Canyon',
+			labelLoc : 'bl',
 			bbox : {
 				"left": -114.003737,
 				"bottom": 35.130507,
 				"right": -110.132732,
 				"top": 37.828968
-			}
+			},
+			reaches : true
+		},
+		"CL" : {
+			displayName : 'Canyonlands',
+			labelLoc: 'tl',
+			bbox: {
+				"left": -110.42415,
+				"bottom": 38.02643,
+				"right": -109.63313,
+				"top": 38.54384
+			},
+			appFeatureId : "CANYONLANDS"
 		},
 		"DINO" : {
 			displayName : 'Dinosaur',
@@ -28,6 +41,17 @@ GCMRC.Networks = function() {
 				"top": 41.093398
 			}
 		},
+		"CRD" : {
+			displayName : 'Colorado River Delta',
+			labelLoc: 'bl',
+			bbox : {
+				"left": -115.12630,
+				"bottom": 32.13372,
+				"right": -114.55501,
+				"top": 32.72718
+			},
+			appFeatureId : "RIVER_DELTA"
+		},
 		"BIBE" : {
 			displayName : 'Big Bend',
 			bbox : {
@@ -35,7 +59,8 @@ GCMRC.Networks = function() {
 				"bottom": 28.780138,
 				"right": -102.625809,
 				"top": 29.561388
-			}
+			},
+			reaches : true
 		}
 	};
 }();

@@ -1,12 +1,15 @@
 <configuration>
 	<appender name="stdout" class="ch.qos.logback.core.ConsoleAppender">
+		<filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+			<level>INFO</level>
+		</filter>
 		<encoder>
 			<pattern>%d{HH:mm:ss.SSS} [%t] GCMRC-SERVICES %5p %logger{20} - %m%n</pattern>
 		</encoder>
 	</appender>
 	<appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
 		<filter class="ch.qos.logback.classic.filter.ThresholdFilter">
-			<level>DEBUG</level>
+			<level>TRACE</level>
 		</filter>
 		<file>${catalina.base}/logs/gcmrc.log</file>
 		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
@@ -19,6 +22,7 @@
 		</encoder>
 	</appender>
 	
+	<logger name="gov.usgs.cida.gcmrcservices.nude.time" level="TRACE"/>
 	<logger name="gov.usgs.webservices.jdbc.spec" level="TRACE"/>
 	<logger name="gov.usgs.webservices.jdbc.service" level="DEBUG"/>
 	<logger name="gov.usgs.cida.nude" level="DEBUG"/>

@@ -7,7 +7,6 @@ GCMRC.Page = {
 		var divId = config['divId'] || 'openlayers-map';
 
 		var options = {
-			//controls : []
 		};
 		
 		GCMRC.Mapping.maps[divId] = new OpenLayers.Map(divId, options);
@@ -35,23 +34,34 @@ GCMRC.Page = {
 			});
 
 		var resizeToDefault = true;
-		if (1 < GCMRC.Mapping.layers.vector.features.length) {
-			resizeToDefault = false;
-			GCMRC.Mapping.maps[divId].zoomToExtent(GCMRC.Mapping.layers.vector.getDataExtent());
-			if (9 < GCMRC.Mapping.maps[divId].zoom) {
-				resizeToDefault = true;
-			}
-		}
+//		if (1 < GCMRC.Mapping.layers.vector.features.length) {
+//			resizeToDefault = false;
+//			GCMRC.Mapping.maps[divId].zoomToExtent(GCMRC.Mapping.layers.vector.getDataExtent());
+//			if (9 < GCMRC.Mapping.maps[divId].zoom) {
+//				resizeToDefault = true;
+//			}
+//		}
 		if (resizeToDefault) {
-			if ('GCDAMP' === CONFIG.networkName) {
-				GCMRC.Mapping.maps[divId].moveTo(new OpenLayers.LonLat(-12499366.619029, 4338225.8756765), 8);
-			} else if ('DINO' === CONFIG.networkName) {
-				GCMRC.Mapping.maps[divId].moveTo(new OpenLayers.LonLat(-12097598.376886, 4950668.6874257), 9);
-			} else if ('BIBE' === CONFIG.networkName) {
-				GCMRC.Mapping.maps[divId].moveTo(new OpenLayers.LonLat(-11492369.987008, 3397774.0210003), 9);
-			} else {
-				LOG.error("Invalid Network Name!");
-			}
+			var network = GCMRC.Networks[CONFIG.networkName];
+			var networkBounds = new OpenLayers.Bounds();
+			networkBounds.extend(new OpenLayers.LonLat(network.bbox.right, network.bbox.top).transform(
+					new OpenLayers.Projection("EPSG:4326"),
+					GCMRC.Mapping.maps[divId].getProjectionObject()
+				));
+			networkBounds.extend(new OpenLayers.LonLat(network.bbox.left, network.bbox.bottom).transform(
+					new OpenLayers.Projection("EPSG:4326"),
+					GCMRC.Mapping.maps[divId].getProjectionObject()
+				));
+			GCMRC.Mapping.maps[divId].zoomToExtent(networkBounds);
+//			if ('GCDAMP' === CONFIG.networkName) {
+//				GCMRC.Mapping.maps[divId].moveTo(new OpenLayers.LonLat(-12499366.619029, 4338225.8756765), 8);
+//			} else if ('DINO' === CONFIG.networkName) {
+//				GCMRC.Mapping.maps[divId].moveTo(new OpenLayers.LonLat(-12097598.376886, 4950668.6874257), 9);
+//			} else if ('BIBE' === CONFIG.networkName) {
+//				GCMRC.Mapping.maps[divId].moveTo(new OpenLayers.LonLat(-11492369.987008, 3397774.0210003), 9);
+//			} else {
+//				LOG.error("Invalid Network Name!");
+//			}
 		}
 
 

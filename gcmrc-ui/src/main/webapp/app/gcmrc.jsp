@@ -35,6 +35,23 @@ GCMRC.StationLoad = JSL.ResourceLoad(function(el) {
 
 	GCMRC.Stations[name] = Object.merge({}, GCMRC.Stations[name], true).merge(el, true);
 });
+
+GCMRC.Features = {
+	active : {
+		"CANYONLANDS" : true,
+		"RIVER_DELTA" : false
+	},
+	checkFeature : function(obj) {
+		var result = false;
+		
+		if (!obj.appFeatureId || GCMRC.Features.active[obj.appFeatureId]) {
+			result = true;
+		}
+		
+		return result;
+	}
+};
+
 CONFIG.instColor = "#4DAF4A";
 CONFIG.instHiColor = "#FF0033";
 CONFIG.pumpColor = "#A6CEE3";

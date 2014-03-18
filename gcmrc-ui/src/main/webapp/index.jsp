@@ -17,12 +17,7 @@
 		}
 	}
 	protected boolean development = Boolean.parseBoolean(props.getProperty("all.development")) || Boolean.parseBoolean(props.getProperty("${project.artifactId}.development"));
-	protected Map<String, Boolean> features = new HashMap<String, Boolean>();
-	
-	{
-		features.put("CANYONLANDS", Boolean.parseBoolean(props.getProperty("gcmrc.features.canyonlands", "false")));
-		features.put("RIVER_DELTA", Boolean.parseBoolean(props.getProperty("gcmrc.features.riverdelta", "false")));
-	}
+
 %>
 
 <%
@@ -34,8 +29,6 @@
 
 	String relativePath = PathUtil.calculateRelativePath(request.getRequestURI(), request.getContextPath());
 	request.setAttribute("relativePath", relativePath);
-	
-	request.setAttribute("features", Collections.unmodifiableMap(features));
 %>
 
 <!DOCTYPE html>

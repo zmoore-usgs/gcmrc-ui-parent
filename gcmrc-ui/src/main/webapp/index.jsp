@@ -1,3 +1,6 @@
+<%@page import="java.util.Collections"%>
+<%@page import="java.util.Map"%>
+<%@page import="java.util.HashMap"%>
 <%@page import="gov.usgs.cida.path.PathUtil"%>
 <%@page import="org.slf4j.Logger"%>
 <%@page import="org.slf4j.LoggerFactory"%>
@@ -13,7 +16,8 @@
 			log.error("Could not find JNDI");
 		}
 	}
-	boolean development = Boolean.parseBoolean(props.getProperty("all.development")) || Boolean.parseBoolean(props.getProperty("${project.artifactId}.development"));
+	protected boolean development = Boolean.parseBoolean(props.getProperty("all.development")) || Boolean.parseBoolean(props.getProperty("${project.artifactId}.development"));
+
 %>
 
 <%

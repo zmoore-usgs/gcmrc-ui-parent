@@ -31,7 +31,11 @@ public class StationAllSiteSpec extends StationSiteSpec {
 		result.append("    THEN 'DINO'");
 		result.append("    WHEN NETWORK_NAME='BigBend'");
 		result.append("    THEN 'BIBE'");
-		result.append("    ELSE 'GCDAMP'");
+		result.append("    WHEN NETWORK_NAME='Canyonlands'");
+		result.append("    THEN 'CL'");
+		result.append("    WHEN NETWORK_NAME='RiverDelta'");
+		result.append("    THEN 'CRD'");
+		result.append("    ELSE NETWORK_NAME");
 		result.append("  END AS NET,");
 		result.append("  ACTIVE,");
 		result.append("  DISPLAY_ORDER");

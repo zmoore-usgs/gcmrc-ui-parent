@@ -1,3 +1,27 @@
+<%@page import="java.util.Collections"%>
+<%@page import="java.util.Map"%>
+<%@page import="java.util.HashMap"%>
+<%@page import="org.slf4j.Logger"%>
+<%@page import="org.slf4j.LoggerFactory"%>
+<%@page import="gov.usgs.cida.config.DynamicReadOnlyProperties"%>
+<%!
+	private static final Logger log = LoggerFactory.getLogger("gcmrc_jsp");
+	protected DynamicReadOnlyProperties props = new DynamicReadOnlyProperties();
+
+	{
+		try {
+			props = props.addJNDIContexts(new String[0]);
+		} catch (Exception e) {
+			log.error("Could not find JNDI");
+		}
+	}
+	protected Map<String, Boolean> features = new HashMap<String, Boolean>();
+	
+	{
+		features.put("CANYONLANDS", Boolean.parseBoolean(props.getProperty("gcmrc.features.canyonlands", "false")));
+		features.put("RIVER_DELTA", Boolean.parseBoolean(props.getProperty("gcmrc.features.riverdelta", "false")));
+	}
+%>
 <script type="text/javascript">
 var GCMRC = {
 	administrator : 'cida_gcmrc',
@@ -38,8 +62,8 @@ GCMRC.StationLoad = JSL.ResourceLoad(function(el) {
 
 GCMRC.Features = {
 	active : {
-		"CANYONLANDS" : true,
-		"RIVER_DELTA" : false
+		"CANYONLANDS" : <%= (null != features.get("CANYONLANDS") && Boolean.TRUE == features.get("CANYONLANDS"))?"true":"false" %>,
+		"RIVER_DELTA" : <%= (null != features.get("RIVER_DELTA") && Boolean.TRUE == features.get("RIVER_DELTA"))?"true":"false" %>
 	},
 	checkFeature : function(obj) {
 		var result = false;

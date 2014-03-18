@@ -167,7 +167,11 @@ public class ReachTribSpec extends Spec {
 		result.append("      THEN 'DINO'");
 		result.append("      WHEN RTD.NETWORK_NAME='BigBend'");
 		result.append("      THEN 'BIBE'");
-		result.append("      ELSE 'GCDAMP'");
+		result.append("      WHEN RTD.NETWORK_NAME='Canyonlands'");
+		result.append("      THEN 'CL'");
+		result.append("      WHEN RTD.NETWORK_NAME='RiverDelta'");
+		result.append("      THEN 'CRD'");
+		result.append("      ELSE RTD.NETWORK_NAME");
 		result.append("    END AS NETWORK_NAME,");
 		result.append("    RTD.DISPLAY_ORDER,");
 		result.append("    TO_CHAR(END_STATIC_REC, 'YYYY-MM-DD\"T\"HH24:MI:SS') END_STATIC_REC,");

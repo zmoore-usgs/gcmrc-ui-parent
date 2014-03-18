@@ -1,3 +1,6 @@
+<%@page import="java.util.Collections"%>
+<%@page import="java.util.Map"%>
+<%@page import="java.util.HashMap"%>
 <%@page import="gov.usgs.cida.path.PathUtil"%>
 <%@page import="org.slf4j.Logger"%>
 <%@page import="org.slf4j.LoggerFactory"%>
@@ -13,7 +16,13 @@
 			log.error("Could not find JNDI");
 		}
 	}
-	boolean development = Boolean.parseBoolean(props.getProperty("all.development")) || Boolean.parseBoolean(props.getProperty("${project.artifactId}.development"));
+	protected boolean development = Boolean.parseBoolean(props.getProperty("all.development")) || Boolean.parseBoolean(props.getProperty("${project.artifactId}.development"));
+	protected Map<String, Boolean> features = new HashMap<String, Boolean>();
+	
+	{
+		features.put("CANYONLANDS", Boolean.parseBoolean(props.getProperty("gcmrc.features.canyonlands", "false")));
+		features.put("RIVER_DELTA", Boolean.parseBoolean(props.getProperty("gcmrc.features.riverdelta", "false")));
+	}
 %>
 
 <%
@@ -25,6 +34,8 @@
 
 	String relativePath = PathUtil.calculateRelativePath(request.getRequestURI(), request.getContextPath());
 	request.setAttribute("relativePath", relativePath);
+	
+	request.setAttribute("features", Collections.unmodifiableMap(features));
 %>
 
 <!DOCTYPE html>

@@ -1,3 +1,4 @@
+<%@page import="java.util.Map" %>
 <script type="text/javascript">
 var GCMRC = {
 	administrator : 'cida_gcmrc',
@@ -38,8 +39,8 @@ GCMRC.StationLoad = JSL.ResourceLoad(function(el) {
 
 GCMRC.Features = {
 	active : {
-		"CANYONLANDS" : true,
-		"RIVER_DELTA" : false
+		"CANYONLANDS" : <%= (null != ((Map<String, Boolean>)request.getAttribute("features")).get("CANYONLANDS") && Boolean.TRUE == ((Map<String, Boolean>)request.getAttribute("features")).get("CANYONLANDS"))?"true":"false" %>,
+		"RIVER_DELTA" : <%= (null != ((Map<String, Boolean>)request.getAttribute("features")).get("RIVER_DELTA") && Boolean.TRUE == ((Map<String, Boolean>)request.getAttribute("features")).get("RIVER_DELTA"))?"true":"false" %>
 	},
 	checkFeature : function(obj) {
 		var result = false;

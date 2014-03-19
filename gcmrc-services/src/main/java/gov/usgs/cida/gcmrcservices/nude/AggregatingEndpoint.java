@@ -1,12 +1,15 @@
 package gov.usgs.cida.gcmrcservices.nude;
 
+import gov.usgs.cida.gcmrcservices.column.ColumnMetadata;
 import com.google.common.collect.ListMultimap;
 import com.google.common.collect.Multimap;
 import static gov.usgs.cida.gcmrcservices.TimeUtil.TZ_CODE_LOOKUP;
-import gov.usgs.cida.gcmrcservices.nude.ColumnMetadata.SpecEntry;
+import gov.usgs.cida.gcmrcservices.column.ColumnMetadata.SpecEntry;
+import gov.usgs.cida.gcmrcservices.column.ColumnResolver;
+import static gov.usgs.cida.gcmrcservices.column.ColumnResolver.getCustomName;
+import static gov.usgs.cida.gcmrcservices.column.ColumnResolver.getStation;
 import static gov.usgs.cida.gcmrcservices.nude.Endpoint.COLUMN_KEYWORD;
 import static gov.usgs.cida.gcmrcservices.nude.Endpoint.getDateRange;
-import static gov.usgs.cida.gcmrcservices.nude.Endpoint.getStation;
 import static gov.usgs.cida.gcmrcservices.nude.Endpoint.getParameter;
 import gov.usgs.cida.gcmrcservices.nude.time.CutoffTimesPlanStep;
 import gov.usgs.cida.gcmrcservices.nude.time.TimeColumnReq;
@@ -66,17 +69,19 @@ public class AggregatingEndpoint extends SpecEndpoint {
 			result.add(new FilterStep(buildReplaceValueFilter(new ColumnGrouping(interestingColumns), interestingColumns, MINUS_999, BAD_DATA_KEYWORD)));
 		}
 		
+		SQLProvider sqlProvider = (SQLProvider) providers.get(Provider.SQL);
+		
 		Set<Column> exemptColumns = new HashSet<Column>();
 		for (String station : stations) {
-			for (Entry<String, ColumnMetadata> ent : qwColumnMetadatas.entrySet()) {
-				addExemptColumns(exemptColumns, ent.getValue(), station);
+			for (Entry<String, ColumnMetadata> ent : ColumnResolver.getQWColumns(sqlProvider).entrySet()) {
+				exemptColumns.addAll(getExemptColumns(ent.getValue(), station));
 			}
 		}
 		
 		NudeFilterBuilder offsettingLoadBuilder = new NudeFilterBuilder(new ColumnGrouping(interestingColumns));
 		offsettingLoadBuilder.addFilterStage(new FilterStageBuilder(offsettingLoadBuilder.getCurrOutCols()).buildFilterStage());
 		for (String station : stations) {
-			for (Entry<String, ColumnMetadata> ent : cumLoadColumnMetadatas.entrySet()) {
+			for (Entry<String, ColumnMetadata> ent : ColumnResolver.getCumulativeColumns(sqlProvider).entrySet()) {
 				final Column derivedMux = ent.getValue().getColumn(station);
 				final Column derivedCol = ent.getValue().getInternalColumn(station);
 				if (mux.keySet().contains(derivedMux)) {
@@ -140,17 +145,14 @@ public class AggregatingEndpoint extends SpecEndpoint {
 		return result.buildFilter();
 	}
 	
-	/**
-	 * Operates via Side Effects
-	 * @param colSet
-	 * @param col 
-	 */
-	protected void addExemptColumns(Set<Column> colSet, ColumnMetadata col, String station) {
-		if (null != colSet && null != col && null != station) {
+	protected Set<Column> getExemptColumns(ColumnMetadata col, String station) {
+		Set<Column> result = new HashSet<Column>();
+		if (null != col && null != station) {
 			for (SpecEntry ent : col.getSpecEntries()) {
-				colSet.add(ent.getColumn(station));
+				result.add(ent.getColumn(station));
 			}
 		}
+		return result;
 	}
 
 	@Override
@@ -183,9 +185,10 @@ public class AggregatingEndpoint extends SpecEndpoint {
 			timeDisplayName = "time (" + timezoneCode + ")";
 		}
 		
+		SQLProvider sqlProvider = (SQLProvider) providers.get(Provider.SQL);
 		List<String> userCols = params.get(COLUMN_KEYWORD);
 		for (String colName : userCols) {
-			ColumnMetadata cmd = getColumnMetadata(colName);
+			ColumnMetadata cmd = ColumnResolver.resolveColumn(colName, sqlProvider);
 			String station = getStation(colName);
 			String customName = getCustomName(colName);
 			

@@ -1,10 +1,10 @@
-package gov.usgs.cida.gcmrcservices.nude;
+package gov.usgs.cida.gcmrcservices.column;
 
 import gov.usgs.cida.gcmrcservices.jsl.data.ParameterCode;
 import gov.usgs.cida.gcmrcservices.jsl.data.ParameterSpec;
 import gov.usgs.cida.gcmrcservices.jsl.data.QWDataSpec;
 import gov.usgs.cida.gcmrcservices.jsl.data.SpecOptions;
-import static gov.usgs.cida.gcmrcservices.nude.ColumnMetadata.SpecEntry.SpecType.*;
+import static gov.usgs.cida.gcmrcservices.column.ColumnMetadata.SpecEntry.SpecType.*;
 import gov.usgs.cida.nude.column.Column;
 import gov.usgs.cida.nude.column.SimpleColumn;
 import gov.usgs.cida.nude.out.mapping.ColumnToXmlMapping;
@@ -44,6 +44,7 @@ public class ColumnMetadata {
 	
 	/**
 	 * Give a pCode if not a download, give descriptive names if is.
+	 * @param station
 	 * @param isDownload
 	 * @return 
 	 */
@@ -53,7 +54,9 @@ public class ColumnMetadata {
 	
 	/**
 	 * Give a pCode if not a download, give descriptive names if is.
+	 * @param station
 	 * @param isDownload
+	 * @param customName
 	 * @return 
 	 */
 	public ColumnToXmlMapping getMapping(String station, boolean isDownload, String customName) {

@@ -1,11 +1,13 @@
 package gov.usgs.cida.gcmrcservices.nude;
 
+import gov.usgs.cida.gcmrcservices.column.ColumnMetadata;
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.ListMultimap;
 import gov.usgs.cida.gcmrcservices.TimeUtil;
 import gov.usgs.cida.gcmrcservices.jsl.data.ParameterCode;
-import gov.usgs.cida.gcmrcservices.nude.ColumnMetadata.SpecEntry;
-import gov.usgs.cida.gcmrcservices.nude.ColumnMetadata.SpecEntry.SpecType;
+import gov.usgs.cida.gcmrcservices.column.ColumnMetadata.SpecEntry;
+import gov.usgs.cida.gcmrcservices.column.ColumnMetadata.SpecEntry.SpecType;
+import gov.usgs.cida.gcmrcservices.column.ColumnResolver;
 import gov.usgs.cida.gcmrcservices.nude.time.TimeConfig;
 import gov.usgs.cida.nude.column.Column;
 import gov.usgs.cida.nude.column.SimpleColumn;
@@ -69,13 +71,7 @@ public abstract class Endpoint extends HttpServlet {
 	public static final String CUTOFF_AFTER_KEYWORD = "cutoffAfter";
 	public static final String CUTOFF_BEFORE_KEYWORD = "cutoffBefore";
 	
-	
-	public static final int columnIdentifierLength = 2; // HACK HAAAAAAAAAAAAAACK
-	
 	protected Map<Provider, IProvider> providers;
-	protected Map<String, ColumnMetadata> CM_LOOKUP;
-	protected Map<String, ColumnMetadata> qwColumnMetadatas;
-	protected Map<String, ColumnMetadata> cumLoadColumnMetadatas;
 	
 	@Override
 	public void init() throws ServletException {
@@ -85,124 +81,7 @@ public abstract class Endpoint extends HttpServlet {
 		providers.put(Provider.SQL, sqlProvider);
 		providers = Collections.unmodifiableMap(providers);
 		
-		CM_LOOKUP = new HashMap<String, ColumnMetadata>();
-		CM_LOOKUP.putAll(buildInstantaneousParametersCols(sqlProvider));
-		qwColumnMetadatas = Collections.unmodifiableMap(buildQWParametersCols(sqlProvider));
-		CM_LOOKUP.putAll(qwColumnMetadatas);
-		CM_LOOKUP = Collections.unmodifiableMap(CM_LOOKUP);
-		
-		cumLoadColumnMetadatas = Collections.unmodifiableMap(buildCumLoadParametersCols());
-		
 		super.init();
-	}
-	
-	protected Map<String, ColumnMetadata> buildInstantaneousParametersCols(SQLProvider sqlProvider) {
-		Map<String, ColumnMetadata> result = new HashMap<String, ColumnMetadata>();
-		ResultSet rs = null;
-		try {
-			Column tsGrpNm = new SimpleColumn("NAME");
-			Column displayName = new SimpleColumn("NAME_DISPLAY");
-			Column unitsShort = new SimpleColumn("UNITS_NAME_SHORT");
-			
-			ParameterizedString ps = new ParameterizedString();
-			ps.append("  SELECT DISTINCT GROUP_ID,");
-			ps.append("    NAME,");
-			ps.append("    NAME_DISPLAY,");
-			ps.append("    UNITS_NAME,");
-			ps.append("    UNITS_NAME_SHORT");
-			ps.append("  FROM GROUP_NAME");
-			
-			rs = sqlProvider.getResults(null, ps);
-			while (rs.next()) {
-				TableRow row = TableRow.buildTableRow(rs);
-				
-				String columnTsGroupName = row.getValue(tsGrpNm);
-				String parameterCode = "inst!" + columnTsGroupName;
-				
-				String columnDisplayName = row.getValue(displayName);
-				
-				String columnTitle = columnDisplayName + "(" + row.getValue(unitsShort) + ")";
-				
-				result.put(parameterCode, new ColumnMetadata(parameterCode, columnTitle, 
-						new SpecEntry(ParameterCode.parseParameterCode(parameterCode), SpecType.PARAM)));
-			}
-			log.debug("Instantaneous parameter columns constructed : " + result.keySet().toString());
-		} catch (Exception e) {
-			log.error("Could not get columns", e);
-		} finally {
-			Closers.closeQuietly(rs);
-		}
-		return result;
-	}
-	
-	protected Map<String, ColumnMetadata> buildQWParametersCols(SQLProvider sqlProvider) {
-		Map<String, ColumnMetadata> result = new HashMap<String, ColumnMetadata>();
-		ResultSet rs = null;
-		try {
-			Column sampleMethod = new SimpleColumn("SAMPLE_METHOD");
-			Column pCode = new SimpleColumn("NAME");
-			Column displayName = new SimpleColumn("NAME_DISPLAY");
-			Column unitsShort = new SimpleColumn("UNITS_NAME_SHORT");
-			
-			ParameterizedString ps = new ParameterizedString();
-			ps.append("SELECT");
-			ps.append("  QWP.SAMPLE_METHOD,");
-			ps.append("  G.NAME,");
-			ps.append("  G.NAME_DISPLAY,");
-			ps.append("  G.UNITS_NAME_SHORT");
-			ps.append(" FROM ");
-			ps.append("  QW_POR_STAR QWP,");
-			ps.append("  GROUP_NAME G");
-			ps.append(" WHERE");
-			ps.append("  QWP.GROUP_ID = G.GROUP_ID");
-			ps.append(" GROUP BY ");
-			ps.append("  G.NAME,");
-			ps.append("  QWP.SAMPLE_METHOD,");
-			ps.append("  G.NAME_DISPLAY,");
-			ps.append("  G.UNITS_NAME_SHORT");
-			
-			rs = sqlProvider.getResults(null, ps);
-			while (rs.next()) {
-				TableRow row = TableRow.buildTableRow(rs);
-				
-				String parameterCode = row.getValue(sampleMethod) + "!" + row.getValue(pCode);
-				String columnTitle = row.getValue(sampleMethod) + " Sampled " + row.getValue(displayName) + "(" + row.getValue(unitsShort) + ")";
-				
-				result.put(parameterCode, new ColumnMetadata(parameterCode, columnTitle, 
-						new SpecEntry(ParameterCode.parseParameterCode(parameterCode), SpecType.LABDATA)));
-			}
-			log.debug("QW parameter columns constructed : " + result.keySet().toString());
-		} catch (Exception e) {
-			log.error("Could not get columns", e);
-		} finally {
-			Closers.closeQuietly(rs);
-		}
-		return result;
-	}
-	
-	/**
-	 * We need to know Cumulative Load parameters, so we can zero out the timeseries per request.
-	 * @return 
-	 */
-	protected Map<String, ColumnMetadata> buildCumLoadParametersCols() {
-		Map<String, ColumnMetadata> result = new HashMap<String, ColumnMetadata>();
-		
-		//WAYYY HAAACK
-		result.put("inst!S Sand Cumul Load", new ColumnMetadata("inst!S Sand Cumul Load", "Cumulative Suspended Sand Load (Metric Tons)", 
-				new SpecEntry(ParameterCode.parseParameterCode("inst!S Sand Cumul Load"), SpecType.PARAM)));
-		result.put("inst!Minor Trib S Sand Cumul Load", new ColumnMetadata("inst!Minor Trib S Sand Cumul Load", "Cumulative Suspended Sand Load (Metric Tons)", 
-				new SpecEntry(ParameterCode.parseParameterCode("inst!Minor Trib S Sand Cumul Load"), SpecType.PARAM)));
-		result.put("inst!S Fines Cumul Load", new ColumnMetadata("inst!S Fines Cumul Load", "Cumulative Silt-and-Clay Load (Metric Tons)", 
-				new SpecEntry(ParameterCode.parseParameterCode("inst!S Fines Cumul Load"), SpecType.PARAM)));
-		result.put("inst!Minor Trib S Fines Cumul Load", new ColumnMetadata("inst!Minor Trib S Fines Cumul Load", "Cumulative Silt-and-Clay Load (Metric Tons)", 
-				new SpecEntry(ParameterCode.parseParameterCode("inst!Minor Trib S Fines Cumul Load"), SpecType.PARAM)));
-		
-		//ugh. this is horrible.
-		result.put("inst!Sand Cumul Load", new ColumnMetadata("inst!Sand Cumul Load", "Cumulative Sand Load (Metric Tons)", 
-				new SpecEntry(ParameterCode.parseParameterCode("inst!Sand Cumul Load"), SpecType.PARAM)));
-		
-		
-		return result;
 	}
 	
 	@Override
@@ -213,8 +92,6 @@ public abstract class Endpoint extends HttpServlet {
 				provider.destroy();
 			}
 		}
-		
-		CM_LOOKUP = Collections.unmodifiableMap(new HashMap<String, ColumnMetadata>());
 		
 		super.destroy();
 	}
@@ -305,6 +182,22 @@ public abstract class Endpoint extends HttpServlet {
 		
 		result = pendingResult;
 		
+		return result;
+	}
+	
+	public static List<String> getStations(ListMultimap<String, String> params) {
+		List<String> result = new ArrayList<String>();
+		Set<String> toGo = new HashSet<String>();
+		
+		List<String> columnNames = params.get(COLUMN_KEYWORD);
+		for (String colName : columnNames) {
+			String station = ColumnResolver.getStation(colName);
+			if (null != station) {
+				toGo.add(station);
+			}
+		}
+		
+		result.addAll(toGo);
 		return result;
 	}
 
@@ -419,84 +312,6 @@ public abstract class Endpoint extends HttpServlet {
 		}
 		
 		result = new TimeConfig(dateRange, interpDateRange, downscaleDateRange, cutoffBeforeDT, cutoffAfterDT, tz);
-		
-		return result;
-	}
-	
-	public static List<String> getStations(ListMultimap<String, String> params) {
-		List<String> result = new ArrayList<String>();
-		Set<String> toGo = new HashSet<String>();
-		
-		List<String> columnNames = params.get(COLUMN_KEYWORD);
-		for (String colName : columnNames) {
-			String station = getStation(colName);
-			if (null != station) {
-				toGo.add(station);
-			}
-		}
-		
-		result.addAll(toGo);
-		return result;
-	}
-	public static String getStation(String colName) {
-		String result = null;
-		
-		String stripped = stripColName(colName);
-		String restOfStation = colName.substring(stripped.length());
-		String[] otherThings = restOfStation.split("!");
-		if (1 < otherThings.length) {
-			result = otherThings[1];
-		}
-		
-		return result;
-	}
-	
-	public static String getCustomName(String colName) {
-		String result = null;
-		
-		String stripped = stripColName(colName);
-		String restOfStation = colName.substring(stripped.length());
-		String[] otherThings = restOfStation.split("!");
-		if (2 < otherThings.length) {
-			result = otherThings[2];
-		}
-		
-		return result;
-	}
-	
-	public static String stripColName(String colName) {
-		String result = colName;
-		
-		String cleanName = StringUtils.trimToNull(colName);
-		if (null != cleanName) {
-			int colLength = columnIdentifierLength;
-			if (cleanName.startsWith("time")) {
-				colLength--;
-			}
-			String[] tings = cleanName.split("!", colLength + 1);
-			if (tings.length > colLength) {
-				//Strip the extra tings
-				int restOfInfo = cleanName.indexOf(tings[colLength]) - 1;
-				if (0 < restOfInfo) {
-					result = cleanName.substring(0, restOfInfo);
-				} else { 
-					log.error("could not find rest of string in column name");
-				}
-			} else {
-				log.trace("No extra tings.");
-			}
-		}
-		
-		return result;
-	}
-	
-	public ColumnMetadata getColumnMetadata(String uncleanName) {
-		ColumnMetadata result = null;
-		
-		String cleanName = stripColName(uncleanName);
-		if (null != cleanName) {
-			result = CM_LOOKUP.get(cleanName);
-		}
 		
 		return result;
 	}

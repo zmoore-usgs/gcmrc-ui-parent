@@ -1,10 +1,13 @@
 package gov.usgs.cida.gcmrcservices.nude;
 
+import gov.usgs.cida.gcmrcservices.column.ColumnMetadata;
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.ListMultimap;
 import com.google.common.collect.Multimap;
 import gov.usgs.cida.gcmrcservices.TimeUtil;
 import static gov.usgs.cida.gcmrcservices.TimeUtil.TZ_CODE_LOOKUP;
+import gov.usgs.cida.gcmrcservices.column.ColumnResolver;
+import static gov.usgs.cida.gcmrcservices.column.ColumnResolver.getStation;
 import gov.usgs.cida.gcmrcservices.jsl.data.ParameterSpec;
 import gov.usgs.cida.gcmrcservices.jsl.data.QWDataSpec;
 import gov.usgs.cida.gcmrcservices.jsl.data.SpecOptions;
@@ -14,7 +17,6 @@ import static gov.usgs.cida.gcmrcservices.nude.Endpoint.TIMEZONE_KEYWORD;
 import static gov.usgs.cida.gcmrcservices.nude.Endpoint.getDateRange;
 import static gov.usgs.cida.gcmrcservices.nude.Endpoint.getParameter;
 import static gov.usgs.cida.gcmrcservices.nude.Endpoint.getStations;
-import static gov.usgs.cida.gcmrcservices.nude.Endpoint.getStation;
 import gov.usgs.cida.gcmrcservices.nude.time.TimeColumnReq;
 import gov.usgs.cida.gcmrcservices.nude.time.TimeConfig;
 import gov.usgs.cida.gcmrcservices.nude.time.TimeSplitPlanStep;
@@ -23,6 +25,8 @@ import gov.usgs.cida.nude.column.SimpleColumn;
 import gov.usgs.cida.nude.plan.ConfigPlanStep;
 import gov.usgs.cida.nude.plan.Plan;
 import gov.usgs.cida.nude.plan.PlanStep;
+import gov.usgs.cida.nude.provider.Provider;
+import gov.usgs.cida.nude.provider.sql.SQLProvider;
 import gov.usgs.cida.nude.resultset.inmemory.TableRow;
 import gov.usgs.webservices.jdbc.spec.Spec;
 import java.util.*;
@@ -90,25 +94,13 @@ public abstract class SpecEndpoint extends Endpoint {
 		Set<Spec> result = new HashSet<Spec>();
 		
 		SpecOptions specOptions = buildSpecOptions(params);
+		SQLProvider sqlProvider = (SQLProvider) providers.get(Provider.SQL);
 
 		List<String> userCols = params.get(COLUMN_KEYWORD);
 		for (String colName : userCols) {
-			ColumnMetadata cmd = getColumnMetadata(colName);
-			String station = getStation(colName);
-			
-			if (null != cmd && null != station) {
-				List<ColumnMetadata.SpecEntry> specEntries = cmd.getSpecEntries();
-				for (ColumnMetadata.SpecEntry se : specEntries) {
-					Map<String, String[]> modMap = new HashMap<String, String[]>();
-					modMap.put(ParameterSpec.S_SITE_NAME, new String[] {station});
-					modMap.put(ParameterSpec.S_GROUP_NAME, new String[] {se.parameterCode.groupName});
-					modMap.put(QWDataSpec.S_SAMPLE_METHOD, new String[] {se.parameterCode.sampleMethod});
-					Spec spec = se.getSpec(station, specOptions);
-					Spec.loadParameters(spec, modMap);
-					result.add(spec);
-				}
-			} else {
-				log.debug("No column by the name of: " + colName);
+			Spec resolvedSpec = ColumnResolver.createSpecs(colName, specOptions, sqlProvider);
+			if (null != resolvedSpec) {
+				result.add(resolvedSpec);
 			}
 		}
 		
@@ -120,7 +112,7 @@ public abstract class SpecEndpoint extends Endpoint {
 		
 		List<String> userCols = params.get(COLUMN_KEYWORD);
 		for (String colName : userCols) {
-			ColumnMetadata cmd = getColumnMetadata(colName);
+			ColumnMetadata cmd = ColumnResolver.resolveColumn(colName, ((SQLProvider)providers.get(Provider.SQL)));
 			String station = getStation(colName);
 
 			if (null != cmd && null!= station && !result.containsKey(cmd.getColumn(station))) {

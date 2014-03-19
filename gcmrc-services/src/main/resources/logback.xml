@@ -1,8 +1,8 @@
 <configuration>
 	<appender name="stdout" class="ch.qos.logback.core.ConsoleAppender">
-		<filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+<!--		<filter class="ch.qos.logback.classic.filter.ThresholdFilter">
 			<level>INFO</level>
-		</filter>
+		</filter>-->
 		<encoder>
 			<pattern>%d{HH:mm:ss.SSS} [%t] GCMRC-SERVICES %5p %logger{20} - %m%n</pattern>
 		</encoder>
@@ -29,7 +29,7 @@
 	<logger name="gov.usgs.cida.nude.filter" level="INFO"/>
 	<logger name="org.apache" level="INFO"/>
 	<logger name="gov.usgs.cida.proxy" level="INFO"/>
-	<root level="DEBUG">
+	<root level="INFO">
 		<appender-ref ref="stdout" />
 		<appender-ref ref="FILE" />
 	</root>

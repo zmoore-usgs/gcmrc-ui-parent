@@ -31,7 +31,8 @@ public class ColumnResolver {
 	private static ColumnResolver resolver = null;
 	protected Map<String, ColumnMetadata> CM_LOOKUP;
 	protected Map<String, ColumnMetadata> qwColumnMetadatas;
-	protected Map<String, ColumnMetadata> cumLoadColumnMetadatas;
+	protected Map<String, ColumnMetadata> cumulativeColumnMetadatas;
+	protected Map<String, ColumnMetadata> ancillaryColumnMetadatas;
 
 	public static final int columnIdentifierLength = 2; // HACK HAAAAAAAAAAAAAACK
 
@@ -40,9 +41,11 @@ public class ColumnResolver {
 		CM_LOOKUP.putAll(buildInstantaneousParametersCols(sqlProvider));
 		qwColumnMetadatas = Collections.unmodifiableMap(buildQWParametersCols(sqlProvider));
 		CM_LOOKUP.putAll(qwColumnMetadatas);
+		ancillaryColumnMetadatas = Collections.unmodifiableMap(buildAncillaryCols(sqlProvider));
+		CM_LOOKUP.putAll(ancillaryColumnMetadatas);
 		CM_LOOKUP = Collections.unmodifiableMap(CM_LOOKUP);
 
-		cumLoadColumnMetadatas = Collections.unmodifiableMap(buildCumLoadParametersCols());
+		cumulativeColumnMetadatas = Collections.unmodifiableMap(buildCumulativeParametersCols());
 	}
 	
 	public static Map<String, ColumnMetadata> getQWColumns(SQLProvider sqlProvider) {
@@ -62,7 +65,7 @@ public class ColumnResolver {
 			resolver = new ColumnResolver(sqlProvider);
 		}
 		
-		result.putAll(resolver.cumLoadColumnMetadatas);
+		result.putAll(resolver.cumulativeColumnMetadatas);
 		
 		return Collections.unmodifiableMap(result);
 	}
@@ -241,11 +244,19 @@ public class ColumnResolver {
 		return result;
 	}
 	
+	protected static Map<String, ColumnMetadata> buildAncillaryCols(SQLProvider sqlProvider) {
+		Map<String, ColumnMetadata> result = new HashMap<String, ColumnMetadata>();
+		
+		
+		
+		return result;
+	}
+	
 	/**
 	 * We need to know Cumulative Load parameters, so we can zero out the timeseries per request.
 	 * @return 
 	 */
-	protected static Map<String, ColumnMetadata> buildCumLoadParametersCols() {
+	protected static Map<String, ColumnMetadata> buildCumulativeParametersCols() {
 		Map<String, ColumnMetadata> result = new HashMap<String, ColumnMetadata>();
 		
 		//WAYYY HAAACK

@@ -9,10 +9,14 @@ import gov.usgs.cida.nude.column.Column;
 import gov.usgs.cida.nude.column.SimpleColumn;
 import gov.usgs.cida.nude.out.mapping.ColumnToXmlMapping;
 import gov.usgs.webservices.jdbc.spec.Spec;
+import java.io.UnsupportedEncodingException;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import org.apache.commons.codec.binary.Hex;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -52,6 +56,46 @@ public class ColumnMetadata {
 		return getMapping(station, isDownload, null);
 	}
 	
+	private static String hashString(String message, Integer places) {
+		String result = null;
+		
+		if (null != message) {
+			String algorithm = "SHA-256";
+			String encoding = "UTF-8";
+			try {
+				MessageDigest sha = MessageDigest.getInstance(algorithm);
+				sha.update(message.getBytes(encoding));
+				byte[] digest = sha.digest();
+				result = Hex.encodeHexString(digest);
+			} catch (NoSuchAlgorithmException e) {
+				log.error("Could not get " + algorithm + " Algorithm");
+			} catch (UnsupportedEncodingException ex) {
+				log.error("Could not get " + encoding + " Encoding");
+			}
+			
+			if (null == result) {
+				result = "" + message.hashCode();
+			}
+			
+			if (null != places) {
+				result = result.substring(0, places);
+			}
+		}
+		
+		return result;
+	}
+	
+	public static String createColumnName(String station, ParameterCode parameterCode) {
+		String result = null;
+		
+		if (null != station && null != parameterCode) {
+			result = "S" + hashString(station, 5) + "P" + hashString(parameterCode.toString(), 5);
+		}
+		
+		return result;
+	}
+	
+	
 	/**
 	 * Give a pCode if not a download, give descriptive names if is.
 	 * @param station
@@ -62,7 +106,7 @@ public class ColumnMetadata {
 	public ColumnToXmlMapping getMapping(String station, boolean isDownload, String customName) {
 		ColumnToXmlMapping result = null;
 		
-		String inName = "s" + Math.abs(station.hashCode()) + "p" + Math.abs(this.parameterCode.hashCode());
+		String inName = createColumnName(station, this.parameterCode);
 		String outName = getDefaultOutName(station, isDownload);
 		
 		String cleanCustomName = StringUtils.trimToNull(customName);
@@ -103,7 +147,7 @@ public class ColumnMetadata {
 	public Column getInternalColumn(String station) {
 		Column result = null;
 		
-		result = new SimpleColumn("s" + Math.abs(station.hashCode()) + "p" + Math.abs(this.parameterCode.hashCode()));
+		result = new SimpleColumn(createColumnName(station, this.parameterCode));
 		
 		return result;
 	}
@@ -129,7 +173,7 @@ public class ColumnMetadata {
 		public Column getColumn(String station) {
 			Column result = null;
 
-			result = new SimpleColumn("s" + Math.abs(station.hashCode()) + "p" + Math.abs(this.parameterCode.hashCode()));
+			result = new SimpleColumn(createColumnName(station, this.parameterCode));
 
 			return result;
 		}

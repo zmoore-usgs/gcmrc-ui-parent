@@ -1,16 +1,10 @@
 package gov.usgs.cida.gcmrcservices.nude;
 
-import gov.usgs.cida.gcmrcservices.column.ColumnMetadata;
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.ListMultimap;
 import gov.usgs.cida.gcmrcservices.TimeUtil;
-import gov.usgs.cida.gcmrcservices.jsl.data.ParameterCode;
-import gov.usgs.cida.gcmrcservices.column.ColumnMetadata.SpecEntry;
-import gov.usgs.cida.gcmrcservices.column.ColumnMetadata.SpecEntry.SpecType;
 import gov.usgs.cida.gcmrcservices.column.ColumnResolver;
 import gov.usgs.cida.gcmrcservices.nude.time.TimeConfig;
-import gov.usgs.cida.nude.column.Column;
-import gov.usgs.cida.nude.column.SimpleColumn;
 import gov.usgs.cida.nude.out.Closers;
 import gov.usgs.cida.nude.out.Dispatcher;
 import gov.usgs.cida.nude.out.StreamResponse;
@@ -19,9 +13,7 @@ import gov.usgs.cida.nude.out.mapping.ColumnToXmlMapping;
 import gov.usgs.cida.nude.plan.Plan;
 import gov.usgs.cida.nude.provider.IProvider;
 import gov.usgs.cida.nude.provider.Provider;
-import gov.usgs.cida.nude.provider.sql.ParameterizedString;
 import gov.usgs.cida.nude.provider.sql.SQLProvider;
-import gov.usgs.cida.nude.resultset.inmemory.TableRow;
 import gov.usgs.cida.nude.time.DateRange;
 import gov.usgs.webservices.framework.basic.MimeType;
 import java.io.IOException;

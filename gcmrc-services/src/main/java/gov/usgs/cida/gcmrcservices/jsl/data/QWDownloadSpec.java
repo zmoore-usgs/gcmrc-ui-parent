@@ -45,6 +45,7 @@ public class QWDownloadSpec extends Spec {
 			new ColumnMapping(C_STATION_NAME, S_STATION_NAME),
 			new ColumnMapping(C_STATION_NUM, S_STATION_NUM),
 			new ColumnMapping(C_START_DATE, S_START_DATE, ASCENDING_ORDER, S_START_DATE, null, null, null, "TO_CHAR(" + C_START_DATE + ", 'YYYY-MM-DD\"T\"HH24:MI:SS')", null, null),
+			new ColumnMapping(C_MEAN_DATE, S_MEAN_DATE, ASCENDING_ORDER, S_MEAN_DATE, null, null, null, "TO_CHAR(" + C_MEAN_DATE + ", 'YYYY-MM-DD\"T\"HH24:MI:SS')", null, null),
 			new ColumnMapping(C_END_DATE, S_END_DATE, ASCENDING_ORDER, S_END_DATE, null, null, null, "TO_CHAR(" + C_END_DATE + ", 'YYYY-MM-DD\"T\"HH24:MI:SS')", null, null),
 			new ColumnMapping(C_USGS_DATA_LEAD, S_USGS_DATA_LEAD),
 			new ColumnMapping(C_SAMPLE_METHOD, S_SAMPLE_METHOD),
@@ -184,6 +185,7 @@ public class QWDownloadSpec extends Spec {
 		result.append("        si.name station_name,");
 		result.append("        nvl2(si.nwis_site_no, si.nwis_site_no, si.short_name) station_num,");
 		result.append("        s.start_date AS START_DT,");
+		result.append("        s.average_date AS MEAN_DT,");
 		result.append("        s.end_date AS END_DT,");
 		result.append("        d.name usgs_data_lead,");
 		result.append("        sm.sample_method,");
@@ -408,6 +410,7 @@ public class QWDownloadSpec extends Spec {
 	public static final String C_STATION_NAME = "STATION_NAME";
 	public static final String C_STATION_NUM = "STATION_NUM";
 	public static final String C_START_DATE = "START_DT";
+	public static final String C_MEAN_DATE = "MEAN_DT";
 	public static final String C_END_DATE = "END_DT";
 	public static final String C_USGS_DATA_LEAD = "USGS_DATA_LEAD";
 	public static final String C_SAMPLE_METHOD = "SAMPLE_METHOD";
@@ -497,7 +500,8 @@ public class QWDownloadSpec extends Spec {
 	public static final String S_SAMPLE_ID = "sampleId";
 	public static final String S_STATION_NAME = "Station name";
 	public static final String S_STATION_NUM = "USGS Station #";
-	public static final String S_START_DATE = "start time or mean time (MST)";
+	public static final String S_START_DATE = "start time (MST)";
+	public static final String S_MEAN_DATE = "mean time (MST)";
 	public static final String S_END_DATE = "end time (MST)";
 	public static final String S_USGS_DATA_LEAD = "USGS data lead";
 	public static final String S_SAMPLE_METHOD = "Sampling method";

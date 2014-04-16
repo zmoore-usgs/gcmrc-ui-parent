@@ -2,6 +2,7 @@
 /gcmrc-ui/src/main/webapp/META-INF/
 /gcmrc-labs/${war.dir}/META-INF/
 /gcmrc-services/src/main/webapp/META-INF/
+/gcmrc-services/nb-configuration.xml
 /gcmrc-services/target/
 /SOS-Endpoint/src/main/webapp/META-INF/
 /SOS-Endpoint/target/

@@ -8,9 +8,9 @@
 		</encoder>
 	</appender>
 	<appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
-		<filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+<!--		<filter class="ch.qos.logback.classic.filter.ThresholdFilter">
 			<level>TRACE</level>
-		</filter>
+		</filter>-->
 		<file>${catalina.base}/logs/gcmrc.log</file>
 		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
 			<fileNamePattern>${catalina.base}/logs/gcmrc/gcmrc-services.%d{yyyy-MM-dd}.log</fileNamePattern>
@@ -29,6 +29,7 @@
 	<logger name="gov.usgs.cida.nude.filter" level="INFO"/>
 	<logger name="org.apache" level="INFO"/>
 	<logger name="gov.usgs.cida.proxy" level="INFO"/>
+	<logger name="gov.usgs.cida.gcmrcservices.mb.mappers" level="DEBUG"/>
 	<root level="INFO">
 		<appender-ref ref="stdout" />
 		<appender-ref ref="FILE" />

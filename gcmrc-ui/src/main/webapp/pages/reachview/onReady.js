@@ -1,4 +1,4 @@
-$(document).ready(function() {
+$(document).ready(function onReady() {
 	$("span.network-name").html(GCMRC.Networks[CONFIG.networkName].displayName);
 	var upstreamStation = GCMRC.Stations[CONFIG.upstreamStationName];
 	var downstreamStation = GCMRC.Stations[CONFIG.downstreamStationName];

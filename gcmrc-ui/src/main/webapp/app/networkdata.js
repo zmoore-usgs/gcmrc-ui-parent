@@ -16,8 +16,8 @@ GCMRC.Networks = function() {
 			bbox : {
 				"left": -114.003737,
 				"bottom": 35.130507,
-				"right": -110.132732,
-				"top": 37.828968
+				"right": -110.84875,
+				"top": 37.71811
 			},
 			reaches : true
 		},
@@ -25,10 +25,10 @@ GCMRC.Networks = function() {
 			displayName : 'Canyonlands',
 			labelLoc: 'tl',
 			bbox: {
-				"left": -110.42415,
+				"left": -110.26759,
 				"bottom": 38.02643,
-				"right": -109.63313,
-				"top": 38.54384
+				"right": -109.47657,
+				"top": 38.60718
 			},
 			appFeatureId : "CANYONLANDS"
 		},

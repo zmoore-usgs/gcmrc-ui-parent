@@ -297,6 +297,12 @@
 									<a href="#" id="physicalDownloadButton" class='buildButton'>Download Data</a>
 								</div>
 							</tab>
+							<tab>
+								<tab-heading>Bed Sediment</tab-heading>
+								<div class="row-fluid">
+									<a href="#" id="bedSedimentDownloadButton" class='buildButton'>Download Data</a>
+								</div>
+							</tab>
 						</tabset>
 					</div>
 				</div>

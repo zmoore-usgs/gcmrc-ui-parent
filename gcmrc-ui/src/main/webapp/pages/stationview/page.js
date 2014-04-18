@@ -554,6 +554,23 @@ GCMRC.Page = {
 
 		document.location = document.location.href.first(document.location.href.lastIndexOf('/') + 1) + CONFIG.relativePath + 'services/service/download/tab/' + CONFIG.networkName + 'samples?' + $.param(serviceOptions);
 	},
+	downloadBedSedimentClicked : function() {
+		//TODO refactor copy paste code
+		var begin = $("input[name='beginPosition']").val();
+		var end = $("input[name='endPosition']").val();
+		
+		//Make absolutely sure they're formatted correctly for the services.
+		var beginClean = Date.create(begin).format('{yyyy}-{MM}-{dd}') + 'T00:00:00';
+		var endClean = Date.create(end).format('{yyyy}-{MM}-{dd}') + 'T23:59:59';
+		
+		var serviceOptions = {
+			beginPosition : beginClean,
+			endPosition : endClean,
+			stationNum : CONFIG.stationName
+		};
+		
+		document.location = document.location.href.first(document.location.href.lastIndexOf('/') + 1) + CONFIG.relativePath + 'services/service/download/tab/' + CONFIG.networkName + "bedSediment?" + $.param(serviceOptions);
+	},
 	colOrder: [],
 	earliestPosition : null,
 	latestPosition : null,

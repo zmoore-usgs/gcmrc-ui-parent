@@ -25,6 +25,7 @@ $(document).ready(function() {
 
 	$('#buildGraph').click(GCMRC.Page.buildGraphClicked);
 
+	$('#bedSedimentDownloadButton').click(GCMRC.Page.downloadBedSedimentClicked);
 	$('#physicalDownloadButton').click(GCMRC.Page.downloadSamplesClicked);
 	$('#stupidlyBigDownloadButton').click(GCMRC.Page.downloadDataClicked);
 	$('#downloadData').click(GCMRC.Page.downloadPopupClicked);

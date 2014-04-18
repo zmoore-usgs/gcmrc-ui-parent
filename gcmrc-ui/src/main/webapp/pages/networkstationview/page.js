@@ -7,12 +7,13 @@ GCMRC.Page = {
 		var divId = config['divId'] || 'openlayers-map';
 
 		var options = {
-			controls: [
-				new OpenLayers.Control.MousePosition(
-					{
-						displayProjection: 'EPSG:4326'
-					})
-			]
+//			controls: [
+//				new OpenLayers.Control.MousePosition(
+//					{
+//						displayProjection: 'EPSG:4326'
+//					}),
+//				new OpenLayers.Control.PanZoom()
+//			]
 		};
 		
 		GCMRC.Mapping.maps[divId] = new OpenLayers.Map(divId, options);

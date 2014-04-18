@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+ 
+<mapper namespace="gov.usgs.cida.gcmrcservices.mb.mappers.ReachMapper">
+	
+	<resultMap id="result" type="Reach">
+		<result property="reachName" column="REACH_NAME"/>
+		<result property="upstreamStation" column="SITE_UP"/>
+		<result property="upstreamDisplayName" column="DISPLAY_NAME_UP"/>
+		<result property="downstreamStation" column="SITE_DOWN"/>
+		<result property="downstreamDisplayName" column="DISPLAY_NAME_DOWN"/>
+		<result property="downstreamDischargeStation" column="DISCHARGE_SITE_DOWN"/>
+		<result property="downstreamDischargeName" column="DISCHARGE_DISPLAY_NAME_DOWN"/>
+		<result property="network" column="NETWORK_NAME"/>
+		<result property="displayOrder" column="DISPLAY_ORDER"/>
+	</resultMap>
+	
+	<sql id="columns">
+		REACH_NAME,
+		SITE_UP,
+		DISPLAY_NAME_UP,
+		SITE_DOWN,
+		DISPLAY_NAME_DOWN,
+		DISCHARGE_SITE_DOWN,
+		DISCHARGE_DISPLAY_NAME_DOWN,
+		NETWORK_NAME,
+		DISPLAY_ORDER
+	</sql>
+	
+	<select id="getReaches" parameterType="map" resultMap="result">
+		SELECT
+		<include refid="columns"/>
+		FROM
+  (SELECT DISTINCT RTD.REACH_NAME,
+    (SELECT (
+      CASE
+        WHEN NWIS_SITE_NO IS NOT NULL
+        THEN NWIS_SITE_NO
+        ELSE SHORT_NAME
+      END) SITE_UP
+    FROM SITE_STAR S
+    WHERE S.SITE_ID = RTD.SITE_ID_UP
+    ) SITE_UP,
+    (SELECT S.NAME FROM SITE_STAR S WHERE S.SITE_ID = RTD.SITE_ID_UP
+    ) DISPLAY_NAME_UP,
+    (SELECT (
+      CASE
+        WHEN NWIS_SITE_NO IS NOT NULL
+        THEN NWIS_SITE_NO
+        ELSE SHORT_NAME
+      END)
+    FROM SITE_STAR S
+    WHERE S.SITE_ID = RTD.SITE_ID_DOWN
+    ) SITE_DOWN,
+    (SELECT S.NAME FROM SITE_STAR S WHERE S.SITE_ID = RTD.SITE_ID_DOWN
+    ) DISPLAY_NAME_DOWN,
+    (SELECT (
+      CASE
+        WHEN NWIS_SITE_NO IS NOT NULL
+        THEN NWIS_SITE_NO
+        ELSE SHORT_NAME
+      END)
+    FROM SITE_STAR S
+    WHERE S.SITE_ID = RTD.DISCHARGE_DOWN
+    ) DISCHARGE_SITE_DOWN,
+    (SELECT S.NAME FROM SITE_STAR S WHERE S.SITE_ID = RTD.DISCHARGE_DOWN
+    ) DISCHARGE_DISPLAY_NAME_DOWN,
+    CASE
+      WHEN RTD.NETWORK_NAME='GCDAMP'
+      THEN 'GCDAMP'
+      WHEN RTD.NETWORK_NAME='Dinosaur'
+      THEN 'DINO'
+      WHEN RTD.NETWORK_NAME='BigBend'
+      THEN 'BIBE'
+      WHEN RTD.NETWORK_NAME='Canyonlands'
+      THEN 'CL'
+      WHEN RTD.NETWORK_NAME='RiverDelta'
+      THEN 'CRD'
+      ELSE RTD.NETWORK_NAME
+    END AS NETWORK_NAME,
+    RTD.DISPLAY_ORDER
+  FROM REACH_DISPLAY RTD) T_A_REACH
+		<where>
+			<if test="null != network">
+				AND NETWORK_NAME = #{network}
+			</if>
+		</where>
+	</select>
+	
+</mapper>

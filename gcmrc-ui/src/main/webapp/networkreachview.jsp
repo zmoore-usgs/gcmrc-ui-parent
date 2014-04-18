@@ -73,12 +73,12 @@
 		</script>
 
 		<jsp:include page="app/gcmrc.jsp"></jsp:include>
-		<script src="${relativePath}services/service/station/jsonp/site/?network=${networkName}&jsonp_callback=GCMRC.StationLoad"></script>
+		<script src="${relativePath}services/service/station/jsonp/site?network=${networkName}&jsonp_callback=GCMRC.StationLoad"></script>
 		<jsp:include page="pages/page.jsp">
 			<jsp:param name="relPath" value="${relativePath}" />
 			<jsp:param name="pageName" value="${pageName}" />
 		</jsp:include>
-		<script src="${relativePath}services/service/reach/jsonp/trib/?network=${networkName}&jsonp_callback=GCMRC.Page.reachLoad"></script>
+		<script src="${relativePath}services/rest/reach/${networkName}?jsonp_callback=GCMRC.Page.reachLoad"></script>
     </head>
     <body>
 		<div class="container-fluid">

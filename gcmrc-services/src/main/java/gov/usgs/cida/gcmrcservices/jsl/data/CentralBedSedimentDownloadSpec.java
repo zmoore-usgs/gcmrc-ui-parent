@@ -7,14 +7,14 @@ import org.slf4j.LoggerFactory;
  *
  * @author dmsibley
  */
-public class CentralQWDownloadSpec extends QWDownloadSpec {
-	private static final Logger log = LoggerFactory.getLogger(CentralQWDownloadSpec.class);
+public class CentralBedSedimentDownloadSpec extends BedSedimentDownloadSpec {
+	private static final Logger log = LoggerFactory.getLogger(CentralBedSedimentDownloadSpec.class);
 
 	@Override
 	public String getTimezoneDisplay() {
 		return "CST";
 	}
-	
+
 	@Override
 	public String getTimezoneSql() {
 		return " + 1/24 ";

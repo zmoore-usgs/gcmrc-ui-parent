@@ -30,20 +30,23 @@ $(document).ready(function onReady() {
 	
 	GCMRC.Page.createParameterList($('#bedLoadList'), bedLoadList);
 
+	var checkMajorTrib = function(el) {return !!el.majorStation;};
+	var checkMinorTrib = function(el) {return !!el.minorStation;};
+	var checkFines = function(el) {return el.reachGroup === "S Fines Cumul Load";};
 	var paramList = [
 		GCMRC.Page.sliderConfig.riverLoad
 	];
-	if (GCMRC.Page.reach.groupName.some("S Fines Cumul Load")) { //HACK
+	if (GCMRC.Page.reachDetail.some(checkFines)) { //HACK
 		paramList.push(GCMRC.Page.sliderConfig.riverFinesLoad);
 	}
-	if (GCMRC.Page.reach.majorTribSite) {
-		if (GCMRC.Page.reach.groupName.some("S Fines Cumul Load")) {
+	if (GCMRC.Page.reachDetail.some(checkMajorTrib)) {
+		if (GCMRC.Page.reachDetail.some(checkFines)) {
 			paramList.push(GCMRC.Page.sliderConfig.majorTribFinesLoad);
 		}
 		paramList.push(GCMRC.Page.sliderConfig.majorTribLoad);
 	}
-	if (GCMRC.Page.reach.minorTribSite) {
-		if (GCMRC.Page.reach.groupName.some("S Fines Cumul Load")) {
+	if (GCMRC.Page.reachDetail.some(checkMinorTrib)) {
+		if (GCMRC.Page.reachDetail.some(checkFines)) {
 			paramList.push(GCMRC.Page.sliderConfig.minorTribFinesLoad);
 		}
 		paramList.push(GCMRC.Page.sliderConfig.minorTribLoad);

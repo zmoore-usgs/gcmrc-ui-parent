@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+ 
+<mapper namespace="gov.usgs.cida.gcmrcservices.mb.mappers.ReachDetailMapper">
+	
+	<resultMap id="reachDetailResult" type="ReachDetail">
+		<result property="upstreamStation" column="UPSTREAM_STATION"/>
+		<result property="reachGroup" column="REACH_GROUP"/>
+		<result property="majorGroup" column="MAJOR_GROUP"/>
+		<result property="majorStation" column="MAJOR_SITE"/>
+		<result property="minorGroup" column="MINOR_GROUP"/>
+		<result property="minorStation" column="MINOR_SITE"/>
+	</resultMap>
+	
+	<sql id="columns">
+		UPSTREAM_STATION,
+		REACH_GROUP,
+		MAJOR_GROUP,
+		MAJOR_SITE,
+		MINOR_GROUP,
+		MINOR_SITE
+	</sql>
+	
+	<select id="getReachDetails" parameterType="map" resultMap="reachDetailResult">
+		SELECT
+		<include refid="columns"/>
+		FROM
+			(SELECT DISTINCT
+			(SELECT NWIS_SITE_NO FROM SITE_STAR WHERE SITE_STAR.SITE_ID = SITE_ID_UP) UPSTREAM_STATION,
+			(SELECT NAME FROM GROUP_NAME WHERE GROUP_NAME.GROUP_ID = RTD.REACH_GROUP) REACH_GROUP,
+			(SELECT NAME FROM GROUP_NAME WHERE GROUP_NAME.GROUP_ID = RTD.MAJOR_GROUP) MAJOR_GROUP,
+			(SELECT (
+      CASE
+        WHEN NWIS_SITE_NO IS NOT NULL
+        THEN NWIS_SITE_NO
+        ELSE SHORT_NAME
+      END) SITE_UP
+    FROM SITE_STAR S
+    WHERE S.SITE_ID = RTD.MAJOR_SITE
+    ) MAJOR_SITE,
+			(SELECT NAME FROM GROUP_NAME WHERE GROUP_NAME.GROUP_ID = RTD.MINOR_GROUP) MINOR_GROUP,
+		(SELECT (
+      CASE
+        WHEN NWIS_SITE_NO IS NOT NULL
+        THEN NWIS_SITE_NO
+        ELSE SHORT_NAME
+      END) SITE_UP
+    FROM SITE_STAR S
+    WHERE S.SITE_ID = RTD.MINOR_SITE
+    ) MINOR_SITE
+			FROM
+			REACH_DISPLAY RTD) T_A_INNER
+		<where>
+			<if test="null != upstream">
+				AND UPSTREAM_STATION = #{upstream}
+			</if>
+		</where>
+	</select>
+	
+</mapper>

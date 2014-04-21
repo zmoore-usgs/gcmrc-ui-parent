@@ -338,21 +338,22 @@ GCMRC.Page = {
 		var budgetColumns = {};
 		var responseColumns = {};
 		//TODO Build Columns
-		reach.groupName.each(function(el) {
+		GCMRC.Page.reachDetail.each(function(elContainer) {
+			var el = elContainer.reachGroup;
 			budgetColumns[el] = [];
 			budgetColumns[el].push("inst!" + el + "!" + reach.upstreamStation);
 			budgetColumns[el].push("inst!" + el + "!" + reach.downstreamStation);
-			if (reach.majorTribSite) {
-				budgetColumns[el].push("inst!" + reach.majorGroup + "!" + reach.majorTribSite);
+			if (elContainer.majorStation) {
+				budgetColumns[el].push("inst!" + elContainer.majorGroup + "!" + elContainer.majorStation);
 			}
-			if (reach.minorTribSite) {
-				budgetColumns[el].push("inst!" + reach.minorGroup + "!" + reach.minorTribSite);
+			if (elContainer.minorStation) {
+				budgetColumns[el].push("inst!" + elContainer.minorGroup + "!" + elContainer.minorStation);
 			}
 			
 			responseColumns[el] = []
 			responseColumns[el].push("inst!" + el + "-" + reach.upstreamStation);
-			responseColumns[el].push("inst!" + reach.majorGroup + "-" + reach.majorTribSite);
-			responseColumns[el].push("inst!" + reach.minorGroup + "-" + reach.minorTribSite);
+			responseColumns[el].push("inst!" + elContainer.majorGroup + "-" + elContainer.majorStation);
+			responseColumns[el].push("inst!" + elContainer.minorGroup + "-" + elContainer.minorStation);
 			responseColumns[el].push("inst!" + el + "-" + reach.downstreamStation);
 		});
 
@@ -458,7 +459,7 @@ GCMRC.Page = {
 			};
 		};
 
-		if (GCMRC.Page.reach.groupName.some("S Sand Cumul Load")) {
+		if (GCMRC.Page.reachDetail.some(function(el){return el.reachGroup === "S Sand Cumul Load"})) {
 			result.push(new Budget({
 				budgetType : "sandbudget",
 				budgetColumns : budgetColumns["S Sand Cumul Load"],
@@ -472,7 +473,7 @@ GCMRC.Page = {
 			}));
 		}
 		
-		if (GCMRC.Page.reach.groupName.some("S Fines Cumul Load")) {
+		if (GCMRC.Page.reachDetail.some(function(el){return el.reachGroup === "S Fines Cumul Load"})) {
 			result.push(new Budget({
 				budgetType : "finesbudget",
 				budgetColumns : budgetColumns["S Fines Cumul Load"],
@@ -719,6 +720,10 @@ GCMRC.Page = {
 	reach: {},
 	reachLoad: JSL.ResourceLoad(function(el) {
 		GCMRC.Page.reach = el;
+	}),
+	reachDetail : [],
+	reachDetailLoad : JSL.ResourceLoad(null, function(data) {
+		GCMRC.Page.reachDetail = data;
 	}),
 	sliderConfig: {
 		bedLoad: {

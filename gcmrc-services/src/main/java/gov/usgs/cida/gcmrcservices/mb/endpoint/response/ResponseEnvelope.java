@@ -15,7 +15,11 @@ public class ResponseEnvelope<T> {
 	private final List<T> data;
 
 	public ResponseEnvelope(List<T> data) {
-		this.rowCount = data.size();
+		Integer count = -1;
+		if (null != data) {
+			count = data.size();
+		}
+		this.rowCount = count;
 		this.data = data;
 	}
 

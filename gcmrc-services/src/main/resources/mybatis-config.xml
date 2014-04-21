@@ -8,6 +8,7 @@
 	</settings>
     <typeAliases>
         <typeAlias type='gov.usgs.cida.gcmrcservices.mb.model.Reach' alias='Reach'></typeAlias>
+        <typeAlias type='gov.usgs.cida.gcmrcservices.mb.model.ReachDetail' alias='ReachDetail'></typeAlias>
     </typeAliases>
     <environments default='container'>
         <environment id='container'>
@@ -37,5 +38,6 @@
     </environments>
     <mappers>
         <mapper resource='gov/usgs/cida/gcmrcservices/mb/mappers/ReachMapper.xml' />
+        <mapper resource='gov/usgs/cida/gcmrcservices/mb/mappers/ReachDetailMapper.xml' />
     </mappers>
 </configuration>

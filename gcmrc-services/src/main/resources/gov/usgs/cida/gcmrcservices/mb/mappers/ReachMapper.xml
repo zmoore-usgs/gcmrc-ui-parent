@@ -5,7 +5,7 @@
  
 <mapper namespace="gov.usgs.cida.gcmrcservices.mb.mappers.ReachMapper">
 	
-	<resultMap id="result" type="Reach">
+	<resultMap id="reachResult" type="Reach">
 		<result property="reachName" column="REACH_NAME"/>
 		<result property="upstreamStation" column="SITE_UP"/>
 		<result property="upstreamDisplayName" column="DISPLAY_NAME_UP"/>
@@ -15,6 +15,8 @@
 		<result property="downstreamDischargeName" column="DISCHARGE_DISPLAY_NAME_DOWN"/>
 		<result property="network" column="NETWORK_NAME"/>
 		<result property="displayOrder" column="DISPLAY_ORDER"/>
+		<result property="endStaticRec" column="END_STATIC_REC"/>
+		<result property="newestSuspSed" column="NEWEST_SUSPSED"/>
 	</resultMap>
 	
 	<sql id="columns">
@@ -26,10 +28,12 @@
 		DISCHARGE_SITE_DOWN,
 		DISCHARGE_DISPLAY_NAME_DOWN,
 		NETWORK_NAME,
-		DISPLAY_ORDER
+		DISPLAY_ORDER,
+		END_STATIC_REC,
+		NEWEST_SUSPSED
 	</sql>
 	
-	<select id="getReaches" parameterType="map" resultMap="result">
+	<select id="getReaches" parameterType="map" resultMap="reachResult">
 		SELECT
 		<include refid="columns"/>
 		FROM
@@ -80,13 +84,22 @@
       THEN 'CRD'
       ELSE RTD.NETWORK_NAME
     END AS NETWORK_NAME,
-    RTD.DISPLAY_ORDER
+    RTD.DISPLAY_ORDER,
+	TO_CHAR(RTD.END_STATIC_REC, 'YYYY-MM-DD"T"HH24:MI:SS') END_STATIC_REC,
+	TO_CHAR(RTD.NEWEST_SUSPSED, 'YYYY-MM-DD"T"HH24:MI:SS') NEWEST_SUSPSED
   FROM REACH_DISPLAY RTD) T_A_REACH
 		<where>
 			<if test="null != network">
 				AND NETWORK_NAME = #{network}
 			</if>
+			<if test="null != upstream">
+				AND SITE_UP = #{upstream}
+			</if>
+			<if test="null != downstream">
+				AND SITE_DOWN = #{downstream}
+			</if>
 		</where>
+	ORDER BY DISPLAY_ORDER ASC
 	</select>
 	
 </mapper>

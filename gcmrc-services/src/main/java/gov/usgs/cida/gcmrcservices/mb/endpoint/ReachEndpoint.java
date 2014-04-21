@@ -4,13 +4,13 @@ import gov.usgs.cida.gcmrcservices.mb.dao.ReachDAO;
 import gov.usgs.cida.gcmrcservices.mb.endpoint.response.ResponseEnvelope;
 import gov.usgs.cida.gcmrcservices.mb.endpoint.response.SuccessResponse;
 import gov.usgs.cida.gcmrcservices.mb.model.Reach;
+import gov.usgs.cida.gcmrcservices.mb.model.ReachDetail;
 import java.util.ArrayList;
 import java.util.List;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
-import javax.ws.rs.core.MediaType;
 import org.glassfish.jersey.server.JSONP;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -29,7 +29,6 @@ public class ReachEndpoint {
 	@Produces("application/javascript")
 	public SuccessResponse<Reach> getReaches(@PathParam("network") String network) {
 		SuccessResponse<Reach> result = null;
-		ResponseEnvelope<Reach> envelope = null;
 		List<Reach> reaches = new ArrayList<Reach>();
 		
 		try {
@@ -38,28 +37,46 @@ public class ReachEndpoint {
 			log.error("Could not get reaches!", e);
 		}
 		
-		envelope = new ResponseEnvelope<>(reaches);
-		result = new SuccessResponse<>(envelope);
+		result = new SuccessResponse<>(new ResponseEnvelope<>(reaches));
 		
 		return result;
 	}
 	
-//	@GET
-//	@Path("{network}/{upstream}/{downstream}")
-//	@Produces(MediaType.APPLICATION_JSON)
-//	public Reach getReach(@PathParam("network") String network, @PathParam("upstream") String upstreamStation, @PathParam("downstream") String downstreamStation) {
-//		Reach result = null;
-//		
-//		try {
-////			result = new ReachDAO().getReach(upstreamStation, downstreamStation);
-//		} catch (Exception e) {
-//			log.error("Could not get reach for upstream '" + upstreamStation + "' and downstream '" + downstreamStation, e);
-//		}
-//		
-//		if (null == result) {
-//			//Error handling?
-//		}
-//		
-//		return result;
-//	}
+	@GET
+	@JSONP(queryParam="jsonp_callback")
+	@Path("{network}/{upstream}/{downstream}")
+	@Produces("application/javascript")
+	public SuccessResponse<Reach> getReach(@PathParam("network") String network, @PathParam("upstream") String upstreamStation, @PathParam("downstream") String downstreamStation) {
+		SuccessResponse<Reach> result = null;
+		List<Reach> reaches = new ArrayList<Reach>();
+		
+		try {
+			reaches = new ReachDAO().getReach(network, upstreamStation, downstreamStation);
+		} catch (Exception e) {
+			log.error("Could not get reaches!", e);
+		}
+		
+		result = new SuccessResponse<>(new ResponseEnvelope<>(reaches));
+		
+		return result;
+	}
+	
+	@GET
+	@JSONP(queryParam="jsonp_callback")
+	@Path("detail/{network}/{upstream}/{downstream}")
+	@Produces("application/javascript")
+	public SuccessResponse<ReachDetail> getReachDetails(@PathParam("network") String network, @PathParam("upstream") String upstreamStation, @PathParam("downstream") String downstreamStation) {
+		SuccessResponse<ReachDetail> result = null;
+		List<ReachDetail> reachDetails = new ArrayList<>();
+		
+		try {
+			reachDetails = new ReachDAO().getReachDetails(network, upstreamStation, downstreamStation);
+		} catch (Exception e) {
+			log.error("Could not get reach for network '" + network + "' upstream '" + upstreamStation + "' and downstream '" + downstreamStation, e);
+		}
+		
+		result = new SuccessResponse<>(new ResponseEnvelope<>(reachDetails));
+		
+		return result;
+	}
 }

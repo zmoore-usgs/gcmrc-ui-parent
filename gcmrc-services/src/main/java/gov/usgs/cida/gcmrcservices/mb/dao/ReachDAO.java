@@ -2,6 +2,8 @@ package gov.usgs.cida.gcmrcservices.mb.dao;
 
 import gov.usgs.cida.gcmrcservices.mb.MyBatisConnectionFactory;
 import gov.usgs.cida.gcmrcservices.mb.model.Reach;
+import gov.usgs.cida.gcmrcservices.mb.model.ReachDetail;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -27,15 +29,7 @@ public class ReachDAO {
 		this.sqlSessionFactory = sqlSessionFactory;
 	}
 	
-//	public Reach getReach(String upstreamStation, String downstreamStation) {
-//		Reach result = null;
-//		
-//		try (SqlSession session = sqlSessionFactory.openSession()) {
-//			result = session.<Reach>selectOne("gov.usgs.cida.gcmrcservices.mb.mappers.ReachMapper.getReach");
-//		}
-//
-//		return result;
-//	}
+	public static final String queryPackage = "gov.usgs.cida.gcmrcservices.mb.mappers";
 	
 	public List<Reach> getReaches(String network) {
 		List<Reach> result = null;
@@ -44,7 +38,37 @@ public class ReachDAO {
 		params.put("network", network);
 		
 		try (SqlSession session = sqlSessionFactory.openSession()) {
-			result = session.selectList("gov.usgs.cida.gcmrcservices.mb.mappers.ReachMapper.getReaches", params);
+			result = session.selectList( queryPackage + ".ReachMapper.getReaches", params);
+		}
+		
+		return result;
+	}
+	
+	public List<Reach> getReach(String network, String upstreamStation, String downstreamStation) {
+		List<Reach> result = null;
+		
+		Map<String, String> params = new HashMap<String, String>();
+		params.put("network", network);
+		params.put("upstream", upstreamStation);
+		params.put("downstream", downstreamStation);
+		
+		try (SqlSession session = sqlSessionFactory.openSession()) {
+			result = session.selectList( queryPackage + ".ReachMapper.getReaches", params);
+		}
+		
+		return result;
+	}
+	
+	public List<ReachDetail> getReachDetails(String network, String upstreamStation, String downstreamStation) {
+		List<ReachDetail> result = new ArrayList<ReachDetail>();
+		
+		Map<String, String> params = new HashMap<String, String>();
+		params.put("network", network);
+		params.put("upstream", upstreamStation);
+		params.put("downstream", downstreamStation);
+		
+		try (SqlSession session = sqlSessionFactory.openSession()) {
+			result = session.selectList(queryPackage + ".ReachDetailMapper.getReachDetails", params);
 		}
 		
 		return result;

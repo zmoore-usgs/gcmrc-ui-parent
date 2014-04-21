@@ -21,6 +21,7 @@ public class Reach {
 	private final String displayOrder;
 	private final String endStaticRec;
 	private final String newestSuspSed;
+	private final String majorTribRiver;
 
 	public Reach() {
 		this.reachName = null;
@@ -34,9 +35,10 @@ public class Reach {
 		this.displayOrder = null;
 		this.endStaticRec = null;
 		this.newestSuspSed = null;
+		this.majorTribRiver = null;
 	}
 
-	public Reach(String reachName, String upstreamStation, String upstreamDisplayName, String downstreamStation, String downstreamDisplayName, String downstreamDischargeStation, String downstreamDischargeName, String network, String displayOrder, String endStaticRec, String newestSuspSed) {
+	public Reach(String reachName, String upstreamStation, String upstreamDisplayName, String downstreamStation, String downstreamDisplayName, String downstreamDischargeStation, String downstreamDischargeName, String network, String displayOrder, String endStaticRec, String newestSuspSed, String majorTribRiver) {
 		this.reachName = reachName;
 		this.upstreamStation = upstreamStation;
 		this.upstreamDisplayName = upstreamDisplayName;
@@ -48,6 +50,11 @@ public class Reach {
 		this.displayOrder = displayOrder;
 		this.endStaticRec = endStaticRec;
 		this.newestSuspSed = newestSuspSed;
+		this.majorTribRiver = majorTribRiver;
+	}
+
+	public String getMajorTribRiver() {
+		return majorTribRiver;
 	}
 
 	public String getEndStaticRec() {

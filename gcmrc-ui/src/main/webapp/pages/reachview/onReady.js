@@ -14,45 +14,74 @@ $(document).ready(function onReady() {
 		upstreamStationName: (!upstreamStation) ? null : upstreamStation.siteName,
 		downstreamStationName: (!downstreamStation) ? null : downstreamStation.siteName
 	});
-
-	if ("BIBE" === CONFIG.networkName) {
-		var budgetMsg = "These sediment budgets do not currently include the "+ 
-				"sediment supplied by tributaries between the above Castolon and "+
-				"above Rio Grande Village stations.  Therefore, the complete "+
-				"sediment budgets are more positive than those shown except "+
-				"during periods of no tributary activity.";
-		GCMRC.Graphing.showInfoMsg("#specialMsg", budgetMsg);
-	}
 	
 	GCMRC.Page.buildPORView($('#porContainer'), GCMRC.Page.earliestPositionISO, GCMRC.Page.latestPositionISO);
 
 	var bedLoadList = [GCMRC.Page.sliderConfig.bedLoad];
 	
 	GCMRC.Page.createParameterList($('#bedLoadList'), bedLoadList);
-
-	var checkMajorTrib = function(el) {return !!el.majorStation;};
-	var checkMinorTrib = function(el) {return !!el.minorStation;};
-	var checkFines = function(el) {return el.reachGroup === "S Fines Cumul Load";};
-	var paramList = [
-		GCMRC.Page.sliderConfig.riverLoad
-	];
-	if (GCMRC.Page.reachDetail.some(checkFines)) { //HACK
-		paramList.push(GCMRC.Page.sliderConfig.riverFinesLoad);
-	}
-	if (GCMRC.Page.reachDetail.some(checkMajorTrib)) {
-		if (GCMRC.Page.reachDetail.some(checkFines)) {
-			paramList.push(GCMRC.Page.sliderConfig.majorTribFinesLoad);
-		}
-		paramList.push(GCMRC.Page.sliderConfig.majorTribLoad);
-	}
-	if (GCMRC.Page.reachDetail.some(checkMinorTrib)) {
-		if (GCMRC.Page.reachDetail.some(checkFines)) {
-			paramList.push(GCMRC.Page.sliderConfig.minorTribFinesLoad);
-		}
-		paramList.push(GCMRC.Page.sliderConfig.minorTribLoad);
-	}
+	
 	GCMRC.Page.createDateList($('#lastSedDates'), GCMRC.Page.reach);
-	GCMRC.Page.createParameterList($('#parameterList'), paramList);
+	
+	var getParamList = function() {
+		var result = [
+			
+		];
+		
+		var addToResult = {
+			sandRiverLoad : false,
+			finesRiverLoad : false,
+			sandMajor : false,
+			finesMajor : false,
+			sandMinor : false,
+			finesMinor : false
+		}
+		
+		GCMRC.Page.reachDetail.each(function(el) {
+			if (el.reachGroup === "S Sand Cumul Load") {
+				addToResult["sandRiverLoad"] = true;
+				if (el.majorStation) {
+					addToResult["sandMajor"] = true;
+				}
+				if (el.minorStation) {
+					addToResult["sandMinor"] = true;
+				}
+			}
+			if (el.reachGroup === "S Fines Cumul Load") {
+				addToResult["finesRiverLoad"] = true;
+				if (el.majorStation) {
+					addToResult["finesMajor"] = true;
+				}
+				if (el.minorStation) {
+					addToResult["finesMinor"] = true;
+				}
+			}
+		});
+		
+		if (addToResult["sandRiverLoad"]) {
+			result.push(GCMRC.Page.sliderConfig.riverLoad);
+		}
+		if (addToResult["finesRiverLoad"]) {
+			result.push(GCMRC.Page.sliderConfig.riverFinesLoad);
+		}
+		if (addToResult["sandMajor"]) {
+			result.push(GCMRC.Page.sliderConfig.majorTribLoad);
+		}
+		if (addToResult["finesMajor"]) {
+			result.push(GCMRC.Page.sliderConfig.majorTribFinesLoad);
+		}
+		if (addToResult["sandMinor"]) {
+			result.push(GCMRC.Page.sliderConfig.minorTribLoad);
+		}
+		if (addToResult["finesMinor"]) {
+			result.push(GCMRC.Page.sliderConfig.minorTribFinesLoad);
+		}
+		
+		return result;
+	}
+	
+	
+	GCMRC.Page.createParameterList($('#parameterList'), getParamList());
 	
 	$('#buildGraph').click(GCMRC.Page.buildGraphClicked);
 	$('#downloadData').click(GCMRC.Page.downloadDataClicked);

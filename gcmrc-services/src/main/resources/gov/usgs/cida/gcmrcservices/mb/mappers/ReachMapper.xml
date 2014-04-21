@@ -17,6 +17,7 @@
 		<result property="displayOrder" column="DISPLAY_ORDER"/>
 		<result property="endStaticRec" column="END_STATIC_REC"/>
 		<result property="newestSuspSed" column="NEWEST_SUSPSED"/>
+		<result property="majorTribRiver" column="MAJOR_TRIB_RIVER"/>
 	</resultMap>
 	
 	<sql id="columns">
@@ -30,7 +31,8 @@
 		NETWORK_NAME,
 		DISPLAY_ORDER,
 		END_STATIC_REC,
-		NEWEST_SUSPSED
+		NEWEST_SUSPSED,
+		MAJOR_TRIB_RIVER
 	</sql>
 	
 	<select id="getReaches" parameterType="map" resultMap="reachResult">
@@ -86,7 +88,11 @@
     END AS NETWORK_NAME,
     RTD.DISPLAY_ORDER,
 	TO_CHAR(RTD.END_STATIC_REC, 'YYYY-MM-DD"T"HH24:MI:SS') END_STATIC_REC,
-	TO_CHAR(RTD.NEWEST_SUSPSED, 'YYYY-MM-DD"T"HH24:MI:SS') NEWEST_SUSPSED
+	TO_CHAR(RTD.NEWEST_SUSPSED, 'YYYY-MM-DD"T"HH24:MI:SS') NEWEST_SUSPSED,
+	(SELECT S.RIVER_NAME
+		FROM SITE_STAR S
+		WHERE RTD.MAJOR_SITE = S.SITE_ID
+	) MAJOR_TRIB_RIVER
   FROM REACH_DISPLAY RTD) T_A_REACH
 		<where>
 			<if test="null != network">

@@ -59,8 +59,8 @@ GCMRC.Page = {
 		];
 		div.append(result.join(''));
 	},
-	buildSliderInfo : function(div, dateStr, multiplier) {
-		div.append('<div>Uncertainty for Major Tributary Sand Loads <span class="c_qual' + multiplier + '"></span>% after ' + dateStr + '</div>');
+	buildSliderInfo : function(div, dateStr, multiplier, loadDivKey, dataType) {
+		div.append('<div>Uncertainty for Major Tributary ' + dataType + ' Loads <span class="' + loadDivKey + '_qual' + multiplier + '"></span>% after ' + dateStr + '</div>');
 	},
 	buildGraphClicked: function() {
 		var begin = $("input[name='beginPosition']").val();
@@ -102,11 +102,11 @@ GCMRC.Page = {
 			if (CONFIG.downstreamStationName) {
 				expectedStations.push(CONFIG.downstreamStationName);
 			}
-			if (GCMRC.Page.reach.majorTrib) {
-				expectedStations.push(GCMRC.Page.reach.majorTrib);
+			if (GCMRC.Page.reachDetail.majorStation) {
+				expectedStations.push(GCMRC.Page.reachDetail.majorStation);
 			}
-			if (GCMRC.Page.reach.minorTrib) {
-				expectedStations.push(GCMRC.Page.reach.minorTrib);
+			if (GCMRC.Page.reachDetail.minorStation) {
+				expectedStations.push(GCMRC.Page.reachDetail.minorStation);
 			}
 			if (GCMRC.Page.reach.downstreamDischargeStation) {
 				expectedStations.push(GCMRC.Page.reach.downstreamDischargeStation);
@@ -130,17 +130,23 @@ GCMRC.Page = {
 				serviceOptions['downscale'] = aggTime;
 			}
 			
-			var thingthing = $('div.c_qual');
-			thingthing.empty();
-			if ((endStaticRecMillis && endStaticRecMillis < endMillis) && 
-					(!newestSuspSedMillis || (endStaticRecMillis < newestSuspSedMillis && newestSuspSedMillis > beginMillis))) {
-				GCMRC.Page.buildSliderInfo(thingthing, GCMRC.Page.reach.endStaticRec.split("T")[0], 2);
-				$('.c_qual2').html(parseFloat($('span[name=c_val]').html()) * 2);
+			var addUncertaintyInformation = function(loadTypes) {
+				loadTypes.keys(function(loadDivKey, loadType) {
+					var thingthing = $('div.' + loadDivKey + '_qual');
+					thingthing.empty();
+					if ((endStaticRecMillis && endStaticRecMillis < endMillis) && 
+							(!newestSuspSedMillis || (endStaticRecMillis < newestSuspSedMillis && newestSuspSedMillis > beginMillis))) {
+						GCMRC.Page.buildSliderInfo(thingthing, GCMRC.Page.reach.endStaticRec.split("T")[0], 2, loadDivKey, loadType);
+						$('.' + loadDivKey + '_qual2').html(parseFloat($('span[name=' + loadDivKey + '_val]').html()) * 2);
+					}
+					if (newestSuspSedMillis && newestSuspSedMillis < endMillis) {
+						GCMRC.Page.buildSliderInfo(thingthing, GCMRC.Page.reach.newestSuspSed.split("T")[0], 4, loadDivKey, loadType);
+						$('.' + loadDivKey + '_qual4').html(parseFloat($('span[name=' + loadDivKey + '_val]').html()) * 4);
+					}
+				})
 			}
-			if (newestSuspSedMillis && newestSuspSedMillis < endMillis) {
-				GCMRC.Page.buildSliderInfo(thingthing, GCMRC.Page.reach.newestSuspSed.split("T")[0], 4);
-				$('.c_qual4').html(parseFloat($('span[name=c_val]').html()) * 4);
-			}
+			
+			addUncertaintyInformation({'f' : 'Silt and Clay', 'c' : 'Sand'})
 			
 			GCMRC.Graphing.createDataGraph(
 					'agg',

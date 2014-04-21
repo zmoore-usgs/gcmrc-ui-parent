@@ -131,19 +131,21 @@ GCMRC.Page = {
 			}
 			
 			var addUncertaintyInformation = function(loadTypes) {
-				loadTypes.keys(function(loadDivKey, loadType) {
-					var thingthing = $('div.' + loadDivKey + '_qual');
-					thingthing.empty();
-					if ((endStaticRecMillis && endStaticRecMillis < endMillis) && 
-							(!newestSuspSedMillis || (endStaticRecMillis < newestSuspSedMillis && newestSuspSedMillis > beginMillis))) {
-						GCMRC.Page.buildSliderInfo(thingthing, GCMRC.Page.reach.endStaticRec.split("T")[0], 2, loadDivKey, loadType);
-						$('.' + loadDivKey + '_qual2').html(parseFloat($('span[name=' + loadDivKey + '_val]').html()) * 2);
-					}
-					if (newestSuspSedMillis && newestSuspSedMillis < endMillis) {
-						GCMRC.Page.buildSliderInfo(thingthing, GCMRC.Page.reach.newestSuspSed.split("T")[0], 4, loadDivKey, loadType);
-						$('.' + loadDivKey + '_qual4').html(parseFloat($('span[name=' + loadDivKey + '_val]').html()) * 4);
-					}
-				})
+				if (GCMRC.Page.reach.endStaticRec && GCMRC.Page.reach.newestSuspSed) {
+					loadTypes.keys(function(loadDivKey, loadType) {
+						var thingthing = $('div.' + loadDivKey + '_qual');
+						thingthing.empty();
+						if ((endStaticRecMillis && endStaticRecMillis < endMillis) && 
+								(!newestSuspSedMillis || (endStaticRecMillis < newestSuspSedMillis && newestSuspSedMillis > beginMillis))) {
+							GCMRC.Page.buildSliderInfo(thingthing, GCMRC.Page.reach.endStaticRec.split("T")[0], 2, loadDivKey, loadType);
+							$('.' + loadDivKey + '_qual2').html(parseFloat($('span[name=' + loadDivKey + '_val]').html()) * 2);
+						}
+						if (newestSuspSedMillis && newestSuspSedMillis < endMillis) {
+							GCMRC.Page.buildSliderInfo(thingthing, GCMRC.Page.reach.newestSuspSed.split("T")[0], 4, loadDivKey, loadType);
+							$('.' + loadDivKey + '_qual4').html(parseFloat($('span[name=' + loadDivKey + '_val]').html()) * 4);
+						}
+					})
+				}
 			}
 			
 			addUncertaintyInformation({'f' : 'Silt and Clay', 'c' : 'Sand'})

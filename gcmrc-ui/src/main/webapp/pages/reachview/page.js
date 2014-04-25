@@ -736,51 +736,51 @@ GCMRC.Page = {
 	sliderConfig: {
 		bedLoad: {
 			name: "a",
-			displayName: "Bedload Coefficient for River Sand Loads",
+			displayName: "Bedload Coefficient for " + (("BIBE" === CONFIG.networkName)?"Rio Grande":"River") + " Sand Loads",
 			adjustMin: 0,
 			adjustMax: 10,
 			adjustDefault: 5
 		},
 		riverFinesLoad: {
 			name: "e",
-			displayName: "Magnitude of Possible Persistent Bias in Measured River Silt and Clay Loads",
+			displayName: "Magnitude of Possible Persistent Bias in Measured " + (("BIBE" === CONFIG.networkName)?"Rio Grande":"River") + " Silt and Clay Loads",
 			adjustMin: 0,
 			adjustMax: 25,
 			adjustDefault: ("BIBE" === CONFIG.networkName)?10:5
 		},
 		riverLoad: {
 			name: "b",
-			displayName: "Magnitude of Possible Persistent Bias in Measured River Sand Loads",
+			displayName: "Magnitude of Possible Persistent Bias in Measured " + (("BIBE" === CONFIG.networkName)?"Rio Grande":"River") + " Sand Loads",
 			adjustMin: 0,
 			adjustMax: 25,
 			adjustDefault: ("BIBE" === CONFIG.networkName)?10:5
 		},
 		majorTribFinesLoad: {
 			name: "f",
-			displayName: "Magnitude of Possible Persistent Bias in Measured Major Tributary Silt and Clay Loads",
+			displayName: "Magnitude of Possible Persistent Bias in Measured " + (("BIBE" === CONFIG.networkName)?"Tornillo Creek":"Major Tributary") + " Silt and Clay Loads",
 			adjustMin: 0,
 			adjustMax: 25,
-			adjustDefault: 10
+			adjustDefault: ("BIBE" === CONFIG.networkName)?20:10
 		},
 		majorTribLoad: {
 			name: "c",
-			displayName: "Magnitude of Possible Persistent Bias in Measured Major Tributary Sand Loads",
+			displayName: "Magnitude of Possible Persistent Bias in Measured " + (("BIBE" === CONFIG.networkName)?"Tornillo Creek":"Major Tributary") + " Sand Loads",
 			adjustMin: 0,
 			adjustMax: 25,
-			adjustDefault: 10
+			adjustDefault: ("BIBE" === CONFIG.networkName)?20:10
 		},
 		minorTribFinesLoad: {
 			name: "g",
-			displayName: "Magnitude of Possible Persistent Bias in Lesser Tributary Silt and Clay Loads",
+			displayName: "Magnitude of Possible Persistent Bias in " + (("BIBE" === CONFIG.networkName)?"Other Tributaries":"Lesser Tributary") + " Silt and Clay Loads",
 			adjustMin: 0,
-			adjustMax: 50,
+			adjustMax: ("BIBE" === CONFIG.networkName)?100:50,
 			adjustDefault: 50
 		},
 		minorTribLoad: {
 			name: "d",
-			displayName: "Magnitude of Possible Persistent Bias in Lesser Tributary Sand Loads",
+			displayName: "Magnitude of Possible Persistent Bias in " + (("BIBE" === CONFIG.networkName)?"Other Tributaries":"Lesser Tributary") + " Sand Loads",
 			adjustMin: 0,
-			adjustMax: 50,
+			adjustMax: ("BIBE" === CONFIG.networkName)?100:50,
 			adjustDefault: 50
 		}
 	},

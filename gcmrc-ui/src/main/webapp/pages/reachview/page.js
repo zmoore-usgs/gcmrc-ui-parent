@@ -60,7 +60,7 @@ GCMRC.Page = {
 		div.append(result.join(''));
 	},
 	buildSliderInfo : function(div, dateStr, multiplier, loadDivKey, dataType) {
-		div.append('<div>Uncertainty for Major Tributary ' + dataType + ' Loads <span class="' + loadDivKey + '_qual' + multiplier + '"></span>% after ' + dateStr + '</div>');
+		div.append('<div>Uncertainty for ' + (("BIBE" === CONFIG.networkName)?"Tornillo Creek":"Major Tributary") + ' ' + dataType + ' Loads <span class="' + loadDivKey + '_qual' + multiplier + '"></span>% after ' + dateStr + '</div>');
 	},
 	buildGraphClicked: function() {
 		var begin = $("input[name='beginPosition']").val();

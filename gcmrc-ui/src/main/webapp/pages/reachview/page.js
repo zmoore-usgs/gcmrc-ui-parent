@@ -771,14 +771,14 @@ GCMRC.Page = {
 		},
 		minorTribFinesLoad: {
 			name: "g",
-			displayName: "Magnitude of Possible Persistent Bias in " + (("BIBE" === CONFIG.networkName)?"Other Tributaries":"Lesser Tributary") + " Silt and Clay Loads",
+			displayName: "Magnitude of Possible Persistent Bias in " + (("BIBE" === CONFIG.networkName)?"Other Tributary":"Lesser Tributary") + " Silt and Clay Loads",
 			adjustMin: 0,
 			adjustMax: ("BIBE" === CONFIG.networkName)?100:50,
 			adjustDefault: 50
 		},
 		minorTribLoad: {
 			name: "d",
-			displayName: "Magnitude of Possible Persistent Bias in " + (("BIBE" === CONFIG.networkName)?"Other Tributaries":"Lesser Tributary") + " Sand Loads",
+			displayName: "Magnitude of Possible Persistent Bias in " + (("BIBE" === CONFIG.networkName)?"Other Tributary":"Lesser Tributary") + " Sand Loads",
 			adjustMin: 0,
 			adjustMax: ("BIBE" === CONFIG.networkName)?100:50,
 			adjustDefault: 50

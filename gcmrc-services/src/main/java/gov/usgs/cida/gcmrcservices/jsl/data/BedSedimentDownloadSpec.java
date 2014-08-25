@@ -247,7 +247,7 @@ public class BedSedimentDownloadSpec extends Spec implements CentralizableTimezo
 	public static final String C_STATION_LOCATION = "STATION_LOCATION";
 	public static final String S_STATION_LOCATION = "station location (ft)";
 	public static final String C_SAMPLE_WEIGHT = "SAMPLE_WEIGHT";
-	public static final String S_SAMPLE_WEIGHT = "sample weight (g)";
+	public static final String S_SAMPLE_WEIGHT = "sample mass (g)";
 	public static final String C_SAND_D50 = "SAND_D50";
 	public static final String S_SAND_D50 = "D50 (mm)";
 	public static final String C_FINES_D50 = "FINES_D50";

@@ -39,7 +39,8 @@ GCMRC.Networks = function() {
 				"bottom": 40.067194,
 				"right": -107.693084,
 				"top": 41.093398
-			}
+			},
+			reaches : true
 		},
 		"CRD" : {
 			displayName : 'Colorado River Delta',

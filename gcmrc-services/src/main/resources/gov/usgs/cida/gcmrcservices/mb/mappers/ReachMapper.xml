@@ -9,6 +9,8 @@
 		<result property="reachName" column="REACH_NAME"/>
 		<result property="upstreamStation" column="SITE_UP"/>
 		<result property="upstreamDisplayName" column="DISPLAY_NAME_UP"/>
+		<result property="upstreamSecondaryStation" column="SITE_UP_SECONDARY" />
+		<result property="upstreamSecondaryDisplayName" column="DISPLAY_NAME_UP_SECONDARY" />
 		<result property="downstreamStation" column="SITE_DOWN"/>
 		<result property="downstreamDisplayName" column="DISPLAY_NAME_DOWN"/>
 		<result property="downstreamDischargeStation" column="DISCHARGE_SITE_DOWN"/>
@@ -24,6 +26,8 @@
 		REACH_NAME,
 		SITE_UP,
 		DISPLAY_NAME_UP,
+	        SITE_UP_SECONDARY,
+	        DISPLAY_NAME_UP_SECONDARY,
 		SITE_DOWN,
 		DISPLAY_NAME_DOWN,
 		DISCHARGE_SITE_DOWN,
@@ -51,6 +55,17 @@
     ) SITE_UP,
     (SELECT S.NAME FROM SITE_STAR S WHERE S.SITE_ID = RTD.SITE_ID_UP
     ) DISPLAY_NAME_UP,
+    (SELECT (
+      CASE
+        WHEN NWIS_SITE_NO IS NOT NULL
+        THEN NWIS_SITE_NO
+        ELSE SHORT_NAME
+      END) SITE_UP_SECONDARY
+    FROM SITE_STAR S
+    WHERE S.SITE_ID = RTD.SITE_ID_UP_SECONDARY
+    ) SITE_UP_SECONDARY,
+    (SELECT S.NAME FROM SITE_STAR S WHERE S.SITE_ID = RTD.SITE_ID_UP_SECONDARY
+    ) DISPLAY_NAME_UP_SECONDARY,
     (SELECT (
       CASE
         WHEN NWIS_SITE_NO IS NOT NULL

@@ -13,6 +13,8 @@ public class Reach {
 	private final String reachName;
 	private final String upstreamStation;
 	private final String upstreamDisplayName;
+	private final String upstreamSecondaryStation;
+	private final String upstreamSecondaryDisplayName;
 	private final String downstreamStation;
 	private final String downstreamDisplayName;
 	private final String downstreamDischargeStation;
@@ -27,6 +29,8 @@ public class Reach {
 		this.reachName = null;
 		this.upstreamStation = null;
 		this.upstreamDisplayName = null;
+		this.upstreamSecondaryStation = null;
+		this.upstreamSecondaryDisplayName = null;
 		this.downstreamStation = null;
 		this.downstreamDisplayName = null;
 		this.downstreamDischargeStation = null;
@@ -38,10 +42,12 @@ public class Reach {
 		this.majorTribRiver = null;
 	}
 
-	public Reach(String reachName, String upstreamStation, String upstreamDisplayName, String downstreamStation, String downstreamDisplayName, String downstreamDischargeStation, String downstreamDischargeName, String network, String displayOrder, String endStaticRec, String newestSuspSed, String majorTribRiver) {
+	public Reach(String reachName, String upstreamStation, String upstreamDisplayName, String upstreamSecondaryStation, String upstreamSecondaryDisplayName, String downstreamStation, String downstreamDisplayName, String downstreamDischargeStation, String downstreamDischargeName, String network, String displayOrder, String endStaticRec, String newestSuspSed, String majorTribRiver) {
 		this.reachName = reachName;
 		this.upstreamStation = upstreamStation;
 		this.upstreamDisplayName = upstreamDisplayName;
+		this.upstreamSecondaryStation = upstreamSecondaryStation;
+		this.upstreamSecondaryDisplayName = upstreamSecondaryDisplayName;
 		this.downstreamStation = downstreamStation;
 		this.downstreamDisplayName = downstreamDisplayName;
 		this.downstreamDischargeStation = downstreamDischargeStation;
@@ -75,6 +81,14 @@ public class Reach {
 
 	public String getUpstreamDisplayName() {
 		return upstreamDisplayName;
+	}
+	
+	public String getUpstreamSecondaryStation() {
+	    return upstreamSecondaryStation;
+	}
+	
+	public String getUpstreamSecondaryDisplayName() {
+	    return upstreamSecondaryDisplayName;
 	}
 
 	public String getDownstreamStation() {

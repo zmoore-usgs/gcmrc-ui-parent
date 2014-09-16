@@ -65,10 +65,10 @@ GCMRC.Page = {
 	buildGraphClicked: function() {
 		var begin = $("input[name='beginPosition']").val();
 		var end = $("input[name='endPosition']").val();
-		
+
 		var endStaticRecMillis = new Date(GCMRC.Page.reach.endStaticRec).getTime() + (CONFIG.networkHoursOffset * 60 * 60 * 1000);
 		var newestSuspSedMillis = new Date(GCMRC.Page.reach.newestSuspSed).getTime() + (CONFIG.networkHoursOffset * 60 * 60 * 1000);
-		
+
 		var beginMillis = Date.create(begin).getUTCTime() + (CONFIG.networkHoursOffset * 60 * 60 * 1000);
 		var endMillis = Date.create(end).getUTCTime() + (CONFIG.networkHoursOffset * 60 * 60 * 1000);
 		if (endMillis >= beginMillis) {
@@ -79,7 +79,7 @@ GCMRC.Page = {
 					return col;
 				}).unique());
 			}, chosenParameters);
-			
+
 			expectedGraphColumns.forEach(function(el) {
 				var cols = [];
 				[].push.apply(cols, el.columns.map(function(col) {
@@ -129,13 +129,13 @@ GCMRC.Page = {
 			if (aggTime) {
 				serviceOptions['downscale'] = aggTime;
 			}
-			
+
 			var addUncertaintyInformation = function(loadTypes) {
 				if (GCMRC.Page.reach.endStaticRec && GCMRC.Page.reach.newestSuspSed) {
 					loadTypes.keys(function(loadDivKey, loadType) {
 						var thingthing = $('div.' + loadDivKey + '_qual');
 						thingthing.empty();
-						if ((endStaticRecMillis && endStaticRecMillis < endMillis) && 
+						if ((endStaticRecMillis && endStaticRecMillis < endMillis) &&
 								(!newestSuspSedMillis || (endStaticRecMillis < newestSuspSedMillis && newestSuspSedMillis > beginMillis))) {
 							GCMRC.Page.buildSliderInfo(thingthing, GCMRC.Page.reach.endStaticRec.split("T")[0], 2, loadDivKey, loadType);
 							$('.' + loadDivKey + '_qual2').html(parseFloat($('span[name=' + loadDivKey + '_val]').html()) * 2);
@@ -147,9 +147,9 @@ GCMRC.Page = {
 					})
 				}
 			}
-			
+
 			addUncertaintyInformation({'f' : 'Silt and Clay', 'c' : 'Sand'})
-			
+
 			GCMRC.Graphing.createDataGraph(
 					'agg',
 					{
@@ -357,7 +357,7 @@ GCMRC.Page = {
 			if (elContainer.minorStation) {
 				budgetColumns[el].push("inst!" + elContainer.minorGroup + "!" + elContainer.minorStation);
 			}
-			
+
 			responseColumns[el] = []
 			responseColumns[el].push("inst!" + el + "-" + reach.upstreamStation);
 			responseColumns[el].push("inst!" + elContainer.majorGroup + "-" + elContainer.majorStation);
@@ -374,7 +374,7 @@ GCMRC.Page = {
 				yAxisLabel: "Discharge (cfs) at " + GCMRC.Page.reach.downstreamDischargeName
 			}
 		];
-		
+
 		var Budget = function(config) {
 			this.config = config;
 			this.groupId = config.budgetType;
@@ -480,7 +480,7 @@ GCMRC.Page = {
 				workerName : "sandworker"
 			}));
 		}
-		
+
 		if (GCMRC.Page.reachDetail.some(function(el){return el.reachGroup === "S Fines Cumul Load"})) {
 			result.push(new Budget({
 				budgetType : "finesbudget",
@@ -494,7 +494,7 @@ GCMRC.Page = {
 				workerName : "finesworker"
 			}));
 		}
-		
+
 		return result;
 	},
 	createDateList: function(container, dates) {
@@ -609,12 +609,12 @@ GCMRC.Page = {
 				slide: slidechange(param["name"]),
 				change: slidechange(param["name"])
 			});
-			
+
 			slider.on("slidechange", slidequal('span.' + param["name"] + '_qual2', 2));
 			slider.on("slide", slidequal('span.' + param["name"] + '_qual2', 2));
 			slider.on("slidechange", slidequal('span.' + param["name"] + '_qual4', 4));
 			slider.on("slide", slidequal('span.' + param["name"] + '_qual4', 4));
-			
+
 			var defaultLocation = $('div[name=' + param["name"] + '] a').attr("style");
 			$('div[name=' + param["name"] + ']').append('<a class="ui-corner-all ui-slider-default-position" style="' + defaultLocation + '" href="#"></a>');
 			$('span[name=' + param["name"] + '_val]').html(param["adjustDefault"]);
@@ -629,7 +629,7 @@ GCMRC.Page = {
 	latestPositionISO: null,
 	reachPORLoad : JSL.ResourceLoad(function(el) {
 		var streams = ["upstream", "downstream", "majorTrib", "minorTrib"];
-		
+
 		streams.each(function(stream) {
 			if (el[stream + "BeginPosition"]) {
 				var beginPosition = new Date(el[stream + "BeginPosition"]).getTime();
@@ -733,57 +733,7 @@ GCMRC.Page = {
 	reachDetailLoad : JSL.ResourceLoad(null, function(data) {
 		GCMRC.Page.reachDetail = data;
 	}),
-	sliderConfig: {
-		bedLoad: {
-			name: "a",
-			displayName: "Bedload Coefficient for " + (("BIBE" === CONFIG.networkName)?"Rio Grande":"River") + " Sand Loads",
-			adjustMin: 0,
-			adjustMax: 10,
-			adjustDefault: 5
-		},
-		riverFinesLoad: {
-			name: "e",
-			displayName: "Magnitude of Possible Persistent Bias in Measured " + (("BIBE" === CONFIG.networkName)?"Rio Grande":"River") + " Silt and Clay Loads",
-			adjustMin: 0,
-			adjustMax: 25,
-			adjustDefault: ("BIBE" === CONFIG.networkName)?10:5
-		},
-		riverLoad: {
-			name: "b",
-			displayName: "Magnitude of Possible Persistent Bias in Measured " + (("BIBE" === CONFIG.networkName)?"Rio Grande":"River") + " Sand Loads",
-			adjustMin: 0,
-			adjustMax: 25,
-			adjustDefault: ("BIBE" === CONFIG.networkName)?10:5
-		},
-		majorTribFinesLoad: {
-			name: "f",
-			displayName: "Magnitude of Possible Persistent Bias in Measured " + (("BIBE" === CONFIG.networkName)?"Tornillo Creek":"Major Tributary") + " Silt and Clay Loads",
-			adjustMin: 0,
-			adjustMax: 25,
-			adjustDefault: ("BIBE" === CONFIG.networkName)?20:10
-		},
-		majorTribLoad: {
-			name: "c",
-			displayName: "Magnitude of Possible Persistent Bias in Measured " + (("BIBE" === CONFIG.networkName)?"Tornillo Creek":"Major Tributary") + " Sand Loads",
-			adjustMin: 0,
-			adjustMax: 25,
-			adjustDefault: ("BIBE" === CONFIG.networkName)?20:10
-		},
-		minorTribFinesLoad: {
-			name: "g",
-			displayName: "Magnitude of Possible Persistent Bias in " + (("BIBE" === CONFIG.networkName)?"Other Tributary":"Lesser Tributary") + " Silt and Clay Loads",
-			adjustMin: 0,
-			adjustMax: ("BIBE" === CONFIG.networkName)?100:50,
-			adjustDefault: 50
-		},
-		minorTribLoad: {
-			name: "d",
-			displayName: "Magnitude of Possible Persistent Bias in " + (("BIBE" === CONFIG.networkName)?"Other Tributary":"Lesser Tributary") + " Sand Loads",
-			adjustMin: 0,
-			adjustMax: ("BIBE" === CONFIG.networkName)?100:50,
-			adjustDefault: 50
-		}
-	},
+	sliderConfig: GCMRC.Reaches.sliderConfig,
 	resetSliders: function() {
 		GCMRC.Page.sliderConfig.values(function(el) {
 			$('div[name=' + el.name + ']').slider("option", "value", el.adjustDefault);

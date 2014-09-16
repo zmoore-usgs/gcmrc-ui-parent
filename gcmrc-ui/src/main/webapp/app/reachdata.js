@@ -1,4 +1,4 @@
-GCMRC.Reaches = function() {
+GCMRC.Reaches = function () {
 
     var slider_defaults = {
 	bedLoad: {
@@ -73,7 +73,7 @@ GCMRC.Reaches = function() {
 	slider.majorTribFinesLoad.adjustDefault = 10;
 
 	slider.majorTribLoad.displayName = slider.majorTribLoad.displayName.replace("Major Tributary", MAJOR_TRIB_NAME);
-    	slider.majorTribLoad.adjustDefault = 10;
+	slider.majorTribLoad.adjustDefault = 10;
 
 	slider.minorTribFinesLoad.displayName = slider.minorTribFinesLoad.displayName.replace("Lesser Tributary", LESSOR_TRIB_NAME);
 	slider.minorTribFinesLoad.adjustMax = 50;
@@ -96,7 +96,7 @@ GCMRC.Reaches = function() {
     }
 
     return {
-	sliderConfig : slider
+	sliderConfig: slider
     };
 }();
 

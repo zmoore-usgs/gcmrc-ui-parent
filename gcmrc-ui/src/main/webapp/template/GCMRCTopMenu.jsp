@@ -31,7 +31,7 @@
 					<li class="drop"><a href="http://www.gcmrc.gov/research_areas/adaptive_management/adaptive_management_default.aspx"
 										title="Adaptive Management">Adaptive Management</a></li>
 					<li class="drop"><a href="http://www.gcmrc.gov/research_areas/food_base/food_base_default.aspx"
-										title="Aquatic Food Base">Aquatic Food Base</a></li>
+										title="Aquatic Ecology">Aquatic Ecology</a></li>
 					<li class="drop"><a href="http://www.gcmrc.gov/research_areas/cultural_resources/cultural_resources_default.aspx"
 										title="Cultural Resources">Cultural Resources</a></li>
 					<li class="drop"><a href="http://www.gcmrc.gov/research_areas/extirpated_species/extirpated_species_default.aspx"
@@ -48,8 +48,8 @@
 										title="Recreation">Recreation</a></li>
 					<li class="drop"><a href="http://www.gcmrc.gov/research_areas/riparian_plant_communities/riparian_plant_communities_default.aspx"
 										title="Riparian Plant Communities">Riparian Plant Communities</a></li>
-					<li class="drop"><a href="http://www.gcmrc.gov/research_areas/sediment_sandbars/sediment_sandbars_default.aspx"
-										title="Sediment and Sandbars">Sediment and Sandbars</a></li>
+					<li class="drop"><a href="http://www.gcmrc.gov/research_areas/sediment_geomorphology/sediment_geomorphology_default.aspx"
+										title="Sediment and Geomorphology">Sediment and Geomorphology</a></li>
 					<li class="drop"><a href="http://www.gcmrc.gov/research_areas/water_quality/water_quality_default.aspx"
 										title="Water Quality">Water Quality</a></li>
 					<li class="drop"><a href="http://www.gcmrc.gov/high_flow/high_flow_default.aspx"

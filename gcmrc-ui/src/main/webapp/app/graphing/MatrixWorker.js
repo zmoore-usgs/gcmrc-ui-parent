@@ -60,37 +60,37 @@ MatrixWorker.prototype.setDataArray = function(config) {
 };
 
 MatrixWorker.prototype.transformArray = function(config) {
-	var a,b,c,d;
+	var percentages = {};
 	if (MatrixWorker.FINES === this.isFines) {
-		a = 0,
-		b = config.e || 0,
-		c = config.f || 0,
-		d = config.g || 0;
+		percentages["bedload"] = 0;
+		percentages["river"] = config.e || 0;
+		percentages["major"] = config.f || 0;
+		percentages["minor"] = config.g || 0;
 	} else {
-		a = config.a || 0;
-		b = config.b || 0;
-		c = config.c || 0;
-		d = config.d || 0;
+		percentages["bedload"] = config.a || 0;
+		percentages["river"] = config.b || 0;
+		percentages["major"] = config.c || 0;
+		percentages["minor"] = config.d || 0;
 	}
 	
 
 	var transformMatrix = (this.xformMatrices["sign"].multiply(1)).
-			add(this.xformMatrices["bedload"].multiply(a)).
-			add(this.xformMatrices["river"].multiply(b)).
-			add(this.xformMatrices["minor"].multiply(d)).
-			add(this.xformMatrices["major"].multiply(c));
+			add(this.xformMatrices["bedload"].multiply(percentages["bedload"])).
+			add(this.xformMatrices["river"].multiply(percentages["river"])).
+			add(this.xformMatrices["minor"].multiply(percentages["minor"])).
+			add(this.xformMatrices["major"].multiply(percentages["major"]));
 	
 	var doubleTransformMatrix = (this.xformMatrices["sign"].multiply(1)).
-			add(this.xformMatrices["bedload"].multiply(a)).
-			add(this.xformMatrices["river"].multiply(b)).
-			add(this.xformMatrices["minor"].multiply(d)).
-			add(this.xformMatrices["major"].multiply(c * 2));
+			add(this.xformMatrices["bedload"].multiply(percentages["bedload"])).
+			add(this.xformMatrices["river"].multiply(percentages["river"])).
+			add(this.xformMatrices["minor"].multiply(percentages["minor"])).
+			add(this.xformMatrices["major"].multiply(percentages["major"] * 2));
 	
 	var quadTransformMatrix = (this.xformMatrices["sign"].multiply(1)).
-		add(this.xformMatrices["bedload"].multiply(a)).
-		add(this.xformMatrices["river"].multiply(b)).
-		add(this.xformMatrices["minor"].multiply(d)).
-		add(this.xformMatrices["major"].multiply(c * 4));
+		add(this.xformMatrices["bedload"].multiply(percentages["bedload"])).
+		add(this.xformMatrices["river"].multiply(percentages["river"])).
+		add(this.xformMatrices["minor"].multiply(percentages["minor"])).
+		add(this.xformMatrices["major"].multiply(percentages["major"] * 4));
 
 	var singleTimes = this.times[config.divId];
 	var singleArray = this.dataArrays[config.divId];

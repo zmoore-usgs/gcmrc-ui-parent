@@ -15,6 +15,7 @@ GCMRC.Page = {
 //		[].push.apply(layersToAdd, GCMRC.Mapping.layers.esri.values());
 		layersToAdd.push(GCMRC.Mapping.layers.flowlines.allzones);
 		layersToAdd.push(GCMRC.Mapping.layers.flowlines.zone8374535);
+		layersToAdd.push(GCMRC.Mapping.layers.flowlines.dinosaur_reaches);
 		layersToAdd.push(GCMRC.Mapping.layers.vector);
 		GCMRC.Mapping.maps[divId].addLayers(layersToAdd);
 
@@ -24,14 +25,14 @@ GCMRC.Page = {
 						new OpenLayers.Projection("EPSG:4326"),
 						GCMRC.Mapping.maps[divId].getProjectionObject()
 						);
-				
+
 				var siteFeature = new OpenLayers.Feature.Vector(sitePoint, {
 					siteName: station.nwisSite || station.shortName
 				});
 				GCMRC.Mapping.layers.vector.addFeatures([siteFeature]);
 			}
 		});
-		
+
 		var resizeToDefault = true;
 		if (1 < GCMRC.Mapping.layers.vector.features.length) {
 			resizeToDefault = false;
@@ -105,6 +106,7 @@ GCMRC.Page = {
 			[].push.apply(result, [
 				"(",
 				el.upstreamDisplayName,
+				el.upstreamSecondaryDisplayName ? " and " + el.upstreamSecondaryDisplayName : '',
 				" to ",
 				el.downstreamDisplayName,
 				")",

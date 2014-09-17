@@ -1,6 +1,6 @@
 GCMRC.Mapping = function() {
 	var map = {};
-	
+
 	var activeStyle = function(main, alt) {
 		return function(feature, prop) {
 			var result = main;
@@ -10,7 +10,7 @@ GCMRC.Mapping = function() {
 			return result;
 		}
 	}
-	
+
 	var layers = {
 		esri : {
 		esriWorldImagery: new OpenLayers.Layer.XYZ("World Imagery",
@@ -77,12 +77,12 @@ GCMRC.Mapping = function() {
 				}
 		)},
 		markers : new OpenLayers.Layer.Markers(
-			'SiteMarkers', 
+			'SiteMarkers',
 			{
 				projection: new OpenLayers.Projection("EPSG:26949")
 			}),
 		vector : new OpenLayers.Layer.Vector(
-			'SiteVectors', 
+			'SiteVectors',
 			{
 				projection: new OpenLayers.Projection("EPSG:900913"),
 				styleMap: new OpenLayers.StyleMap({
@@ -121,7 +121,7 @@ GCMRC.Mapping = function() {
 				}
 			}),
 		network : new OpenLayers.Layer.Vector(
-			'NetworkVectors', 
+			'NetworkVectors',
 			{
 				projection: new OpenLayers.Projection("EPSG:900913"),
 				styleMap: new OpenLayers.StyleMap({
@@ -146,7 +146,7 @@ GCMRC.Mapping = function() {
 				})
 			}),
 		satmap : new OpenLayers.Layer.ArcGIS93Rest( "ArcGIS Server Layer",
-                "http://137.227.239.42/ArcGIS/rest/services/GC_2009_05_4BAND_EARTHDATA/ImageServer/exportImage", 
+                "http://137.227.239.42/ArcGIS/rest/services/GC_2009_05_4BAND_EARTHDATA/ImageServer/exportImage",
                 {
 					layers: "show:0",
 					srs : "EPSG:26949"
@@ -169,7 +169,7 @@ GCMRC.Mapping = function() {
 					buffer: 0,
 					displayOutsideMaxExtent: true,
 					yx : {'EPSG:900913' : false}
-				} 
+				}
 			),
 			zone9380000 : new OpenLayers.Layer.WMS(
 				'Flow Lines',
@@ -185,7 +185,7 @@ GCMRC.Mapping = function() {
 					buffer: 0,
 					displayOutsideMaxExtent: true,
 					yx : {'EPSG:900913' : false}
-				} 
+				}
 			),
 			zone9383050 : new OpenLayers.Layer.WMS(
 				'Flow Lines',
@@ -201,7 +201,7 @@ GCMRC.Mapping = function() {
 					buffer: 0,
 					displayOutsideMaxExtent: true,
 					yx : {'EPSG:900913' : false}
-				} 
+				}
 			),
 			zone9383100 : new OpenLayers.Layer.WMS(
 				'Flow Lines',
@@ -217,7 +217,7 @@ GCMRC.Mapping = function() {
 					buffer: 0,
 					displayOutsideMaxExtent: true,
 					yx : {'EPSG:900913' : false}
-				} 
+				}
 			),
 			zone9402500 : new OpenLayers.Layer.WMS(
 				'Flow Lines',
@@ -233,7 +233,7 @@ GCMRC.Mapping = function() {
 					buffer: 0,
 					displayOutsideMaxExtent: true,
 					yx : {'EPSG:900913' : false}
-				} 
+				}
 			),
 			zone9404120 : new OpenLayers.Layer.WMS(
 				'Flow Lines',
@@ -249,7 +249,7 @@ GCMRC.Mapping = function() {
 					buffer: 0,
 					displayOutsideMaxExtent: true,
 					yx : {'EPSG:900913' : false}
-				} 
+				}
 			),
 			zone9404200 : new OpenLayers.Layer.WMS(
 				'Flow Lines',
@@ -330,10 +330,25 @@ GCMRC.Mapping = function() {
 					displayOutsideMaxExtent: true,
 					yx : {'EPSG:900913' : false}
 				}
+			),
+			dinosaur_reaches : new OpenLayers.Layer.WMS(
+				'Dinosaur Reaches',
+				CONFIG.relativePath + 'geoserver/sample/wms',
+				{
+					SRS: 'EPSG: 900913',
+					CRS: 'EPSG:900913',
+					LAYERS: 'sample:dinosaur_reaches_final',
+					transparent: true
+				},
+				{
+					buffer: 0,
+					displayOutsideMaxExtent: true,
+					yx : {'EPSG:900913' : false}
+				}
 			)
 		}
 	};
-	
+
 	var styleTemplates = {
 				active: {
 					'Y' : {
@@ -356,7 +371,7 @@ GCMRC.Mapping = function() {
 					}
 				}
 			};
-	
+
 	return {
 		maps : map,
 		layers : layers,

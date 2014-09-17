@@ -350,19 +350,32 @@ GCMRC.Page = {
 			var el = elContainer.reachGroup;
 			budgetColumns[el] = [];
 			budgetColumns[el].push("inst!" + el + "!" + reach.upstreamStation);
-			budgetColumns[el].push("inst!" + el + "!" + reach.downstreamStation);
+			budgetColumns[el].push("inst!" + el + "!" + reach.downstreamStation);			
 			if (elContainer.majorStation) {
 				budgetColumns[el].push("inst!" + elContainer.majorGroup + "!" + elContainer.majorStation);
 			}
 			if (elContainer.minorStation) {
 				budgetColumns[el].push("inst!" + elContainer.minorGroup + "!" + elContainer.minorStation);
 			}
-
+			//check for multiple upstream sediment stations for DINO
+			if (reach.downstreamStation == "09260050") {
+				budgetColumns[el].push("inst!" + el + "!09260000");
+			}
+			if (reach.downstreamStation == "09261000") {
+				budgetColumns[el].push("inst!" + el + "!09260050");
+			}
 			responseColumns[el] = []
 			responseColumns[el].push("inst!" + el + "-" + reach.upstreamStation);
 			responseColumns[el].push("inst!" + elContainer.majorGroup + "-" + elContainer.majorStation);
 			responseColumns[el].push("inst!" + elContainer.minorGroup + "-" + elContainer.minorStation);
 			responseColumns[el].push("inst!" + el + "-" + reach.downstreamStation);
+			//check for multiple upstream sediment stations for DINO
+			if (reach.downstreamStation == "09260050") {
+				responseColumns[el].push("inst!" + el + "-09260000");
+			}
+			if (reach.downstreamStation == "09261000") {
+				responseColumns[el].push("inst!" + el + "-09260050");
+			}
 		});
 
 		var result = [
@@ -393,11 +406,16 @@ GCMRC.Page = {
 					return result;
 				}
 
+				// add additional sediment station value for both DINO networks
 				data.success.data.each(function(el) {
 					datas.push([getValue(el, self.config.responseColumns[0]),
 						getValue(el, self.config.responseColumns[1]),
 						getValue(el, self.config.responseColumns[2]),
-						getValue(el, self.config.responseColumns[3])]);
+							self.config.responseColumns[3].contains("09260050") ||
+							self.config.responseColumns[3].contains("09261000")?
+								getValue(el, self.config.responseColumns[3]) + 
+									getValue(el, self.config.responseColumns[4]):
+								getValue(el, self.config.responseColumns[3])]);
 					times.push(getValue(el, "time"));
 				});
 

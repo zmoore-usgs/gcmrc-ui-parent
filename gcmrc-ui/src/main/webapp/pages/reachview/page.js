@@ -375,7 +375,8 @@ GCMRC.Page = {
 			//check for secondary upstream sediment stations
 			if (reach.upstreamSecondaryStation) {
 				budgetColumns[el].push("inst!" + el + "!" +reach.upstreamSecondaryStation);
-			}			responseColumns[el] = [];
+			}
+			
 			responseColumns[el] = [];
 			responseColumns[el].push("inst!" + el + "-" + reach.upstreamStation);
 			responseColumns[el].push("inst!" + elContainer.majorGroup + "-" + elContainer.majorStation);

@@ -298,9 +298,6 @@ GCMRC.Graphing = function(hoursOffset) {
 				clearWarningMessage();
 				showWarningMessage('Due to the length of your request, some timesteps may be filtered from the graph. You may still download the unfiltered dataset, or shorten the date range of your request.');
 			}
-			if (CONFIG.networkName === "DINO") {
-				showInfoMessage("#infoMsg",'The tributary data in this area are not included in the calculations and visualizations because they have negligible effects on the sand budgets, therefore you may notice some small, negative changes in the silt and clay budget displayed. These are likely the result of these unconstrained tributary inputs.');
-			}
 
 			urlParams["output"] = "json";
 			$.ajax({

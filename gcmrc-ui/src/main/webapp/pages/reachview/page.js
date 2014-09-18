@@ -63,6 +63,7 @@ GCMRC.Page = {
 		div.append('<div>Uncertainty for ' + (("BIBE" === CONFIG.networkName)?"Tornillo Creek":"Major Tributary") + ' ' + dataType + ' Loads <span class="' + loadDivKey + '_qual' + multiplier + '"></span>% after ' + dateStr + '</div>');
 	},
 	buildGraphClicked: function() {
+		var NETWORK_DINO = "DINO";
 		var begin = $("input[name='beginPosition']").val();
 		var end = $("input[name='endPosition']").val();
 
@@ -149,7 +150,7 @@ GCMRC.Page = {
 			}
 
 			addUncertaintyInformation({'f' : 'Silt and Clay', 'c' : 'Sand'})
-
+			
 			GCMRC.Graphing.createDataGraph(
 					'agg',
 					{
@@ -161,6 +162,11 @@ GCMRC.Page = {
 						dateWindow : [beginMillis, endMillis]
 					},
 			serviceOptions);
+
+			if (CONFIG.networkName === NETWORK_DINO) {
+				GCMRC.Graphing.showInfoMsg("#infoMsg",'The tributary data in this area are not included in the calculations and visualizations because they have negligible effects on the sand budgets, therefore you may notice some small, negative changes in the silt and clay budget displayed. These are likely the result of these unconstrained tributary inputs.');
+			}
+			
 		} else {
 			GCMRC.Graphing.clearErrorMsg();
 			GCMRC.Graphing.showErrorMsg("Please choose an End that is after Start");

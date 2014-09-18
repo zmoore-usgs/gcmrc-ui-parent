@@ -8,8 +8,8 @@ GCMRC.Mapping = function() {
 				result = alt;
 			}
 			return result;
-		}
-	}
+		};
+	};
 
 	var layers = {
 		esri : {

@@ -2,6 +2,7 @@ $(document).ready(function onReady() {
 	$("span.network-name").html(GCMRC.Networks[CONFIG.networkName].displayName);
 	var upstreamStation = GCMRC.Stations[CONFIG.upstreamStationName];
 	var downstreamStation = GCMRC.Stations[CONFIG.downstreamStationName];
+	var upstreamSecondaryStation = GCMRC.Stations[GCMRC.Page.reach.upstreamSecondaryStation];
 
 	$('#station-title').html(GCMRC.Page.reach.reachName);
 
@@ -12,7 +13,8 @@ $(document).ready(function onReady() {
 
 	GCMRC.Page.createMiniMap({
 		upstreamStationName: (!upstreamStation) ? null : upstreamStation.siteName,
-		downstreamStationName: (!downstreamStation) ? null : downstreamStation.siteName
+		downstreamStationName: (!downstreamStation) ? null : downstreamStation.siteName,
+		upstreamSecondaryStation: (!upstreamSecondaryStation) ? null : upstreamSecondaryStation.siteName
 	});
 	
 	GCMRC.Page.buildPORView($('#porContainer'), GCMRC.Page.earliestPositionISO, GCMRC.Page.latestPositionISO);

@@ -7,6 +7,7 @@ GCMRC.Page = {
 
 		var upstreamStationName = config['upstreamStationName'];
 		var downstreamStationName = config['downstreamStationName'];
+		var upstreamSecondaryStation = config['upstreamSecondaryStation'];
 		var divId = config['divId'] || 'openlayers-map';
 
 		var options = {};
@@ -37,6 +38,14 @@ GCMRC.Page = {
 		if (GCMRC.Stations[downstreamStationName]) {
 			GCMRC.Mapping.layers.markers.addMarker(new OpenLayers.Marker(
 					new OpenLayers.LonLat(GCMRC.Stations[downstreamStationName].lon, GCMRC.Stations[downstreamStationName].lat).transform(
+					new OpenLayers.Projection("EPSG:4326"),
+					GCMRC.Mapping.maps[divId].getProjectionObject()
+					), makeIcon()));
+		}
+
+		if (GCMRC.Stations[upstreamSecondaryStation]) {
+			GCMRC.Mapping.layers.markers.addMarker(new OpenLayers.Marker(
+					new OpenLayers.LonLat(GCMRC.Stations[upstreamSecondaryStation].lon, GCMRC.Stations[upstreamSecondaryStation].lat).transform(
 					new OpenLayers.Projection("EPSG:4326"),
 					GCMRC.Mapping.maps[divId].getProjectionObject()
 					), makeIcon()));

@@ -64,32 +64,30 @@ GCMRC.Reaches = function () {
 		slider.bedLoad.displayName = slider.bedLoad.displayName.replace("River", RIVER_NAME);
 
 		slider.riverFinesLoad.displayName = slider.riverFinesLoad.displayName.replace("River", RIVER_NAME);
-		slider.riverFinesLoad.adjustDefault = 5;
+		slider.riverFinesLoad.adjustDefault = 10;
 
 		slider.riverLoad.displayName = slider.riverLoad.displayName.replace("River", RIVER_NAME);
-		slider.riverLoad.adjustDefault = 5;
+		slider.riverLoad.adjustDefault = 10;
 
 		slider.majorTribFinesLoad.displayName = slider.majorTribFinesLoad.displayName.replace("Major Tributary", MAJOR_TRIB_NAME);
-		slider.majorTribFinesLoad.adjustDefault = 10;
+		slider.majorTribFinesLoad.adjustDefault = 20;
 
 		slider.majorTribLoad.displayName = slider.majorTribLoad.displayName.replace("Major Tributary", MAJOR_TRIB_NAME);
-		slider.majorTribLoad.adjustDefault = 10;
+		slider.majorTribLoad.adjustDefault = 20;
 
 		slider.minorTribFinesLoad.displayName = slider.minorTribFinesLoad.displayName.replace("Lesser Tributary", LESSOR_TRIB_NAME);
-		slider.minorTribFinesLoad.adjustMax = 50;
+		slider.minorTribFinesLoad.adjustMax = 100;
 
 		slider.minorTribLoad.displayName = slider.minorTribLoad.displayName.replace("Lesser Tributary", LESSOR_TRIB_NAME);
-		slider.minorTribLoad.adjustMax = 50;
+		slider.minorTribLoad.adjustMax = 100;
 	}
 	else if ("DINO" === CONFIG.networkName) {
-		slider.bedLoad.adjustDefault = 10;
 		slider.bedLoad.adjustMax = 100;
+		slider.bedLoad.adjustDefault = 10;
 
-		slider.riverFinesLoad.adjustMin = 10;
 		slider.riverFinesLoad.adjustMax = 50;
 		slider.riverFinesLoad.adjustDefault = 10;
 
-		slider.riverLoad.adjustMin = 10;
 		slider.riverLoad.adjustMax = 50;
 		slider.riverLoad.adjustDefault = 10;
 

@@ -145,11 +145,11 @@ GCMRC.Page = {
 							GCMRC.Page.buildSliderInfo(thingthing, GCMRC.Page.reach.newestSuspSed.split("T")[0], 4, loadDivKey, loadType);
 							$('.' + loadDivKey + '_qual4').html(parseFloat($('span[name=' + loadDivKey + '_val]').html()) * 4);
 						}
-					})
+					});
 				}
-			}
+			};
 
-			addUncertaintyInformation({'f' : 'Silt and Clay', 'c' : 'Sand'})
+			addUncertaintyInformation({'f' : 'Silt and Clay', 'c' : 'Sand'});
 			
 			GCMRC.Graphing.createDataGraph(
 					'agg',
@@ -183,7 +183,7 @@ GCMRC.Page = {
 				tabbedData += el[0] + '\t' + el[1][0] + '\t' + el[1][1] + '\t' + el[1][2] + '\n';
 			});
 
-			form.find('[name=data]').val(tabbedData)
+			form.find('[name=data]').val(tabbedData);
 			form.submit();
 		} else {
 			LOG.debug("We don't have data to pull from!");
@@ -370,7 +370,7 @@ GCMRC.Page = {
 			if (reach.downstreamStation == "09261000") {
 				budgetColumns[el].push("inst!" + el + "!09260050");
 			}
-			responseColumns[el] = []
+			responseColumns[el] = [];
 			responseColumns[el].push("inst!" + el + "-" + reach.upstreamStation);
 			responseColumns[el].push("inst!" + elContainer.majorGroup + "-" + elContainer.majorStation);
 			responseColumns[el].push("inst!" + elContainer.minorGroup + "-" + elContainer.minorStation);
@@ -410,18 +410,17 @@ GCMRC.Page = {
 						result = parseFloat(row[colName]);
 					}
 					return result;
-				}
+				};
 
 				// add additional sediment station value for both DINO networks
 				data.success.data.each(function(el) {
 					datas.push([getValue(el, self.config.responseColumns[0]),
 						getValue(el, self.config.responseColumns[1]),
 						getValue(el, self.config.responseColumns[2]),
-							self.config.responseColumns[3].contains("09260050") ||
-							self.config.responseColumns[3].contains("09261000")?
-								getValue(el, self.config.responseColumns[3]) + 
-									getValue(el, self.config.responseColumns[4]):
-								getValue(el, self.config.responseColumns[3])]);
+						(self.config.responseColumns[3].has("09260050") ||
+						self.config.responseColumns[3].has("09261000"))?
+							getValue(el, self.config.responseColumns[3]) + getValue(el, self.config.responseColumns[4]):
+							getValue(el, self.config.responseColumns[3])]);
 					times.push(getValue(el, "time"));
 				});
 

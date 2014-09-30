@@ -15,7 +15,9 @@ GCMRC.Page = {
 
 		var layersToAdd = [];
 		layersToAdd.push(GCMRC.Mapping.layers.esri.esriTopo);
-		layersToAdd.push(GCMRC.Mapping.layers.flowlines["zone" + GCMRC.Page.reach.displayOrder]);
+		if (GCMRC.Mapping.layers.flowlines["zone" + GCMRC.Page.reach.displayOrder]) {
+			layersToAdd.push(GCMRC.Mapping.layers.flowlines["zone" + GCMRC.Page.reach.displayOrder]);
+		}
 		layersToAdd.push(GCMRC.Mapping.layers.markers);
 
 		GCMRC.Mapping.maps[divId].addLayers(layersToAdd);

@@ -374,16 +374,17 @@ GCMRC.Page = {
 			if (elContainer.minorStation) {
 				budgetColumns[el].push("inst!" + elContainer.minorGroup + "!" + elContainer.minorStation);
 			}
-			//check for multiple upstream sediment stations for DINO
+			//check for secondary upstream sediment stations
 			if (reach.upstreamSecondaryStation) {
 				budgetColumns[el].push("inst!" + el + "!" +reach.upstreamSecondaryStation);
 			}
+			
 			responseColumns[el] = [];
 			responseColumns[el].push("inst!" + el + "-" + reach.upstreamStation);
 			responseColumns[el].push("inst!" + elContainer.majorGroup + "-" + elContainer.majorStation);
 			responseColumns[el].push("inst!" + elContainer.minorGroup + "-" + elContainer.minorStation);
 			responseColumns[el].push("inst!" + el + "-" + reach.downstreamStation);
-			//check for multiple upstream sediment stations for DINO
+			//check for secondary upstream sediment station
 			if (reach.upstreamSecondaryStation) {
 				responseColumns[el].push("inst!" + el + "-" + reach.upstreamSecondaryStation);
 			}
@@ -419,7 +420,7 @@ GCMRC.Page = {
 
 				// add additional sediment station value for both DINO networks
 				data.success.data.each(function(el) {
-					var combinedValue = self.config.responseColumns.length > 4?
+					var combinedValue = self.config.responseColumns.length > 4 ?
 							getValue(el, self.config.responseColumns[0]) + 
 							getValue(el, self.config.responseColumns[4]):
 							getValue(el, self.config.responseColumns[0]);

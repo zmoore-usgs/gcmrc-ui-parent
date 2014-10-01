@@ -658,7 +658,7 @@ GCMRC.Page = {
 	latestPosition: null,
 	latestPositionISO: null,
 	reachPORLoad : JSL.ResourceLoad(function(el) {
-		var streams = ["upstream", "downstream", "majorTrib", "minorTrib"];
+		var streams = ["upstream", "upstreamSecondary", "downstream", "majorTrib", "minorTrib"];
 
 		streams.each(function(stream) {
 			if (el[stream + "BeginPosition"]) {

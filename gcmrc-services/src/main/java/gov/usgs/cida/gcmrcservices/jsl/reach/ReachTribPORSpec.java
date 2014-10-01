@@ -39,10 +39,13 @@ public class ReachTribPORSpec extends Spec {
 	public ColumnMapping[] setupColumnMap() {
 		return new ColumnMapping[] {
 			new ColumnMapping(C_SITE_UP, S_SITE_UP),
+			new ColumnMapping(C_SITE_UP_SEC, S_SITE_UP_SEC),
 			new ColumnMapping(C_SITE_DOWN, S_SITE_DOWN),
 			new ColumnMapping(C_GROUP_NAME, S_GROUP_NAME),
 			new ColumnMapping(C_UP_EARLIEST_DT, S_UP_EARLIEST_DT),
 			new ColumnMapping(C_UP_LATEST_DT, S_UP_LATEST_DT),
+			new ColumnMapping(C_UP_SEC_EARLIEST_DT, S_UP_SEC_EARLIEST_DT),
+			new ColumnMapping(C_UP_SEC_LATEST_DT, S_UP_SEC_LATEST_DT),
 			new ColumnMapping(C_DOWN_EARLIEST_DT, S_DOWN_EARLIEST_DT),
 			new ColumnMapping(C_DOWN_LATEST_DT, S_DOWN_LATEST_DT),
 			new ColumnMapping(C_EARLIEST_DT_MAJOR_TRIB, S_EARLIEST_DT_MAJOR_TRIB),
@@ -91,6 +94,21 @@ public class ReachTribPORSpec extends Spec {
 		result.append("  WHERE ");
 		result.append("    TSP.SITE_ID = D.SITE_ID_UP ");
 		result.append("    AND TSP.GROUP_ID = D.REACH_GROUP) UP_LATEST_DT, ");
+		result.append("  (SELECT CASE WHEN NWIS_SITE_NO IS NULL THEN SHORT_NAME ELSE NWIS_SITE_NO END FROM SITE_STAR WHERE SITE_ID_UP_SECONDARY = SITE_ID) SITE_UP_SEC, ");
+		result.append("  (SELECT ");
+		result.append("    TO_CHAR(EARLIEST_DT, 'YYYY-MM-DD\"T\"HH24:MI:SS') ");
+		result.append("  FROM  ");
+		result.append("    TIME_SERIES_POR TSP ");
+		result.append("  WHERE ");
+		result.append("    TSP.SITE_ID = D.SITE_ID_UP_SECONDARY ");
+		result.append("    AND TSP.GROUP_ID = D.REACH_GROUP) UP_SEC_EARLIEST_DT, ");
+		result.append("  (SELECT ");
+		result.append("    TO_CHAR(LATEST_DT, 'YYYY-MM-DD\"T\"HH24:MI:SS') ");
+		result.append("  FROM  ");
+		result.append("    TIME_SERIES_POR TSP ");
+		result.append("  WHERE ");
+		result.append("    TSP.SITE_ID = D.SITE_ID_UP_SECONDARY ");
+		result.append("    AND TSP.GROUP_ID = D.REACH_GROUP) UP_SEC_LATEST_DT, ");
 		result.append("  (SELECT CASE WHEN NWIS_SITE_NO IS NULL THEN SHORT_NAME ELSE NWIS_SITE_NO END FROM SITE_STAR WHERE SITE_ID_DOWN = SITE_ID) SITE_DOWN, ");
 		result.append("  (SELECT ");
 		result.append("    TO_CHAR(EARLIEST_DT, 'YYYY-MM-DD\"T\"HH24:MI:SS') ");
@@ -158,10 +176,16 @@ public class ReachTribPORSpec extends Spec {
 	
 	public static final String S_SITE_UP = "upstreamStation";
 	public static final String C_SITE_UP = "SITE_UP";
+	public static final String S_SITE_UP_SEC = "upstreamSecondaryStation";
+	public static final String C_SITE_UP_SEC = "SITE_UP_SEC";
 	public static final String S_UP_EARLIEST_DT = "upstreamBeginPosition";
 	public static final String C_UP_EARLIEST_DT = "UP_EARLIEST_DT";
 	public static final String S_UP_LATEST_DT = "upstreamEndPosition";
 	public static final String C_UP_LATEST_DT = "UP_LATEST_DT";
+	public static final String S_UP_SEC_EARLIEST_DT = "upstreamSecondaryBeginPosition";
+	public static final String C_UP_SEC_EARLIEST_DT = "UP_SEC_EARLIEST_DT";
+	public static final String S_UP_SEC_LATEST_DT = "upstreamSecondaryEndPosition";
+	public static final String C_UP_SEC_LATEST_DT = "UP_SEC_LATEST_DT";
 	public static final String S_SITE_DOWN = "downstreamStation";
 	public static final String C_SITE_DOWN = "SITE_DOWN";
 	public static final String S_DOWN_EARLIEST_DT = "downstreamBeginPosition";

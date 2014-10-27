@@ -58,12 +58,12 @@ public class BedMaterialSpec extends DataSpec {
 		result.append("  bm.BED_MEAS_DT AS SAMP_START_DT,");
 		result.append("  bm.bed_value AS BED_VALUE,");
 		result.append("  bm.GROUP_ID,");
-		result.append("  G.NAME AS GROUP_NAME,");
+		result.append("  G.NAME AS GROUP_NAME");
 		result.append(" FROM bed_material bm,");
 		result.append("  SITE_STAR S,");
 		result.append("  GROUP_NAME G");
 		result.append(" WHERE bm.SITE_ID          = S.SITE_ID");
-		result.append("  AND QWR.GROUP_ID         = G.GROUP_ID");
+		result.append("  AND bm.GROUP_ID         = G.GROUP_ID");
 		result.append(") T_A_BED_MATERIAL");
 
 		return result.toString();

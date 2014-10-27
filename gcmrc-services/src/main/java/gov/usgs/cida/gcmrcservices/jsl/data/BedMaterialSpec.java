@@ -27,7 +27,8 @@ public class BedMaterialSpec extends DataSpec {
 		
 		if (null != this.stationName && null != this.parameterCode) {
 			result = new ColumnMapping[] {
-				new ColumnMapping(C_SITE_ID, S_SITE_NAME),
+				new ColumnMapping(ParameterSpec.C_TSM_DT, S_SAMPLE_START_DT),
+				new ColumnMapping(ParameterSpec.C_TSM_DT, ParameterSpec.S_TSM_DT, ASCENDING_ORDER, ParameterSpec.S_TSM_DT, null, null, null, "TO_CHAR(BM.BED_MEAS_DT, 'YYYY-MM-DD\"T\"HH24:MI:SS') AS TSM_DT", null, null),
 				new ColumnMapping(C_SITE_NAME, S_SITE_NAME),
 				new ColumnMapping(ColumnMetadata.createColumnName(this.stationName, this.parameterCode), S_BED_VALUE, ASCENDING_ORDER, S_BED_VALUE, null, null, null, null, null, null),
 				new ColumnMapping(C_GROUP_NAME, S_GROUP_NAME)
@@ -56,9 +57,9 @@ public class BedMaterialSpec extends DataSpec {
 		result.append("(");
 		result.append("  SELECT BM.SAMPLE_SET,");
 		result.append("  TO_CHAR(BM.BED_MEAS_DT, 'YYYY-MM-DD\"T\"HH24:MI:SS') AS TSM_DT,");
-		result.append("  NVL(S.NWIS_SITE_NO, S.SHORT_NAME) SITE_NAME,");
+		result.append("  NVL(S.NWIS_SITE_NO, S.SHORT_NAME) AS SITE_NAME,");
 		result.append("  BM.BED_MEAS_DT AS SAMP_START_DT,");
-		result.append("  BM.BED_VALUE AS BED_VALUE,");
+		result.append("  BM.BED_VALUE AS " + ColumnMetadata.createColumnName(this.stationName, this.parameterCode) + ",");
 		result.append("  BM.GROUP_ID,");
 		result.append("  G.NAME AS GROUP_NAME");
 		result.append(" FROM BED_MATERIAL BM,");

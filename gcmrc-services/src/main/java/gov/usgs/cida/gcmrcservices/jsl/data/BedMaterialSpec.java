@@ -1,5 +1,6 @@
 package gov.usgs.cida.gcmrcservices.jsl.data;
 
+import gov.usgs.cida.gcmrcservices.column.ColumnMetadata;
 import gov.usgs.cida.gcmrcservices.nude.Endpoint;
 import gov.usgs.webservices.jdbc.spec.mapping.ColumnMapping;
 import gov.usgs.webservices.jdbc.spec.mapping.SearchMapping;
@@ -28,7 +29,7 @@ public class BedMaterialSpec extends DataSpec {
 			result = new ColumnMapping[] {
 				new ColumnMapping(C_SITE_ID, S_SITE_NAME),
 				new ColumnMapping(C_SITE_NAME, S_SITE_NAME),
-				new ColumnMapping(C_BED_VALUE, S_BED_VALUE),
+				new ColumnMapping(ColumnMetadata.createColumnName(this.stationName, this.parameterCode), S_BED_VALUE, ASCENDING_ORDER, S_BED_VALUE, null, null, null, null, null, null),
 				new ColumnMapping(C_GROUP_NAME, S_GROUP_NAME)
 			};
 		} else {
@@ -53,17 +54,18 @@ public class BedMaterialSpec extends DataSpec {
 		StringBuilder result = new StringBuilder();
 
 		result.append("(");
-		result.append("  SELECT bm.SAMPLE_SET,");
-		result.append("  NVL(S.nwis_site_no, S.short_name) site_name,");
-		result.append("  bm.BED_MEAS_DT AS SAMP_START_DT,");
-		result.append("  bm.bed_value AS BED_VALUE,");
-		result.append("  bm.GROUP_ID,");
+		result.append("  SELECT BM.SAMPLE_SET,");
+		result.append("  TO_CHAR(BM.BED_MEAS_DT, 'YYYY-MM-DD\"T\"HH24:MI:SS') AS TSM_DT,");
+		result.append("  NVL(S.NWIS_SITE_NO, S.SHORT_NAME) SITE_NAME,");
+		result.append("  BM.BED_MEAS_DT AS SAMP_START_DT,");
+		result.append("  BM.BED_VALUE AS BED_VALUE,");
+		result.append("  BM.GROUP_ID,");
 		result.append("  G.NAME AS GROUP_NAME");
-		result.append(" FROM bed_material bm,");
+		result.append(" FROM BED_MATERIAL BM,");
 		result.append("  SITE_STAR S,");
 		result.append("  GROUP_NAME G");
-		result.append(" WHERE bm.SITE_ID          = S.SITE_ID");
-		result.append("  AND bm.GROUP_ID         = G.GROUP_ID");
+		result.append(" WHERE BM.SITE_ID         = S.SITE_ID");
+		result.append("  AND BM.GROUP_ID         = G.GROUP_ID");
 		result.append(") T_A_BED_MATERIAL");
 
 		return result.toString();
@@ -72,7 +74,7 @@ public class BedMaterialSpec extends DataSpec {
 	@Override
 	public int hashCode() {
 		return new HashCodeBuilder()
-				.append("TODO I'm a " + this.stationName + " station " + this.parameterCode.toString() + " Lab Data Spec!")
+				.append("TODO I'm a " + this.stationName + " station " + this.parameterCode.toString() + " Bed Material Spec!")
 				.toHashCode();
 	}
 

@@ -10,8 +10,6 @@ import gov.usgs.cida.nude.resultset.inmemory.TableRow;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Arrays;
-import java.util.HashSet;
-import org.joda.time.Period;
 import org.junit.After;
 import org.junit.AfterClass;
 import static org.junit.Assert.assertTrue;
@@ -38,7 +36,7 @@ public class BedSedAverageTest {
 		ResultSet expected = new IteratorWrappingResultSet(expectedSampleJiraDataset.iterator());
 		ResultSet in = new IteratorWrappingResultSet(incomingSampleJiraDataset.iterator());
 		
-		BedSedAveragePlanStep bsaps = new BedSedAveragePlanStep(incomingSampleJiraColGroup);
+		BedSedAveragePlanStep bsaps = new BedSedAveragePlanStep(timeColumn, sampleSetColumn, valueColumn, sampleMassColumn, errorColumn, conf95Column);
 		
 		ResultSet actual = bsaps.runStep(in);
 		
@@ -47,32 +45,43 @@ public class BedSedAverageTest {
 	
 	@BeforeClass
 	public static void setUpClass() throws Exception {
+		timeColumn = new SimpleColumn("time");
+		sampleSetColumn = new SimpleColumn("sampleset");
+		valueColumn = new SimpleColumn("param1");
+		sampleMassColumn = new SimpleColumn("param2");
+		errorColumn = new SimpleColumn("param3");
+		conf95Column = new SimpleColumn("param4");
+		
 		incomingSampleJiraColGroup = new ColumnGrouping(Arrays.asList(new Column[] {
-			new SimpleColumn("time"),
-			new SimpleColumn("sampleset"),
-			new SimpleColumn("param1"),
-			new SimpleColumn("param2"),
-			new SimpleColumn("param3")
+			timeColumn,
+			sampleSetColumn,
+			valueColumn,
+			sampleMassColumn
 		}));
 		incomingSampleJiraDataset = ResultSetUtils.createTableRows(incomingSampleJiraColGroup, new String[][] {
-			new String[] {"1010","1","9","5","7"},
-			new String[] {"1020","1","8",null,null},
-			new String[] {"1030","1","7",null,null},
-			new String[] {"1041","2","2","9","6"},
-			new String[] {"1051","2","3",null,null},
-			new String[] {"1061","2",null,null,null},
-			new String[] {"1071","2","5",null,null},
-			new String[] {"1081","2","6",null,null},
-			new String[] {"1092","3","3","5","7"},
-			new String[] {"1103","4",null,"4","8"},
-			new String[] {"1114","5","5","2","9"}
+			new String[] {"1010","1","90","50"},
+			new String[] {"1020","1","80","30"},
+			new String[] {"1030","1","70","70"},
+			new String[] {"1041","2","20","90"},
+			new String[] {"1051","2","30","20"},
+			new String[] {"1061","2","40","50"},
+			new String[] {"1071","2","50","80"},
+			new String[] {"1081","2","60","30"},
+			new String[] {"1092","3","30","50"},
+			new String[] {"1103","4","40","40"},
+			new String[] {"1114","5","50","20"}
 		});
-		expectedSampleJiraDataset = ResultSetUtils.createTableRows(incomingSampleJiraColGroup, new String[][] {
-			new String[] {"1020","1","8","5","7"},
-			new String[] {"1061","2","4","9","6"},
-			new String[] {"1092","3","3","5","7"},
-			new String[] {"1103","4",null,"4","8"},
-			new String[] {"1114","5","5","2","9"}
+		expectedSampleJiraColGroup = new ColumnGrouping(Arrays.asList(new Column[] {
+			timeColumn,
+			sampleSetColumn,
+			valueColumn,
+			sampleMassColumn,
+			errorColumn,
+			conf95Column
+		}));
+		expectedSampleJiraDataset = ResultSetUtils.createTableRows(expectedSampleJiraColGroup, new String[][] {
+			new String[] {"1020","1","80","50","6", "11.7"},
+			new String[] {"1061","2","40","54","7", "13.6"},
 		});
 	}
 	
@@ -91,8 +100,16 @@ public class BedSedAverageTest {
 		
 	}
 
+	protected static Column timeColumn = null;
+	protected static Column sampleSetColumn = null;
+	protected static Column valueColumn = null;
+	protected static Column sampleMassColumn = null;
+	protected static Column errorColumn = null;
+	protected static Column conf95Column = null;
+	
 	protected static ColumnGrouping incomingSampleJiraColGroup = null;
 	protected static Iterable<TableRow> incomingSampleJiraDataset = null;
+	protected static ColumnGrouping expectedSampleJiraColGroup = null;
 	protected static Iterable<TableRow> expectedSampleJiraDataset = null;
 	
 }

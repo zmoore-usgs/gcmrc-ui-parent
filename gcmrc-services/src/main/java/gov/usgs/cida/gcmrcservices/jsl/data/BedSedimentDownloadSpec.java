@@ -114,7 +114,7 @@ public class BedSedimentDownloadSpec extends Spec implements CentralizableTimezo
 	@Override
 	public SearchMapping[] setupSearchMap() {
 		SearchMapping[] result = new SearchMapping[] {
-			new SearchMapping(S_STATION_NUM, C_STATION_NUM, null, WhereClauseType.equals, CleaningOption.none, null, null),
+			new SearchMapping(SE_STATION_NUM, C_STATION_NUM, null, WhereClauseType.equals, CleaningOption.none, null, null),
 			new SearchMapping(Endpoint.BEGIN_KEYWORD, C_BED_DATE, null, WhereClauseType.special, CleaningOption.none, FIELD_NAME_KEY + " >= TO_DATE(" + USER_VALUE_KEY + ", 'YYYY-MM-DD\"T\"HH24:MI:SS')", null),
 			new SearchMapping(Endpoint.END_KEYWORD, C_BED_DATE, null, WhereClauseType.special, CleaningOption.none, FIELD_NAME_KEY + " <= TO_DATE(" + USER_VALUE_KEY + ", 'YYYY-MM-DD\"T\"HH24:MI:SS')", null)
 		};
@@ -238,6 +238,7 @@ public class BedSedimentDownloadSpec extends Spec implements CentralizableTimezo
 	public static final String S_STATION_NAME = "Station name";
 	public static final String C_STATION_NUM = "STATION_NUM";
 	public static final String S_STATION_NUM = "Station #";
+	public static final String SE_STATION_NUM = "stationNum";
 	public static final String C_BED_DATE = "BED_DT";
 	public static final String S_BED_DATE = "datetime";
 	public static final String C_SAMPLE_SET = "SAMPLE_SET";

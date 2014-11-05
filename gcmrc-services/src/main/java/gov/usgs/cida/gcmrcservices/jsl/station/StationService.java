@@ -20,6 +20,7 @@ public class StationService extends WebService {
 
 	public StationService() {
 		this.specMapping.put("param", StationParamSpec.class);
+		this.specMapping.put("bs", StationBSSpec.class);
 		this.specMapping.put("qw", StationQWSpec.class);
 		this.specMapping.put("qwdownload", QWDownloadSpec.class);
 		this.specMapping.put("allsite", StationAllSiteSpec.class);

@@ -27,8 +27,7 @@ public class BedMaterialSpec extends DataSpec {
 		
 		if (null != this.stationName && null != this.parameterCode) {
 			result = new ColumnMapping[] {
-				new ColumnMapping(ParameterSpec.C_TSM_DT, S_SAMPLE_START_DT),
-				new ColumnMapping(ParameterSpec.C_TSM_DT, ParameterSpec.S_TSM_DT, ASCENDING_ORDER, ParameterSpec.S_TSM_DT, null, null, null, "TO_CHAR(BM.BED_MEAS_DT, 'YYYY-MM-DD\"T\"HH24:MI:SS') AS TSM_DT", null, null),
+				new ColumnMapping(ParameterSpec.C_TSM_DT, ParameterSpec.S_TSM_DT),
 				new ColumnMapping(C_SITE_NAME, S_SITE_NAME),
 				new ColumnMapping(ColumnMetadata.createColumnName(this.stationName, this.parameterCode), S_BED_VALUE, ASCENDING_ORDER, S_BED_VALUE, null, null, null, null, null, null),
 				new ColumnMapping(C_GROUP_NAME, S_GROUP_NAME)
@@ -67,6 +66,7 @@ public class BedMaterialSpec extends DataSpec {
 		result.append("  GROUP_NAME G");
 		result.append(" WHERE BM.SITE_ID         = S.SITE_ID");
 		result.append("  AND BM.GROUP_ID         = G.GROUP_ID");
+		result.append("  AND G.GROUP_ID          = 15");
 		result.append(") T_A_BED_MATERIAL");
 
 		return result.toString();

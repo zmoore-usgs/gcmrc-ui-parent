@@ -11,11 +11,13 @@ import gov.usgs.cida.nude.provider.sql.ParameterizedString;
 import gov.usgs.cida.nude.provider.sql.SQLProvider;
 import gov.usgs.cida.nude.resultset.inmemory.TableRow;
 import gov.usgs.webservices.jdbc.spec.Spec;
+
 import java.sql.ResultSet;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -33,6 +35,7 @@ public class ColumnResolver {
 	protected Map<String, ColumnMetadata> qwColumnMetadatas;
 	protected Map<String, ColumnMetadata> cumulativeColumnMetadatas;
 	protected Map<String, ColumnMetadata> ancillaryColumnMetadatas;
+	protected Map<String, ColumnMetadata> bedMaterialColumnMetadatas;
 
 	public static final int columnIdentifierLength = 2; // HACK HAAAAAAAAAAAAAACK
 
@@ -43,8 +46,10 @@ public class ColumnResolver {
 		CM_LOOKUP.putAll(qwColumnMetadatas);
 		ancillaryColumnMetadatas = Collections.unmodifiableMap(buildAncillaryCols(sqlProvider));
 		CM_LOOKUP.putAll(ancillaryColumnMetadatas);
+		bedMaterialColumnMetadatas = Collections.unmodifiableMap(buildBedMaterialParametersCols(sqlProvider));
+		CM_LOOKUP.putAll(buildBedMaterialParametersCols(sqlProvider));
 		CM_LOOKUP = Collections.unmodifiableMap(CM_LOOKUP);
-
+		
 		cumulativeColumnMetadatas = Collections.unmodifiableMap(buildCumulativeParametersCols());
 	}
 	
@@ -189,6 +194,46 @@ public class ColumnResolver {
 				
 				result.put(parameterCode, new ColumnMetadata(parameterCode, columnTitle, 
 						new ColumnMetadata.SpecEntry(ParameterCode.parseParameterCode(parameterCode), ColumnMetadata.SpecEntry.SpecType.PARAM)));
+			}
+			log.debug("Instantaneous parameter columns constructed : " + result.keySet().toString());
+		} catch (Exception e) {
+			log.error("Could not get columns", e);
+		} finally {
+			Closers.closeQuietly(rs);
+		}
+		return result;
+	}
+	
+	protected static Map<String, ColumnMetadata> buildBedMaterialParametersCols(SQLProvider sqlProvider) {
+		Map<String, ColumnMetadata> result = new HashMap<String, ColumnMetadata>();
+		ResultSet rs = null;
+		try {
+			Column tsGrpNm = new SimpleColumn("NAME");
+			Column displayName = new SimpleColumn("NAME_DISPLAY");
+			Column unitsShort = new SimpleColumn("UNITS_NAME_SHORT");
+			
+			ParameterizedString ps = new ParameterizedString();
+			ps.append("  SELECT DISTINCT GROUP_ID,");
+			ps.append("    NAME,");
+			ps.append("    NAME_DISPLAY,");
+			ps.append("    UNITS_NAME,");
+			ps.append("    UNITS_NAME_SHORT");
+			ps.append("  FROM GROUP_NAME");
+			ps.append("  WHERE GROUP_ID = 15");
+			
+			rs = sqlProvider.getResults(null, ps);
+			while (rs.next()) {
+				TableRow row = TableRow.buildTableRow(rs);
+				
+				String columnTsGroupName = row.getValue(tsGrpNm);
+				String parameterCode = "bed!" + columnTsGroupName;
+				
+				String columnDisplayName = row.getValue(displayName);
+				
+				String columnTitle = columnDisplayName + "(" + row.getValue(unitsShort) + ")";
+				
+				result.put(parameterCode, new ColumnMetadata(parameterCode, columnTitle, 
+						new ColumnMetadata.SpecEntry(ParameterCode.parseParameterCode(parameterCode), ColumnMetadata.SpecEntry.SpecType.BEDMATERIAL)));
 			}
 			log.debug("Instantaneous parameter columns constructed : " + result.keySet().toString());
 		} catch (Exception e) {

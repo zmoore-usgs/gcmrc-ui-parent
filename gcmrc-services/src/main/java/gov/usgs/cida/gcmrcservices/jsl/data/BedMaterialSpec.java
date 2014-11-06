@@ -1,6 +1,7 @@
 package gov.usgs.cida.gcmrcservices.jsl.data;
 
 import gov.usgs.cida.gcmrcservices.column.ColumnMetadata;
+import static gov.usgs.cida.gcmrcservices.jsl.data.ParameterSpec.C_TSM_DT;
 import gov.usgs.cida.gcmrcservices.nude.Endpoint;
 import gov.usgs.webservices.jdbc.spec.mapping.ColumnMapping;
 import gov.usgs.webservices.jdbc.spec.mapping.SearchMapping;
@@ -31,7 +32,7 @@ public class BedMaterialSpec extends DataSpec {
 				new ColumnMapping(C_SITE_NAME, S_SITE_NAME),
 				new ColumnMapping(ColumnMetadata.createColumnName(this.stationName, this.parameterCode) + C_BED_VALUE, S_BED_VALUE),
 				new ColumnMapping(ColumnMetadata.createColumnName(this.stationName, this.parameterCode) + C_SAMPLE_MASS, S_SAMPLE_MASS),
-				new ColumnMapping(C_GROUP_NAME, S_GROUP_NAME)
+				new ColumnMapping(ColumnMetadata.createColumnName(this.stationName, this.parameterCode) + C_SAMPLE_SET, S_SAMPLE_SET)
 			};
 		} else {
 			log.trace("setupColumnMap stationName=" + this.stationName + " parameterCode=" + this.parameterCode);
@@ -43,8 +44,8 @@ public class BedMaterialSpec extends DataSpec {
 	@Override
 	public SearchMapping[] setupSearchMap() {
 		SearchMapping[] result = new SearchMapping[] {
-			new SearchMapping(Endpoint.BEGIN_KEYWORD, C_SAMPLE_START_DT, null, WhereClauseType.special, CleaningOption.none, FIELD_NAME_KEY + " >= TO_DATE(" + USER_VALUE_KEY + ", 'YYYY-MM-DD\"T\"HH24:MI:SS')", null),
-			new SearchMapping(Endpoint.END_KEYWORD, C_SAMPLE_START_DT, null, WhereClauseType.special, CleaningOption.none, FIELD_NAME_KEY + " <= TO_DATE(" + USER_VALUE_KEY + ", 'YYYY-MM-DD\"T\"HH24:MI:SS')", null)
+			new SearchMapping(Endpoint.BEGIN_KEYWORD, C_TSM_DT, null, WhereClauseType.special, CleaningOption.none, "TO_DATE(" + FIELD_NAME_KEY + ", 'YYYY-MM-DD\"T\"HH24:MI:SS') >= TO_DATE(" + USER_VALUE_KEY + ", 'YYYY-MM-DD\"T\"HH24:MI:SS')", null),
+			new SearchMapping(Endpoint.END_KEYWORD, C_TSM_DT, null, WhereClauseType.special, CleaningOption.none, "TO_DATE(" + FIELD_NAME_KEY + ", 'YYYY-MM-DD\"T\"HH24:MI:SS') <= TO_DATE(" + USER_VALUE_KEY + ", 'YYYY-MM-DD\"T\"HH24:MI:SS')", null)
 		};
 		
 		return result;
@@ -55,26 +56,35 @@ public class BedMaterialSpec extends DataSpec {
 		StringBuilder result = new StringBuilder();
 		
 		result.append("(");
-		result.append("  SELECT TSM_DT,");
-		result.append("  NVL(S.NWIS_SITE_NO, S.SHORT_NAME) AS SITE_NAME,");
-		result.append("  VAL AS ").append(ColumnMetadata.createColumnName(this.stationName, this.parameterCode)).append(C_BED_VALUE).append(",");
-		result.append("  SAMPLE_MASS AS ").append(ColumnMetadata.createColumnName(this.stationName, this.parameterCode)).append(C_SAMPLE_MASS).append(",");
-		result.append("  SAMPLE_SET");
-		result.append("  FROM ");
-		result.append("    (SELECT");
-		result.append("    TO_CHAR(BM.BED_MEAS_DT, 'YYYY-MM-DD\"T\"HH24:MI:SS') AS TSM_DT,");
-		result.append("    SITE_ID,");
-		result.append("    max(case when BM.GROUP_ID = 15 then BM.BED_VALUE end) VAL,");
-		result.append("    max(case when BM.GROUP_ID = 14 then BM.BED_VALUE end) SAMPLE_MASS,");
-		result.append("    BM.SAMPLE_SET");
+		result.append("  SELECT TO_CHAR(BED_MEAS_DT, 'YYYY-MM-DD\"T\"HH24:MI:SS') AS TSM_DT,");
+		result.append("    NVL(S.NWIS_SITE_NO, S.SHORT_NAME) AS SITE_NAME,");
+		result.append("    VAL AS ").append(ColumnMetadata.createColumnName(this.stationName, this.parameterCode)).append(C_BED_VALUE).append(",");
+		result.append("    SAMPLE_MASS AS ").append(ColumnMetadata.createColumnName(this.stationName, this.parameterCode)).append(C_SAMPLE_MASS).append(",");
+		result.append("    SAMPLE_SET AS ").append(ColumnMetadata.createColumnName(this.stationName, this.parameterCode)).append(C_SAMPLE_SET).append("");
+		result.append("  FROM");
+		result.append("    (SELECT BED_MEAS_DT,");
+		result.append("      SITE_ID,");
+		result.append("      MAX(");
+		result.append("      CASE");
+		result.append("        WHEN BM.GROUP_ID = 15");
+		result.append("        THEN BM.BED_VALUE");
+		result.append("      END) VAL,");
+		result.append("      MAX(");
+		result.append("      CASE");
+		result.append("        WHEN BM.GROUP_ID = 14");
+		result.append("        THEN BM.BED_VALUE");
+		result.append("      END) SAMPLE_MASS,");
+		result.append("      BM.SAMPLE_SET");
 		result.append("    FROM BED_MATERIAL BM");
-		result.append("    WHERE BM.GROUP_ID in (14, 15)");
-		result.append("    group by TO_CHAR(BM.BED_MEAS_DT, 'YYYY-MM-DD\"T\"HH24:MI:SS'),");
-		result.append("    SITE_ID, BM.SAMPLE_SET) T_A_BED,");
+		result.append("    WHERE BM.GROUP_ID IN (14, 15)");
+		result.append("    GROUP BY BED_MEAS_DT,");
+		result.append("      SITE_ID,");
+		result.append("      BM.SAMPLE_SET");
+		result.append("    ) T_A_BED,");
 		result.append("    SITE_STAR S");
 		result.append("  WHERE T_A_BED.SITE_ID = S.SITE_ID");
 		result.append(") T_A_BED_SEDIMENT");
-
+		
 		return result.toString();
 	}
 	
@@ -100,16 +110,14 @@ public class BedMaterialSpec extends DataSpec {
 	}
 	
 	public static final String C_SITE_ID = "SITE_ID";
-	public static final String C_SAMPLE_START_DT = "SAMP_START_DT";
-	public static final String S_SAMPLE_START_DT = "SAMP_START_DT";
 	
 	public static final String S_SITE_NAME = "site";
 	public static final String C_SITE_NAME = "SITE_NAME";
 	public static final String S_BED_VALUE = "bedValue";
 	public static final String C_BED_VALUE = "";
 	public static final String S_SAMPLE_MASS = "sampleMass";
-	public static final String C_SAMPLE_MASS = "_MASS";
-	public static final String S_GROUP_NAME = "groupName";
-	public static final String C_GROUP_NAME = "GROUP_NAME";
+	public static final String C_SAMPLE_MASS = "MASS";
+	public static final String S_SAMPLE_SET = "sampleSet";
+	public static final String C_SAMPLE_SET = "SET";
 	
 }

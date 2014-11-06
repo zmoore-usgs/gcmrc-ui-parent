@@ -27,7 +27,7 @@ public class BedMaterialSpec extends DataSpec {
 		
 		if (null != this.stationName && null != this.parameterCode) {
 			result = new ColumnMapping[] {
-				new ColumnMapping(ParameterSpec.C_TSM_DT, ParameterSpec.S_TSM_DT, ASCENDING_ORDER, ParameterSpec.S_TSM_DT, null, null, null, null, null, null),
+				new ColumnMapping(ParameterSpec.C_TSM_DT, ParameterSpec.S_TSM_DT),
 				new ColumnMapping(C_SITE_NAME, S_SITE_NAME),
 				new ColumnMapping(ColumnMetadata.createColumnName(this.stationName, this.parameterCode), S_BED_VALUE, ASCENDING_ORDER, S_BED_VALUE, null, null, null, null, null, null),
 				new ColumnMapping(C_GROUP_NAME, S_GROUP_NAME)

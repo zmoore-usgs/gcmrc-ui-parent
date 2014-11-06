@@ -1,14 +1,15 @@
 package gov.usgs.cida.gcmrcservices.column;
 
+import gov.usgs.cida.gcmrcservices.jsl.data.BedMaterialSpec;
 import gov.usgs.cida.gcmrcservices.jsl.data.ParameterCode;
 import gov.usgs.cida.gcmrcservices.jsl.data.ParameterSpec;
 import gov.usgs.cida.gcmrcservices.jsl.data.QWDataSpec;
 import gov.usgs.cida.gcmrcservices.jsl.data.SpecOptions;
-import static gov.usgs.cida.gcmrcservices.column.ColumnMetadata.SpecEntry.SpecType.*;
 import gov.usgs.cida.nude.column.Column;
 import gov.usgs.cida.nude.column.SimpleColumn;
 import gov.usgs.cida.nude.out.mapping.ColumnToXmlMapping;
 import gov.usgs.webservices.jdbc.spec.Spec;
+
 import java.io.UnsupportedEncodingException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -16,6 +17,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+
 import org.apache.commons.codec.binary.Hex;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
@@ -159,7 +161,8 @@ public class ColumnMetadata {
 	public static class SpecEntry {
 		public static enum SpecType {
 			PARAM,
-			LABDATA;
+			LABDATA,
+			BEDMATERIAL;
 		}
 		
 		public final ParameterCode parameterCode;
@@ -187,6 +190,9 @@ public class ColumnMetadata {
 					break;
 				case LABDATA:
 					result = new QWDataSpec(station, this.parameterCode, specOptions);
+					break;
+				case BEDMATERIAL:
+					result = new BedMaterialSpec(station, this.parameterCode, specOptions);
 					break;
 			}
 

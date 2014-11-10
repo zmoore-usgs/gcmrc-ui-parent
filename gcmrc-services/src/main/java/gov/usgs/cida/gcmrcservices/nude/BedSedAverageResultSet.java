@@ -88,7 +88,7 @@ public class BedSedAverageResultSet extends PeekingResultSet {
 		
 		LinkedList<TableRow> groupedSampleSet = groupSampleSet(this.queuedRows, this.sampleSetColumn);
 		String sampleSet = groupedSampleSet.peekFirst().getValue(this.sampleSetColumn);
-		result = averageRow(groupedSampleSet, valueColumn, sampleMassColumn, errorColumn, conf95Column);
+		result = averageRow(groupedSampleSet, timeColumn, valueColumn, sampleMassColumn, errorColumn, conf95Column);
 		dropSampleSet(this.queuedRows, sampleSet);
 		
 		return result;
@@ -111,7 +111,7 @@ public class BedSedAverageResultSet extends PeekingResultSet {
 		return result;
 	}
 	
-	public static TableRow averageRow(LinkedList<TableRow> groupedSampleSet,
+	public static TableRow averageRow(LinkedList<TableRow> groupedSampleSet, Column timeColumn,
 			Column valueColumn, Column sampleMassColumn, Column errorColumn, Column conf95Column) {
 		TableRow result = null;
 		
@@ -151,6 +151,11 @@ public class BedSedAverageResultSet extends PeekingResultSet {
 				errorColumn
 			}));
 			ColumnGrouping outColGroup = ColumnGrouping.join(Arrays.asList(new ColumnGrouping[] {inColGroup, addedColGroup}));
+			ColumnGrouping cumulColGroup = new ColumnGrouping(timeColumn, Arrays.asList(new Column[] {
+				timeColumn,
+				valueColumn,
+				sampleMassColumn
+			}));
 			Map<Column, String> modMap = new HashMap<>();
 			
 			String cuMeanColPrefix = "CUMEAN_";
@@ -161,8 +166,11 @@ public class BedSedAverageResultSet extends PeekingResultSet {
 			String conf95ColPrefix = "CONF95_";
 			int n = 0;
 			for (TableRow sample : validSamples) {
-				n++;
 				for (Column col : inColGroup) {
+					modMap.put(col, sample.getValue(col));
+				}
+				n++;
+				for (Column col : cumulColGroup) {
 					//CUMULATIVE MOVING AVERAGE
 					//http://en.wikipedia.org/wiki/Moving_average#Cumulative_moving_average
 					Column lastCuMeanColumn = new SimpleColumn(lastCuMeanColPrefix + col.getName());
@@ -286,7 +294,11 @@ public class BedSedAverageResultSet extends PeekingResultSet {
 			}
 			
 			for (Column col : outColGroup) {
-				modMap.put(new SimpleColumn(col.getName()), modMap.get(new SimpleColumn(cuMeanColPrefix + col.getName())));
+				String val = modMap.get(new SimpleColumn(cuMeanColPrefix + col.getName()));
+				if (null == val) {
+					val = modMap.get(col);
+				}
+				modMap.put(col, val);
 			}
 			modMap.put(errorColumn, modMap.get(new SimpleColumn(stErrColPrefix + valueColumn.getName())));
 			modMap.put(conf95Column, modMap.get(new SimpleColumn(conf95ColPrefix + valueColumn.getName())));

@@ -2,11 +2,27 @@ package gov.usgs.cida.gcmrcservices.jsl.data;
 
 import gov.usgs.cida.gcmrcservices.column.ColumnMetadata;
 import static gov.usgs.cida.gcmrcservices.jsl.data.ParameterSpec.C_TSM_DT;
+import gov.usgs.cida.gcmrcservices.nude.BedSedAverageResultSet;
+import gov.usgs.cida.gcmrcservices.nude.DBConnectorPlanStep;
 import gov.usgs.cida.gcmrcservices.nude.Endpoint;
+import gov.usgs.cida.gcmrcservices.nude.time.IntoMillisTransform;
+import gov.usgs.cida.gcmrcservices.nude.time.OutOfMillisTransform;
+import gov.usgs.cida.nude.column.Column;
+import gov.usgs.cida.nude.column.ColumnGrouping;
+import gov.usgs.cida.nude.column.SimpleColumn;
+import gov.usgs.cida.nude.filter.ColumnTransform;
+import gov.usgs.cida.nude.filter.FilterStageBuilder;
+import gov.usgs.cida.nude.filter.NudeFilter;
+import gov.usgs.cida.nude.filter.NudeFilterBuilder;
+import gov.usgs.cida.nude.resultset.inmemory.TableRow;
+import gov.usgs.webservices.jdbc.spec.SpecResponse;
 import gov.usgs.webservices.jdbc.spec.mapping.ColumnMapping;
 import gov.usgs.webservices.jdbc.spec.mapping.SearchMapping;
 import gov.usgs.webservices.jdbc.spec.mapping.WhereClauseType;
 import gov.usgs.webservices.jdbc.util.CleaningOption;
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
@@ -44,6 +60,7 @@ public class BedMaterialSpec extends DataSpec {
 	@Override
 	public SearchMapping[] setupSearchMap() {
 		SearchMapping[] result = new SearchMapping[] {
+			new SearchMapping(ParameterSpec.S_SITE_NAME, C_SITE_NAME, null, WhereClauseType.equals, null, null, null),
 			new SearchMapping(Endpoint.BEGIN_KEYWORD, C_TSM_DT, null, WhereClauseType.special, CleaningOption.none, "TO_DATE(" + FIELD_NAME_KEY + ", 'YYYY-MM-DD\"T\"HH24:MI:SS') >= TO_DATE(" + USER_VALUE_KEY + ", 'YYYY-MM-DD\"T\"HH24:MI:SS')", null),
 			new SearchMapping(Endpoint.END_KEYWORD, C_TSM_DT, null, WhereClauseType.special, CleaningOption.none, "TO_DATE(" + FIELD_NAME_KEY + ", 'YYYY-MM-DD\"T\"HH24:MI:SS') <= TO_DATE(" + USER_VALUE_KEY + ", 'YYYY-MM-DD\"T\"HH24:MI:SS')", null)
 		};
@@ -107,6 +124,38 @@ public class BedMaterialSpec extends DataSpec {
 					.isEquals();
 		}
 		return false;
+	}
+
+	@Override
+	public SpecResponse readAction(Connection con) throws SQLException {
+		SpecResponse result = null;
+		SpecResponse superSR = super.readAction(con);
+		
+		String common = ColumnMetadata.createColumnName(this.stationName, this.parameterCode);
+		
+		final Column timeColumn = new SimpleColumn(ParameterSpec.C_TSM_DT);
+		final Column sampleSetColumn = new SimpleColumn(common + C_SAMPLE_SET);
+		final Column valueColumn = new SimpleColumn(common + C_BED_VALUE);
+		final Column sampleMassColumn = new SimpleColumn(common + C_SAMPLE_MASS);
+		final Column errorColumn = new SimpleColumn(common + "ERROR");
+		final Column conf95Column = new SimpleColumn(common + "CONF95");
+		
+		ColumnGrouping cols = DBConnectorPlanStep.buildColumnGroupingFromSpec(this, timeColumn);
+		NudeFilter prefilter = new NudeFilterBuilder(cols)
+				.addFilterStage(new FilterStageBuilder(cols).addTransform(timeColumn, new IntoMillisTransform(timeColumn)).buildFilterStage())
+				.buildFilter();
+		
+		ResultSet avg = new BedSedAverageResultSet(prefilter.filter(superSR.rset),
+				cols, 
+				timeColumn, sampleSetColumn, valueColumn, sampleMassColumn, errorColumn, conf95Column);
+		
+		NudeFilter postfilter = new NudeFilterBuilder(cols)
+				.addFilterStage(new FilterStageBuilder(cols).addTransform(timeColumn, new OutOfMillisTransform(timeColumn)).buildFilterStage())
+				.buildFilter();
+		
+		result = new SpecResponse(superSR.responseSpec, postfilter.filter(avg), superSR.fullRowCount, superSR.validationErrors);
+		
+		return result;
 	}
 	
 	public static final String C_SITE_ID = "SITE_ID";

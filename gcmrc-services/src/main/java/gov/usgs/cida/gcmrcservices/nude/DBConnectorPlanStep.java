@@ -1,6 +1,7 @@
 package gov.usgs.cida.gcmrcservices.nude;
 
 import gov.usgs.cida.gcmrcservices.TimeUtil;
+import gov.usgs.cida.gcmrcservices.nude.time.IntoMillisTransform;
 import gov.usgs.cida.nude.column.Column;
 import gov.usgs.cida.nude.column.ColumnGrouping;
 import gov.usgs.cida.nude.column.SimpleColumn;
@@ -62,21 +63,9 @@ public class DBConnectorPlanStep implements PlanStep {
 			for (Spec spec : specs) {
 				SpecResponse sr = Spec.runSpecAction(spec, ActionType.read, con);
 
-				NudeFilterBuilder nfb = new NudeFilterBuilder(buildColumnGroupingFromSpec(spec));
-				NudeFilter nf = nfb.addFilterStage(new FilterStageBuilder(nfb.getCurrOutCols()).addTransform(time, new ColumnTransform() {
-					@Override
-					public String transform(TableRow row) {
-						String result = null;
-
-						String val = row.getValue(time);
-						if (null != val) {
-							DateTime d = TimeUtil.DB_DATE_FORMAT.withZone(DateTimeZone.forOffsetHours(-7)).parseDateTime(val);
-							result = "" + d.getMillis();
-						}
-
-						return result;
-					}
-				}).buildFilterStage()).buildFilter();
+				NudeFilterBuilder nfb = new NudeFilterBuilder(buildColumnGroupingFromSpec(spec, time));
+				NudeFilter nf = nfb.addFilterStage(new FilterStageBuilder(nfb.getCurrOutCols()).addTransform(time, new IntoMillisTransform(time))
+						.buildFilterStage()).buildFilter();
 				
 				results.add(nf.filter(sr.rset));
 			}
@@ -93,7 +82,7 @@ public class DBConnectorPlanStep implements PlanStep {
 		List<ColumnGrouping> colGroups = new ArrayList<ColumnGrouping>();
 		
 		for (Spec spec : specs) {
-			colGroups.add(buildColumnGroupingFromSpec(spec));
+			colGroups.add(buildColumnGroupingFromSpec(spec, time));
 		}
 		
 		result = ColumnGrouping.join(colGroups);
@@ -101,11 +90,10 @@ public class DBConnectorPlanStep implements PlanStep {
 	}
 
 	
-	public ColumnGrouping buildColumnGroupingFromSpec(Spec spec) {
+	public static ColumnGrouping buildColumnGroupingFromSpec(Spec spec, Column primaryKey) {
 		ColumnGrouping result = null;
 		
-		if (null != spec) {
-			Column primaryKey = time;
+		if (null != spec && null != primaryKey) {
 			List<Column> cols = new ArrayList<Column>();
 			
 			ColumnMapping[] cm = spec.getCOLUMN_MAP();

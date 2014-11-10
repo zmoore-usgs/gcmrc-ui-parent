@@ -637,6 +637,15 @@ GCMRC.Page = {
 		el.sampleMethod = 'bed';
 		el.color = CONFIG.instColor;
 		el.highlightColor = CONFIG.instHiColor;
+		
+		el.series = {
+			strokeWidth: 0.0,
+			drawPoints: true,
+			pointSize: 3,
+			highlightCircleSize: 4,
+			plotter: GCMRC.Dygraphs.DotPlotter
+		};
+
 		GCMRC.Page.params[identifier][el.sampleMethod] = el;
 		
 		if (el.isVisible) {

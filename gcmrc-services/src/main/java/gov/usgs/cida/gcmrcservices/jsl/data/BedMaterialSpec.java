@@ -3,6 +3,7 @@ package gov.usgs.cida.gcmrcservices.jsl.data;
 import gov.usgs.cida.gcmrcservices.column.ColumnMetadata;
 import static gov.usgs.cida.gcmrcservices.jsl.data.ParameterSpec.C_TSM_DT;
 import gov.usgs.cida.gcmrcservices.nude.BedSedAverageResultSet;
+import gov.usgs.cida.gcmrcservices.nude.BedSedErrorBarResultSet;
 import gov.usgs.cida.gcmrcservices.nude.DBConnectorPlanStep;
 import gov.usgs.cida.gcmrcservices.nude.Endpoint;
 import gov.usgs.cida.gcmrcservices.nude.time.IntoMillisTransform;
@@ -20,9 +21,11 @@ import gov.usgs.webservices.jdbc.spec.mapping.ColumnMapping;
 import gov.usgs.webservices.jdbc.spec.mapping.SearchMapping;
 import gov.usgs.webservices.jdbc.spec.mapping.WhereClauseType;
 import gov.usgs.webservices.jdbc.util.CleaningOption;
+
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Arrays;
 
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
@@ -148,6 +151,10 @@ public class BedMaterialSpec extends DataSpec {
 		ResultSet avg = new BedSedAverageResultSet(prefilter.filter(superSR.rset),
 				cols, 
 				timeColumn, sampleSetColumn, valueColumn, sampleMassColumn, errorColumn, conf95Column);
+		
+//		ResultSet errorBars = new BedSedErrorBarResultSet(avg, 
+//				new ColumnGrouping(Arrays.asList(new Column[] {timeColumn, valueColumn})), 
+//				timeColumn, valueColumn);
 		
 		NudeFilter postfilter = new NudeFilterBuilder(cols)
 				.addFilterStage(new FilterStageBuilder(cols).addTransform(timeColumn, new OutOfMillisTransform(timeColumn)).buildFilterStage())

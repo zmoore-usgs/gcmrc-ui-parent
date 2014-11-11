@@ -35,7 +35,6 @@ public class BedSedErrorBarResultSet extends PeekingResultSet {
 	@Override
 	protected void addNextRow() throws SQLException {
 		LinkedList<TableRow> result = new LinkedList<>();
-		//Spin through and transform all incoming result set rows 
 		while(0 >= result.size() && in.next() && !in.isAfterLast()) {
 			TableRow rowIn = TableRow.buildTableRow(in);
 			TableRow rowOut = buildRowOut(rowIn, timeColumn, valueColumn);
@@ -43,7 +42,6 @@ public class BedSedErrorBarResultSet extends PeekingResultSet {
 		}
 		this.nextRows.addAll(result);
 	}
-	
 	
 	public static TableRow buildRowOut(TableRow rowIn, Column timeColumn, Column valueColumn) {
 		TableRow result = null;
@@ -55,26 +53,27 @@ public class BedSedErrorBarResultSet extends PeekingResultSet {
 		
 		Map<Column, String> modMap = new HashMap<>();
 	
-		Column avgSize =  null;
-		Column conf95 = null;
+		Column avgSizeColumn =  null;
+		Column conf95Column = null;
 		for (Column col : inColGroup) {
 			modMap.put(col, rowIn.getValue(col));
-			if (col.getName().equalsIgnoreCase("avgSize")) { 
-				avgSize = col ;
+			if (col.getName().equalsIgnoreCase("param1")) { 
+				avgSizeColumn = col;
 			}
-			if (col.getName().equalsIgnoreCase("conf95")) { 
-				conf95 = col ;
+			if (col.getName().equalsIgnoreCase("param4")) { 
+				conf95Column = col;
 			}
 		}
 		
-		//Calculate Upper and Lower 95% limit
+		//Calculate upper and lower 95% limits
 		try {
 			BigDecimal avgSizeValue = null;
-			if (null != modMap.get(avgSize)) {
-				avgSizeValue = new BigDecimal(modMap.get(avgSize));		}
+			if (null != modMap.get(avgSizeColumn)) {
+				avgSizeValue = new BigDecimal(modMap.get(avgSizeColumn));		
+			}
 			BigDecimal conf95Value = null;
-			if (null != modMap.get(conf95)) {
-				conf95Value = new BigDecimal(modMap.get(conf95));
+			if (null != modMap.get(conf95Column)) {
+				conf95Value = new BigDecimal(modMap.get(conf95Column));
 			}
 			BigDecimal lowerLimitValue = avgSizeValue.subtract(conf95Value, new MathContext(conf95Value.precision(), RoundingMode.HALF_EVEN));
 			BigDecimal upperLimitValue = avgSizeValue.add(conf95Value, new MathContext(conf95Value.precision(), RoundingMode.HALF_EVEN));

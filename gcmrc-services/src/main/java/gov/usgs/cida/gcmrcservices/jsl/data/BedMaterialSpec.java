@@ -1,9 +1,8 @@
 package gov.usgs.cida.gcmrcservices.jsl.data;
 
-import gov.usgs.cida.gcmrcservices.column.ColumnMetadata;
 import static gov.usgs.cida.gcmrcservices.jsl.data.ParameterSpec.C_TSM_DT;
+import gov.usgs.cida.gcmrcservices.column.ColumnMetadata;
 import gov.usgs.cida.gcmrcservices.nude.BedSedAverageResultSet;
-import gov.usgs.cida.gcmrcservices.nude.BedSedErrorBarResultSet;
 import gov.usgs.cida.gcmrcservices.nude.DBConnectorPlanStep;
 import gov.usgs.cida.gcmrcservices.nude.Endpoint;
 import gov.usgs.cida.gcmrcservices.nude.time.IntoMillisTransform;
@@ -11,11 +10,9 @@ import gov.usgs.cida.gcmrcservices.nude.time.OutOfMillisTransform;
 import gov.usgs.cida.nude.column.Column;
 import gov.usgs.cida.nude.column.ColumnGrouping;
 import gov.usgs.cida.nude.column.SimpleColumn;
-import gov.usgs.cida.nude.filter.ColumnTransform;
 import gov.usgs.cida.nude.filter.FilterStageBuilder;
 import gov.usgs.cida.nude.filter.NudeFilter;
 import gov.usgs.cida.nude.filter.NudeFilterBuilder;
-import gov.usgs.cida.nude.resultset.inmemory.TableRow;
 import gov.usgs.webservices.jdbc.spec.SpecResponse;
 import gov.usgs.webservices.jdbc.spec.mapping.ColumnMapping;
 import gov.usgs.webservices.jdbc.spec.mapping.SearchMapping;
@@ -25,7 +22,6 @@ import gov.usgs.webservices.jdbc.util.CleaningOption;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.Arrays;
 
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;

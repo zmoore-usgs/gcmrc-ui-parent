@@ -31,21 +31,19 @@ public class BedSedErrorBarTest {
 	public static void setUpClass() throws Exception {
 		timeColumn = new SimpleColumn("time");
 		sampleSetColumn = new SimpleColumn("sampleset");
-		sampleSizeColumn = new SimpleColumn("avgSize");
-		sampleMassColumn = new SimpleColumn("mass");
-		errorColumn = new SimpleColumn("stdError");
-		conf95Column = new SimpleColumn("conf95");
-		
-		valueColumn = new SimpleColumn("value");
+		valueColumn = new SimpleColumn("param1");
+		sampleMassColumn = new SimpleColumn("param2");
+		errorColumn = new SimpleColumn("param3");
+		conf95Column = new SimpleColumn("param4");
 		
 		inputSampleColGroup = new ColumnGrouping(Arrays.asList(new Column[] {
-				timeColumn,
-				sampleSetColumn,
-				sampleSizeColumn,
-				sampleMassColumn,
-				errorColumn,
-				conf95Column
-			}));
+			timeColumn,
+			sampleSetColumn,
+			valueColumn,
+			sampleMassColumn,
+			errorColumn,
+			conf95Column
+		}));
 		
 		inputSampleDataset = ResultSetUtils.createTableRows(inputSampleColGroup, new String[][] {
 			new String[] {"1020","1","80","50","6", "11.7"},
@@ -53,9 +51,9 @@ public class BedSedErrorBarTest {
 		});
 		
 		expectedSampleColGroup = new ColumnGrouping(Arrays.asList(new Column[] {
-				timeColumn,
-				valueColumn,
-			}));
+			timeColumn,
+			valueColumn,
+		}));
 		
 		expectedSampleDataset = ResultSetUtils.createTableRows(expectedSampleColGroup, new String[][] {
 			new String[] {"1020","68.3:80:91.7"},
@@ -97,12 +95,10 @@ public class BedSedErrorBarTest {
 	
 	protected static Column timeColumn = null;
 	protected static Column sampleSetColumn = null;
-	protected static Column sampleSizeColumn = null;
+	protected static Column valueColumn = null;
 	protected static Column sampleMassColumn = null;
 	protected static Column errorColumn = null;
 	protected static Column conf95Column = null;
-	
-	protected static Column valueColumn = null;
 	
 	protected static ColumnGrouping inputSampleColGroup;
 	protected static Iterable<TableRow> inputSampleDataset = null;

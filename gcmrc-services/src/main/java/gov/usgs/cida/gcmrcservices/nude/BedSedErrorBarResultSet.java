@@ -10,7 +10,6 @@ import java.math.MathContext;
 import java.math.RoundingMode;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Map;
@@ -22,14 +21,14 @@ public class BedSedErrorBarResultSet extends PeekingResultSet {
 	private static final Logger LOGGER = LoggerFactory.getLogger(BedSedErrorBarResultSet.class);
 	
 	protected final ResultSet in;
-	protected final Column timeColumn;
 	protected final Column valueColumn;
+	protected final Column conf95Column;
 	
-	public BedSedErrorBarResultSet(ResultSet in, ColumnGrouping colGroup, Column timeColumn, Column valueColumn) {
+	public BedSedErrorBarResultSet(ResultSet in, ColumnGrouping colGroup, Column valueColumn, Column conf95Column) {
 		this.in = in;
 		this.columns = colGroup;
-		this.timeColumn = timeColumn;
 		this.valueColumn = valueColumn;
+		this.conf95Column = conf95Column;
 	}
 	
 	@Override
@@ -37,45 +36,35 @@ public class BedSedErrorBarResultSet extends PeekingResultSet {
 		LinkedList<TableRow> result = new LinkedList<>();
 		while(0 >= result.size() && in.next() && !in.isAfterLast()) {
 			TableRow rowIn = TableRow.buildTableRow(in);
-			TableRow rowOut = buildRowOut(rowIn, timeColumn, valueColumn);
+			TableRow rowOut = buildRowOut(rowIn, valueColumn, conf95Column);
 			result.add(rowOut);
 		}
 		this.nextRows.addAll(result);
 	}
 	
-	public static TableRow buildRowOut(TableRow rowIn, Column timeColumn, Column valueColumn) {
+	public static TableRow buildRowOut(TableRow rowIn, Column valueColumn, Column conf95Column) {
 		TableRow result = null;
 		ColumnGrouping inColGroup = rowIn.getColumns();
-		ColumnGrouping outColGroup = new ColumnGrouping(timeColumn, Arrays.asList(new Column[] {
-				timeColumn,
-				valueColumn
-			}));
-		
 		Map<Column, String> modMap = new HashMap<>();
-	
-		Column avgSizeColumn =  null;
-		Column conf95Column = null;
 		for (Column col : inColGroup) {
 			modMap.put(col, rowIn.getValue(col));
-			if (col.getName().equalsIgnoreCase("param1")) { 
-				avgSizeColumn = col;
-			}
-			if (col.getName().equalsIgnoreCase("param4")) { 
-				conf95Column = col;
-			}
 		}
-		
+	
 		//Calculate upper and lower 95% limits
 		try {
 			BigDecimal avgSizeValue = null;
-			if (null != modMap.get(avgSizeColumn)) {
-				avgSizeValue = new BigDecimal(modMap.get(avgSizeColumn));		
+			if (null != modMap.get(valueColumn)) {
+				avgSizeValue = new BigDecimal(modMap.get(valueColumn));		
 			}
 			BigDecimal conf95Value = null;
 			if (null != modMap.get(conf95Column)) {
 				conf95Value = new BigDecimal(modMap.get(conf95Column));
 			}
 			BigDecimal lowerLimitValue = avgSizeValue.subtract(conf95Value, new MathContext(conf95Value.precision(), RoundingMode.HALF_EVEN));
+			//zero out if negative
+			if (lowerLimitValue.compareTo(BigDecimal.ZERO) < 0) {
+				lowerLimitValue = BigDecimal.ZERO;
+			}
 			BigDecimal upperLimitValue = avgSizeValue.add(conf95Value, new MathContext(conf95Value.precision(), RoundingMode.HALF_EVEN));
 			
 			String lowerLimitResult = null;
@@ -90,15 +79,11 @@ public class BedSedErrorBarResultSet extends PeekingResultSet {
 			
 			modMap.put(valueColumn, lowerLimitResult+":"+avgSizeValue.toPlainString()+":"+upperLimitResult);
 			
-			LOGGER.debug(""+modMap);
-			
-			result = new TableRow(outColGroup, modMap);
+			result = new TableRow(inColGroup, modMap);
 			
 		} catch (Exception e) {
 			LOGGER.trace("could not calculate upper and lower 95% limits");
 		}
-		
-		LOGGER.debug(""+result);
 		
 		return result;
 	}

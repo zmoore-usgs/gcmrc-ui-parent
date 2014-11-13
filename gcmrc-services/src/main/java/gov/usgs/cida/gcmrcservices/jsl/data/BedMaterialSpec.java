@@ -3,6 +3,7 @@ package gov.usgs.cida.gcmrcservices.jsl.data;
 import static gov.usgs.cida.gcmrcservices.jsl.data.ParameterSpec.C_TSM_DT;
 import gov.usgs.cida.gcmrcservices.column.ColumnMetadata;
 import gov.usgs.cida.gcmrcservices.nude.BedSedAverageResultSet;
+import gov.usgs.cida.gcmrcservices.nude.BedSedErrorBarResultSet;
 import gov.usgs.cida.gcmrcservices.nude.DBConnectorPlanStep;
 import gov.usgs.cida.gcmrcservices.nude.Endpoint;
 import gov.usgs.cida.gcmrcservices.nude.time.IntoMillisTransform;
@@ -22,6 +23,7 @@ import gov.usgs.webservices.jdbc.util.CleaningOption;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Arrays;
 
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
@@ -144,19 +146,27 @@ public class BedMaterialSpec extends DataSpec {
 				.addFilterStage(new FilterStageBuilder(cols).addTransform(timeColumn, new IntoMillisTransform(timeColumn)).buildFilterStage())
 				.buildFilter();
 		
+		ColumnGrouping colGroup = new ColumnGrouping(Arrays.asList(new Column[] {
+				 timeColumn 
+				,sampleSetColumn
+				,valueColumn
+				,sampleMassColumn
+				,errorColumn
+				,conf95Column
+				}));
+		
 		ResultSet avg = new BedSedAverageResultSet(prefilter.filter(superSR.rset),
-				cols, 
+				colGroup,
 				timeColumn, sampleSetColumn, valueColumn, sampleMassColumn, errorColumn, conf95Column);
 		
-//		ResultSet errorBars = new BedSedErrorBarResultSet(avg, 
-//				new ColumnGrouping(Arrays.asList(new Column[] {timeColumn, valueColumn})), 
-//				timeColumn, valueColumn);
+		ResultSet errorBars = new BedSedErrorBarResultSet(avg, colGroup, valueColumn, conf95Column);
 		
-		NudeFilter postfilter = new NudeFilterBuilder(cols)
-				.addFilterStage(new FilterStageBuilder(cols).addTransform(timeColumn, new OutOfMillisTransform(timeColumn)).buildFilterStage())
-				.buildFilter();
+		NudeFilter postfilter = new NudeFilterBuilder(colGroup)
+//			.addFilterStage(new FilterStageBuilder(colGroup).addTransform(valueColumn, new BedSedimentTransform(valueColumn,conf95Column)).buildFilterStage())
+			.addFilterStage(new FilterStageBuilder(colGroup).addTransform(timeColumn, new OutOfMillisTransform(timeColumn)).buildFilterStage())
+			.buildFilter();
 		
-		result = new SpecResponse(superSR.responseSpec, postfilter.filter(avg), superSR.fullRowCount, superSR.validationErrors);
+		result = new SpecResponse(superSR.responseSpec, postfilter.filter(errorBars), superSR.fullRowCount, superSR.validationErrors);
 		
 		return result;
 	}

@@ -29,14 +29,14 @@ public class BedSedErrorBarTest {
 
 	@BeforeClass		
 	public static void setUpClass() throws Exception {
-		timeColumn = new SimpleColumn("time");
-		sampleSetColumn = new SimpleColumn("sampleset");
-		valueColumn = new SimpleColumn("param1");
-		sampleMassColumn = new SimpleColumn("param2");
-		errorColumn = new SimpleColumn("param3");
-		conf95Column = new SimpleColumn("param4");
+		timeColumn = new SimpleColumn("timeColumn");
+		sampleSetColumn = new SimpleColumn("sampleSetColumn");
+		valueColumn = new SimpleColumn("valueColumn");
+		sampleMassColumn = new SimpleColumn("sampleMassColumn");
+		errorColumn = new SimpleColumn("errorColumn");
+		conf95Column = new SimpleColumn("conf95Column");
 		
-		inputSampleColGroup = new ColumnGrouping(Arrays.asList(new Column[] {
+		sampleColGroup = new ColumnGrouping(Arrays.asList(new Column[] {
 			timeColumn,
 			sampleSetColumn,
 			valueColumn,
@@ -45,19 +45,16 @@ public class BedSedErrorBarTest {
 			conf95Column
 		}));
 		
-		inputSampleDataset = ResultSetUtils.createTableRows(inputSampleColGroup, new String[][] {
-			new String[] {"1020","1","80","50","6", "11.7"},
-			new String[] {"1061","2","40","54","7", "13.6"}
+		inputSampleDataset = ResultSetUtils.createTableRows(sampleColGroup, new String[][] {
+			new String[] {"1020","1","80","50","6","11.7"},
+			new String[] {"1061","2","40","54","7","13.6"},
+			new String[] {"1071","3","10","64","10","10.1"}
 		});
 		
-		expectedSampleColGroup = new ColumnGrouping(Arrays.asList(new Column[] {
-			timeColumn,
-			valueColumn,
-		}));
-		
-		expectedSampleDataset = ResultSetUtils.createTableRows(expectedSampleColGroup, new String[][] {
-			new String[] {"1020","68.3:80:91.7"},
-			new String[] {"1061","26.4:40:53.6"}
+		expectedSampleDataset = ResultSetUtils.createTableRows(sampleColGroup, new String[][] {
+			new String[] {"1020","1","68.3:80:91.7","50","6","11.7"},
+			new String[] {"1061","2","26.4:40:53.6","54","7","13.6"},
+			new String[] {"1071","3","0:10:20.1","64","10","10.1"}
 		});
 		
 	}
@@ -73,7 +70,7 @@ public class BedSedErrorBarTest {
 	private	ResultSet runStep(ResultSet rs) {
 		ResultSet result = null;
 		if (null != rs) {
-			result = new BedSedErrorBarResultSet(rs, expectedSampleColGroup, timeColumn, valueColumn);
+			result = new BedSedErrorBarResultSet(rs, sampleColGroup, valueColumn, conf95Column);
 		}
 		return result;
 	}
@@ -100,9 +97,8 @@ public class BedSedErrorBarTest {
 	protected static Column errorColumn = null;
 	protected static Column conf95Column = null;
 	
-	protected static ColumnGrouping inputSampleColGroup;
+	protected static ColumnGrouping sampleColGroup;
 	protected static Iterable<TableRow> inputSampleDataset = null;
-	protected static ColumnGrouping expectedSampleColGroup = null;
 	protected static Iterable<TableRow> expectedSampleDataset = null;
 	
 }

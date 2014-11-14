@@ -35,7 +35,7 @@ public class ColumnResolver {
 	protected Map<String, ColumnMetadata> qwColumnMetadatas;
 	protected Map<String, ColumnMetadata> cumulativeColumnMetadatas;
 	protected Map<String, ColumnMetadata> ancillaryColumnMetadatas;
-	protected Map<String, ColumnMetadata> bedMaterialColumnMetadatas;
+	protected Map<String, ColumnMetadata> bedSedimentColumnMetadatas;
 
 	public static final int columnIdentifierLength = 2; // HACK HAAAAAAAAAAAAAACK
 
@@ -46,11 +46,22 @@ public class ColumnResolver {
 		CM_LOOKUP.putAll(qwColumnMetadatas);
 		ancillaryColumnMetadatas = Collections.unmodifiableMap(buildAncillaryCols(sqlProvider));
 		CM_LOOKUP.putAll(ancillaryColumnMetadatas);
-		bedMaterialColumnMetadatas = Collections.unmodifiableMap(buildBedMaterialParametersCols(sqlProvider));
+		bedSedimentColumnMetadatas = Collections.unmodifiableMap(buildBedMaterialParametersCols(sqlProvider));
 		CM_LOOKUP.putAll(buildBedMaterialParametersCols(sqlProvider));
 		CM_LOOKUP = Collections.unmodifiableMap(CM_LOOKUP);
 		
 		cumulativeColumnMetadatas = Collections.unmodifiableMap(buildCumulativeParametersCols());
+	}
+	
+	public static Map<String, ColumnMetadata> getBedSedColumns(SQLProvider sqlProvider) {
+		Map<String, ColumnMetadata> result = new HashMap<String, ColumnMetadata>();
+		if (null == resolver) {
+			resolver = new ColumnResolver(sqlProvider);
+		}
+		
+		result.putAll(resolver.bedSedimentColumnMetadatas);
+		
+		return Collections.unmodifiableMap(result);
 	}
 	
 	public static Map<String, ColumnMetadata> getQWColumns(SQLProvider sqlProvider) {

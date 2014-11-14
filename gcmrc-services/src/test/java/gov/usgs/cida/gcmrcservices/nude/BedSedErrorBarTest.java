@@ -52,9 +52,9 @@ public class BedSedErrorBarTest {
 		});
 		
 		expectedSampleDataset = ResultSetUtils.createTableRows(sampleColGroup, new String[][] {
-			new String[] {"1020","1","68.3:80:91.7","50","6","11.7"},
-			new String[] {"1061","2","26.4:40:53.6","54","7","13.6"},
-			new String[] {"1071","3","0:10:20.1","64","10","10.1"}
+			new String[] {"1020","1","68.3;80;91.7","50","6","11.7"},
+			new String[] {"1061","2","26.4;40;53.6","54","7","13.6"},
+			new String[] {"1071","3","0;10;20.1","64","10","10.1"}
 		});
 		
 	}

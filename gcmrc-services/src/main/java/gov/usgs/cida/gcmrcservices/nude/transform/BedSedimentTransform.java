@@ -13,6 +13,7 @@ import org.slf4j.LoggerFactory;
 
 public class BedSedimentTransform implements ColumnTransform {
 	private static final Logger log = LoggerFactory.getLogger(BedSedimentTransform.class);
+	private final static String DELIMITER = ";";
 	
 	protected final Column valueColumn;
 	protected final Column conf95Column;
@@ -41,7 +42,7 @@ public class BedSedimentTransform implements ColumnTransform {
 			}
 			BigDecimal upperLimitValue = avgSizeValue.add(conf95Value, new MathContext(conf95Value.precision(), RoundingMode.HALF_EVEN));
 		
-			result = lowerLimitValue.toPlainString()+":"+avgSizeValue.toPlainString()+":"+upperLimitValue.toPlainString();
+			result = lowerLimitValue.toPlainString()+DELIMITER+avgSizeValue.toPlainString()+DELIMITER+upperLimitValue.toPlainString();
 		} catch (Exception e) {
 			log.trace("Could not parse ");
 		}

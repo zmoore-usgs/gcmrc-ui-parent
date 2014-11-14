@@ -19,6 +19,7 @@ import org.slf4j.LoggerFactory;
 
 public class BedSedErrorBarResultSet extends PeekingResultSet {
 	private static final Logger LOGGER = LoggerFactory.getLogger(BedSedErrorBarResultSet.class);
+	private final static String DELIMITER = ";";
 	
 	protected final ResultSet in;
 	protected final Column valueColumn;
@@ -77,7 +78,7 @@ public class BedSedErrorBarResultSet extends PeekingResultSet {
 				upperLimitResult = upperLimitValue.toPlainString();
 			}
 			
-			modMap.put(valueColumn, lowerLimitResult+":"+avgSizeValue.toPlainString()+":"+upperLimitResult);
+			modMap.put(valueColumn, lowerLimitResult+DELIMITER+avgSizeValue.toPlainString()+DELIMITER+upperLimitResult);
 			
 			result = new TableRow(inColGroup, modMap);
 			

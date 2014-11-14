@@ -162,7 +162,6 @@ public class BedMaterialSpec extends DataSpec {
 		ResultSet errorBars = new BedSedErrorBarResultSet(avg, colGroup, valueColumn, conf95Column);
 		
 		NudeFilter postfilter = new NudeFilterBuilder(colGroup)
-//			.addFilterStage(new FilterStageBuilder(colGroup).addTransform(valueColumn, new BedSedimentTransform(valueColumn,conf95Column)).buildFilterStage())
 			.addFilterStage(new FilterStageBuilder(colGroup).addTransform(timeColumn, new OutOfMillisTransform(timeColumn)).buildFilterStage())
 			.buildFilter();
 		

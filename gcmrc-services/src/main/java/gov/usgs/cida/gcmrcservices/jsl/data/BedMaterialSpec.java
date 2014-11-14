@@ -1,8 +1,9 @@
 package gov.usgs.cida.gcmrcservices.jsl.data;
 
-import gov.usgs.cida.gcmrcservices.column.ColumnMetadata;
 import static gov.usgs.cida.gcmrcservices.jsl.data.ParameterSpec.C_TSM_DT;
+import gov.usgs.cida.gcmrcservices.column.ColumnMetadata;
 import gov.usgs.cida.gcmrcservices.nude.BedSedAverageResultSet;
+import gov.usgs.cida.gcmrcservices.nude.BedSedErrorBarResultSet;
 import gov.usgs.cida.gcmrcservices.nude.DBConnectorPlanStep;
 import gov.usgs.cida.gcmrcservices.nude.Endpoint;
 import gov.usgs.cida.gcmrcservices.nude.time.IntoMillisTransform;
@@ -10,19 +11,19 @@ import gov.usgs.cida.gcmrcservices.nude.time.OutOfMillisTransform;
 import gov.usgs.cida.nude.column.Column;
 import gov.usgs.cida.nude.column.ColumnGrouping;
 import gov.usgs.cida.nude.column.SimpleColumn;
-import gov.usgs.cida.nude.filter.ColumnTransform;
 import gov.usgs.cida.nude.filter.FilterStageBuilder;
 import gov.usgs.cida.nude.filter.NudeFilter;
 import gov.usgs.cida.nude.filter.NudeFilterBuilder;
-import gov.usgs.cida.nude.resultset.inmemory.TableRow;
 import gov.usgs.webservices.jdbc.spec.SpecResponse;
 import gov.usgs.webservices.jdbc.spec.mapping.ColumnMapping;
 import gov.usgs.webservices.jdbc.spec.mapping.SearchMapping;
 import gov.usgs.webservices.jdbc.spec.mapping.WhereClauseType;
 import gov.usgs.webservices.jdbc.util.CleaningOption;
+
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Arrays;
 
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
@@ -145,15 +146,26 @@ public class BedMaterialSpec extends DataSpec {
 				.addFilterStage(new FilterStageBuilder(cols).addTransform(timeColumn, new IntoMillisTransform(timeColumn)).buildFilterStage())
 				.buildFilter();
 		
+		ColumnGrouping colGroup = new ColumnGrouping(Arrays.asList(new Column[] {
+				 timeColumn 
+				,sampleSetColumn
+				,valueColumn
+				,sampleMassColumn
+				,errorColumn
+				,conf95Column
+				}));
+		
 		ResultSet avg = new BedSedAverageResultSet(prefilter.filter(superSR.rset),
-				cols, 
+				colGroup,
 				timeColumn, sampleSetColumn, valueColumn, sampleMassColumn, errorColumn, conf95Column);
 		
-		NudeFilter postfilter = new NudeFilterBuilder(cols)
-				.addFilterStage(new FilterStageBuilder(cols).addTransform(timeColumn, new OutOfMillisTransform(timeColumn)).buildFilterStage())
-				.buildFilter();
+		ResultSet errorBars = new BedSedErrorBarResultSet(avg, colGroup, valueColumn, conf95Column);
 		
-		result = new SpecResponse(superSR.responseSpec, postfilter.filter(avg), superSR.fullRowCount, superSR.validationErrors);
+		NudeFilter postfilter = new NudeFilterBuilder(colGroup)
+			.addFilterStage(new FilterStageBuilder(colGroup).addTransform(timeColumn, new OutOfMillisTransform(timeColumn)).buildFilterStage())
+			.buildFilter();
+		
+		result = new SpecResponse(superSR.responseSpec, postfilter.filter(errorBars), superSR.fullRowCount, superSR.validationErrors);
 		
 		return result;
 	}

@@ -635,8 +635,8 @@ GCMRC.Page = {
 			};
 		}
 		el.sampleMethod = 'bed';
-		el.color = CONFIG.instColor;
-		el.highlightColor = CONFIG.instHiColor;
+		el.color = CONFIG.sampColor;
+		el.highlightColor = CONFIG.sampHiColor;
 		
 		el.series = {
 			strokeWidth: 0.0,

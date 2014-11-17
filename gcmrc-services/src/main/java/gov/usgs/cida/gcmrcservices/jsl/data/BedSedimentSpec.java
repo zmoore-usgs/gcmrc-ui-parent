@@ -3,11 +3,11 @@ package gov.usgs.cida.gcmrcservices.jsl.data;
 import static gov.usgs.cida.gcmrcservices.jsl.data.ParameterSpec.C_TSM_DT;
 import gov.usgs.cida.gcmrcservices.column.ColumnMetadata;
 import gov.usgs.cida.gcmrcservices.nude.BedSedAverageResultSet;
-import gov.usgs.cida.gcmrcservices.nude.BedSedErrorBarResultSet;
 import gov.usgs.cida.gcmrcservices.nude.DBConnectorPlanStep;
 import gov.usgs.cida.gcmrcservices.nude.Endpoint;
 import gov.usgs.cida.gcmrcservices.nude.time.IntoMillisTransform;
 import gov.usgs.cida.gcmrcservices.nude.time.OutOfMillisTransform;
+import gov.usgs.cida.gcmrcservices.nude.transform.BedSedErrorBarTransform;
 import gov.usgs.cida.gcmrcservices.nude.transform.SandGrainSizeLimiterTransform;
 import gov.usgs.cida.nude.column.Column;
 import gov.usgs.cida.nude.column.ColumnGrouping;
@@ -160,14 +160,13 @@ public class BedSedimentSpec extends DataSpec {
 				colGroup,
 				timeColumn, sampleSetColumn, valueColumn, sampleMassColumn, errorColumn, conf95Column);
 		
-		ResultSet errorBars = new BedSedErrorBarResultSet(avg, colGroup, valueColumn, conf95Column);
-		
 		NudeFilter postfilter = new NudeFilterBuilder(colGroup)
+			.addFilterStage(new FilterStageBuilder(colGroup).addTransform(valueColumn, new BedSedErrorBarTransform(valueColumn, conf95Column)).buildFilterStage())
 			.addFilterStage(new FilterStageBuilder(colGroup).addTransform(valueColumn, new SandGrainSizeLimiterTransform(valueColumn)).buildFilterStage())
 			.addFilterStage(new FilterStageBuilder(colGroup).addTransform(timeColumn, new OutOfMillisTransform(timeColumn)).buildFilterStage())
 			.buildFilter();
 		
-		result = new SpecResponse(superSR.responseSpec, postfilter.filter(errorBars), superSR.fullRowCount, superSR.validationErrors);
+		result = new SpecResponse(superSR.responseSpec, postfilter.filter(avg), superSR.fullRowCount, superSR.validationErrors);
 		
 		return result;
 	}

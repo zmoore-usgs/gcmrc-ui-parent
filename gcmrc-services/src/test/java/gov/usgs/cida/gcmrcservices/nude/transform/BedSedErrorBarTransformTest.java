@@ -1,4 +1,4 @@
-package gov.usgs.cida.gcmrcservices.nude;
+package gov.usgs.cida.gcmrcservices.nude.transform;
 
 import static gov.usgs.cida.gcmrcservices.ResultSetUtils.checkEqualRows;
 import static org.junit.Assert.assertTrue;
@@ -6,6 +6,9 @@ import gov.usgs.cida.gcmrcservices.ResultSetUtils;
 import gov.usgs.cida.nude.column.Column;
 import gov.usgs.cida.nude.column.ColumnGrouping;
 import gov.usgs.cida.nude.column.SimpleColumn;
+import gov.usgs.cida.nude.filter.FilterStage;
+import gov.usgs.cida.nude.filter.FilterStageBuilder;
+import gov.usgs.cida.nude.filter.NudeFilter;
 import gov.usgs.cida.nude.resultset.inmemory.IteratorWrappingResultSet;
 import gov.usgs.cida.nude.resultset.inmemory.TableRow;
 
@@ -20,11 +23,11 @@ import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class BedSedErrorBarTest {
+public class BedSedErrorBarTransformTest {
 	
-	private static final Logger LOGGER = LoggerFactory.getLogger(BedSedErrorBarTest.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(BedSedErrorBarTransformTest.class);
 
-	public BedSedErrorBarTest() {
+	public BedSedErrorBarTransformTest() {
 	}
 
 	@BeforeClass		
@@ -48,31 +51,35 @@ public class BedSedErrorBarTest {
 		inputSampleDataset = ResultSetUtils.createTableRows(sampleColGroup, new String[][] {
 			new String[] {"1020","1","80","50","6","11.7"},
 			new String[] {"1061","2","40","54","7","13.6"},
-			new String[] {"1071","3","10","64","10","10.1"}
+			new String[] {"1062","3",null,"54","7","13.6"},
+			new String[] {"1063","4","40","54","7",null},
+			new String[] {"1064","5",null,"54","7",null},
+			new String[] {"1071","6","10","64","10","10.1"}
 		});
 		
 		expectedSampleDataset = ResultSetUtils.createTableRows(sampleColGroup, new String[][] {
 			new String[] {"1020","1","68.3;80;91.7","50","6","11.7"},
 			new String[] {"1061","2","26.4;40;53.6","54","7","13.6"},
-			new String[] {"1071","3","-0.1;10;20.1","64","10","10.1"}
+			new String[] {"1062","3",null,"54","7","13.6"},
+			new String[] {"1063","4",null,"54","7",null},
+			new String[] {"1064","5",null,"54","7",null},
+			new String[] {"1071","6","-0.1;10;20.1","64","10","10.1"}
 		});
 		
 	}
 	
 	@Test
 	public void testBedSedErrorBarResultSet() throws Exception {
+		NudeFilter nf = new NudeFilter(Arrays.asList(new FilterStage[] {
+			new FilterStageBuilder(sampleColGroup)
+					.addTransform(valueColumn, new BedSedErrorBarTransform(valueColumn, conf95Column))
+					.buildFilterStage()
+		}));
+		
 		ResultSet expected = new IteratorWrappingResultSet(expectedSampleDataset.iterator());
 		ResultSet in = new IteratorWrappingResultSet(inputSampleDataset.iterator());
-		ResultSet actual = runStep(in);
+		ResultSet actual = nf.filter(in);
 		assertTrue(checkEqualRows(expected, actual));
-	}
-	
-	private	ResultSet runStep(ResultSet rs) {
-		ResultSet result = null;
-		if (null != rs) {
-			result = new BedSedErrorBarResultSet(rs, sampleColGroup, valueColumn, conf95Column);
-		}
-		return result;
 	}
 
 	@Before

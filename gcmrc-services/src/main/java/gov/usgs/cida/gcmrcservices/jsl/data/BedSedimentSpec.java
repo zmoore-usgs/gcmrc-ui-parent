@@ -8,6 +8,7 @@ import gov.usgs.cida.gcmrcservices.nude.DBConnectorPlanStep;
 import gov.usgs.cida.gcmrcservices.nude.Endpoint;
 import gov.usgs.cida.gcmrcservices.nude.time.IntoMillisTransform;
 import gov.usgs.cida.gcmrcservices.nude.time.OutOfMillisTransform;
+import gov.usgs.cida.gcmrcservices.nude.transform.SandGrainSizeLimiterTransform;
 import gov.usgs.cida.nude.column.Column;
 import gov.usgs.cida.nude.column.ColumnGrouping;
 import gov.usgs.cida.nude.column.SimpleColumn;
@@ -30,12 +31,12 @@ import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class BedMaterialSpec extends DataSpec {
+public class BedSedimentSpec extends DataSpec {
 
 	private static final long serialVersionUID = 2263816089456993501L;
-	private static final Logger log = LoggerFactory.getLogger(BedMaterialSpec.class);
+	private static final Logger log = LoggerFactory.getLogger(BedSedimentSpec.class);
 
-	public BedMaterialSpec(String stationName, ParameterCode parameterCode, SpecOptions options) {
+	public BedSedimentSpec(String stationName, ParameterCode parameterCode, SpecOptions options) {
 		super(stationName, parameterCode, options);
 	}
 
@@ -117,8 +118,8 @@ public class BedMaterialSpec extends DataSpec {
 	public boolean equals(Object obj) {
 		if (obj == null) { return false; }
 		if (obj == this) { return true; }
-		if (obj instanceof BedMaterialSpec) {
-			BedMaterialSpec rhs = (BedMaterialSpec) obj;
+		if (obj instanceof BedSedimentSpec) {
+			BedSedimentSpec rhs = (BedSedimentSpec) obj;
 			return new EqualsBuilder()
 					.append(this.stationName, rhs.stationName)
 					.append(this.parameterCode, rhs.parameterCode)
@@ -162,6 +163,7 @@ public class BedMaterialSpec extends DataSpec {
 		ResultSet errorBars = new BedSedErrorBarResultSet(avg, colGroup, valueColumn, conf95Column);
 		
 		NudeFilter postfilter = new NudeFilterBuilder(colGroup)
+			.addFilterStage(new FilterStageBuilder(colGroup).addTransform(valueColumn, new SandGrainSizeLimiterTransform(valueColumn)).buildFilterStage())
 			.addFilterStage(new FilterStageBuilder(colGroup).addTransform(timeColumn, new OutOfMillisTransform(timeColumn)).buildFilterStage())
 			.buildFilter();
 		

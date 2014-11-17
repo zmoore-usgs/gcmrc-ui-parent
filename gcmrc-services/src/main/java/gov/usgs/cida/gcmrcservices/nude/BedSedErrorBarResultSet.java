@@ -61,24 +61,19 @@ public class BedSedErrorBarResultSet extends PeekingResultSet {
 			if (null != modMap.get(conf95Column)) {
 				conf95Value = new BigDecimal(modMap.get(conf95Column));
 			}
-			BigDecimal lowerLimitValue = avgSizeValue.subtract(conf95Value, new MathContext(conf95Value.precision(), RoundingMode.HALF_EVEN));
-			//zero out if negative
-			if (lowerLimitValue.compareTo(BigDecimal.ZERO) < 0) {
-				lowerLimitValue = BigDecimal.ZERO;
-			}
-			BigDecimal upperLimitValue = avgSizeValue.add(conf95Value, new MathContext(conf95Value.precision(), RoundingMode.HALF_EVEN));
-			
-			String lowerLimitResult = null;
-			if (null != lowerLimitValue) {
-				lowerLimitResult = lowerLimitValue.toPlainString();
+			BigDecimal lowerConfValue = avgSizeValue.subtract(conf95Value, new MathContext(conf95Value.precision(), RoundingMode.HALF_EVEN));
+			String lowerConfResult = null;
+			if (null != lowerConfValue) {
+				lowerConfResult = lowerConfValue.toPlainString();
 			}
 			
-			String upperLimitResult = null;
-			if (null != upperLimitValue) {
-				upperLimitResult = upperLimitValue.toPlainString();
+			BigDecimal upperConfValue = avgSizeValue.add(conf95Value, new MathContext(conf95Value.precision(), RoundingMode.HALF_EVEN));
+			String upperConfResult = null;
+			if (null != upperConfValue) {
+				upperConfResult = upperConfValue.toPlainString();
 			}
 			
-			modMap.put(valueColumn, lowerLimitResult+DELIMITER+avgSizeValue.toPlainString()+DELIMITER+upperLimitResult);
+			modMap.put(valueColumn, lowerConfResult + DELIMITER + avgSizeValue.toPlainString() + DELIMITER + upperConfResult);
 			
 			result = new TableRow(inColGroup, modMap);
 			

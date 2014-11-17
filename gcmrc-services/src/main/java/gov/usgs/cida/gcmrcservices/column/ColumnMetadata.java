@@ -1,6 +1,6 @@
 package gov.usgs.cida.gcmrcservices.column;
 
-import gov.usgs.cida.gcmrcservices.jsl.data.BedMaterialSpec;
+import gov.usgs.cida.gcmrcservices.jsl.data.BedSedimentSpec;
 import gov.usgs.cida.gcmrcservices.jsl.data.ParameterCode;
 import gov.usgs.cida.gcmrcservices.jsl.data.ParameterSpec;
 import gov.usgs.cida.gcmrcservices.jsl.data.QWDataSpec;
@@ -192,7 +192,7 @@ public class ColumnMetadata {
 					result = new QWDataSpec(station, this.parameterCode, specOptions);
 					break;
 				case BEDMATERIAL:
-					result = new BedMaterialSpec(station, this.parameterCode, specOptions);
+					result = new BedSedimentSpec(station, this.parameterCode, specOptions);
 					break;
 			}
 

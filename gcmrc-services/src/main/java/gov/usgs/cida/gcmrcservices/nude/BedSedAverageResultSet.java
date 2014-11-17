@@ -63,22 +63,21 @@ public class BedSedAverageResultSet extends PeekingResultSet {
 				TableRow averagedRow = flushNextSampleSet();
 				if (null != averagedRow) {
 					result.add(averagedRow);
-					if (queuedRows.size() > 0) {
-						sampleSet = queuedRows.peekFirst().getValue(sampleSetColumn);
-					} else {
-						sampleSet = null;
-					}
+				}
+				sampleSet = null;
+			}
+		}
+		
+		if(0 >= result.size()) {
+			while (in.isAfterLast() && queuedRows.size() > 0) {
+				//If we're at the end and we have queued rows, flush
+				TableRow averagedRow = flushNextSampleSet();
+				if (null != averagedRow) {
+					result.add(averagedRow);
 				}
 			}
 		}
 		
-		while (in.isAfterLast() && queuedRows.size() > 0) {
-			//If we're at the end and we have queued rows, flush
-			TableRow averagedRow = flushNextSampleSet();
-			if (null != averagedRow) {
-				result.add(averagedRow);
-			}
-		}
 		
 		this.nextRows.addAll(result);
 	}
@@ -127,7 +126,7 @@ public class BedSedAverageResultSet extends PeekingResultSet {
 		for (TableRow sample : groupedSampleSet) {
 			try {
 				BigDecimal sampleMass = new BigDecimal(sample.getValue(sampleMassColumn));
-				if (sampleMassInGramsCutoff.compareTo(sampleMass) <= 0) {
+				if (null != sample.getValue(valueColumn) && sampleMassInGramsCutoff.compareTo(sampleMass) <= 0) {
 					validSamples.add(sample);
 				}
 			} catch (Exception e) {

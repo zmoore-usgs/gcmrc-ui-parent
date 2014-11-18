@@ -14,6 +14,10 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Map;
+import java.util.SortedSet;
+import java.util.TreeSet;
+import org.apache.commons.lang.builder.EqualsBuilder;
+import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -24,6 +28,13 @@ import org.slf4j.LoggerFactory;
 public class BedSedAverageResultSet extends PeekingResultSet {
 	private static final Logger log = LoggerFactory.getLogger(BedSedAverageResultSet.class);
 
+	protected static final BigDecimal cutoffMassInGrams = new BigDecimal("20.000");
+	protected static final SortedSet<SampleSetRule> rules = new TreeSet(Arrays.asList(new SampleSetRule[] {
+		new SampleSetRule(cutoffMassInGrams, 3, 2),
+		new SampleSetRule(cutoffMassInGrams, 4, 3)
+//		new SampleSetRule(cutoffMassInGrams, 5, 4)
+	}));
+	
 	protected final ResultSet in;
 	protected final LinkedList<TableRow> queuedRows;
 	protected final Column timeColumn;
@@ -114,19 +125,11 @@ public class BedSedAverageResultSet extends PeekingResultSet {
 			Column valueColumn, Column sampleMassColumn, Column errorColumn, Column conf95Column) {
 		TableRow result = null;
 		
-		final BigDecimal sampleMassInGramsCutoff = new BigDecimal(20);
-		
-		final int largeSampleSetSize = 5;
-		final int minimumSamplesForLargeSampleSet = 3;
-		
-		final int smallSampleSetSize = 4;
-		final int minimumSamplesForSmallSampleSet = 2;
-		
 		LinkedList<TableRow> validSamples = new LinkedList<>();
 		for (TableRow sample : groupedSampleSet) {
 			try {
 				BigDecimal sampleMass = new BigDecimal(sample.getValue(sampleMassColumn));
-				if (null != sample.getValue(valueColumn) && sampleMassInGramsCutoff.compareTo(sampleMass) <= 0) {
+				if (null != sample.getValue(valueColumn) && cutoffMassInGrams.compareTo(sampleMass) <= 0) {
 					validSamples.add(sample);
 				}
 			} catch (Exception e) {
@@ -135,12 +138,19 @@ public class BedSedAverageResultSet extends PeekingResultSet {
 		}
 		
 		int sampleSetSize = groupedSampleSet.size();
-		if ((sampleSetSize >= largeSampleSetSize && validSamples.size() < minimumSamplesForLargeSampleSet)
-				|| (sampleSetSize <= smallSampleSetSize && validSamples.size() < minimumSamplesForSmallSampleSet)) {
-			log.trace("we did not have enough valid samples to average");
+		boolean isValid = false;
+		for (SampleSetRule rule : rules) {
+			if ((!rule.equals(rules.last()) && sampleSetSize >= rules.first().sampleSetSize 
+						&& sampleSetSize <= rule.sampleSetSize
+						&& validSamples.size() >= rule.minValidSamples)
+					|| (rule.equals(rules.last()) && sampleSetSize >= rules.first().sampleSetSize
+						&& sampleSetSize >= rule.sampleSetSize
+						&& validSamples.size() >= rule.minValidSamples)) {
+				isValid = true;
+			}
+		}
+		if (!isValid) {
 			validSamples.clear();
-		} else {
-			log.trace("we have enough valid samples");
 		}
 		
 		if (0 < validSamples.size()) {
@@ -323,5 +333,46 @@ public class BedSedAverageResultSet extends PeekingResultSet {
 	@Override
 	public String getCursorName() throws SQLException {
 		return this.in.getCursorName();
+	}
+	
+	public static final class SampleSetRule implements Comparable<SampleSetRule> {
+		public final BigDecimal cutoffMass;
+		public final int sampleSetSize;
+		public final int minValidSamples;
+
+		public SampleSetRule(BigDecimal cutoffMass, int sampleSetSize, int minValidSamples) {
+			this.cutoffMass = cutoffMass;
+			this.sampleSetSize = sampleSetSize;
+			this.minValidSamples = minValidSamples;
+		}
+
+		@Override
+		public int compareTo(SampleSetRule o) {
+			return Integer.compare(this.sampleSetSize, o.sampleSetSize);
+		}
+
+		@Override
+		public boolean equals(Object obj) {
+			if (obj == null) { return false; }
+			if (obj == this) { return true; }
+			if (obj instanceof SampleSetRule) {
+				SampleSetRule rhs = (SampleSetRule) obj;
+				return new EqualsBuilder()
+						.append(this.cutoffMass, rhs.cutoffMass)
+						.append(this.sampleSetSize, rhs.sampleSetSize)
+						.append(this.minValidSamples, rhs.minValidSamples)
+						.isEquals();
+			}
+			return false;
+		}
+
+		@Override
+		public int hashCode() {
+			return new HashCodeBuilder()
+					.append(this.cutoffMass)
+					.append(this.sampleSetSize)
+					.append(this.minValidSamples)
+					.toHashCode();
+		}
 	}
 }

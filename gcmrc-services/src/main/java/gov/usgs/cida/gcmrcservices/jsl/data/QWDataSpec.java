@@ -63,9 +63,7 @@ public class QWDataSpec extends DataSpec {
 		result.append("(");
 		result.append("  SELECT QWS.SAMPLE_ID,");
 		result.append("  NVL(S.nwis_site_no, S.short_name) site_name,");
-//		result.append("  QWS.START_DATE AS SAMP_START_DT,");
 		result.append("  QWS.AVERAGE_DATE AS SAMP_START_DT,");
-//		result.append("  QWS.START_DATE + NUMTODSINTERVAL(SS.TIME_LAG_SECONDS, 'second') AS LAGGED_SAMP_START_DT,");
 		result.append("  QWS.AVERAGE_DATE + NUMTODSINTERVAL(SS.TIME_LAG_SECONDS, 'second') AS LAGGED_SAMP_START_DT,");
 		result.append("  'true' AS USE_LAGGED,");
 		result.append("  QWR.SUSPSED_VALUE RESULT_VA,");

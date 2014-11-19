@@ -14,6 +14,10 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Map;
+import java.util.SortedSet;
+import java.util.TreeSet;
+import org.apache.commons.lang.builder.EqualsBuilder;
+import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -24,6 +28,13 @@ import org.slf4j.LoggerFactory;
 public class BedSedAverageResultSet extends PeekingResultSet {
 	private static final Logger log = LoggerFactory.getLogger(BedSedAverageResultSet.class);
 
+	protected static final BigDecimal cutoffMassInGrams = new BigDecimal("20.000");
+	protected static final SortedSet<SampleSetRule> rules = new TreeSet(Arrays.asList(new SampleSetRule[] {
+		new SampleSetRule(cutoffMassInGrams, 3, 2),
+		new SampleSetRule(cutoffMassInGrams, 4, 3),
+		new SampleSetRule(cutoffMassInGrams, 5, 4)
+	}));
+	
 	protected final ResultSet in;
 	protected final LinkedList<TableRow> queuedRows;
 	protected final Column timeColumn;
@@ -63,22 +74,21 @@ public class BedSedAverageResultSet extends PeekingResultSet {
 				TableRow averagedRow = flushNextSampleSet();
 				if (null != averagedRow) {
 					result.add(averagedRow);
-					if (queuedRows.size() > 0) {
-						sampleSet = queuedRows.peekFirst().getValue(sampleSetColumn);
-					} else {
-						sampleSet = null;
-					}
+				}
+				sampleSet = null;
+			}
+		}
+		
+		if(0 >= result.size()) {
+			while (in.isAfterLast() && queuedRows.size() > 0) {
+				//If we're at the end and we have queued rows, flush
+				TableRow averagedRow = flushNextSampleSet();
+				if (null != averagedRow) {
+					result.add(averagedRow);
 				}
 			}
 		}
 		
-		while (in.isAfterLast() && queuedRows.size() > 0) {
-			//If we're at the end and we have queued rows, flush
-			TableRow averagedRow = flushNextSampleSet();
-			if (null != averagedRow) {
-				result.add(averagedRow);
-			}
-		}
 		
 		this.nextRows.addAll(result);
 	}
@@ -88,7 +98,7 @@ public class BedSedAverageResultSet extends PeekingResultSet {
 		
 		LinkedList<TableRow> groupedSampleSet = groupSampleSet(this.queuedRows, this.sampleSetColumn);
 		String sampleSet = groupedSampleSet.peekFirst().getValue(this.sampleSetColumn);
-		result = averageRow(groupedSampleSet, valueColumn, sampleMassColumn, errorColumn, conf95Column);
+		result = averageRow(groupedSampleSet, timeColumn, valueColumn, sampleMassColumn, errorColumn, conf95Column);
 		dropSampleSet(this.queuedRows, sampleSet);
 		
 		return result;
@@ -111,23 +121,15 @@ public class BedSedAverageResultSet extends PeekingResultSet {
 		return result;
 	}
 	
-	public static TableRow averageRow(LinkedList<TableRow> groupedSampleSet,
+	public static TableRow averageRow(LinkedList<TableRow> groupedSampleSet, Column timeColumn,
 			Column valueColumn, Column sampleMassColumn, Column errorColumn, Column conf95Column) {
 		TableRow result = null;
-		
-		final BigDecimal sampleMassInGramsCutoff = new BigDecimal(20);
-		
-		final int largeSampleSetSize = 5;
-		final int minimumSamplesForLargeSampleSet = 3;
-		
-		final int smallSampleSetSize = 4;
-		final int minimumSamplesForSmallSampleSet = 2;
 		
 		LinkedList<TableRow> validSamples = new LinkedList<>();
 		for (TableRow sample : groupedSampleSet) {
 			try {
 				BigDecimal sampleMass = new BigDecimal(sample.getValue(sampleMassColumn));
-				if (sampleMassInGramsCutoff.compareTo(sampleMass) <= 0) {
+				if (null != sample.getValue(valueColumn) && cutoffMassInGrams.compareTo(sampleMass) <= 0) {
 					validSamples.add(sample);
 				}
 			} catch (Exception e) {
@@ -136,12 +138,19 @@ public class BedSedAverageResultSet extends PeekingResultSet {
 		}
 		
 		int sampleSetSize = groupedSampleSet.size();
-		if ((sampleSetSize >= largeSampleSetSize && validSamples.size() < minimumSamplesForLargeSampleSet)
-				|| (sampleSetSize <= smallSampleSetSize && validSamples.size() < minimumSamplesForSmallSampleSet)) {
-			log.trace("we did not have enough valid samples to average");
+		boolean isValid = false;
+		for (SampleSetRule rule : rules) {
+			if ((!rule.equals(rules.last()) && sampleSetSize >= rules.first().sampleSetSize 
+						&& sampleSetSize <= rule.sampleSetSize
+						&& validSamples.size() >= rule.minValidSamples)
+					|| (rule.equals(rules.last()) && sampleSetSize >= rules.first().sampleSetSize
+						&& sampleSetSize >= rule.sampleSetSize
+						&& validSamples.size() >= rule.minValidSamples)) {
+				isValid = true;
+			}
+		}
+		if (!isValid) {
 			validSamples.clear();
-		} else {
-			log.trace("we have enough valid samples");
 		}
 		
 		if (0 < validSamples.size()) {
@@ -151,6 +160,11 @@ public class BedSedAverageResultSet extends PeekingResultSet {
 				errorColumn
 			}));
 			ColumnGrouping outColGroup = ColumnGrouping.join(Arrays.asList(new ColumnGrouping[] {inColGroup, addedColGroup}));
+			ColumnGrouping cumulColGroup = new ColumnGrouping(timeColumn, Arrays.asList(new Column[] {
+				timeColumn,
+				valueColumn,
+				sampleMassColumn
+			}));
 			Map<Column, String> modMap = new HashMap<>();
 			
 			String cuMeanColPrefix = "CUMEAN_";
@@ -161,8 +175,11 @@ public class BedSedAverageResultSet extends PeekingResultSet {
 			String conf95ColPrefix = "CONF95_";
 			int n = 0;
 			for (TableRow sample : validSamples) {
-				n++;
 				for (Column col : inColGroup) {
+					modMap.put(col, sample.getValue(col));
+				}
+				n++;
+				for (Column col : cumulColGroup) {
 					//CUMULATIVE MOVING AVERAGE
 					//http://en.wikipedia.org/wiki/Moving_average#Cumulative_moving_average
 					Column lastCuMeanColumn = new SimpleColumn(lastCuMeanColPrefix + col.getName());
@@ -286,7 +303,11 @@ public class BedSedAverageResultSet extends PeekingResultSet {
 			}
 			
 			for (Column col : outColGroup) {
-				modMap.put(new SimpleColumn(col.getName()), modMap.get(new SimpleColumn(cuMeanColPrefix + col.getName())));
+				String val = modMap.get(new SimpleColumn(cuMeanColPrefix + col.getName()));
+				if (null == val) {
+					val = modMap.get(col);
+				}
+				modMap.put(col, val);
 			}
 			modMap.put(errorColumn, modMap.get(new SimpleColumn(stErrColPrefix + valueColumn.getName())));
 			modMap.put(conf95Column, modMap.get(new SimpleColumn(conf95ColPrefix + valueColumn.getName())));
@@ -312,5 +333,46 @@ public class BedSedAverageResultSet extends PeekingResultSet {
 	@Override
 	public String getCursorName() throws SQLException {
 		return this.in.getCursorName();
+	}
+	
+	public static final class SampleSetRule implements Comparable<SampleSetRule> {
+		public final BigDecimal cutoffMass;
+		public final int sampleSetSize;
+		public final int minValidSamples;
+
+		public SampleSetRule(BigDecimal cutoffMass, int sampleSetSize, int minValidSamples) {
+			this.cutoffMass = cutoffMass;
+			this.sampleSetSize = sampleSetSize;
+			this.minValidSamples = minValidSamples;
+		}
+
+		@Override
+		public int compareTo(SampleSetRule o) {
+			return Integer.compare(this.sampleSetSize, o.sampleSetSize);
+		}
+
+		@Override
+		public boolean equals(Object obj) {
+			if (obj == null) { return false; }
+			if (obj == this) { return true; }
+			if (obj instanceof SampleSetRule) {
+				SampleSetRule rhs = (SampleSetRule) obj;
+				return new EqualsBuilder()
+						.append(this.cutoffMass, rhs.cutoffMass)
+						.append(this.sampleSetSize, rhs.sampleSetSize)
+						.append(this.minValidSamples, rhs.minValidSamples)
+						.isEquals();
+			}
+			return false;
+		}
+
+		@Override
+		public int hashCode() {
+			return new HashCodeBuilder()
+					.append(this.cutoffMass)
+					.append(this.sampleSetSize)
+					.append(this.minValidSamples)
+					.toHashCode();
+		}
 	}
 }

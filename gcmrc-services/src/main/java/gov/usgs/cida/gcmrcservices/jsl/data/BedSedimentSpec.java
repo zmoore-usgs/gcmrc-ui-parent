@@ -1,24 +1,42 @@
 package gov.usgs.cida.gcmrcservices.jsl.data;
 
-import gov.usgs.cida.gcmrcservices.column.ColumnMetadata;
 import static gov.usgs.cida.gcmrcservices.jsl.data.ParameterSpec.C_TSM_DT;
+import gov.usgs.cida.gcmrcservices.column.ColumnMetadata;
+import gov.usgs.cida.gcmrcservices.nude.BedSedAverageResultSet;
+import gov.usgs.cida.gcmrcservices.nude.DBConnectorPlanStep;
 import gov.usgs.cida.gcmrcservices.nude.Endpoint;
+import gov.usgs.cida.gcmrcservices.nude.time.IntoMillisTransform;
+import gov.usgs.cida.gcmrcservices.nude.time.OutOfMillisTransform;
+import gov.usgs.cida.gcmrcservices.nude.transform.BedSedErrorBarTransform;
+import gov.usgs.cida.gcmrcservices.nude.transform.SandGrainSizeLimiterTransform;
+import gov.usgs.cida.nude.column.Column;
+import gov.usgs.cida.nude.column.ColumnGrouping;
+import gov.usgs.cida.nude.column.SimpleColumn;
+import gov.usgs.cida.nude.filter.FilterStageBuilder;
+import gov.usgs.cida.nude.filter.NudeFilter;
+import gov.usgs.cida.nude.filter.NudeFilterBuilder;
+import gov.usgs.webservices.jdbc.spec.SpecResponse;
 import gov.usgs.webservices.jdbc.spec.mapping.ColumnMapping;
 import gov.usgs.webservices.jdbc.spec.mapping.SearchMapping;
 import gov.usgs.webservices.jdbc.spec.mapping.WhereClauseType;
 import gov.usgs.webservices.jdbc.util.CleaningOption;
+
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.Arrays;
 
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class BedMaterialSpec extends DataSpec {
+public class BedSedimentSpec extends DataSpec {
 
 	private static final long serialVersionUID = 2263816089456993501L;
-	private static final Logger log = LoggerFactory.getLogger(BedMaterialSpec.class);
+	private static final Logger log = LoggerFactory.getLogger(BedSedimentSpec.class);
 
-	public BedMaterialSpec(String stationName, ParameterCode parameterCode, SpecOptions options) {
+	public BedSedimentSpec(String stationName, ParameterCode parameterCode, SpecOptions options) {
 		super(stationName, parameterCode, options);
 	}
 
@@ -44,6 +62,7 @@ public class BedMaterialSpec extends DataSpec {
 	@Override
 	public SearchMapping[] setupSearchMap() {
 		SearchMapping[] result = new SearchMapping[] {
+			new SearchMapping(ParameterSpec.S_SITE_NAME, C_SITE_NAME, null, WhereClauseType.equals, null, null, null),
 			new SearchMapping(Endpoint.BEGIN_KEYWORD, C_TSM_DT, null, WhereClauseType.special, CleaningOption.none, "TO_DATE(" + FIELD_NAME_KEY + ", 'YYYY-MM-DD\"T\"HH24:MI:SS') >= TO_DATE(" + USER_VALUE_KEY + ", 'YYYY-MM-DD\"T\"HH24:MI:SS')", null),
 			new SearchMapping(Endpoint.END_KEYWORD, C_TSM_DT, null, WhereClauseType.special, CleaningOption.none, "TO_DATE(" + FIELD_NAME_KEY + ", 'YYYY-MM-DD\"T\"HH24:MI:SS') <= TO_DATE(" + USER_VALUE_KEY + ", 'YYYY-MM-DD\"T\"HH24:MI:SS')", null)
 		};
@@ -99,14 +118,57 @@ public class BedMaterialSpec extends DataSpec {
 	public boolean equals(Object obj) {
 		if (obj == null) { return false; }
 		if (obj == this) { return true; }
-		if (obj instanceof BedMaterialSpec) {
-			BedMaterialSpec rhs = (BedMaterialSpec) obj;
+		if (obj instanceof BedSedimentSpec) {
+			BedSedimentSpec rhs = (BedSedimentSpec) obj;
 			return new EqualsBuilder()
 					.append(this.stationName, rhs.stationName)
 					.append(this.parameterCode, rhs.parameterCode)
 					.isEquals();
 		}
 		return false;
+	}
+
+	@Override
+	public SpecResponse readAction(Connection con) throws SQLException {
+		SpecResponse result = null;
+		SpecResponse superSR = super.readAction(con);
+		
+		String common = ColumnMetadata.createColumnName(this.stationName, this.parameterCode);
+		
+		final Column timeColumn = new SimpleColumn(ParameterSpec.C_TSM_DT);
+		final Column sampleSetColumn = new SimpleColumn(common + C_SAMPLE_SET);
+		final Column valueColumn = new SimpleColumn(common + C_BED_VALUE);
+		final Column sampleMassColumn = new SimpleColumn(common + C_SAMPLE_MASS);
+		final Column errorColumn = new SimpleColumn(common + "ERROR");
+		final Column conf95Column = new SimpleColumn(common + "CONF95");
+		
+		ColumnGrouping cols = DBConnectorPlanStep.buildColumnGroupingFromSpec(this, timeColumn);
+		NudeFilter prefilter = new NudeFilterBuilder(cols)
+				.addFilterStage(new FilterStageBuilder(cols).addTransform(timeColumn, new IntoMillisTransform(timeColumn)).buildFilterStage())
+				.buildFilter();
+		
+		ColumnGrouping colGroup = new ColumnGrouping(Arrays.asList(new Column[] {
+				 timeColumn 
+				,sampleSetColumn
+				,valueColumn
+				,sampleMassColumn
+				,errorColumn
+				,conf95Column
+				}));
+		
+		ResultSet avg = new BedSedAverageResultSet(prefilter.filter(superSR.rset),
+				colGroup,
+				timeColumn, sampleSetColumn, valueColumn, sampleMassColumn, errorColumn, conf95Column);
+		
+		NudeFilter postfilter = new NudeFilterBuilder(colGroup)
+			.addFilterStage(new FilterStageBuilder(colGroup).addTransform(valueColumn, new BedSedErrorBarTransform(valueColumn, conf95Column)).buildFilterStage())
+			.addFilterStage(new FilterStageBuilder(colGroup).addTransform(valueColumn, new SandGrainSizeLimiterTransform(valueColumn)).buildFilterStage())
+			.addFilterStage(new FilterStageBuilder(colGroup).addTransform(timeColumn, new OutOfMillisTransform(timeColumn)).buildFilterStage())
+			.buildFilter();
+		
+		result = new SpecResponse(superSR.responseSpec, postfilter.filter(avg), superSR.fullRowCount, superSR.validationErrors);
+		
+		return result;
 	}
 	
 	public static final String C_SITE_ID = "SITE_ID";

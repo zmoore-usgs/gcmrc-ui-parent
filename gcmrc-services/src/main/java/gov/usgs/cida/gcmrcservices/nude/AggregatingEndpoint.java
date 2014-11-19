@@ -76,6 +76,9 @@ public class AggregatingEndpoint extends SpecEndpoint {
 			for (Entry<String, ColumnMetadata> ent : ColumnResolver.getQWColumns(sqlProvider).entrySet()) {
 				exemptColumns.addAll(getExemptColumns(ent.getValue(), station));
 			}
+			for (Entry<String, ColumnMetadata> ent : ColumnResolver.getBedSedColumns(sqlProvider).entrySet()) {
+				exemptColumns.addAll(getExemptColumns(ent.getValue(), station));
+			}
 		}
 		
 		NudeFilterBuilder offsettingLoadBuilder = new NudeFilterBuilder(new ColumnGrouping(interestingColumns));

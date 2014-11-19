@@ -38,10 +38,8 @@ public class BedSedAverageTest {
 		ResultSet expected = new IteratorWrappingResultSet(expectedSampleJiraDataset.iterator());
 		ResultSet in = new IteratorWrappingResultSet(incomingSampleJiraDataset.iterator());
 		
-		BedSedAveragePlanStep bsaps = new BedSedAveragePlanStep(timeColumn, sampleSetColumn, valueColumn, sampleMassColumn, errorColumn, conf95Column);
-		
-		ResultSet actual = bsaps.runStep(in);
-		
+		ResultSet actual = new BedSedAverageResultSet(in, expectedSampleJiraColGroup, timeColumn, sampleSetColumn, valueColumn, sampleMassColumn, errorColumn, conf95Column);
+
 		assertTrue(checkEqualRows(expected, actual));
 	}
 	
@@ -52,9 +50,18 @@ public class BedSedAverageTest {
 		ResultSet expected = new IteratorWrappingResultSet(expectedRealWorldDataset.iterator());
 		ResultSet in = new IteratorWrappingResultSet(incomingRealWorldDataset.iterator());
 		
-		BedSedAveragePlanStep bsaps = new BedSedAveragePlanStep(timeColumn, sampleSetColumn, valueColumn, sampleMassColumn, errorColumn, conf95Column);
-		
-		ResultSet actual = bsaps.runStep(in);
+		ResultSet actual = new BedSedAverageResultSet(in, expectedRealWorldColGroup, timeColumn, sampleSetColumn, valueColumn, sampleMassColumn, errorColumn, conf95Column);
+
+		assertTrue(checkEqualRows(expected, actual));
+	}
+	
+	@Test
+	public void testBugReportTable() throws SQLException {
+		//Test created due to bug report in GCMON-144 comments
+		ResultSet expected = new IteratorWrappingResultSet(expectedBugReportDataset.iterator());
+		ResultSet in = new IteratorWrappingResultSet(incomingBugReportDataset.iterator());
+
+		ResultSet actual = new BedSedAverageResultSet(in, expectedBugReportColGroup, timeColumn, sampleSetColumn, valueColumn, sampleMassColumn, errorColumn, conf95Column);
 		
 		assertTrue(checkEqualRows(expected, actual));
 	}
@@ -127,7 +134,10 @@ public class BedSedAverageTest {
 			new String[] {"09404200","" + dtf.parseDateTime("2001-08-08T13:17:00-07:00").getMillis(),"6","452.55","0.319"},
 			new String[] {"09404200","" + dtf.parseDateTime("2001-08-08T13:25:00-07:00").getMillis(),"6","345.10","0.351"},
 			new String[] {"09404200","" + dtf.parseDateTime("2001-08-15T14:30:00-07:00").getMillis(),"7","450.04","0.283"},
+			new String[] {"09404200","" + dtf.parseDateTime("2001-08-15T14:30:00-07:00").getMillis(),"7","0","0.283"},
+			new String[] {"09404200","" + dtf.parseDateTime("2001-08-15T14:30:00-07:00").getMillis(),"7","450.04","0.283"},
 			new String[] {"09404200","" + dtf.parseDateTime("2001-08-15T14:40:00-07:00").getMillis(),"7","448.13","0.328"},
+			new String[] {"09404200","" + dtf.parseDateTime("2001-08-15T14:40:00-07:00").getMillis(),"7","0","0.328"},
 			new String[] {"09404200","" + dtf.parseDateTime("2001-09-04T15:20:00-07:00").getMillis(),"8","410.51","0.332"},
 			new String[] {"09404200","" + dtf.parseDateTime("2001-09-04T15:30:00-07:00").getMillis(),"8","413.94","0.337"},
 			new String[] {"09404200","" + dtf.parseDateTime("2001-09-04T15:40:00-07:00").getMillis(),"8","397.59","0.359"},
@@ -153,11 +163,43 @@ public class BedSedAverageTest {
 			new String[] {"" + dtf.parseDateTime("1997-11-06T11:30:00-07:00").getMillis(),"3","0.370","309.4","0.0234","0.0456"},
 			new String[] {"" + dtf.parseDateTime("1997-11-07T10:00:00-07:00").getMillis(),"4","0.349","410.9","0.0265","0.0517"},
 			new String[] {"" + dtf.parseDateTime("2001-07-23T17:10:00-07:00").getMillis(),"5","0.400","412.30","0.0121","0.0236"},
-			new String[] {"" + dtf.parseDateTime("2001-08-08T13:21:00-07:00").getMillis(),"6","0.335","398.83","0.0160","0.0312"},
-			new String[] {"" + dtf.parseDateTime("2001-08-15T14:35:00-07:00").getMillis(),"7","0.305","449.08","0.0228","0.0445"},
+//			new String[] {"" + dtf.parseDateTime("2001-08-08T13:21:00-07:00").getMillis(),"6","0.335","398.83","0.0160","0.0312"},
+//			new String[] {"" + dtf.parseDateTime("2001-08-15T14:35:00-07:00").getMillis(),"7","0.305","449.08","0.0228","0.0445"},
 			new String[] {"" + dtf.parseDateTime("2001-09-04T15:30:00-07:00").getMillis(),"8","0.342","407.35","0.0086","0.0168"},
 			new String[] {"" + dtf.parseDateTime("2001-09-13T13:45:00-07:00").getMillis(),"9","0.282","406.73","0.068","0.133"},
 			new String[] {"" + dtf.parseDateTime("2001-10-10T12:58:20-07:00").getMillis(),"10","0.373","430.78","0.0105","0.0205"}
+		});
+		
+		incomingBugReportColGroup = new ColumnGrouping(timeColumn, Arrays.asList(new Column[] {
+			timeColumn,
+			new SimpleColumn("site"),
+			valueColumn,
+			sampleMassColumn,
+			sampleSetColumn
+		}));
+		incomingBugReportDataset = ResultSetUtils.createTableRows(incomingBugReportColGroup, new String[][] {
+			new String[] {"" + dtf.parseDateTime("2012-11-19T16:18:00-07:00").getMillis(),"09404120","1.414","24.91","35"},
+			new String[] {"" + dtf.parseDateTime("2012-11-19T16:21:00-07:00").getMillis(),"09404120","0.355","1210.55","35"},
+			new String[] {"" + dtf.parseDateTime("2012-11-19T16:24:00-07:00").getMillis(),"09404120","0.282","354.83","35"},
+			new String[] {"" + dtf.parseDateTime("2012-11-20T11:05:00-07:00").getMillis(),"09404120",null,"0","36"},
+			new String[] {"" + dtf.parseDateTime("2012-11-20T11:10:00-07:00").getMillis(),"09404120","0.337","831.47","36"},
+			new String[] {"" + dtf.parseDateTime("2012-11-20T11:15:00-07:00").getMillis(),"09404120",null,"180.78","36"},
+			new String[] {"" + dtf.parseDateTime("2012-11-20T13:39:00-07:00").getMillis(),"09404120",null,"0","37"},
+			new String[] {"" + dtf.parseDateTime("2012-11-20T13:42:00-07:00").getMillis(),"09404120","0.354","2084.07","37"},
+			new String[] {"" + dtf.parseDateTime("2012-11-20T13:45:00-07:00").getMillis(),"09404120","0.25","161.67","37"}
+		});
+		
+		expectedBugReportColGroup = new ColumnGrouping(timeColumn, Arrays.asList(new Column[] {
+			timeColumn,
+			sampleSetColumn,
+			valueColumn,
+			sampleMassColumn,
+			errorColumn,
+			conf95Column
+		}));
+		expectedBugReportDataset = ResultSetUtils.createTableRows(expectedBugReportColGroup, new String[][] {
+			new String[] {"" + dtf.parseDateTime("2012-11-19T16:21:00-07:00").getMillis(),"35","0.683","530.10","0.366","0.714"},
+			new String[] {"" + dtf.parseDateTime("2012-11-20T13:43:30-07:00").getMillis(),"37","0.302","1122.87","0.053","0.103"}
 		});
 	}
 	
@@ -192,4 +234,9 @@ public class BedSedAverageTest {
 	protected static Iterable<TableRow> incomingRealWorldDataset = null;
 	protected static ColumnGrouping expectedRealWorldColGroup = null;
 	protected static Iterable<TableRow> expectedRealWorldDataset = null;
+	
+	protected static ColumnGrouping incomingBugReportColGroup = null;
+	protected static Iterable<TableRow> incomingBugReportDataset = null;
+	protected static ColumnGrouping expectedBugReportColGroup = null;
+	protected static Iterable<TableRow> expectedBugReportDataset = null;
 }

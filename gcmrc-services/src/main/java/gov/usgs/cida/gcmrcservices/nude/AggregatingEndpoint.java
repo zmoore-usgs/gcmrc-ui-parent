@@ -28,6 +28,7 @@ import gov.usgs.cida.nude.plan.PlanStep;
 import gov.usgs.cida.nude.provider.Provider;
 import gov.usgs.cida.nude.provider.sql.SQLProvider;
 import gov.usgs.cida.nude.resultset.inmemory.TableRow;
+import gov.usgs.cida.nude.time.DateRange;
 import gov.usgs.webservices.jdbc.spec.Spec;
 import java.math.BigDecimal;
 import java.util.Collection;
@@ -63,7 +64,8 @@ public class AggregatingEndpoint extends SpecEndpoint {
 		interestingColumns.add(time);
 		interestingColumns.addAll(muxedCols);
 		
-		result.add(new CutoffTimesPlanStep(time, new ColumnGrouping(interestingColumns), timeConfig));
+		DateRange requestedCutoff = new DateRange(timeConfig.getCutoffBefore(), timeConfig.getCutoffAfter());
+		result.add(new CutoffTimesPlanStep(time, new ColumnGrouping(interestingColumns), requestedCutoff));
 		
 		if (noDataFilter) {
 			result.add(new FilterStep(buildReplaceValueFilter(new ColumnGrouping(interestingColumns), interestingColumns, MINUS_999, BAD_DATA_KEYWORD)));

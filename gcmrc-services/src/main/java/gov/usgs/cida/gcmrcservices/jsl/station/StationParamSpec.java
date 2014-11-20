@@ -136,7 +136,7 @@ public class StationParamSpec extends Spec {
 	public static final String C_SITE_NAME = "SITE_NAME";
 	public static final String S_SITE_NAME = "site";
         public static final String C_SITE_DISPLAY_NAME = "SITE_DISPLAY_NAME";
-	public static final String S_SITE_DISPLAY_NAME = "SiteDisplayName";
+        public static final String S_SITE_DISPLAY_NAME = "SiteDisplayName";
 	public static final String C_DISPLAY_ORDER = "DISPLAY_ORDER";
 	public static final String S_DISPLAY_ORDER = "displayOrder";
 	public static final String C_DISPLAY_NAME = "DISPLAY_NAME";

@@ -42,7 +42,7 @@ public class StationParamSpec extends Spec {
 			new ColumnMapping(C_START_DT, S_START_DT),
 			new ColumnMapping(C_END_DT, S_END_DT),
 			new ColumnMapping(C_SITE_NAME, S_SITE_NAME),
-            new ColumnMapping(C_SITE_DISPLAY_NAME, S_SITE_DISPLAY_NAME),
+			new ColumnMapping(C_SITE_DISPLAY_NAME, S_SITE_DISPLAY_NAME),
 			new ColumnMapping(C_DISPLAY_ORDER, S_DISPLAY_ORDER),
 			new ColumnMapping(C_DISPLAY_NAME, S_DISPLAY_NAME),
 			new ColumnMapping(C_IS_VISIBLE, S_IS_VISIBLE),
@@ -81,7 +81,7 @@ public class StationParamSpec extends Spec {
 		result.append("  (SELECT T_POR.GROUP_ID,");
 		result.append("    GROUP_NAME,");
 		result.append("    SITE_NAME,");
-        result.append("    SITE_DISPLAY_NAME,");
+		result.append("    SITE_DISPLAY_NAME,");
 		result.append("    TO_CHAR(EARLIEST_DT, 'YYYY-MM-DD\"T\"HH24:MI:SS') AS START_DT,");
 		result.append("    TO_CHAR(LATEST_DT, 'YYYY-MM-DD\"T\"HH24:MI:SS')   AS END_DT,");
 		result.append("    DISPLAY_ORDER,");
@@ -101,7 +101,7 @@ public class StationParamSpec extends Spec {
 		result.append("        THEN SHORT_NAME");
 		result.append("        ELSE NWIS_SITE_NO");
 		result.append("      END AS SITE_NAME,");
-        result.append("      NAME AS SITE_DISPLAY_NAME");
+		result.append("      NAME AS SITE_DISPLAY_NAME");
 		result.append("    FROM SITE_STAR");
 		result.append("    ) SITE");
 		result.append("  ON T_POR.SITE_ID = SITE.SITE_ID");
@@ -135,8 +135,8 @@ public class StationParamSpec extends Spec {
 	public static final String S_END_DT = "endPosition";
 	public static final String C_SITE_NAME = "SITE_NAME";
 	public static final String S_SITE_NAME = "site";
-    public static final String C_SITE_DISPLAY_NAME = "SITE_DISPLAY_NAME";
-    public static final String S_SITE_DISPLAY_NAME = "SiteDisplayName";
+	public static final String C_SITE_DISPLAY_NAME = "SITE_DISPLAY_NAME";
+	public static final String S_SITE_DISPLAY_NAME = "SiteDisplayName";
 	public static final String C_DISPLAY_ORDER = "DISPLAY_ORDER";
 	public static final String S_DISPLAY_ORDER = "displayOrder";
 	public static final String C_DISPLAY_NAME = "DISPLAY_NAME";

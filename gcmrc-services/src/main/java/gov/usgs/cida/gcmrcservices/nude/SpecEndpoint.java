@@ -1,9 +1,11 @@
 package gov.usgs.cida.gcmrcservices.nude;
 
 import gov.usgs.cida.gcmrcservices.column.ColumnMetadata;
+
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.ListMultimap;
 import com.google.common.collect.Multimap;
+
 import gov.usgs.cida.gcmrcservices.TimeUtil;
 import static gov.usgs.cida.gcmrcservices.TimeUtil.TZ_CODE_LOOKUP;
 import gov.usgs.cida.gcmrcservices.column.ColumnResolver;
@@ -17,6 +19,7 @@ import static gov.usgs.cida.gcmrcservices.nude.Endpoint.TIMEZONE_KEYWORD;
 import static gov.usgs.cida.gcmrcservices.nude.Endpoint.getDateRange;
 import static gov.usgs.cida.gcmrcservices.nude.Endpoint.getParameter;
 import static gov.usgs.cida.gcmrcservices.nude.Endpoint.getStations;
+import gov.usgs.cida.gcmrcservices.nude.time.CutoffTimesPlanStep;
 import gov.usgs.cida.gcmrcservices.nude.time.TimeColumnReq;
 import gov.usgs.cida.gcmrcservices.nude.time.TimeConfig;
 import gov.usgs.cida.gcmrcservices.nude.time.TimeSplitPlanStep;
@@ -29,7 +32,9 @@ import gov.usgs.cida.nude.provider.Provider;
 import gov.usgs.cida.nude.provider.sql.SQLProvider;
 import gov.usgs.cida.nude.resultset.inmemory.TableRow;
 import gov.usgs.webservices.jdbc.spec.Spec;
+
 import java.util.*;
+
 import org.apache.commons.lang.StringUtils;
 import org.joda.time.DateTimeZone;
 import org.slf4j.Logger;
@@ -55,7 +60,12 @@ public abstract class SpecEndpoint extends Endpoint {
 		boolean noDataFilter = (!"false".equals(getParameter(params, NODATA_FILTER_KEYWORD, "false")));
 		
 		modMap.put(BEGIN_KEYWORD, new String[]{timeConfig.getDateRange().getBegin().toString(TimeUtil.DB_DATE_FORMAT.withZone(DATABASE_TIMEZONE))});
-		modMap.put(END_KEYWORD, new String[]{timeConfig.getDateRange().getEnd().toString(TimeUtil.DB_DATE_FORMAT.withZone(DATABASE_TIMEZONE))});
+		//Get extra data if interpolating
+		if (null != timeConfig.getInterp() && null != timeConfig.getInterp().every) {
+			modMap.put(END_KEYWORD, new String[]{timeConfig.getDateRange().getEnd().plus(timeConfig.getInterp().every).toString(TimeUtil.DB_DATE_FORMAT.withZone(DATABASE_TIMEZONE))});
+		} else {
+			modMap.put(END_KEYWORD, new String[]{timeConfig.getDateRange().getEnd().toString(TimeUtil.DB_DATE_FORMAT.withZone(DATABASE_TIMEZONE))});
+		}
 		
 		boolean hasSpecs = false;
 		for (Spec spec : specs) {
@@ -69,6 +79,8 @@ public abstract class SpecEndpoint extends Endpoint {
 			List<String> stations = getStations(params);
 			steps.addAll(configurePlan(requestId, stations, specs, mux, timeConfig, noDataFilter));
 			steps.add(new TimeSplitPlanStep(steps.getLast().getExpectedColumns(), createTimeColumnReqs(params)));
+			//TODO In some cases this is causing problems with other requests. Not sure on this change
+			steps.add(new CutoffTimesPlanStep(time, steps.getLast().getExpectedColumns(), timeConfig));
 		} else {
 			List<TableRow> rows = new ArrayList<TableRow>();
 			rows.add(new TableRow(new SimpleColumn("ERROR"), "No Columns Specified"));

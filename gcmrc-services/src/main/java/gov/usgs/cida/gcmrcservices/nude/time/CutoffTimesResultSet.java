@@ -7,13 +7,14 @@ package gov.usgs.cida.gcmrcservices.nude.time;
 
 import gov.usgs.cida.nude.column.Column;
 import gov.usgs.cida.nude.column.ColumnGrouping;
-import static gov.usgs.cida.nude.resultset.ReadOnlyForwardResultSet.throwIfClosed;
 import gov.usgs.cida.nude.resultset.inmemory.PeekingResultSet;
 import gov.usgs.cida.nude.resultset.inmemory.TableRow;
+
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.LinkedList;
 import java.util.List;
+
 import org.joda.time.DateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -53,13 +54,13 @@ public class CutoffTimesResultSet extends PeekingResultSet {
 					TableRow nextBuilt = TableRow.buildTableRow(in);
 					DateTime nextTime = getPrimaryKey(nextBuilt);
 					
-					if (null != timeConfig.getCutoffBefore()) {
-						if (timeConfig.getCutoffBefore().compareTo(nextTime) > 0) {
+					if (null != timeConfig.dateRange.begin) {
+						if (timeConfig.dateRange.begin.compareTo(nextTime) > 0) {
 							weGood = false;
 						}
 					}
-					if (null != timeConfig.getCutoffAfter()) {
-						if (timeConfig.getCutoffAfter().compareTo(nextTime) < 0) {
+					if (null != timeConfig.dateRange.end) {
+						if (timeConfig.dateRange.end.compareTo(nextTime) < 0) {
 							weGood = false;
 						}
 					}

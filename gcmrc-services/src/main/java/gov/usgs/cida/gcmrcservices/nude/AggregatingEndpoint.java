@@ -63,7 +63,10 @@ public class AggregatingEndpoint extends SpecEndpoint {
 		interestingColumns.add(time);
 		interestingColumns.addAll(muxedCols);
 		
-		result.add(new CutoffTimesPlanStep(time, new ColumnGrouping(interestingColumns), timeConfig));
+		//TODO Do not truncate data if interpolation is requested 
+		if (null == timeConfig.getInterp()) {
+			result.add(new CutoffTimesPlanStep(time, new ColumnGrouping(interestingColumns), timeConfig));
+		}
 		
 		if (noDataFilter) {
 			result.add(new FilterStep(buildReplaceValueFilter(new ColumnGrouping(interestingColumns), interestingColumns, MINUS_999, BAD_DATA_KEYWORD)));

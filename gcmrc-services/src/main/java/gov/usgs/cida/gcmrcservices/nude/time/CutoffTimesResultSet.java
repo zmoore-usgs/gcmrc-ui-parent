@@ -9,6 +9,7 @@ import gov.usgs.cida.nude.column.Column;
 import gov.usgs.cida.nude.column.ColumnGrouping;
 import gov.usgs.cida.nude.resultset.inmemory.PeekingResultSet;
 import gov.usgs.cida.nude.resultset.inmemory.TableRow;
+import gov.usgs.cida.nude.time.DateRange;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -28,9 +29,9 @@ public class CutoffTimesResultSet extends PeekingResultSet {
 	
 	protected final ResultSet in;
 	protected final Column timeColumn;
-	protected final TimeConfig timeConfig;
+	protected final DateRange keepDateRange;
 
-	public CutoffTimesResultSet(ResultSet in, Column timeColumn, ColumnGrouping outColumns, TimeConfig timeConfig) {
+	public CutoffTimesResultSet(ResultSet in, Column timeColumn, ColumnGrouping outColumns, DateRange keepDateRange) {
 		try {
 			this.closed = in.isClosed();
 		} catch (Exception e) {
@@ -40,7 +41,7 @@ public class CutoffTimesResultSet extends PeekingResultSet {
 		this.in = in;
 		this.timeColumn = timeColumn;
 		this.columns = outColumns;
-		this.timeConfig = timeConfig;
+		this.keepDateRange = keepDateRange;
 	}
 	
 	@Override
@@ -54,13 +55,13 @@ public class CutoffTimesResultSet extends PeekingResultSet {
 					TableRow nextBuilt = TableRow.buildTableRow(in);
 					DateTime nextTime = getPrimaryKey(nextBuilt);
 					
-					if (null != timeConfig.dateRange.begin) {
-						if (timeConfig.dateRange.begin.compareTo(nextTime) > 0) {
+					if (null != keepDateRange && null != keepDateRange.begin) {
+						if (keepDateRange.begin.compareTo(nextTime) > 0) {
 							weGood = false;
 						}
 					}
-					if (null != timeConfig.dateRange.end) {
-						if (timeConfig.dateRange.end.compareTo(nextTime) < 0) {
+					if (null != keepDateRange && null != keepDateRange.end) {
+						if (keepDateRange.end.compareTo(nextTime) < 0) {
 							weGood = false;
 						}
 					}

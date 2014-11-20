@@ -8,6 +8,7 @@ package gov.usgs.cida.gcmrcservices.nude.time;
 import gov.usgs.cida.nude.column.Column;
 import gov.usgs.cida.nude.column.ColumnGrouping;
 import gov.usgs.cida.nude.plan.PlanStep;
+import gov.usgs.cida.nude.time.DateRange;
 import java.sql.ResultSet;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,12 +22,12 @@ public class CutoffTimesPlanStep implements PlanStep {
 	
 	protected final Column timeColumn;
 	protected final ColumnGrouping outColumns;
-	protected final TimeConfig timeConfig;
+	protected final DateRange keepDateRange;
 
-	public CutoffTimesPlanStep(Column timeColumn, ColumnGrouping outColumns, TimeConfig timeConfig) {
+	public CutoffTimesPlanStep(Column timeColumn, ColumnGrouping outColumns, DateRange keepDateRange) {
 		this.timeColumn = timeColumn;
 		this.outColumns = outColumns;
-		this.timeConfig = timeConfig;
+		this.keepDateRange = keepDateRange;
 	}
 	
 	@Override
@@ -34,7 +35,7 @@ public class CutoffTimesPlanStep implements PlanStep {
 		ResultSet result = null;
 		
 		if (null != rs) {
-			result = new CutoffTimesResultSet(rs, timeColumn, outColumns, timeConfig);
+			result = new CutoffTimesResultSet(rs, timeColumn, outColumns, keepDateRange);
 		}
 		
 		return result;

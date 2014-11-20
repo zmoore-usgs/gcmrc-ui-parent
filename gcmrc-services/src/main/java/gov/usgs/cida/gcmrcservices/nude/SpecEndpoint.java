@@ -79,8 +79,8 @@ public abstract class SpecEndpoint extends Endpoint {
 		if (hasSpecs) {
 			List<String> stations = getStations(params);
 			steps.addAll(configurePlan(requestId, stations, specs, mux, timeConfig, noDataFilter));
-			steps.add(new TimeSplitPlanStep(steps.getLast().getExpectedColumns(), createTimeColumnReqs(params)));
 			steps.add(new CutoffTimesPlanStep(time, steps.getLast().getExpectedColumns(), timeConfig.getDateRange()));
+			steps.add(new TimeSplitPlanStep(steps.getLast().getExpectedColumns(), createTimeColumnReqs(params)));
 		} else {
 			List<TableRow> rows = new ArrayList<TableRow>();
 			rows.add(new TableRow(new SimpleColumn("ERROR"), "No Columns Specified"));

@@ -31,8 +31,7 @@ public class BedSedAverageResultSet extends PeekingResultSet {
 	protected static final BigDecimal cutoffMassInGrams = new BigDecimal("20.000");
 	protected static final SortedSet<SampleSetRule> rules = new TreeSet(Arrays.asList(new SampleSetRule[] {
 		new SampleSetRule(cutoffMassInGrams, 3, 2),
-		new SampleSetRule(cutoffMassInGrams, 4, 3),
-		new SampleSetRule(cutoffMassInGrams, 5, 4)
+		new SampleSetRule(cutoffMassInGrams, 4, 3)
 	}));
 	
 	protected final ResultSet in;

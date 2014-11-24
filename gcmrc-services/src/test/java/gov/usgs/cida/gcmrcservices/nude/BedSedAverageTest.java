@@ -135,7 +135,7 @@ public class BedSedAverageTest {
 			new String[] {"09404200","" + dtf.parseDateTime("2001-08-08T13:25:00-07:00").getMillis(),"6","345.10","0.351"},
 			new String[] {"09404200","" + dtf.parseDateTime("2001-08-15T14:30:00-07:00").getMillis(),"7","450.04","0.283"},
 			new String[] {"09404200","" + dtf.parseDateTime("2001-08-15T14:30:00-07:00").getMillis(),"7","0","0.283"},
-			new String[] {"09404200","" + dtf.parseDateTime("2001-08-15T14:30:00-07:00").getMillis(),"7","450.04","0.283"},
+			new String[] {"09404200","" + dtf.parseDateTime("2001-08-15T14:35:00-07:00").getMillis(),"7","450.04","0.283"},
 			new String[] {"09404200","" + dtf.parseDateTime("2001-08-15T14:40:00-07:00").getMillis(),"7","448.13","0.328"},
 			new String[] {"09404200","" + dtf.parseDateTime("2001-08-15T14:40:00-07:00").getMillis(),"7","0","0.328"},
 			new String[] {"09404200","" + dtf.parseDateTime("2001-09-04T15:20:00-07:00").getMillis(),"8","410.51","0.332"},
@@ -164,7 +164,7 @@ public class BedSedAverageTest {
 			new String[] {"" + dtf.parseDateTime("1997-11-07T10:00:00-07:00").getMillis(),"4","0.349","410.9","0.0265","0.0517"},
 			new String[] {"" + dtf.parseDateTime("2001-07-23T17:10:00-07:00").getMillis(),"5","0.400","412.30","0.0121","0.0236"},
 //			new String[] {"" + dtf.parseDateTime("2001-08-08T13:21:00-07:00").getMillis(),"6","0.335","398.83","0.0160","0.0312"},
-//			new String[] {"" + dtf.parseDateTime("2001-08-15T14:35:00-07:00").getMillis(),"7","0.305","449.08","0.0228","0.0445"},
+			new String[] {"" + dtf.parseDateTime("2001-08-15T14:35:00-07:00").getMillis(),"7","0.298","449.40","0.0150","0.0292"},
 			new String[] {"" + dtf.parseDateTime("2001-09-04T15:30:00-07:00").getMillis(),"8","0.342","407.35","0.0086","0.0168"},
 			new String[] {"" + dtf.parseDateTime("2001-09-13T13:45:00-07:00").getMillis(),"9","0.282","406.73","0.068","0.133"},
 			new String[] {"" + dtf.parseDateTime("2001-10-10T12:58:20-07:00").getMillis(),"10","0.373","430.78","0.0105","0.0205"}

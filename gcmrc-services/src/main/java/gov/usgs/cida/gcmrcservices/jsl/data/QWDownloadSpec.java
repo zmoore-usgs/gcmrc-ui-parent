@@ -54,7 +54,7 @@ public class QWDownloadSpec extends Spec implements CentralizableTimezone {
 			new ColumnMapping(C_SAMPLE_ID, null),
 			new ColumnMapping(C_STATION_NAME, S_STATION_NAME),
 			new ColumnMapping(C_STATION_NUM, S_STATION_NUM),
-			new ColumnMapping(C_START_DATE, SE_START_DATE, ASCENDING_ORDER, S_START_DATE + " (" + getTimezoneDisplay() + ")", null, null, null, "TO_CHAR(" + C_START_DATE + ", 'YYYY-MM-DD\"T\"HH24:MI:SS')", null, null),
+			new ColumnMapping(C_START_DATE, SE_DEFAULT_ORDERING, ASCENDING_ORDER, S_START_DATE + " (" + getTimezoneDisplay() + ")", null, null, null, "TO_CHAR(" + C_START_DATE + ", 'YYYY-MM-DD\"T\"HH24:MI:SS')", null, null),
 			new ColumnMapping(C_MEAN_DATE, SE_MEAN_DATE, ASCENDING_ORDER, S_MEAN_DATE + " (" + getTimezoneDisplay() + ")", null, null, null, "TO_CHAR(" + C_MEAN_DATE + ", 'YYYY-MM-DD\"T\"HH24:MI:SS')", null, null),
 			new ColumnMapping(C_END_DATE, SE_END_DATE, ASCENDING_ORDER, S_END_DATE + " (" + getTimezoneDisplay() + ")", null, null, null, "TO_CHAR(" + C_END_DATE + ", 'YYYY-MM-DD\"T\"HH24:MI:SS')", null, null),
 			new ColumnMapping(C_USGS_DATA_LEAD, S_USGS_DATA_LEAD),
@@ -597,6 +597,8 @@ public class QWDownloadSpec extends Spec implements CentralizableTimezone {
 	public static final String S_SILT_CLAY_TOT_95ER = "95%-confidence-level total error in bias-corr. silt&clay concentration (mg/L)";
 	public static final String S_SAND_TOT_95ER = "95%-confidence-level total error in sand concentration (mg/L)";
 	public static final String S_SAND_D50_TOT_95ER = "95%-confidence-level total error in sand D50(mm)";
+	
+	public static final String SE_DEFAULT_ORDERING = "defaultOrder";
 	
 	public static final String SE_SAMPLE_ID = "sampleId";
 	public static final String SE_STATION_NAME = "stationName";

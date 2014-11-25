@@ -19,7 +19,6 @@
 		<a href="http://www.usgs.gov/">U.S. Geological Survey</a> |
         <a href="http://www.gcmrc.gov/gcmrc.aspx">Grand Canyon Monitoring and Research Center</a>
         <br />
-        <script type="text/javascript" src="http://www.gcmrc.gov/scripts/url.js"></script><br />
 
         <div>
 			<noscript>

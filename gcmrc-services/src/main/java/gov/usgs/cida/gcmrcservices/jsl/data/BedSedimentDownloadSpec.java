@@ -53,7 +53,7 @@ public class BedSedimentDownloadSpec extends Spec implements CentralizableTimezo
 		ColumnMapping[] result = new ColumnMapping[] {
 			new ColumnMapping(C_STATION_NAME, S_STATION_NAME),
 			new ColumnMapping(C_STATION_NUM, S_STATION_NUM),
-			new ColumnMapping(C_BED_DATE, S_BED_DATE, ASCENDING_ORDER, S_BED_DATE, null, null, null, "TO_CHAR(" + C_BED_DATE + ", 'YYYY-MM-DD')", null, null),
+			new ColumnMapping(C_BED_DATE, QWDownloadSpec.SE_DEFAULT_ORDERING, ASCENDING_ORDER, S_BED_DATE, null, null, null, "TO_CHAR(" + C_BED_DATE + ", 'YYYY-MM-DD')", null, null),
 			new ColumnMapping(C_BED_TIME, S_BED_TIME, ASCENDING_ORDER, S_BED_TIME + " (" + getTimezoneDisplay() + ")", null, null, null, "TO_CHAR(" + C_BED_TIME + ", 'HH24:MI:SS')", null, null),
 			new ColumnMapping(C_SAMPLE_SET, S_SAMPLE_SET),
 			new ColumnMapping(C_NOTES, S_NOTES),
@@ -246,7 +246,7 @@ public class BedSedimentDownloadSpec extends Spec implements CentralizableTimezo
 	public static final String C_BED_TIME = "BED_TM";
 	public static final String S_BED_TIME = "time";
 	public static final String C_SAMPLE_SET = "SAMPLE_SET";
-	public static final String S_SAMPLE_SET = "set";
+	public static final String S_SAMPLE_SET = "Sample set";
 	public static final String C_NOTES = "NOTES";
 	public static final String S_NOTES = "NOTES";
 	public static final String C_STATION_LOCATION = "STATION_LOCATION";
@@ -256,9 +256,9 @@ public class BedSedimentDownloadSpec extends Spec implements CentralizableTimezo
 	public static final String C_SAND_D50 = "SAND_D50";
 	public static final String S_SAND_D50 = "Sand D50 (mm)";
 	public static final String C_FINES_D50 = "FINES_D50";
-	public static final String S_FINES_D50 = "Fines D50 (mm)";
+	public static final String S_FINES_D50 = "Sand, silt, and clay D50 (mm)";
 	public static final String C_TOTAL_D50 = "TOTAL_D50";
-	public static final String S_TOTAL_D50 = "Total D50 (mm)";
+	public static final String S_TOTAL_D50 = "Total sample D50 (mm)";
 	public static final String C_PCT_BTWN_063_125 = "PCT_BTWN_063_125";
 	public static final String S_PCT_BTWN_063_125 = "% of sand finer than 0.125 mm";
 	public static final String C_SIZE_DIST_LT_037 = "SIZE_DIST_LT_037";

@@ -363,6 +363,7 @@ GCMRC.Dygraphs.overrides = function(hoursOffset) {
 		ctx.beginPath();
 		ctx.strokeStyle = color;
 		ctx.lineWidth = strokeWidth;
+		ctx.lineJoin = "bevel";
 
 		// NOTE: we break the iterator's encapsulation here for about a 25% speedup.
 		var arr = iter.array_;

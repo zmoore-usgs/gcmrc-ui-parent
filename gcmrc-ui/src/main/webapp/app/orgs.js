@@ -112,8 +112,8 @@ GCMRC.Organizations = {
 		url : "http://institutodeingenieria.uabc.mx/",
 		logo : {
 			url : CONFIG.relativePath + "app/sources/source-iiuabc.jpg",
-			width : 52,
-			height : 40
+			width : 136,
+			height : 102
 		}
 	}
 };

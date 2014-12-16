@@ -106,6 +106,15 @@ GCMRC.Organizations = {
 			width : 40,
 			height : 40
 		}
+	},
+	"IIUABC" : {
+		displayName : "Instituto de Ingeniería UABC",
+		url : "http://institutodeingenieria.uabc.mx/",
+		logo : {
+			url : CONFIG.relativePath + "app/sources/source-iiuabc.jpg",
+			width : 52,
+			height : 40
+		}
 	}
 };
 

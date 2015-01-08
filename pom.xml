@@ -53,9 +53,9 @@
 			<timezone>-6</timezone>
 		</developer>
 		<developer>
-			<id>tcadkin</id>
-			<name>Tracey Cadkin</name>
-			<email>tcadkin@usgs.gov</email>
+			<id>mhines-usgs</id>
+			<name>Megan Hines</name>
+			<email>mhines@usgs.gov</email>
 			<roles>
 				<role>Project Lead</role>
 				<role>Software Developer</role>

@@ -30,9 +30,9 @@ public class BedSedAverageResultSet extends PeekingResultSet {
 
 	protected static final BigDecimal cutoffMassInGrams = new BigDecimal("20.000");
 	protected static final SortedSet<SampleSetRule> rules = new TreeSet(Arrays.asList(new SampleSetRule[] {
-		new SampleSetRule(cutoffMassInGrams, 3, 2),
-		new SampleSetRule(cutoffMassInGrams, 4, 3),
-		new SampleSetRule(cutoffMassInGrams, 1, 1)
+		new SampleSetRule(1, 1),
+		new SampleSetRule(3, 2),
+		new SampleSetRule(4, 3)
 	}));
 	
 	protected final ResultSet in;
@@ -140,10 +140,10 @@ public class BedSedAverageResultSet extends PeekingResultSet {
 		int sampleSetSize = groupedSampleSet.size();
 		boolean isValid = false;
 		for (SampleSetRule rule : rules) {
-			if ((!rule.equals(rules.last()) && sampleSetSize >= rules.first().sampleSetSize 
-						&& sampleSetSize <= rule.sampleSetSize
+			if ((!rule.equals(rules.last())
+						&& sampleSetSize == rule.sampleSetSize
 						&& validSamples.size() >= rule.minValidSamples)
-					|| (rule.equals(rules.last()) && sampleSetSize >= rules.first().sampleSetSize
+					|| (rule.equals(rules.last())
 						&& sampleSetSize >= rule.sampleSetSize
 						&& validSamples.size() >= rule.minValidSamples)) {
 				isValid = true;
@@ -336,12 +336,10 @@ public class BedSedAverageResultSet extends PeekingResultSet {
 	}
 	
 	public static final class SampleSetRule implements Comparable<SampleSetRule> {
-		public final BigDecimal cutoffMass;
 		public final int sampleSetSize;
 		public final int minValidSamples;
 
-		public SampleSetRule(BigDecimal cutoffMass, int sampleSetSize, int minValidSamples) {
-			this.cutoffMass = cutoffMass;
+		public SampleSetRule(int sampleSetSize, int minValidSamples) {
 			this.sampleSetSize = sampleSetSize;
 			this.minValidSamples = minValidSamples;
 		}
@@ -358,7 +356,6 @@ public class BedSedAverageResultSet extends PeekingResultSet {
 			if (obj instanceof SampleSetRule) {
 				SampleSetRule rhs = (SampleSetRule) obj;
 				return new EqualsBuilder()
-						.append(this.cutoffMass, rhs.cutoffMass)
 						.append(this.sampleSetSize, rhs.sampleSetSize)
 						.append(this.minValidSamples, rhs.minValidSamples)
 						.isEquals();
@@ -369,7 +366,6 @@ public class BedSedAverageResultSet extends PeekingResultSet {
 		@Override
 		public int hashCode() {
 			return new HashCodeBuilder()
-					.append(this.cutoffMass)
 					.append(this.sampleSetSize)
 					.append(this.minValidSamples)
 					.toHashCode();

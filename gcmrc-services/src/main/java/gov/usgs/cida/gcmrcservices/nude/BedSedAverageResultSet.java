@@ -1,5 +1,7 @@
 package gov.usgs.cida.gcmrcservices.nude;
 
+import com.google.common.collect.Range;
+import com.google.common.collect.Ranges;
 import gov.usgs.cida.nude.column.Column;
 import gov.usgs.cida.nude.column.ColumnGrouping;
 import gov.usgs.cida.nude.column.SimpleColumn;
@@ -12,10 +14,10 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.Map;
-import java.util.SortedSet;
-import java.util.TreeSet;
+import java.util.Set;
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.slf4j.Logger;
@@ -29,11 +31,12 @@ public class BedSedAverageResultSet extends PeekingResultSet {
 	private static final Logger log = LoggerFactory.getLogger(BedSedAverageResultSet.class);
 
 	protected static final BigDecimal cutoffMassInGrams = new BigDecimal("20.000");
-	protected static final SortedSet<SampleSetRule> rules = new TreeSet(Arrays.asList(new SampleSetRule[] {
-		new SampleSetRule(1, 1),
-		new SampleSetRule(3, 2),
-		new SampleSetRule(4, 3)
+	protected static final Set<SampleSetRule> rules = new HashSet<>(Arrays.asList(new SampleSetRule[] {
+		new SampleSetRule(Ranges.singleton(1), Ranges.atLeast(1)),
+		new SampleSetRule(Ranges.singleton(3), Ranges.atLeast(2)),
+		new SampleSetRule(Ranges.atLeast(4), Ranges.atLeast(3))
 	}));
+	
 	
 	protected final ResultSet in;
 	protected final LinkedList<TableRow> queuedRows;
@@ -140,12 +143,8 @@ public class BedSedAverageResultSet extends PeekingResultSet {
 		int sampleSetSize = groupedSampleSet.size();
 		boolean isValid = false;
 		for (SampleSetRule rule : rules) {
-			if ((!rule.equals(rules.last())
-						&& sampleSetSize == rule.sampleSetSize
-						&& validSamples.size() >= rule.minValidSamples)
-					|| (rule.equals(rules.last())
-						&& sampleSetSize >= rule.sampleSetSize
-						&& validSamples.size() >= rule.minValidSamples)) {
+			if (rule.sampleSetSize.contains(sampleSetSize)
+					&& rule.minValidSamples.contains(validSamples.size())) {
 				isValid = true;
 			}
 		}
@@ -335,18 +334,13 @@ public class BedSedAverageResultSet extends PeekingResultSet {
 		return this.in.getCursorName();
 	}
 	
-	public static final class SampleSetRule implements Comparable<SampleSetRule> {
-		public final int sampleSetSize;
-		public final int minValidSamples;
-
-		public SampleSetRule(int sampleSetSize, int minValidSamples) {
+	public static final class SampleSetRule {
+		public final Range<Integer> sampleSetSize;
+		public final Range<Integer> minValidSamples;
+		
+		public SampleSetRule(Range<Integer> sampleSetSize, Range<Integer> minValidSamples) {
 			this.sampleSetSize = sampleSetSize;
 			this.minValidSamples = minValidSamples;
-		}
-
-		@Override
-		public int compareTo(SampleSetRule o) {
-			return Integer.compare(this.sampleSetSize, o.sampleSetSize);
 		}
 
 		@Override

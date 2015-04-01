@@ -56,7 +56,9 @@ public class BedSedErrorBarTransformTest {
 			new String[] {"1065","5",null,"54","7",null},
 			new String[] {"1066","6","40","54",null,null},
 			new String[] {"1067","7",null,"54",null,null},
-			new String[] {"1071","8","10","64","10","10.1"}
+			new String[] {"1068","8","40","54",null,"13.6"},
+			new String[] {"1069","9",null,"54",null,"13.6"},
+			new String[] {"1071","10","10","64","10","10.1"}
 		});
 		
 		expectedSampleDataset = ResultSetUtils.createTableRows(sampleColGroup, new String[][] {
@@ -67,7 +69,9 @@ public class BedSedErrorBarTransformTest {
 			new String[] {"1065","5",null,"54","7",null},
 			new String[] {"1066","6","40","54",null,null},
 			new String[] {"1067","7",null,"54",null,null},
-			new String[] {"1071","8","-0.1;10;20.1","64","10","10.1"}
+			new String[] {"1068","8","26.4;40;53.6","54",null,"13.6"},
+			new String[] {"1069","9",null,"54",null,"13.6"},
+			new String[] {"1071","10","-0.1;10;20.1","64","10","10.1"}
 		});
 		
 	}

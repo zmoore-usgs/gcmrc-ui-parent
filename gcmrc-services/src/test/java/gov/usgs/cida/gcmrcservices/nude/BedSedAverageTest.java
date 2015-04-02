@@ -70,10 +70,10 @@ public class BedSedAverageTest {
 	public static void setUpClass() throws Exception {
 		timeColumn = new SimpleColumn("time");
 		sampleSetColumn = new SimpleColumn("sampleset");
-		valueColumn = new SimpleColumn("param1");
-		sampleMassColumn = new SimpleColumn("param2");
-		errorColumn = new SimpleColumn("param3");
-		conf95Column = new SimpleColumn("param4");
+		valueColumn = new SimpleColumn("value");
+		sampleMassColumn = new SimpleColumn("sampleMass");
+		errorColumn = new SimpleColumn("error");
+		conf95Column = new SimpleColumn("conf95");
 		
 		incomingSampleJiraColGroup = new ColumnGrouping(Arrays.asList(new Column[] {
 			timeColumn,
@@ -92,6 +92,7 @@ public class BedSedAverageTest {
 			new String[] {"1081","2","60","30"},
 			new String[] {"1092","3","30","50"},
 			new String[] {"1103","4","40","40"},
+			new String[] {"1104","4","44","42"},
 			new String[] {"1114","5","50","20"}
 		});
 		expectedSampleJiraColGroup = new ColumnGrouping(Arrays.asList(new Column[] {
@@ -105,6 +106,8 @@ public class BedSedAverageTest {
 		expectedSampleJiraDataset = ResultSetUtils.createTableRows(expectedSampleJiraColGroup, new String[][] {
 			new String[] {"1020","1","80","50","6", "11.7"},
 			new String[] {"1061","2","40","54","7", "13.6"},
+			new String[] {"1092","3","30","50",null, null},
+			new String[] {"1114","5","50","20",null, null}
 		});
 		
 		DateTimeFormatter dtf = ISODateTimeFormat.dateTimeNoMillis();
@@ -146,7 +149,8 @@ public class BedSedAverageTest {
 			new String[] {"09404200","" + dtf.parseDateTime("2001-09-13T14:00:00-07:00").getMillis(),"9","398.00","0.157"},
 			new String[] {"09404200","" + dtf.parseDateTime("2001-10-10T12:50:00-07:00").getMillis(),"10","432.09","0.362"},
 			new String[] {"09404200","" + dtf.parseDateTime("2001-10-10T13:00:00-07:00").getMillis(),"10","434.86","0.364"},
-			new String[] {"09404200","" + dtf.parseDateTime("2001-10-10T13:05:00-07:00").getMillis(),"10","425.40","0.394"}
+			new String[] {"09404200","" + dtf.parseDateTime("2001-10-10T13:05:00-07:00").getMillis(),"10","425.40","0.394"},
+			new String[] {"09404200","" + dtf.parseDateTime("2001-10-10T14:05:00-07:00").getMillis(),"11","425.40","0.394"}
 		});
 		
 		expectedRealWorldColGroup = new ColumnGrouping(timeColumn, Arrays.asList(new Column[] {
@@ -163,11 +167,11 @@ public class BedSedAverageTest {
 			new String[] {"" + dtf.parseDateTime("1997-11-06T11:30:00-07:00").getMillis(),"3","0.370","309.4","0.0234","0.0456"},
 			new String[] {"" + dtf.parseDateTime("1997-11-07T10:00:00-07:00").getMillis(),"4","0.349","410.9","0.0265","0.0517"},
 			new String[] {"" + dtf.parseDateTime("2001-07-23T17:10:00-07:00").getMillis(),"5","0.400","412.30","0.0121","0.0236"},
-//			new String[] {"" + dtf.parseDateTime("2001-08-08T13:21:00-07:00").getMillis(),"6","0.335","398.83","0.0160","0.0312"},
 			new String[] {"" + dtf.parseDateTime("2001-08-15T14:35:00-07:00").getMillis(),"7","0.298","449.40","0.0150","0.0292"},
 			new String[] {"" + dtf.parseDateTime("2001-09-04T15:30:00-07:00").getMillis(),"8","0.342","407.35","0.0086","0.0168"},
 			new String[] {"" + dtf.parseDateTime("2001-09-13T13:45:00-07:00").getMillis(),"9","0.282","406.73","0.068","0.133"},
-			new String[] {"" + dtf.parseDateTime("2001-10-10T12:58:20-07:00").getMillis(),"10","0.373","430.78","0.0105","0.0205"}
+			new String[] {"" + dtf.parseDateTime("2001-10-10T12:58:20-07:00").getMillis(),"10","0.373","430.78","0.0105","0.0205"},
+			new String[] {"" + dtf.parseDateTime("2001-10-10T14:05:00-07:00").getMillis(),"11","0.394","425.40",null,null}
 		});
 		
 		incomingBugReportColGroup = new ColumnGrouping(timeColumn, Arrays.asList(new Column[] {

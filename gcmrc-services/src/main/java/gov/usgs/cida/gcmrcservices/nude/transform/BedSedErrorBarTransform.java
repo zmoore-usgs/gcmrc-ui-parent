@@ -33,25 +33,28 @@ public class BedSedErrorBarTransform implements ColumnTransform {
 		try {
 			BigDecimal avgSizeValue = null;
 			if (null != tr.getValue(valueColumn)) {
-				avgSizeValue = new BigDecimal(tr.getValue(valueColumn));		
+				avgSizeValue = new BigDecimal(tr.getValue(valueColumn));
+				//Keep this around in case there's no error bars
+				result = avgSizeValue.toPlainString();
+				
+				BigDecimal conf95Value = null;
+				if (null != tr.getValue(conf95Column)) {
+					conf95Value = new BigDecimal(tr.getValue(conf95Column));
+					BigDecimal lowerConfValue = avgSizeValue.subtract(conf95Value, new MathContext(conf95Value.precision(), RoundingMode.HALF_EVEN));
+					String lowerConfResult = null;
+					if (null != lowerConfValue) {
+						lowerConfResult = lowerConfValue.toPlainString();
+					}
+
+					BigDecimal upperConfValue = avgSizeValue.add(conf95Value, new MathContext(conf95Value.precision(), RoundingMode.HALF_EVEN));
+					String upperConfResult = null;
+					if (null != upperConfValue) {
+						upperConfResult = upperConfValue.toPlainString();
+					}
+
+					result = lowerConfResult + DELIMITER + avgSizeValue.toPlainString() + DELIMITER + upperConfResult;
+				}
 			}
-			BigDecimal conf95Value = null;
-			if (null != tr.getValue(conf95Column)) {
-				conf95Value = new BigDecimal(tr.getValue(conf95Column));
-			}
-			BigDecimal lowerConfValue = avgSizeValue.subtract(conf95Value, new MathContext(conf95Value.precision(), RoundingMode.HALF_EVEN));
-			String lowerConfResult = null;
-			if (null != lowerConfValue) {
-				lowerConfResult = lowerConfValue.toPlainString();
-			}
-			
-			BigDecimal upperConfValue = avgSizeValue.add(conf95Value, new MathContext(conf95Value.precision(), RoundingMode.HALF_EVEN));
-			String upperConfResult = null;
-			if (null != upperConfValue) {
-				upperConfResult = upperConfValue.toPlainString();
-			}
-			
-			result = lowerConfResult + DELIMITER + avgSizeValue.toPlainString() + DELIMITER + upperConfResult;
 		} catch (Exception e) {
 			log.trace("could not calculate upper and lower 95% limits");
 		}

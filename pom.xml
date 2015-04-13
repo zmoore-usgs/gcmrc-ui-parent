@@ -96,7 +96,7 @@
 	</properties>
 	
 	<scm>
-		<developerConnection>scm:git:ssh://git@github.com:USGS-CIDA/gcmrc-ui-parent.git</developerConnection>
+		<developerConnection>scm:git:ssh://git@github.com/USGS-CIDA/gcmrc-ui-parent.git</developerConnection>
 	</scm>
 	
 	<distributionManagement>

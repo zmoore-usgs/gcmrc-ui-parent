@@ -67,18 +67,20 @@ public class BedSedAverageResultSet extends PeekingResultSet {
 		
 		while(0 >= result.size() && in.next() && !in.isAfterLast()) {
 			TableRow now = TableRow.buildTableRow(in);
-			queuedRows.add(now);
-			if (null == sampleSet) {
-				sampleSet = queuedRows.peek().getValue(sampleSetColumn);
-			}
-			
-			if (null != sampleSet && 
-					(queuedRows.size() > 1 && !sampleSet.equals(queuedRows.peekLast().getValue(sampleSetColumn)))) {
-				TableRow averagedRow = flushNextSampleSet();
-				if (null != averagedRow) {
-					result.add(averagedRow);
+			if (null != now.getValue(sampleSetColumn)) { // skip over null samplesets
+				queuedRows.add(now);
+				if (null == sampleSet) {
+					sampleSet = queuedRows.peek().getValue(sampleSetColumn);
 				}
-				sampleSet = null;
+
+				if (null != sampleSet && 
+						(queuedRows.size() > 1 && !sampleSet.equals(queuedRows.peekLast().getValue(sampleSetColumn)))) {
+					TableRow averagedRow = flushNextSampleSet();
+					if (null != averagedRow) {
+						result.add(averagedRow);
+					}
+					sampleSet = null;
+				}
 			}
 		}
 		

@@ -248,8 +248,8 @@ public class BedSedAverageTest {
 		}));
 		expectedGCMON296Dataset = ResultSetUtils.createTableRows(expectedGCMON296ColGroup, new String[][] {
 			new String[] {"" + dtf.parseDateTime("2010-11-08T15:10:00-07:00").getMillis(),"1","0.352","1453.63","0.0369","0.0720"},
-			new String[] {"" + dtf.parseDateTime("2010-11-08T15:20:00-07:00").getMillis(),null,"0.119","488.06",null,null},
-			new String[] {"" + dtf.parseDateTime("2012-01-17T16:25:00-07:00").getMillis(),null,"0.112","425.96",null,null},
+//			new String[] {"" + dtf.parseDateTime("2010-11-08T15:20:00-07:00").getMillis(),null,"0.119","488.06",null,null},
+//			new String[] {"" + dtf.parseDateTime("2012-01-17T16:25:00-07:00").getMillis(),null,"0.112","425.96",null,null},
 			new String[] {"" + dtf.parseDateTime("2012-01-17T16:35:00-07:00").getMillis(),"2","0.192","292.99","0.0221","0.0431"},
 			new String[] {"" + dtf.parseDateTime("2012-10-09T14:05:00-07:00").getMillis(),"3","0.306","193.03","0.0093","0.0181"},
 		});

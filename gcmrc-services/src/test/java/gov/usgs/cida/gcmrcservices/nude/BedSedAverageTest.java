@@ -66,6 +66,17 @@ public class BedSedAverageTest {
 		assertTrue(checkEqualRows(expected, actual));
 	}
 	
+	@Test
+	public void testGCMON296Table() throws SQLException {
+		//Test created due to bug report in GCMON-296
+		ResultSet expected = new IteratorWrappingResultSet(expectedGCMON296Dataset.iterator());
+		ResultSet in = new IteratorWrappingResultSet(incomingGCMON296Dataset.iterator());
+
+		ResultSet actual = new BedSedAverageResultSet(in, expectedGCMON296ColGroup, timeColumn, sampleSetColumn, valueColumn, sampleMassColumn, errorColumn, conf95Column);
+		
+		assertTrue(checkEqualRows(expected, actual));
+	}
+	
 	@BeforeClass
 	public static void setUpClass() throws Exception {
 		timeColumn = new SimpleColumn("time");
@@ -205,6 +216,43 @@ public class BedSedAverageTest {
 			new String[] {"" + dtf.parseDateTime("2012-11-19T16:21:00-07:00").getMillis(),"35","0.683","530.10","0.366","0.714"},
 			new String[] {"" + dtf.parseDateTime("2012-11-20T13:43:30-07:00").getMillis(),"37","0.302","1122.87","0.053","0.103"}
 		});
+		
+		incomingGCMON296ColGroup = new ColumnGrouping(timeColumn, Arrays.asList(new Column[] {
+			timeColumn,
+			new SimpleColumn("site"),
+			valueColumn,
+			sampleMassColumn,
+			sampleSetColumn
+		}));
+		incomingGCMON296Dataset = ResultSetUtils.createTableRows(incomingGCMON296ColGroup, new String[][] {
+			new String[] {"" + dtf.parseDateTime("2010-11-08T15:05:00-07:00").getMillis(),	"08375295",	"0.302",	"1681.59",	"1"},
+			new String[] {"" + dtf.parseDateTime("2010-11-08T15:10:00-07:00").getMillis(),	"08375295",	"0.33",	"1387.68",	"1"},
+			new String[] {"" + dtf.parseDateTime("2010-11-08T15:15:00-07:00").getMillis(),	"08375295",	"0.424",	"1291.62",	"1"},
+			new String[] {"" + dtf.parseDateTime("2010-11-08T15:20:00-07:00").getMillis(),	"08375295",	"0.119",	"488.06",	null},
+			new String[] {"" + dtf.parseDateTime("2012-01-17T16:25:00-07:00").getMillis(),	"08375295",	"0.112",	"425.96",	null},
+			new String[] {"" + dtf.parseDateTime("2012-01-17T16:30:00-07:00").getMillis(),	"08375295",	"0.161",	"334.93",	"2"},
+			new String[] {"" + dtf.parseDateTime("2012-01-17T16:35:00-07:00").getMillis(),	"08375295",	"0.18",	"327.35",	"2"},
+			new String[] {"" + dtf.parseDateTime("2012-01-17T16:40:00-07:00").getMillis(),	"08375295",	"0.235",	"216.68",	"2"},
+			new String[] {"" + dtf.parseDateTime("2012-10-09T14:00:00-07:00").getMillis(),	"08375295",	"0.28",	"274.21",	"3"},
+			new String[] {"" + dtf.parseDateTime("2012-10-09T14:05:00-07:00").getMillis(),	"08375295",	"0.31",	"130.98",	"3"},
+			new String[] {"" + dtf.parseDateTime("2012-10-09T14:10:00-07:00").getMillis(),	"08375295",	"0.318",	"173.91",	"3"}
+		});
+		
+		expectedGCMON296ColGroup = new ColumnGrouping(timeColumn, Arrays.asList(new Column[] {
+			timeColumn,
+			sampleSetColumn,
+			valueColumn,
+			sampleMassColumn,
+			errorColumn,
+			conf95Column
+		}));
+		expectedGCMON296Dataset = ResultSetUtils.createTableRows(expectedGCMON296ColGroup, new String[][] {
+			new String[] {"" + dtf.parseDateTime("2010-11-08T15:10:00-07:00").getMillis(),"1","0.352","1453.63","0.0369","0.0720"},
+			new String[] {"" + dtf.parseDateTime("2010-11-08T15:20:00-07:00").getMillis(),null,"0.119","488.06",null,null},
+			new String[] {"" + dtf.parseDateTime("2012-01-17T16:25:00-07:00").getMillis(),null,"0.112","425.96",null,null},
+			new String[] {"" + dtf.parseDateTime("2012-01-17T16:35:00-07:00").getMillis(),"2","0.192","292.99","0.0221","0.0431"},
+			new String[] {"" + dtf.parseDateTime("2012-10-09T14:05:00-07:00").getMillis(),"3","0.306","193.03","0.0093","0.0181"},
+		});
 	}
 	
 	@Before
@@ -243,4 +291,9 @@ public class BedSedAverageTest {
 	protected static Iterable<TableRow> incomingBugReportDataset = null;
 	protected static ColumnGrouping expectedBugReportColGroup = null;
 	protected static Iterable<TableRow> expectedBugReportDataset = null;
+	
+	protected static ColumnGrouping incomingGCMON296ColGroup = null;
+	protected static Iterable<TableRow> incomingGCMON296Dataset = null;
+	protected static ColumnGrouping expectedGCMON296ColGroup = null;
+	protected static Iterable<TableRow> expectedGCMON296Dataset = null;
 }

@@ -90,6 +90,16 @@ GCMRC.Reaches = function () {
 
 		slider.riverLoad.adjustMax = 50;
 		slider.riverLoad.adjustDefault = 10;
+	}
+	else if ("CRD" === CONFIG.networkName) {
+		slider.bedLoad.adjustMax = 200;
+		slider.bedLoad.adjustDefault = 50;
+
+		slider.riverFinesLoad.adjustMax = 50;
+		slider.riverFinesLoad.adjustDefault = 10;
+
+		slider.riverLoad.adjustMax = 50;
+		slider.riverLoad.adjustDefault = 10;
 
 	}
 

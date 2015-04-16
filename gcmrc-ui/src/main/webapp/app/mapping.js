@@ -345,6 +345,22 @@ GCMRC.Mapping = function() {
 					displayOutsideMaxExtent: true,
 					yx : {'EPSG:900913' : false}
 				}
+			),
+			colorado_river_delta_reaches : new OpenLayers.Layer.WMS(
+				'Colorado River Delta Reaches',
+				CONFIG.relativePath + 'geoserver/sample/wms',
+				{
+					SRS: 'EPSG: 900913',
+					CRS: 'EPSG:900913',
+					LAYERS: 'sample:colorado_river_delta',
+					STYLES: 'colorado_river_delta',
+					transparent: true
+				},
+				{
+					buffer: 0,
+					displayOutsideMaxExtent: true,
+					yx : {'EPSG:900913' : false}
+				}
 			)
 		}
 	};

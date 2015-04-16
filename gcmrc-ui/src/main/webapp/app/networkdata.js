@@ -51,7 +51,7 @@ GCMRC.Networks = function() {
 				"right": -114.55501,
 				"top": 32.72718
 			},
-			appFeatureId : "RIVER_DELTA"
+			reaches : true
 		},
 		"BIBE" : {
 			displayName : 'Big Bend',

@@ -16,6 +16,7 @@ GCMRC.Page = {
 		layersToAdd.push(GCMRC.Mapping.layers.flowlines.allzones);
 		layersToAdd.push(GCMRC.Mapping.layers.flowlines.zone8374535);
 		layersToAdd.push(GCMRC.Mapping.layers.flowlines.dinosaur_reaches);
+		layersToAdd.push(GCMRC.Mapping.layers.flowlines.colorado_river_delta_reaches);
 		layersToAdd.push(GCMRC.Mapping.layers.vector);
 		GCMRC.Mapping.maps[divId].addLayers(layersToAdd);
 
@@ -48,6 +49,8 @@ GCMRC.Page = {
 				GCMRC.Mapping.maps[divId].moveTo(new OpenLayers.LonLat(-12097598.376886, 4950668.6874257), 9);
 			} else if ('BIBE' === CONFIG.networkName) {
 				GCMRC.Mapping.maps[divId].moveTo(new OpenLayers.LonLat(-11492369.987008, 3397774.0210003), 9);
+			} else if ('CRD' === CONFIG.networkName) {
+				GCMRC.Mapping.maps[divId].moveTo(new OpenLayers.LonLat(-12797833.5705, 3813164.78718), 9);
 			} else {
 				LOG.error("Invalid Network Name!");
 			}

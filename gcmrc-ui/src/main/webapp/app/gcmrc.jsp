@@ -19,7 +19,6 @@
 	
 	{
 		features.put("CANYONLANDS", Boolean.parseBoolean(props.getProperty("gcmrc.features.canyonlands", "false")));
-		features.put("RIVER_DELTA", Boolean.parseBoolean(props.getProperty("gcmrc.features.riverdelta", "false")));
 	}
 %>
 <script type="text/javascript">
@@ -62,8 +61,7 @@ GCMRC.StationLoad = JSL.ResourceLoad(function(el) {
 
 GCMRC.Features = {
 	active : {
-		"CANYONLANDS" : <%= (null != features.get("CANYONLANDS") && Boolean.TRUE == features.get("CANYONLANDS"))?"true":"false" %>,
-		"RIVER_DELTA" : <%= (null != features.get("RIVER_DELTA") && Boolean.TRUE == features.get("RIVER_DELTA"))?"true":"false" %>
+		"CANYONLANDS" : <%= (null != features.get("CANYONLANDS") && Boolean.TRUE == features.get("CANYONLANDS"))?"true":"false" %>
 	},
 	checkFeature : function(obj) {
 		var result = false;

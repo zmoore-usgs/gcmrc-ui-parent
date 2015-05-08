@@ -1,4 +1,4 @@
-CONFIG.everyPeriod = "P1D";
+CONFIG.everyPeriod = "P1M";
 
 GCMRC.Page = {
 	createMiniMap: function(config) {

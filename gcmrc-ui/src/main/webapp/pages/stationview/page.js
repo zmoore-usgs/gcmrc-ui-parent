@@ -451,10 +451,10 @@ GCMRC.Page = {
 						columnOrdering.push({groupId : el.groupId, name : GCMRC.Page.params[el.groupId].description.displayName, reorderable : true, nameConfig: {useDefault: true}});
 						GCMRC.Page.ancillary.forEach(function(a) {
 							if (el.groupId == '2' && a.groupId == 2) {
-								columnOrdering.push({groupId : el.groupId, ancillaryGroupId: a.ancillaryGroupId, name : a.ancillaryName, reorderable : true, nameConfig: {useDefault: true}});
+								columnOrdering.push({groupId : el.groupId, ancillaryGroupId: a.ancillaryGroupId, name : a.ancillaryName, ancillaryColumn : a.ancillaryColumn, reorderable : true, nameConfig: {useDefault: true}});
 							}
 							else if (el.groupId == '5' && a.groupId == 5) {
-								columnOrdering.push({groupId : el.groupId, ancillaryGroupId: a.ancillaryGroupId, name : a.ancillaryName, reorderable : true, nameConfig: {useDefault: true}});
+								columnOrdering.push({groupId : el.groupId, ancillaryGroupId: a.ancillaryGroupId, name : a.ancillaryName, ancillaryColumn : a.ancillaryColumn, reorderable : true, nameConfig: {useDefault: true}});
 							}
 						})
 					}
@@ -506,7 +506,7 @@ GCMRC.Page = {
 			var columnDef = null;
 			if (resource) {
 				if (el.ancillaryGroupId) {
-					columnDef = [el.ancillaryColumn]
+					columnDef = [el.ancillaryColumn + CONFIG.stationName];
 				}
 				else {
 					columnDef = resource.columns.filter(function(col) {

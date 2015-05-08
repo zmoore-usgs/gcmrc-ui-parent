@@ -449,6 +449,14 @@ GCMRC.Page = {
 						return n.startsWith('inst!');
 					})) {
 						columnOrdering.push({groupId : el.groupId, name : GCMRC.Page.params[el.groupId].description.displayName, reorderable : true, nameConfig: {useDefault: true}});
+						GCMRC.Page.ancillary.forEach(function(a) {
+							if (el.groupId == '2' && a.groupId == 2) {
+								columnOrdering.push({groupId : el.groupId, ancillaryGroupId: a.ancillaryGroupId, name : a.ancillaryName, reorderable : true, nameConfig: {useDefault: true}});
+							}
+							else if (el.groupId == '5' && a.groupId == 5) {
+								columnOrdering.push({groupId : el.groupId, ancillaryGroupId: a.ancillaryGroupId, name : a.ancillaryName, reorderable : true, nameConfig: {useDefault: true}});
+							}
+						})
 					}
 				});
 				
@@ -497,9 +505,14 @@ GCMRC.Page = {
 			
 			var columnDef = null;
 			if (resource) {
-				columnDef = resource.columns.filter(function(col) {
-					return col.startsWith('inst!');
-				});
+				if (el.ancillaryGroupId) {
+					columnDef = [el.ancillaryColumn]
+				}
+				else {
+					columnDef = resource.columns.filter(function(col) {
+						return col.startsWith('inst!');
+					});					
+				}
 			} else if ("time" === el.groupId) {
 				columnDef = [el.groupId + "!" + el.formatConfig.format];
 			}
@@ -574,6 +587,10 @@ GCMRC.Page = {
 	colOrder: [],
 	earliestPosition : null,
 	latestPosition : null,
+	ancillary : [{groupId:2, ancillaryGroupId:2101, ancillaryName: 'Discharge Ice Affected', ancillaryColumn: 'iceAffected!discharge'},
+	             {groupId:2, ancillaryGroupId:2102, ancillaryName: 'Discharge Notes', ancillaryColumn: 'notes!discharge'},
+	             {groupId:5, ancillaryGroupId:5101, ancillaryName: 'Gage Height Ice Affected', ancillaryColumn: 'iceAffected!stage'},
+	             {groupId:5, ancillaryGroupId:5102, ancillaryName: 'Gage Height Notes', ancillaryColumn: 'notes!stage'}],
 	params : {},
 	paramsLoad : JSL.ResourceLoad(function(el) {
 		var identifier = el.groupId;

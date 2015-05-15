@@ -506,7 +506,7 @@ GCMRC.Page = {
 			var columnDef = null;
 			if (resource) {
 				if (el.ancillaryGroupId) {
-					columnDef = [el.ancillaryColumn + CONFIG.stationName];
+					columnDef = [el.ancillaryColumn + "!" + CONFIG.stationName];
 				}
 				else {
 					columnDef = resource.columns.filter(function(col) {
@@ -587,10 +587,10 @@ GCMRC.Page = {
 	colOrder: [],
 	earliestPosition : null,
 	latestPosition : null,
-	ancillary : [{groupId:2, ancillaryGroupId:2101, ancillaryName: 'Discharge Ice Affected', ancillaryColumn: 'iceAffected!discharge'},
-	             {groupId:2, ancillaryGroupId:2102, ancillaryName: 'Discharge Notes', ancillaryColumn: 'notes!discharge'},
-	             {groupId:5, ancillaryGroupId:5101, ancillaryName: 'Gage Height Ice Affected', ancillaryColumn: 'iceAffected!stage'},
-	             {groupId:5, ancillaryGroupId:5102, ancillaryName: 'Gage Height Notes', ancillaryColumn: 'notes!stage'}],
+	ancillary : [{groupId:2, ancillaryGroupId:2101, ancillaryName: 'Discharge Ice Affected', ancillaryColumn: 'iceAffected!Discharge'},
+	             {groupId:2, ancillaryGroupId:2102, ancillaryName: 'Discharge Notes', ancillaryColumn: 'notes!Discharge'},
+	             {groupId:5, ancillaryGroupId:5101, ancillaryName: 'Gage Height Ice Affected', ancillaryColumn: 'iceAffected!Stage'},
+	             {groupId:5, ancillaryGroupId:5102, ancillaryName: 'Gage Height Notes', ancillaryColumn: 'notes!Stage'}],
 	params : {},
 	paramsLoad : JSL.ResourceLoad(function(el) {
 		var identifier = el.groupId;

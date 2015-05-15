@@ -89,9 +89,31 @@ public class ColumnMetadata {
 	
 	public static String createColumnName(String station, ParameterCode parameterCode) {
 		String result = null;
-		
+		ParameterCode dischargeParameterCode = ParameterCode.parseParameterCode("inst!Discharge");
+		ParameterCode stageParameterCode = ParameterCode.parseParameterCode("inst!Stage");
+
 		if (null != station && null != parameterCode) {
-			result = "S" + hashString(station, 5) + "P" + hashString(parameterCode.toString(), 5);
+			if (parameterCode.sampleMethod.equals("iceAffected")) {
+				if (parameterCode.groupName.equals("Discharge")) {
+					result = "S" + hashString(station, 5) + "P" + hashString(dischargeParameterCode.toString(), 5) + ParameterSpec.C_ICE_AFFECTED;					
+				}
+				else {
+					result = "S" + hashString(station, 5) + "P" + hashString(stageParameterCode.toString(), 5) + ParameterSpec.C_ICE_AFFECTED;										
+				}
+			}
+			else {
+				if (parameterCode.sampleMethod.equals("notes")) {
+					if (parameterCode.groupName.equals("Discharge")) {
+						result = "S" + hashString(station, 5) + "P" + hashString(dischargeParameterCode.toString(), 5) + ParameterSpec.C_NOTES;					
+					}
+					else {
+						result = "S" + hashString(station, 5) + "P" + hashString(stageParameterCode.toString(), 5) + ParameterSpec.C_NOTES;										
+					}
+				}
+				else {
+					result = "S" + hashString(station, 5) + "P" + hashString(parameterCode.toString(), 5);				
+				}
+			}
 		}
 		
 		return result;

@@ -109,13 +109,13 @@ public class ColumnResolver {
 		if (null != cmd && null != station) {
 			List<ColumnMetadata.SpecEntry> specEntries = cmd.getSpecEntries();
 			for (ColumnMetadata.SpecEntry se : specEntries) {
-				Map<String, String[]> modMap = new HashMap<String, String[]>();
-				modMap.put(ParameterSpec.S_SITE_NAME, new String[] {station});
-				modMap.put(ParameterSpec.S_GROUP_NAME, new String[] {se.parameterCode.groupName});
-				modMap.put(QWDataSpec.S_SAMPLE_METHOD, new String[] {se.parameterCode.sampleMethod});
-				Spec spec = se.getSpec(station, specOptions);
-				Spec.loadParameters(spec, modMap);
-				result = spec;
+					Map<String, String[]> modMap = new HashMap<String, String[]>();
+					modMap.put(ParameterSpec.S_SITE_NAME, new String[] {station});
+					modMap.put(ParameterSpec.S_GROUP_NAME, new String[] {se.parameterCode.groupName});
+					modMap.put(QWDataSpec.S_SAMPLE_METHOD, new String[] {se.parameterCode.sampleMethod});
+					Spec spec = se.getSpec(station, specOptions);
+					Spec.loadParameters(spec, modMap);
+					result = spec;					
 			}
 		} else {
 			log.debug("No column by the name of: " + colName);
@@ -302,8 +302,22 @@ public class ColumnResolver {
 	
 	protected static Map<String, ColumnMetadata> buildAncillaryCols(SQLProvider sqlProvider) {
 		Map<String, ColumnMetadata> result = new HashMap<String, ColumnMetadata>();
+		String parameterCode;
 		
+		parameterCode = "notes!Discharge";
+		result.put(parameterCode, new ColumnMetadata(parameterCode, "discharge notes", 
+				new ColumnMetadata.SpecEntry(ParameterCode.parseParameterCode(parameterCode), ColumnMetadata.SpecEntry.SpecType.PARAM)));
+		parameterCode = "iceAffected!Discharge";
+		result.put(parameterCode, new ColumnMetadata(parameterCode, "discharge ice affected", 
+				new ColumnMetadata.SpecEntry(ParameterCode.parseParameterCode(parameterCode), ColumnMetadata.SpecEntry.SpecType.PARAM)));
 		
+		parameterCode = "notes!Stage";
+		result.put(parameterCode, new ColumnMetadata(parameterCode, "stage notes", 
+				new ColumnMetadata.SpecEntry(ParameterCode.parseParameterCode(parameterCode), ColumnMetadata.SpecEntry.SpecType.PARAM)));
+		parameterCode = "iceAffected!Stage";
+		result.put(parameterCode, new ColumnMetadata(parameterCode, "stage ice affected", 
+				new ColumnMetadata.SpecEntry(ParameterCode.parseParameterCode(parameterCode), ColumnMetadata.SpecEntry.SpecType.PARAM)));
+		log.debug("Instantaneous ancillary columns constructed : " + result.keySet().toString());
 		
 		return result;
 	}

@@ -1,10 +1,8 @@
 package gov.usgs.cida.gcmrcservices.nude;
 
 import gov.usgs.cida.gcmrcservices.column.ColumnMetadata;
-
 import com.google.common.collect.ListMultimap;
 import com.google.common.collect.Multimap;
-
 import static gov.usgs.cida.gcmrcservices.TimeUtil.TZ_CODE_LOOKUP;
 import gov.usgs.cida.gcmrcservices.column.ColumnMetadata.SpecEntry;
 import gov.usgs.cida.gcmrcservices.column.ColumnResolver;
@@ -13,8 +11,6 @@ import static gov.usgs.cida.gcmrcservices.column.ColumnResolver.getStation;
 import static gov.usgs.cida.gcmrcservices.nude.Endpoint.COLUMN_KEYWORD;
 import static gov.usgs.cida.gcmrcservices.nude.Endpoint.getDateRange;
 import static gov.usgs.cida.gcmrcservices.nude.Endpoint.getParameter;
-import gov.usgs.cida.gcmrcservices.jsl.data.ParameterCode;
-import gov.usgs.cida.gcmrcservices.jsl.data.ParameterSpec;
 import gov.usgs.cida.gcmrcservices.nude.time.CutoffTimesPlanStep;
 import gov.usgs.cida.gcmrcservices.nude.time.TimeColumnReq;
 import gov.usgs.cida.gcmrcservices.nude.time.TimeConfig;
@@ -34,7 +30,6 @@ import gov.usgs.cida.nude.provider.sql.SQLProvider;
 import gov.usgs.cida.nude.resultset.inmemory.TableRow;
 import gov.usgs.cida.nude.time.DateRange;
 import gov.usgs.webservices.jdbc.spec.Spec;
-
 import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;
 import java.security.MessageDigest;
@@ -46,7 +41,6 @@ import java.util.List;
 import java.util.Map.Entry;
 import java.util.Set;
 import java.util.UUID;
-
 import org.apache.commons.codec.binary.Hex;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;

@@ -450,10 +450,7 @@ GCMRC.Page = {
 					})) {
 						columnOrdering.push({groupId : el.groupId, name : GCMRC.Page.params[el.groupId].description.displayName, reorderable : true, nameConfig: {useDefault: true}});
 						GCMRC.Page.ancillary.forEach(function(a) {
-							if (el.groupId == '2' && a.groupId == 2) {
-								columnOrdering.push({groupId : el.groupId, ancillaryGroupId: a.ancillaryGroupId, name : a.ancillaryName, ancillaryColumn : a.ancillaryColumn, reorderable : true, nameConfig: {useDefault: true}});
-							}
-							else if (el.groupId == '5' && a.groupId == 5) {
+							if (el.groupId == a.groupId) {
 								columnOrdering.push({groupId : el.groupId, ancillaryGroupId: a.ancillaryGroupId, name : a.ancillaryName, ancillaryColumn : a.ancillaryColumn, reorderable : true, nameConfig: {useDefault: true}});
 							}
 						})
@@ -587,10 +584,10 @@ GCMRC.Page = {
 	colOrder: [],
 	earliestPosition : null,
 	latestPosition : null,
-	ancillary : [{groupId:2, ancillaryGroupId:2101, ancillaryName: 'Discharge Ice Affected', ancillaryColumn: 'iceAffected!Discharge'},
-	             {groupId:2, ancillaryGroupId:2102, ancillaryName: 'Discharge Notes', ancillaryColumn: 'notes!Discharge'},
-	             {groupId:5, ancillaryGroupId:5101, ancillaryName: 'Gage Height Ice Affected', ancillaryColumn: 'iceAffected!Stage'},
-	             {groupId:5, ancillaryGroupId:5102, ancillaryName: 'Gage Height Notes', ancillaryColumn: 'notes!Stage'}],
+	ancillary : [{groupId:'2', ancillaryGroupId:2101, ancillaryName: 'Discharge Ice Affected', ancillaryColumn: 'iceAffected!Discharge'},
+	             {groupId:'2', ancillaryGroupId:2102, ancillaryName: 'Discharge Notes', ancillaryColumn: 'notes!Discharge'},
+	             {groupId:'5', ancillaryGroupId:5101, ancillaryName: 'Gage Height Ice Affected', ancillaryColumn: 'iceAffected!Stage'},
+	             {groupId:'5', ancillaryGroupId:5102, ancillaryName: 'Gage Height Notes', ancillaryColumn: 'notes!Stage'}],
 	params : {},
 	paramsLoad : JSL.ResourceLoad(function(el) {
 		var identifier = el.groupId;

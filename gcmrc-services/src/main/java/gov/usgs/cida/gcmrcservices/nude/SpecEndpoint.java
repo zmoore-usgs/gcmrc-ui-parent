@@ -110,7 +110,8 @@ public abstract class SpecEndpoint extends Endpoint {
 
 		List<String> userCols = params.get(COLUMN_KEYWORD);
 		for (String colName : userCols) {
-			if (colName.startsWith("iceAffected") || colName.startsWith("notes")) {
+			if (colName.startsWith("iceAffected") || 
+				colName.startsWith("notes")) {
 				//do not create separate spec
 			}
 			else {

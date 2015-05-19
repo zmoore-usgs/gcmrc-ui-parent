@@ -89,32 +89,38 @@ public class ColumnMetadata {
 	
 	public static String createColumnName(String station, ParameterCode parameterCode) {
 		String result = null;
-		ParameterCode dischargeParameterCode = ParameterCode.parseParameterCode("inst!Discharge");
-		ParameterCode stageParameterCode = ParameterCode.parseParameterCode("inst!Stage");
+		String ancillaryColumn = null;
+		ParameterCode tempParameterCode = null;
 
-		if (null != station && null != parameterCode) {
-			if (parameterCode.sampleMethod.equals("iceAffected")) {
-				if (parameterCode.groupName.equals("Discharge")) {
-					result = "S" + hashString(station, 5) + "P" + hashString(dischargeParameterCode.toString(), 5) + ParameterSpec.C_ICE_AFFECTED;					
-				}
-				else {
-					result = "S" + hashString(station, 5) + "P" + hashString(stageParameterCode.toString(), 5) + ParameterSpec.C_ICE_AFFECTED;										
-				}
-			}
-			else {
-				if (parameterCode.sampleMethod.equals("notes")) {
-					if (parameterCode.groupName.equals("Discharge")) {
-						result = "S" + hashString(station, 5) + "P" + hashString(dischargeParameterCode.toString(), 5) + ParameterSpec.C_NOTES;					
-					}
-					else {
-						result = "S" + hashString(station, 5) + "P" + hashString(stageParameterCode.toString(), 5) + ParameterSpec.C_NOTES;										
-					}
-				}
-				else {
-					result = "S" + hashString(station, 5) + "P" + hashString(parameterCode.toString(), 5);				
-				}
-			}
+		switch (parameterCode.sampleMethod+parameterCode.groupName)
+		{
+			case "iceAffectedDischarge": 
+				ancillaryColumn = ParameterSpec.C_ICE_AFFECTED;
+				tempParameterCode = ParameterCode.parseParameterCode("inst!Discharge");
+				break;
+
+			case "iceAffectedStage": 
+				ancillaryColumn = ParameterSpec.C_ICE_AFFECTED;
+				tempParameterCode = ParameterCode.parseParameterCode("inst!Stage");
+				break;
+		
+			case "notesDischarge": 
+				ancillaryColumn = ParameterSpec.C_NOTES;
+				tempParameterCode = ParameterCode.parseParameterCode("inst!Discharge");
+			break;
+			
+			case "notesStage": 
+				ancillaryColumn = ParameterSpec.C_NOTES;
+				tempParameterCode = ParameterCode.parseParameterCode("inst!Stage");
+			break;
+
+			default: 
+				ancillaryColumn = "";
+				tempParameterCode = parameterCode;
+			break;
 		}
+
+		result = "S" + hashString(station, 5) + "P" + hashString(tempParameterCode.toString(), 5) + ancillaryColumn;
 		
 		return result;
 	}

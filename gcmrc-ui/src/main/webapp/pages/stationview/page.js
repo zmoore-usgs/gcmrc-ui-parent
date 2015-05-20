@@ -710,12 +710,16 @@ GCMRC.Page = {
 			};
 		}
 		
-		if ("EDI" === el.sampleMethod || "EWI" === el.sampleMethod || "single vertical" === el.sampleMethod || "multiple verticals" === el.sampleMethod) {
-			el.color = CONFIG.sampColor;
-			el.highlightColor = CONFIG.sampHiColor;
-		} else {
+		if ("dip" === el.sampleMethod ||
+			"dip at multiple verticals" === el.sampleMethod || 
+			"multi-vertical dip" === el.sampleMethod || 
+			"surface dip" === el.sampleMethod || 
+			"pump" === el.sampleMethod || "single stage" === el.sampleMethod) {
 			el.color = CONFIG.pumpColor;
 			el.highlightColor = CONFIG.pumpHiColor;
+		} else {
+			el.color = CONFIG.sampColor;
+			el.highlightColor = CONFIG.sampHiColor;
 		}
 		
 		el.series = {

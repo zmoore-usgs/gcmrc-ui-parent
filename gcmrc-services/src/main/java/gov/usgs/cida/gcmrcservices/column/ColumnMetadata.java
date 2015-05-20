@@ -92,32 +92,27 @@ public class ColumnMetadata {
 		String ancillaryColumn = null;
 		ParameterCode tempParameterCode = null;
 
-		switch (parameterCode.sampleMethod+parameterCode.groupName)
-		{
-			case "iceAffectedDischarge": 
-				ancillaryColumn = ParameterSpec.C_ICE_AFFECTED;
-				tempParameterCode = ParameterCode.parseParameterCode("inst!Discharge");
-				break;
+		if (parameterCode.sampleMethod.startsWith("iceAffected") || 
+			parameterCode.sampleMethod.startsWith("notes")) {
+			tempParameterCode = ParameterCode.parseParameterCode("inst!" + parameterCode.groupName);			
+		}
+		else {
+			tempParameterCode = parameterCode;
+		}
 
-			case "iceAffectedStage": 
+		switch (parameterCode.sampleMethod)
+		{
+			case "iceAffected": 
 				ancillaryColumn = ParameterSpec.C_ICE_AFFECTED;
-				tempParameterCode = ParameterCode.parseParameterCode("inst!Stage");
 				break;
 		
-			case "notesDischarge": 
+			case "notes": 
 				ancillaryColumn = ParameterSpec.C_NOTES;
-				tempParameterCode = ParameterCode.parseParameterCode("inst!Discharge");
-			break;
-			
-			case "notesStage": 
-				ancillaryColumn = ParameterSpec.C_NOTES;
-				tempParameterCode = ParameterCode.parseParameterCode("inst!Stage");
-			break;
+				break;
 
 			default: 
 				ancillaryColumn = "";
-				tempParameterCode = parameterCode;
-			break;
+				break;
 		}
 
 		result = "S" + hashString(station, 5) + "P" + hashString(tempParameterCode.toString(), 5) + ancillaryColumn;

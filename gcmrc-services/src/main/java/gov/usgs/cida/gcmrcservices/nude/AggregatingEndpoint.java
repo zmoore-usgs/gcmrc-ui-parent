@@ -8,9 +8,6 @@ import gov.usgs.cida.gcmrcservices.column.ColumnMetadata.SpecEntry;
 import gov.usgs.cida.gcmrcservices.column.ColumnResolver;
 import static gov.usgs.cida.gcmrcservices.column.ColumnResolver.getCustomName;
 import static gov.usgs.cida.gcmrcservices.column.ColumnResolver.getStation;
-import static gov.usgs.cida.gcmrcservices.nude.Endpoint.COLUMN_KEYWORD;
-import static gov.usgs.cida.gcmrcservices.nude.Endpoint.getDateRange;
-import static gov.usgs.cida.gcmrcservices.nude.Endpoint.getParameter;
 import gov.usgs.cida.gcmrcservices.nude.time.CutoffTimesPlanStep;
 import gov.usgs.cida.gcmrcservices.nude.time.TimeColumnReq;
 import gov.usgs.cida.gcmrcservices.nude.time.TimeConfig;
@@ -206,7 +203,7 @@ public class AggregatingEndpoint extends SpecEndpoint {
 				if (null != timeCol) {
 					colMaps.add(timeCol.getMapping());
 				} else {
-					log.debug("No column by the name of: " + colName);	
+					log.debug("No column by the name of: " + colName);
 				}
 			}
 		}

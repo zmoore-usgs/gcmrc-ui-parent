@@ -302,8 +302,22 @@ public class ColumnResolver {
 	
 	protected static Map<String, ColumnMetadata> buildAncillaryCols(SQLProvider sqlProvider) {
 		Map<String, ColumnMetadata> result = new HashMap<String, ColumnMetadata>();
+		String parameterCode;
 		
+		parameterCode = "notes!Discharge";
+		result.put(parameterCode, new ColumnMetadata(parameterCode, "discharge notes", 
+				new ColumnMetadata.SpecEntry(ParameterCode.parseParameterCode(parameterCode), ColumnMetadata.SpecEntry.SpecType.PARAM)));
+		parameterCode = "iceAffected!Discharge";
+		result.put(parameterCode, new ColumnMetadata(parameterCode, "discharge ice affected", 
+				new ColumnMetadata.SpecEntry(ParameterCode.parseParameterCode(parameterCode), ColumnMetadata.SpecEntry.SpecType.PARAM)));
 		
+		parameterCode = "notes!Stage";
+		result.put(parameterCode, new ColumnMetadata(parameterCode, "stage notes", 
+				new ColumnMetadata.SpecEntry(ParameterCode.parseParameterCode(parameterCode), ColumnMetadata.SpecEntry.SpecType.PARAM)));
+		parameterCode = "iceAffected!Stage";
+		result.put(parameterCode, new ColumnMetadata(parameterCode, "stage ice affected", 
+				new ColumnMetadata.SpecEntry(ParameterCode.parseParameterCode(parameterCode), ColumnMetadata.SpecEntry.SpecType.PARAM)));
+		log.debug("Instantaneous ancillary columns constructed : " + result.keySet().toString());
 		
 		return result;
 	}

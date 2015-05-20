@@ -110,9 +110,15 @@ public abstract class SpecEndpoint extends Endpoint {
 
 		List<String> userCols = params.get(COLUMN_KEYWORD);
 		for (String colName : userCols) {
-			Spec resolvedSpec = ColumnResolver.createSpecs(colName, specOptions, sqlProvider);
-			if (null != resolvedSpec) {
-				result.add(resolvedSpec);
+			if (colName.startsWith("iceAffected") || 
+				colName.startsWith("notes")) {
+				//do not create separate spec
+			}
+			else {
+				Spec resolvedSpec = ColumnResolver.createSpecs(colName, specOptions, sqlProvider);
+				if (null != resolvedSpec) {
+					result.add(resolvedSpec);
+				}				
 			}
 		}
 		

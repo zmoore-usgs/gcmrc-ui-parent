@@ -92,30 +92,32 @@ public class ColumnMetadata {
 		String ancillaryColumn = null;
 		ParameterCode tempParameterCode = null;
 
-		if (parameterCode.sampleMethod.startsWith("iceAffected") || 
-			parameterCode.sampleMethod.startsWith("notes")) {
-			tempParameterCode = ParameterCode.parseParameterCode("inst!" + parameterCode.groupName);			
-		}
-		else {
-			tempParameterCode = parameterCode;
-		}
+		if (null != station && null != parameterCode) {
+			if (parameterCode.sampleMethod.startsWith("iceAffected") || 
+				parameterCode.sampleMethod.startsWith("notes")) {
+				tempParameterCode = ParameterCode.parseParameterCode("inst!" + parameterCode.groupName);			
+			}
+			else {
+				tempParameterCode = parameterCode;
+			}
 
-		switch (parameterCode.sampleMethod)
-		{
-			case "iceAffected": 
-				ancillaryColumn = ParameterSpec.C_ICE_AFFECTED;
-				break;
-		
-			case "notes": 
-				ancillaryColumn = ParameterSpec.C_NOTES;
-				break;
+			switch (parameterCode.sampleMethod)
+			{
+				case "iceAffected": 
+					ancillaryColumn = ParameterSpec.C_ICE_AFFECTED;
+					break;
+				
+				case "notes": 
+					ancillaryColumn = ParameterSpec.C_NOTES;
+					break;
 
-			default: 
-				ancillaryColumn = "";
-				break;
+				default: 
+					ancillaryColumn = "";
+					break;
+			}
+			
+			result = "S" + hashString(station, 5) + "P" + hashString(tempParameterCode.toString(), 5) + ancillaryColumn;			
 		}
-
-		result = "S" + hashString(station, 5) + "P" + hashString(tempParameterCode.toString(), 5) + ancillaryColumn;
 		
 		return result;
 	}

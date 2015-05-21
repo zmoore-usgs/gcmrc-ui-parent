@@ -312,10 +312,10 @@ public class ColumnResolver {
 				new ColumnMetadata.SpecEntry(ParameterCode.parseParameterCode(parameterCode), ColumnMetadata.SpecEntry.SpecType.PARAM)));
 		
 		parameterCode = "notes!Stage";
-		result.put(parameterCode, new ColumnMetadata(parameterCode, "stage notes", 
+		result.put(parameterCode, new ColumnMetadata(parameterCode, "gage notes", 
 				new ColumnMetadata.SpecEntry(ParameterCode.parseParameterCode(parameterCode), ColumnMetadata.SpecEntry.SpecType.PARAM)));
 		parameterCode = "iceAffected!Stage";
-		result.put(parameterCode, new ColumnMetadata(parameterCode, "stage ice affected", 
+		result.put(parameterCode, new ColumnMetadata(parameterCode, "gage ice affected", 
 				new ColumnMetadata.SpecEntry(ParameterCode.parseParameterCode(parameterCode), ColumnMetadata.SpecEntry.SpecType.PARAM)));
 		log.debug("Instantaneous ancillary columns constructed : " + result.keySet().toString());
 		

@@ -112,7 +112,13 @@ GCMRC.Page = {
 				this.unselectAll();
 				$('#networkPopup .network-name').html(vector.attributes.networkDisplayName);
 				$('#networkStation').attr('href', CONFIG.relativePath + 'stations/' + vector.attributes.networkName);
-				$('#networkReach').attr('href', CONFIG.relativePath + 'reaches/' + vector.attributes.networkName);
+				if (GCMRC.Networks[vector.attributes.networkName].reaches) {
+					$('#networkReach').attr('href', CONFIG.relativePath + 'reaches/' + vector.attributes.networkName);					
+					$('#networkReach').parent().show();										
+				}
+				else {
+					$('#networkReach').parent().hide();										
+				}
 				$('#networkPopup').modal();
 			}
 		});

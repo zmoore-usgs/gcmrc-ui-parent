@@ -305,17 +305,17 @@ public class ColumnResolver {
 		String parameterCode;
 		
 		parameterCode = "notes!Discharge";
-		result.put(parameterCode, new ColumnMetadata(parameterCode, "discharge notes", 
+		result.put(parameterCode, new ColumnMetadata(parameterCode, "Discharge Notes", 
 				new ColumnMetadata.SpecEntry(ParameterCode.parseParameterCode(parameterCode), ColumnMetadata.SpecEntry.SpecType.PARAM)));
 		parameterCode = "iceAffected!Discharge";
-		result.put(parameterCode, new ColumnMetadata(parameterCode, "discharge ice affected", 
+		result.put(parameterCode, new ColumnMetadata(parameterCode, "Discharge Ice Affected", 
 				new ColumnMetadata.SpecEntry(ParameterCode.parseParameterCode(parameterCode), ColumnMetadata.SpecEntry.SpecType.PARAM)));
 		
 		parameterCode = "notes!Stage";
-		result.put(parameterCode, new ColumnMetadata(parameterCode, "stage notes", 
+		result.put(parameterCode, new ColumnMetadata(parameterCode, "Gage Notes", 
 				new ColumnMetadata.SpecEntry(ParameterCode.parseParameterCode(parameterCode), ColumnMetadata.SpecEntry.SpecType.PARAM)));
 		parameterCode = "iceAffected!Stage";
-		result.put(parameterCode, new ColumnMetadata(parameterCode, "stage ice affected", 
+		result.put(parameterCode, new ColumnMetadata(parameterCode, "Gage Ice Affected", 
 				new ColumnMetadata.SpecEntry(ParameterCode.parseParameterCode(parameterCode), ColumnMetadata.SpecEntry.SpecType.PARAM)));
 		log.debug("Instantaneous ancillary columns constructed : " + result.keySet().toString());
 		

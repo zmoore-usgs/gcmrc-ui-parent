@@ -710,11 +710,7 @@ GCMRC.Page = {
 			};
 		}
 		
-		if ("dip" === el.sampleMethod ||
-			"dip at multiple verticals" === el.sampleMethod || 
-			"multi-vertical dip" === el.sampleMethod || 
-			"surface dip" === el.sampleMethod || 
-			"pump" === el.sampleMethod || "single stage" === el.sampleMethod) {
+		if ("Y" === el.usePumpColoring) {
 			el.color = CONFIG.pumpColor;
 			el.highlightColor = CONFIG.pumpHiColor;
 		} else {

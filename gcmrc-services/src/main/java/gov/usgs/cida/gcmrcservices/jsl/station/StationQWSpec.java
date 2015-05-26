@@ -42,6 +42,7 @@ public class StationQWSpec extends Spec {
 			new ColumnMapping(C_END_DT, S_END_DT),
 			new ColumnMapping(C_SITE_NAME, S_SITE_NAME),
 			new ColumnMapping(C_SAMPLE_METHOD, S_SAMPLE_METHOD),
+			new ColumnMapping(C_USE_PUMP_COLORING, S_USE_PUMP_COLORING),
 			new ColumnMapping(C_GROUP_NAME, S_GROUP_NAME),
 			new ColumnMapping(C_DISPLAY_NAME, S_DISPLAY_NAME),
 			new ColumnMapping(C_UNITS, S_UNITS),
@@ -83,6 +84,7 @@ public class StationQWSpec extends Spec {
 		result.append("    TO_CHAR(LATEST_DT, 'YYYY-MM-DD') END_DT,");
 		result.append("    SITE_NAME,");
 		result.append("    QWP.SAMPLE_METHOD SAMPLE_METHOD,");
+		result.append("    QWP.USE_PUMP_COLORING USE_PUMP_COLORING,");
 		result.append("    QWP.GROUP_NAME DISPLAY_NAME,");
 		result.append("    G.NAME GROUP_NAME,");
 		result.append("    G.UNITS_NAME UNITS,");
@@ -109,6 +111,8 @@ public class StationQWSpec extends Spec {
 	public static final String C_SITE_NAME = "SITE_NAME";
 	public static final String S_SAMPLE_METHOD = "sampleMethod";
 	public static final String C_SAMPLE_METHOD = "SAMPLE_METHOD";
+	public static final String S_USE_PUMP_COLORING = "usePumpColoring";
+	public static final String C_USE_PUMP_COLORING = "USE_PUMP_COLORING";
 	public static final String S_DISPLAY_NAME = "displayName";
 	public static final String C_DISPLAY_NAME = "DISPLAY_NAME";
 	public static final String S_GROUP_NAME = "groupName";

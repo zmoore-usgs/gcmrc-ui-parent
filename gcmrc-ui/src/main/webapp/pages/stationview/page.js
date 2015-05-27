@@ -710,12 +710,12 @@ GCMRC.Page = {
 			};
 		}
 		
-		if ("EDI" === el.sampleMethod || "EWI" === el.sampleMethod || "single vertical" === el.sampleMethod || "multiple verticals" === el.sampleMethod) {
-			el.color = CONFIG.sampColor;
-			el.highlightColor = CONFIG.sampHiColor;
-		} else {
+		if ("Y" === el.usePumpColoring) {
 			el.color = CONFIG.pumpColor;
 			el.highlightColor = CONFIG.pumpHiColor;
+		} else {
+			el.color = CONFIG.sampColor;
+			el.highlightColor = CONFIG.sampHiColor;
 		}
 		
 		el.series = {

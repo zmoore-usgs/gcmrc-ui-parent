@@ -165,7 +165,7 @@ public class AggregatingEndpoint extends SpecEndpoint {
 		boolean timezoneInHeader = !"false".equals(getParameter(params, TIMEZONE_IN_HEADER_KEYWORD, "false"));
 		TimeConfig timeConfig = getDateRange(params);
 		
-		String timeDisplayName = "Time";
+		String timeDisplayName = "time";
 		if (timezoneInHeader) {
 			String timezoneCode = TZ_CODE_LOOKUP.get(-7);
 			
@@ -184,7 +184,7 @@ public class AggregatingEndpoint extends SpecEndpoint {
 				}
 			}
 			
-			timeDisplayName = "Time (" + timezoneCode + ")";
+			timeDisplayName = "time (" + timezoneCode + ")";
 		}
 		
 		SQLProvider sqlProvider = (SQLProvider) providers.get(Provider.SQL);

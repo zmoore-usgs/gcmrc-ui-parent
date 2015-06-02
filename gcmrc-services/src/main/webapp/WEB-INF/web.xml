@@ -94,6 +94,38 @@
         <url-pattern>/service/param/*</url-pattern>
     </servlet-mapping>
 	<servlet>
+        <servlet-name>LookupService</servlet-name>
+        <servlet-class>gov.usgs.cida.gcmrcservices.jsl.lookup.LookupService</servlet-class>
+        <init-param>
+            <param-name>jndi_name</param-name>
+            <param-value>java:comp/env/jdbc/gcmrcDS</param-value>
+        </init-param>
+        <init-param>
+            <param-name>delimited_value_file_name</param-name>
+            <param-value>gcmrc</param-value>
+        </init-param>
+        <init-param>
+            <param-name>enable_caching</param-name>
+            <param-value>true</param-value>
+        </init-param>
+        <init-param>
+            <param-name>cache_keep_alive_in_minutes</param-name>
+            <param-value>30</param-value>
+        </init-param>
+        <init-param>
+            <param-name>max_cache_count</param-name>
+            <param-value>100</param-value>
+        </init-param>
+        <init-param>
+            <param-name>max_cache_resp_size_in_chars</param-name>
+            <param-value>20000</param-value>
+        </init-param>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>LookupService</servlet-name>
+        <url-pattern>/service/lookup/*</url-pattern>
+    </servlet-mapping>
+	<servlet>
         <servlet-name>DownloadService</servlet-name>
         <servlet-class>gov.usgs.cida.gcmrcservices.jsl.data.DownloadService</servlet-class>
         <init-param>

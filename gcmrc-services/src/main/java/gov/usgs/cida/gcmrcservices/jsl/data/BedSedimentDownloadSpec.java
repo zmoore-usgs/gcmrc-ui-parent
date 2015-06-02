@@ -54,7 +54,7 @@ public class BedSedimentDownloadSpec extends Spec implements CentralizableTimezo
 			new ColumnMapping(C_STATION_NAME, S_STATION_NAME),
 			new ColumnMapping(C_STATION_NUM, S_STATION_NUM),
 			new ColumnMapping(C_BED_DATE, QWDownloadSpec.SE_DEFAULT_ORDERING, ASCENDING_ORDER, S_BED_DATE, null, null, null, "TO_CHAR(" + C_BED_DATE + ", 'YYYY-MM-DD')", null, null),
-			new ColumnMapping(C_BED_TIME, S_BED_TIME, ASCENDING_ORDER, S_BED_TIME + " (" + getTimezoneDisplay() + ")", null, null, null, "TO_CHAR(" + C_BED_TIME + ", 'HH24:MI:SS')", null, null),
+			new ColumnMapping(C_BED_TIME, QWDownloadSpec.SE_SECONDARY_ORDERING, ASCENDING_ORDER, S_BED_TIME + " (" + getTimezoneDisplay() + ")", null, null, null, "TO_CHAR(" + C_BED_TIME + ", 'HH24:MI:SS')", null, null),
 			new ColumnMapping(C_SAMPLE_SET, S_SAMPLE_SET),
 			new ColumnMapping(C_NOTES, S_NOTES),
 			new ColumnMapping(C_STATION_LOCATION, S_STATION_LOCATION),

@@ -599,6 +599,7 @@ public class QWDownloadSpec extends Spec implements CentralizableTimezone {
 	public static final String S_SAND_D50_TOT_95ER = "95%-confidence-level total error in sand D50(mm)";
 	
 	public static final String SE_DEFAULT_ORDERING = "defaultOrder";
+	public static final String SE_SECONDARY_ORDERING = "secondaryOrder";
 	
 	public static final String SE_SAMPLE_ID = "sampleId";
 	public static final String SE_STATION_NAME = "stationName";

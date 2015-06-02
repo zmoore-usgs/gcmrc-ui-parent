@@ -58,7 +58,7 @@ public class AncillarySpec extends Spec {
 	@Override
 	public SearchMapping[] setupSearchMap() {
 		return new SearchMapping[] {
-			new SearchMapping(S_GROUP_ID, C_GROUP_ID, null, WhereClauseType.like, null, null, null),
+			new SearchMapping(null, null, null, null, null, null, null),
 		};
 	}
 
@@ -79,12 +79,4 @@ public class AncillarySpec extends Spec {
 	public static final String S_ANCILLARY_NAME = "ancillaryName";
 	public static final String C_ANCILLARY_SERVICE_COLUMN = "ANCILLARY_SERVICE_COLUMN";
 	public static final String S_ANCILLARY_SERVICE_COLUMN = "ancillaryColumn";
-	public static final String C_DISPLAY_ORDER = "DISPLAY_ORDER";
-	public static final String S_DISPLAY_ORDER = "displayOrder";
-	public static final String C_DISPLAY_NAME = "DISPLAY_NAME";
-	public static final String S_DISPLAY_NAME = "displayName";
-	public static final String C_IS_VISIBLE = "IS_VISIBLE";
-	public static final String S_IS_VISIBLE = "isVisible";
-	public static final String C_IS_DOWNLOADABLE = "IS_DOWNLOADABLE";
-	public static final String S_IS_DOWNLOADABLE = "isDownloadable";
 }

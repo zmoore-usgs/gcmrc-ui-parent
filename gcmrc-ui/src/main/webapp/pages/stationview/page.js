@@ -586,10 +586,12 @@ GCMRC.Page = {
 	latestPosition : null,
 	ancillary : [],
 	ancillaryLoad : JSL.ResourceLoad(function(el) {
-		GCMRC.Page.ancillary.push({groupId : el.groupId,
-								ancillaryGroupId: el.ancillaryGroupId, 
-								ancillaryName : el.ancillaryName, 
-								ancillaryColumn : el.ancillaryColumn});
+		GCMRC.Page.ancillary.push(
+			{groupId : el.groupId,
+			ancillaryGroupId: el.ancillaryGroupId, 
+			ancillaryName : el.ancillaryName, 
+			ancillaryColumn : el.ancillaryColumn}
+		);
 	}),
 	params : {},
 	paramsLoad : JSL.ResourceLoad(function(el) {

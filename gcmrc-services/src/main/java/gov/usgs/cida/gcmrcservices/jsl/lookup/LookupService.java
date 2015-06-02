@@ -32,10 +32,6 @@ public class LookupService extends WebService {
 		
 		result.putAll(super.defineParameters(req, router, params));
 		
-		if (!result.containsKey(Spec.ORDER_BY_PARAM)) {
-			result.put(Spec.ORDER_BY_PARAM, new String[] {AncillarySpec.S_DISPLAY_ORDER});
-		}
-		
 		return result;
 	}
 	

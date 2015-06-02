@@ -584,10 +584,15 @@ GCMRC.Page = {
 	colOrder: [],
 	earliestPosition : null,
 	latestPosition : null,
-	ancillary : [{groupId:'2', ancillaryGroupId:2101, ancillaryName: 'Discharge Ice Affected', ancillaryColumn: 'iceAffected!Discharge'},
-	             {groupId:'2', ancillaryGroupId:2102, ancillaryName: 'Discharge Notes', ancillaryColumn: 'notes!Discharge'},
-	             {groupId:'5', ancillaryGroupId:5101, ancillaryName: 'Gage Height Ice Affected', ancillaryColumn: 'iceAffected!Stage'},
-	             {groupId:'5', ancillaryGroupId:5102, ancillaryName: 'Gage Height Notes', ancillaryColumn: 'notes!Stage'}],
+	ancillary : [],
+	ancillaryLoad : JSL.ResourceLoad(function(el) {
+		GCMRC.Page.ancillary.push(
+			{groupId : el.groupId,
+			ancillaryGroupId: el.ancillaryGroupId, 
+			ancillaryName : el.ancillaryName, 
+			ancillaryColumn : el.ancillaryColumn}
+		);
+	}),
 	params : {},
 	paramsLoad : JSL.ResourceLoad(function(el) {
 		var identifier = el.groupId;

@@ -5,9 +5,13 @@ import gov.usgs.webservices.jdbc.routing.InvalidServiceException;
 import gov.usgs.webservices.jdbc.routing.UriRouter;
 import gov.usgs.webservices.jdbc.service.WebService;
 import gov.usgs.webservices.jdbc.spec.Spec;
+
+import java.security.InvalidParameterException;
 import java.util.HashMap;
 import java.util.Map;
+
 import javax.servlet.http.HttpServletRequest;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -35,5 +39,9 @@ public class LookupService extends WebService {
 		return result;
 	}
 	
+	@Override
+	protected void checkForValidParams(Spec spec) {
+		//empty method to allow for query without search parameters
+	}
 	
 }

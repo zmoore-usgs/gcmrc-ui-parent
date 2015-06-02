@@ -122,7 +122,7 @@
 			<jsp:param name="pageName" value="${pageName}" />
 		</jsp:include>
 		<script src="${relativePath}services/service/reach/jsonp/trib?majorTribSite=${stationName}&jsonp_callback=GCMRC.Page.reachLoad"></script>
-		<script src="${relativePath}services/service/lookup/jsonp/ancillary?groupId=%25&jsonp_callback=GCMRC.Page.ancillaryLoad"></script>
+		<script src="${relativePath}services/service/lookup/jsonp/ancillary?jsonp_callback=GCMRC.Page.ancillaryLoad"></script>
 		<script src="${relativePath}services/service/param/jsonp/param?site=${stationName}&jsonp_callback=GCMRC.Page.paramsLoad"></script>
 		<script src="${relativePath}services/service/param/jsonp/bs?site=${stationName}&jsonp_callback=GCMRC.Page.bsLoad"></script>
 		<script src="${relativePath}services/service/param/jsonp/qw?site=${stationName}&jsonp_callback=GCMRC.Page.qwLoad&orderby=displayOrder, sampleMethod desc"></script>

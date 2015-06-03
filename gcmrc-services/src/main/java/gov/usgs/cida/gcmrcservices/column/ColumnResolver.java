@@ -312,12 +312,8 @@ public class ColumnResolver {
 			ps.append("  ANC.ANCILLARY_NAME,");
 			ps.append("  ANC.ANCILLARY_SERVICE_COLUMN");
 			ps.append(" FROM ");
-			ps.append("  ANCILLARY_COLUMN ANC,");
-			ps.append("  GROUP_NAME G");
-			ps.append(" WHERE");
-			ps.append("  ANC.GROUP_ID = G.GROUP_ID");
+			ps.append("  ANCILLARY_COLUMN ANC");
 			ps.append(" GROUP BY ");
-			ps.append("  G.NAME,");
 			ps.append("  ANC.ANCILLARY_NAME,");
 			ps.append("  ANC.ANCILLARY_SERVICE_COLUMN");
 			

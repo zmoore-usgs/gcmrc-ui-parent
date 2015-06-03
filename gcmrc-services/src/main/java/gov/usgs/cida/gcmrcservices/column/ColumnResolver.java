@@ -302,23 +302,37 @@ public class ColumnResolver {
 	
 	protected static Map<String, ColumnMetadata> buildAncillaryCols(SQLProvider sqlProvider) {
 		Map<String, ColumnMetadata> result = new HashMap<String, ColumnMetadata>();
-		String parameterCode;
-		
-		parameterCode = "notes!Discharge";
-		result.put(parameterCode, new ColumnMetadata(parameterCode, "Discharge Notes", 
-				new ColumnMetadata.SpecEntry(ParameterCode.parseParameterCode(parameterCode), ColumnMetadata.SpecEntry.SpecType.PARAM)));
-		parameterCode = "iceAffected!Discharge";
-		result.put(parameterCode, new ColumnMetadata(parameterCode, "Discharge Ice Affected", 
-				new ColumnMetadata.SpecEntry(ParameterCode.parseParameterCode(parameterCode), ColumnMetadata.SpecEntry.SpecType.PARAM)));
-		
-		parameterCode = "notes!Stage";
-		result.put(parameterCode, new ColumnMetadata(parameterCode, "Gage Notes", 
-				new ColumnMetadata.SpecEntry(ParameterCode.parseParameterCode(parameterCode), ColumnMetadata.SpecEntry.SpecType.PARAM)));
-		parameterCode = "iceAffected!Stage";
-		result.put(parameterCode, new ColumnMetadata(parameterCode, "Gage Ice Affected", 
-				new ColumnMetadata.SpecEntry(ParameterCode.parseParameterCode(parameterCode), ColumnMetadata.SpecEntry.SpecType.PARAM)));
-		log.debug("Instantaneous ancillary columns constructed : " + result.keySet().toString());
-		
+		ResultSet rs = null;
+		try {
+			Column displayName = new SimpleColumn("ANCILLARY_NAME");
+			Column serviceName = new SimpleColumn("ANCILLARY_SERVICE_COLUMN");
+			
+			ParameterizedString ps = new ParameterizedString();
+			ps.append("SELECT");
+			ps.append("  ANC.ANCILLARY_NAME,");
+			ps.append("  ANC.ANCILLARY_SERVICE_COLUMN");
+			ps.append(" FROM ");
+			ps.append("  ANCILLARY_COLUMN ANC");
+			ps.append(" GROUP BY ");
+			ps.append("  ANC.ANCILLARY_NAME,");
+			ps.append("  ANC.ANCILLARY_SERVICE_COLUMN");
+			
+			rs = sqlProvider.getResults(null, ps);
+			while (rs.next()) {
+				TableRow row = TableRow.buildTableRow(rs);
+				
+				String parameterCode = row.getValue(serviceName);
+				String columnTitle = row.getValue(displayName);
+				
+				result.put(parameterCode, new ColumnMetadata(parameterCode, columnTitle, 
+						new ColumnMetadata.SpecEntry(ParameterCode.parseParameterCode(parameterCode), ColumnMetadata.SpecEntry.SpecType.PARAM)));
+			}
+			log.debug("Ancillary data columns constructed : " + result.keySet().toString());
+		} catch (Exception e) {
+			log.error("Could not get columns", e);
+		} finally {
+			Closers.closeQuietly(rs);
+		}
 		return result;
 	}
 	

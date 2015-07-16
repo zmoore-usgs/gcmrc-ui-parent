@@ -517,13 +517,17 @@ GCMRC.Page = {
 			if (columnDef) {
 				//HACK!!!!! THIS IS WRONG.
 				columnDef = columnDef.map(function(col) { //No more PPQ?
-					
 					var displayName = "*default*";
-					if (el.ppq) {
-						displayName = el.ppq + " " + displayName;
+					if (el.ancillaryColumn) {
+						displayName = el.name;
 					}
-					if (!el.nameConfig.useDefault) {
-						displayName = el.nameConfig.customName;
+					else {
+						if (el.ppq) {
+							displayName = el.ppq + " " + displayName;
+						}
+						if (!el.nameConfig.useDefault) {
+							displayName = el.nameConfig.customName;
+						}
 					}
 					return col + "!" + displayName;
 				});

@@ -43,7 +43,7 @@
 			<jsp:param name="title" value="" />
 			<jsp:param name="description" value="" />
 			<jsp:param name="author" value="" />
-			<jsp:param name="keywords" value="" />
+			<jsp:param name="keywords" value="test" />
 			<jsp:param name="publisher" value="" />
 			<jsp:param name="revisedDate" value="" />
 			<jsp:param name="nextReview" value="" />

@@ -518,16 +518,11 @@ GCMRC.Page = {
 				//HACK!!!!! THIS IS WRONG.
 				columnDef = columnDef.map(function(col) { //No more PPQ?
 					var displayName = "*default*";
-					if (el.ancillaryColumn) {
-						displayName = el.name;
+					if (el.ppq) {
+						displayName = el.ppq + " " + displayName;
 					}
-					else {
-						if (el.ppq) {
-							displayName = el.ppq + " " + displayName;
-						}
-						if (!el.nameConfig.useDefault) {
-							displayName = el.nameConfig.customName;
-						}
+					if (!el.nameConfig.useDefault) {
+						displayName = el.nameConfig.customName;
 					}
 					return col + "!" + displayName;
 				});

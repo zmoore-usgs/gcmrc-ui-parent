@@ -2,7 +2,7 @@ package gov.usgs.cida.gcmrcservices.jsl.data;
 
 import gov.usgs.cida.gcmrcservices.column.ColumnMetadata;
 import gov.usgs.cida.gcmrcservices.nude.Endpoint;
-import static gov.usgs.webservices.jdbc.spec.Spec.ASCENDING_ORDER;
+import static gov.usgs.webservices.jdbc.spec.GCMRCSpec.ASCENDING_ORDER;
 import gov.usgs.webservices.jdbc.spec.mapping.ColumnMapping;
 import gov.usgs.webservices.jdbc.spec.mapping.SearchMapping;
 import gov.usgs.webservices.jdbc.spec.mapping.WhereClauseType;

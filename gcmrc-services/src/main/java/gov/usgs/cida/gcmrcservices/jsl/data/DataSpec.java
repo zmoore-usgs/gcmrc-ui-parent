@@ -1,6 +1,6 @@
 package gov.usgs.cida.gcmrcservices.jsl.data;
 
-import gov.usgs.webservices.jdbc.spec.Spec;
+import gov.usgs.webservices.jdbc.spec.GCMRCSpec;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -8,7 +8,7 @@ import org.slf4j.LoggerFactory;
  *
  * @author dmsibley
  */
-public abstract class DataSpec extends Spec {
+public abstract class DataSpec extends GCMRCSpec {
 	private static final Logger log = LoggerFactory.getLogger(DataSpec.class);
 	
 	protected final String stationName;

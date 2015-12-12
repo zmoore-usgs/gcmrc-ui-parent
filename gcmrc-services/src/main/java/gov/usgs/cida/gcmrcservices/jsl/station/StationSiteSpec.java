@@ -1,6 +1,6 @@
 package gov.usgs.cida.gcmrcservices.jsl.station;
 
-import gov.usgs.webservices.jdbc.spec.Spec;
+import gov.usgs.webservices.jdbc.spec.GCMRCSpec;
 import gov.usgs.webservices.jdbc.spec.mapping.ColumnMapping;
 import gov.usgs.webservices.jdbc.spec.mapping.SearchMapping;
 import gov.usgs.webservices.jdbc.spec.mapping.WhereClauseType;
@@ -11,7 +11,7 @@ import org.slf4j.LoggerFactory;
  *
  * @author dmsibley
  */
-public class StationSiteSpec extends Spec {
+public class StationSiteSpec extends GCMRCSpec {
 	private static final Logger log = LoggerFactory.getLogger(StationSiteSpec.class);
 
 	@Override

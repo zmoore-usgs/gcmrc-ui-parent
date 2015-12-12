@@ -1,6 +1,6 @@
 package gov.usgs.cida.gcmrcservices.jsl.reach;
 
-import gov.usgs.webservices.jdbc.spec.Spec;
+import gov.usgs.webservices.jdbc.spec.GCMRCSpec;
 import gov.usgs.webservices.jdbc.spec.mapping.ColumnMapping;
 import gov.usgs.webservices.jdbc.spec.mapping.SearchMapping;
 import gov.usgs.webservices.jdbc.spec.mapping.WhereClauseType;
@@ -12,7 +12,7 @@ import org.slf4j.LoggerFactory;
  *
  * @author dmsibley
  */
-public class ReachTribPORSpec extends Spec {
+public class ReachTribPORSpec extends GCMRCSpec {
 	private static final Logger log = LoggerFactory.getLogger(ReachTribPORSpec.class);
 
 	@Override

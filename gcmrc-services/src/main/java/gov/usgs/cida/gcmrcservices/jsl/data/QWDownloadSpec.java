@@ -2,6 +2,7 @@ package gov.usgs.cida.gcmrcservices.jsl.data;
 
 import gov.usgs.cida.gcmrcservices.nude.Endpoint;
 import gov.usgs.webservices.jdbc.spec.Spec;
+import gov.usgs.webservices.jdbc.spec.GCMRCSpec;
 import static gov.usgs.webservices.jdbc.spec.Spec.FIELD_NAME_KEY;
 import static gov.usgs.webservices.jdbc.spec.Spec.USER_VALUE_KEY;
 import gov.usgs.webservices.jdbc.spec.mapping.ColumnMapping;
@@ -15,7 +16,7 @@ import org.slf4j.LoggerFactory;
  *
  * @author dmsibley
  */
-public class QWDownloadSpec extends Spec implements CentralizableTimezone {
+public class QWDownloadSpec extends GCMRCSpec implements CentralizableTimezone {
 	private static final Logger log = LoggerFactory.getLogger(QWDownloadSpec.class);
 
 	@Override

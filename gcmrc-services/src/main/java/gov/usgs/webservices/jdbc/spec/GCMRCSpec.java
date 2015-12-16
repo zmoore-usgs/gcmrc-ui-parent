@@ -19,7 +19,7 @@ import org.apache.log4j.Logger;
 public abstract class GCMRCSpec extends Spec {
 	private final static Logger log = Logger.getLogger(GCMRCSpec.class);
 	
-	public static final int DEFAULT_FETCH_SIZE = 1000;
+	public static final int DEFAULT_FETCH_SIZE = 10;
 
 	@Override
 	protected ResultSet getMainResultSet(Connection con) throws SQLException {

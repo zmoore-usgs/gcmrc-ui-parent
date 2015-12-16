@@ -11,7 +11,7 @@
 <!--		<filter class="ch.qos.logback.classic.filter.ThresholdFilter">
 			<level>TRACE</level>
 		</filter>-->
-		<file>${catalina.base}/logs/gcmrc.log</file>
+		<file>${catalina.base}/logs/gcmrc-test.log</file>
 		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
 			<fileNamePattern>${catalina.base}/logs/gcmrc/gcmrc-services.%d{yyyy-MM-dd}.log</fileNamePattern>
 			<maxHistory>7</maxHistory>

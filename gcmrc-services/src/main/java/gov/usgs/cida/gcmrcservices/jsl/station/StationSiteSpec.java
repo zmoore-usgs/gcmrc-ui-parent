@@ -68,8 +68,8 @@ public class StationSiteSpec extends Spec {
 	@Override
 	public String setupTableName() {
 		StringBuilder result = new StringBuilder();
-		
-		result.append("(SELECT DISTINCT");
+	
+		result.append("(SELECT /*+ OPT_PARAM('optimizer_features_enable' '11.2.0.3') */ DISTINCT");
 		result.append("  TSD.SITE_ID,");
 		result.append("  CASE");
 		result.append("    WHEN NWIS_SITE_NO IS NULL");

@@ -41,6 +41,7 @@
 	
 	<select id="getReaches" parameterType="map" resultMap="reachResult">
 		SELECT
+		/*+ OPT_PARAM('optimizer_features_enable' '11.2.0.3') */
 		<include refid="columns"/>
 		FROM
   (SELECT DISTINCT RTD.REACH_NAME,

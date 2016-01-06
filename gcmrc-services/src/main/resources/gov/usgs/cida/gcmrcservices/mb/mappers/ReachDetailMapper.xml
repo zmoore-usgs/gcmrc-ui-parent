@@ -25,6 +25,7 @@
 	
 	<select id="getReachDetails" parameterType="map" resultMap="reachDetailResult">
 		SELECT
+		/*+ OPT_PARAM('optimizer_features_enable' '11.2.0.3') */
 		<include refid="columns"/>
 		FROM
 			(SELECT DISTINCT

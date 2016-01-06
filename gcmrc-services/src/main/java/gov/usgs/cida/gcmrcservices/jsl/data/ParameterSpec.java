@@ -73,8 +73,7 @@ public class ParameterSpec extends DataSpec {
 	public String setupTableName() {
 		StringBuilder result = new StringBuilder();
 		
-		result.append("	 /*+ OPT_PARAM('optimizer_features_enable' '11.2.0.3') */");
-		result.append("  (SELECT MEASUREMENT_DATE AS TSM_DT,");
+		result.append("  (SELECT /*+ OPT_PARAM('optimizer_features_enable' '11.2.0.3') */ MEASUREMENT_DATE AS TSM_DT,");
 		result.append("    FINAL_VALUE,");
 		result.append("    RAW_VALUE,");
 		result.append("    MAIN_QUALIFIER,");

@@ -77,7 +77,8 @@ public class StationParamSpec extends Spec {
 	@Override
 	public String setupTableName() {
 		StringBuilder result = new StringBuilder();
-		
+
+		result.append("	 /*+ OPT_PARAM('optimizer_features_enable' '11.2.0.3') */");
 		result.append("  (SELECT T_POR.GROUP_ID,");
 		result.append("    GROUP_NAME,");
 		result.append("    SITE_NAME,");

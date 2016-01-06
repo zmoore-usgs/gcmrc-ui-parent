@@ -40,6 +40,7 @@
 	</sql>
 	
 	<select id="getReaches" parameterType="map" resultMap="reachResult">
+		/*+ OPT_PARAM('optimizer_features_enable' '11.2.0.3') */
 		SELECT
 		<include refid="columns"/>
 		FROM

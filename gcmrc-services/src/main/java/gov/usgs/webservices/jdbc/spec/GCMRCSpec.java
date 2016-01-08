@@ -1,16 +1,9 @@
 package gov.usgs.webservices.jdbc.spec;
 
-import gov.usgs.webservices.jdbc.spec.value.Value;
-import gov.usgs.webservices.jdbc.util.SqlUtils;
-
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-
 import org.apache.log4j.Logger;
+
 /**
- * Project subclass of Spec that provides additional logging.
+ * Project subclass of Spec that adds a hint to Select queries.
  * 
  * @author eeverman
  *
@@ -21,56 +14,25 @@ public abstract class GCMRCSpec extends Spec {
 	
 	public static final int DEFAULT_FETCH_SIZE = 10;
 
-	@Override
-	protected ResultSet getMainResultSet(Connection con) throws SQLException {
-		SqlString query = this.getQuery();
-		
-		int conId = con.hashCode();
-		
-		if (log.isDebugEnabled()) {
-			log.debug("" + conId + " QUERY:" + this.getQuery());
-			for (Value v: query.getValues()) {
-				log.debug("" + conId + " ARG: " + v.toString());
-			}
-		}
-		
-		long start = System.currentTimeMillis();
-
-		try {
-			ResultSet result = new GCMRCResultSet(getQueryResults(this.getQuery(), con));
-			long end = System.currentTimeMillis();
-
-			log.debug("" + conId + " Total Time (Seconds): " + ((end - start) / 1000L));
-			return result;
-		} catch (Throwable t) {
-			long end = System.currentTimeMillis();
-			log.error("" + conId + " through an Exception rather than complete after " + ((end - start) / 1000L) + " seconds.", t);
-			throw t;
-		}
-		
-
-	}
-	
-		/**
-	 * Executes a database query via a PreparedStatement
+	/**
+	 * This hint massively speeds up select queries on Oracle 12c.
 	 * 
-	 * @param query The SqlString criteria for the query  
-	 * @param con An open database connection object
-	 * @return ResultSet object containing the results of the query 
-	 * @throws SQLException
+	 * Specifically, the Oracle 11 optimizer would apply the WHERE clause logic
+	 * to the individual tables prior to merging into one large dataset.  Oracle
+	 * 12 no longer does that if the tables are joined via 'OUTER'.  The result
+	 * is that 12c is up to 30x slower for some of the larger star queries in
+	 * the app.
+	 * @See JIRA GCMON-337
+	 * 
+	 * IMPORTANT:  By inserting this hint here, it is applied to all queries in
+	 * the app, possibly slowing other queries down.  If Oracle does fix this
+	 * outer join issue, this hint should be removed.
+	 * 
+	 * @return The query hint.
 	 */
-	public ResultSet getQueryResults(SqlString query, Connection con) throws SQLException {
-		
-		PreparedStatement statement = con.prepareStatement(query.getClause(), ResultSet.TYPE_FORWARD_ONLY, ResultSet.CONCUR_READ_ONLY);
-		statement.setFetchSize(DEFAULT_FETCH_SIZE);
-		
-		Value[] values = new Value[0];
-		values = query.getValues().toArray(values);
-		for (int i = 0; i < values.length; i++) {
-			statement.setString(i+1, values[i].toString());
-		}
-		
-		return statement.executeQuery();
+	@Override
+	protected String getSelectHint() {
+		return "/*+ OPT_PARAM('optimizer_features_enable' '11.2.0.3') */";
 	}
 
 }

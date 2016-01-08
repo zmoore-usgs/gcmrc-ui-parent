@@ -23,8 +23,18 @@
 	</appender>
 	
 	<logger name="gov.usgs.cida.gcmrcservices.nude.time" level="INFO"/>
-	<logger name="gov.usgs.webservices.jdbc.spec.GCMRCSpec" level="DEBUG"/>
-	<logger name="gov.usgs.webservices.jdbc.spec.GCMRCResultSet" level="TRACE"/>
+	
+	<!--
+	Set logging for Spec to TRACE to enable logging for:
+	* Full SQL and parameters for Select statements
+	* Partial and total fetch time (time spent calling resultSet.next())
+	
+	This can help debug performance issues, but will put a log of stuff in the logs.
+	
+	Slow queries (queries that take over 30 seconds to return w/ init results)
+	will be logged by default at the WARN level, and will include full SQL and params.
+	-->
+	<logger name="gov.usgs.webservices.jdbc.spec.Spec" level="TRACE"/>
 	<logger name="gov.usgs.webservices.jdbc.service" level="DEBUG"/>
 	<logger name="gov.usgs.cida.nude" level="DEBUG"/>
 	<logger name="gov.usgs.cida.nude.filter" level="INFO"/>

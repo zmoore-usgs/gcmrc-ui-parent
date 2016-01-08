@@ -1,7 +1,6 @@
 package gov.usgs.cida.gcmrcservices.jsl.data;
 
 import gov.usgs.cida.gcmrcservices.nude.Endpoint;
-import gov.usgs.webservices.jdbc.spec.Spec;
 import gov.usgs.webservices.jdbc.spec.GCMRCSpec;
 import static gov.usgs.webservices.jdbc.spec.Spec.FIELD_NAME_KEY;
 import static gov.usgs.webservices.jdbc.spec.Spec.USER_VALUE_KEY;

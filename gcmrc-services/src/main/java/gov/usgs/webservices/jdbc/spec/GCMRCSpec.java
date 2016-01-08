@@ -1,7 +1,5 @@
 package gov.usgs.webservices.jdbc.spec;
 
-import org.apache.log4j.Logger;
-
 /**
  * Project subclass of Spec that adds a hint to Select queries.
  * 
@@ -10,9 +8,6 @@ import org.apache.log4j.Logger;
  */
 @SuppressWarnings("serial")
 public abstract class GCMRCSpec extends Spec {
-	private final static Logger log = Logger.getLogger(GCMRCSpec.class);
-	
-	public static final int DEFAULT_FETCH_SIZE = 10;
 
 	/**
 	 * This hint massively speeds up select queries on Oracle 12c.

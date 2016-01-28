@@ -177,7 +177,7 @@
 			<dependency>
 				<groupId>gov.usgs.cida</groupId>
 				<artifactId>jdbc-spec-library</artifactId>
-				<version>0.5.14.1</version>
+				<version>0.5.14.2</version>
 				<exclusions>
 					<exclusion>
 						<artifactId>log4j</artifactId>

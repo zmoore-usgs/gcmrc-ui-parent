@@ -17,6 +17,7 @@
 			<artifactId>proxy-utils</artifactId>
 			<groupId>gov.usgs.cida</groupId>
 		</dependency>
+		<!-- LOGGING -->
 		<dependency>
 			<!-- Required by proxy-utils -> httpclient -->
 			<artifactId>commons-logging</artifactId>

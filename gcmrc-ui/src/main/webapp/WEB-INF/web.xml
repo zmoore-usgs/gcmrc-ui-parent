@@ -65,14 +65,30 @@
 	<servlet>
 		<servlet-name>GCMRCServicesServlet</servlet-name>
 		<servlet-class>gov.usgs.cida.proxy.AlternateProxyServlet</servlet-class>
-		<init-param>
-			<param-name>forward-url-param</param-name>
-			<param-value>gcmrc.services-url</param-value>
-		</init-param>
-		<init-param>
+		<init-param> <!-- The url to forward incoming requests to -->
 			<param-name>forward-url</param-name>
 			<param-value>http://localhost:8080/gcmrc-services/</param-value>
 		</init-param>
+		<init-param>
+			<!-- Allows overridding forward-url in context.xml with 'gcmrc.services-url' -->
+			<param-name>forward-url-param</param-name>
+			<param-value>gcmrc.services-url</param-value>
+		</init-param>
+
+		<init-param>
+			<!-- 15*60*1000 = 900,000 ms = 15 minutes (default is 5 min)
+			This is the timeout between chunks of data being received.
+			For long queries where data is loaded and build b/f any data can be
+			sent, it easy to go past the default 5 min. -->
+			<param-name>client-socket-timeout</param-name>
+			<param-value>900000</param-value>
+		</init-param>
+		<init-param>
+			<!-- Allows overridding client-socket-timeout in context.xml with 'client-socket-timeout-param' -->
+			<param-name>client-socket-timeout-param</param-name>
+			<param-value>client-socket-timeout-param</param-value>
+		</init-param>
+
 	</servlet>
 	<servlet-mapping>
 		<servlet-name>GCMRCServicesServlet</servlet-name>

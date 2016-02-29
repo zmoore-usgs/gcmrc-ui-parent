@@ -204,8 +204,15 @@
 			<dependency>
 				<artifactId>proxy-utils</artifactId>
 				<groupId>gov.usgs.cida</groupId>
-				<type>jar</type>
-				<version>1.0.5</version>
+				<version>1.0.12</version>
+			</dependency>
+			<dependency>
+				<!-- Required by httpclient, which is used by proxy-utils.
+				Though required, it is excluded in proxy-utils pom, so must
+				be included when used in a project -->
+				<artifactId>commons-logging</artifactId>
+				<groupId>commons-logging</groupId>
+				<version>1.2</version>
 			</dependency>
 			<dependency>
 				<groupId>org.mybatis</groupId>

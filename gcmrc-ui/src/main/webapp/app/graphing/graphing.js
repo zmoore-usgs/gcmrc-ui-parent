@@ -366,9 +366,25 @@ GCMRC.Graphing = function(hoursOffset) {
 						}
 					}
 				},
-				error: function() {
+				error: function(jqXHR, textStatus, errorThrown) {
 					clearErrorMessage();
-					showErrorMessage("A Network Error has occurred. Please check your configuration and try again.  If you repeatedly receive this message, contact <a href='mailto:" + GCMRC.administrator + "@usgs.gov'>" + GCMRC.administrator + "@usgs.gov</a>");
+					var msg = "";
+					switch(textStatus) {
+						case 'timeout':
+							msg = "The browser timed out waiting for a response from the server.";
+						break;
+						case 'abort':
+							msg = "The request was aborted.";
+						break;
+						case 'parsererror':
+							msg = "A response was received, but it was unreadable.";
+						break;
+						case 'error':
+						//break; fall thru
+					default:
+						msg = "Some type of server or network error occured.";
+					}
+					showErrorMessage("Your request could not be completed.  Reason: '" + msg + "'  If you repeatedly receive this message, contact <a href='mailto:" + GCMRC.administrator + "@usgs.gov'>" + GCMRC.administrator + "@usgs.gov</a>");
 				}
 			});
 		}

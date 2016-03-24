@@ -19,7 +19,8 @@ GCMRC.Networks = function() {
 				"right": -110.84875,
 				"top": 37.71811
 			},
-			reaches : true
+			reaches : true,
+			folderId: '56461a54e4b0e2669b30f2db'
 		},
 		"CL" : {
 			displayName : 'Canyonlands',
@@ -30,7 +31,8 @@ GCMRC.Networks = function() {
 				"right": -109.47657,
 				"top": 38.60718
 			},
-			appFeatureId : "CANYONLANDS"
+			appFeatureId : "CANYONLANDS",
+			folderId: '56461a7de4b0e2669b30f2df'
 		},
 		"DINO" : {
 			displayName : 'Dinosaur',
@@ -40,7 +42,8 @@ GCMRC.Networks = function() {
 				"right": -107.693084,
 				"top": 41.093398
 			},
-			reaches : true
+			reaches : true,
+			folderId: '56461a8be4b0e2669b30f2e1'
 		},
 		"CRD" : {
 			displayName : 'Colorado River Delta',
@@ -51,7 +54,8 @@ GCMRC.Networks = function() {
 				"right": -114.55501,
 				"top": 32.72718
 			},
-			reaches : true
+			reaches : true,
+			folderId: '56461a96e4b0e2669b30f2e4'
 		},
 		"BIBE" : {
 			displayName : 'Big Bend',
@@ -61,7 +65,8 @@ GCMRC.Networks = function() {
 				"right": -102.625809,
 				"top": 29.561388
 			},
-			reaches : true
+			reaches : true,
+			folderId: '56461aa1e4b0e2669b30f2e6'
 		}
 	};
 }();

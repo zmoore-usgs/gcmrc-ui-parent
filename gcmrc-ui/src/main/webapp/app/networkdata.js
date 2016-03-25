@@ -13,7 +13,7 @@ GCMRC.Networks = function() {
 		"GCDAMP" : {
 			displayName : 'Grand Canyon',
 			folderId: '56461a54e4b0e2669b30f2db',
-			//labelLoc : 'bl',
+			labelLoc : 'bl',
 			bbox : {
 				"left": -114.003737,
 				"bottom": 35.130507,
@@ -25,7 +25,7 @@ GCMRC.Networks = function() {
 		"CL" : {
 			displayName : 'Canyonlands',
 			folderId: '56461a7de4b0e2669b30f2df',
-			//labelLoc: 'tl',
+			labelLoc: 'tl',
 			bbox: {
 				"left": -110.26759,
 				"bottom": 38.02643,
@@ -48,7 +48,7 @@ GCMRC.Networks = function() {
 		"CRD" : {
 			displayName : 'Colorado River Delta',
 			folderId: '56461a96e4b0e2669b30f2e4',
-			//labelLoc: 'bl',
+			labelLoc: 'bl',
 			bbox : {
 				"left": -115.12630,
 				"bottom": 32.13372,

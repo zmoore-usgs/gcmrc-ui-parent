@@ -91,7 +91,6 @@ GCMRC.Page = {
 						new OpenLayers.LonLat(box[labelLoc].x, box[labelLoc].y),
 						new OpenLayers.Size(80, 12),
 						siteFeature.attributes.networkDisplayName,
-						siteFeature.attributes.networkFolder,
 						null,
 						false,
 						null

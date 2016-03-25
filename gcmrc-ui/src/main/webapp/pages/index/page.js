@@ -55,7 +55,8 @@ GCMRC.Page = {
 				]);
 				var siteFeature = new OpenLayers.Feature.Vector(networkBBox, {
 					networkName: key,
-					networkDisplayName: network.displayName
+					networkDisplayName: network.displayName,
+					networkFolder: network.folderId
 				});
 				GCMRC.Mapping.layers.network.addFeatures([siteFeature]);
 				
@@ -90,6 +91,7 @@ GCMRC.Page = {
 						new OpenLayers.LonLat(box[labelLoc].x, box[labelLoc].y),
 						new OpenLayers.Size(80, 12),
 						siteFeature.attributes.networkDisplayName,
+						siteFeature.attributes.networkFolder,
 						null,
 						false,
 						null
@@ -112,6 +114,7 @@ GCMRC.Page = {
 				this.unselectAll();
 				$('#networkPopup .network-name').html(vector.attributes.networkDisplayName);
 				$('#networkStation').attr('href', CONFIG.relativePath + 'stations/' + vector.attributes.networkName);
+				$('#networkFolder').attr('href', 'https://www.sciencebase.gov/catalog/folder/' + vector.attributes.networkFolder);
 				if (GCMRC.Networks[vector.attributes.networkName].reaches) {
 					$('#networkReach').attr('href', CONFIG.relativePath + 'reaches/' + vector.attributes.networkName);					
 					$('#networkReach').parent().show();										

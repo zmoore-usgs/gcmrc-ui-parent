@@ -257,6 +257,7 @@
 							<ul>
 								<li><a href="#" id="networkStation">Monitoring Stations</a></li>
 								<li><a href="#" id="networkReach">Sediment Budget Reaches</a></li>
+								<li><a href="#" id="networkFolder">Research Trip Data</a></li>
 							</ul>
 						</div>
 					</div>

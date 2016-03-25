@@ -91,7 +91,6 @@ GCMRC.Page = {
 						new OpenLayers.LonLat(box[labelLoc].x, box[labelLoc].y),
 						new OpenLayers.Size(80, 12),
 						siteFeature.attributes.networkDisplayName,
-						siteFeature.attributes.networkFolder,
 						null,
 						false,
 						null
@@ -102,6 +101,7 @@ GCMRC.Page = {
 		var addLabels = function(obj, el) {
 			popups.each(function(pop) {
 				GCMRC.Mapping.maps[divId].addPopup(pop);
+				pop.updateRelativePosition();
 			});
 			GCMRC.Mapping.maps[divId].events.unregister('zoomend', null, addLabels);
 		};

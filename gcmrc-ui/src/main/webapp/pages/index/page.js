@@ -101,7 +101,6 @@ GCMRC.Page = {
 		var addLabels = function(obj, el) {
 			popups.each(function(pop) {
 				GCMRC.Mapping.maps[divId].addPopup(pop);
-				pop.updateRelativePosition();
 			});
 			GCMRC.Mapping.maps[divId].events.unregister('zoomend', null, addLabels);
 		};

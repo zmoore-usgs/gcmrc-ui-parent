@@ -479,10 +479,6 @@ GCMRC.Dygraphs.overrides = function(hoursOffset) {
 			var msInYear = 365.2524 * 24 * 3600 * 1000;
 			var num_years = 1.0 * (end_time - start_time) / msInYear;
 			return Math.floor(0.5 + 1.0 * num_years * tickPlacement.months.length / tickPlacement.year_mod);
-
-			var msInYear = 365.2524 * 24 * 3600 * 1000;
-			var num_years = 1.0 * (end_time - start_time) / msInYear;
-			return Math.floor(0.5 + 1.0 * num_years * num_months / year_mod);
 		}
 	};
 

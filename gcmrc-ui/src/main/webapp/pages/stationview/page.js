@@ -319,17 +319,6 @@ GCMRC.Page = {
 						thisDataPresent = true;
 					}
 				    }
-				    
-////					var params = new Object.extended(GCMRC.Page.params[el]);
-//					 new Object.extended(GCMRC.Page.params[el]).values(function(param) {
-//						var elBegin = param.beginPosition;
-//						var elEnd = param.endPosition;
-//
-//						if (new Date(reqBegin) <= new Date(elEnd) &&
-//							new Date(reqEnd) > new Date(elBegin)) {
-//							thisDataPresent = true;
-//						}
-//					});
 				}
 				return someDataPresent || thisDataPresent;
 			}, false);

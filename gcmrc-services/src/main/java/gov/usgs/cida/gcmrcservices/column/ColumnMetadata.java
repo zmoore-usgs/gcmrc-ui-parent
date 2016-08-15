@@ -1,6 +1,7 @@
 package gov.usgs.cida.gcmrcservices.column;
 
 import gov.usgs.cida.gcmrcservices.jsl.data.BedSedimentSpec;
+import gov.usgs.cida.gcmrcservices.jsl.data.DischargeErrorSpec;
 import gov.usgs.cida.gcmrcservices.jsl.data.ParameterCode;
 import gov.usgs.cida.gcmrcservices.jsl.data.ParameterSpec;
 import gov.usgs.cida.gcmrcservices.jsl.data.QWDataSpec;
@@ -187,7 +188,8 @@ public class ColumnMetadata {
 		public static enum SpecType {
 			PARAM,
 			LABDATA,
-			BEDMATERIAL;
+			BEDMATERIAL,
+			DISCHARGEERROR;
 		}
 		
 		public final ParameterCode parameterCode;
@@ -218,6 +220,9 @@ public class ColumnMetadata {
 					break;
 				case BEDMATERIAL:
 					result = new BedSedimentSpec(station, this.parameterCode, specOptions);
+					break;
+				case DISCHARGEERROR:
+					result = new DischargeErrorSpec(station, this.parameterCode, specOptions);
 					break;
 			}
 

@@ -33,7 +33,7 @@ public class ColumnResolver {
 	private static ColumnResolver resolver = null;
 	protected Map<String, ColumnMetadata> CM_LOOKUP;
 	protected Map<String, ColumnMetadata> qwColumnMetadatas;
-	protected Map<String, ColumnMetadata> qwErrorColumnMetadatas;
+	protected Map<String, ColumnMetadata> dischargeErrorColumnMetadatas;
 	protected Map<String, ColumnMetadata> cumulativeColumnMetadatas;
 	protected Map<String, ColumnMetadata> ancillaryColumnMetadatas;
 	protected Map<String, ColumnMetadata> bedSedimentColumnMetadatas;
@@ -47,8 +47,8 @@ public class ColumnResolver {
 		qwColumnMetadatas = Collections.unmodifiableMap(buildQWParametersCols(sqlProvider));
 		CM_LOOKUP.putAll(qwColumnMetadatas);
 
-		qwErrorColumnMetadatas = Collections.unmodifiableMap(buildQErrorCols());
-		CM_LOOKUP.putAll(qwErrorColumnMetadatas);
+		dischargeErrorColumnMetadatas = Collections.unmodifiableMap(buildQErrorCols());
+		CM_LOOKUP.putAll(dischargeErrorColumnMetadatas);
 		
 		ancillaryColumnMetadatas = Collections.unmodifiableMap(buildAncillaryCols(sqlProvider));
 		CM_LOOKUP.putAll(ancillaryColumnMetadatas);
@@ -380,14 +380,14 @@ public class ColumnResolver {
 				new ColumnMetadata.SpecEntry(ParameterCode.parseParameterCode("error!Discharge"), 
 						ColumnMetadata.SpecEntry.SpecType.DISCHARGEERROR)));
 
-		result.put("errorObs!Discharge", 
-				new ColumnMetadata("errorObs!Discharge", "Discharge Measurements and Associated Error (Percent) for only methods Observation or Estimate", 
-				new ColumnMetadata.SpecEntry(ParameterCode.parseParameterCode("errorObs!Discharge"), 
+		result.put("dischargeObservation!Discharge", 
+				new ColumnMetadata("dischargeObservation!Discharge", "Discharge Measurements and Associated Error (Percent) for only methods Observation or Estimate", 
+				new ColumnMetadata.SpecEntry(ParameterCode.parseParameterCode("dischargeObservation!Discharge"), 
 						ColumnMetadata.SpecEntry.SpecType.DISCHARGEERROR)));
 
-		result.put("errorNonObs!Discharge", 
-				new ColumnMetadata("errorNonObs!Discharge", "Discharge Measurements and Associated Error (Percent) excluding methods Observation or Estimate", 
-				new ColumnMetadata.SpecEntry(ParameterCode.parseParameterCode("errorNonObs!Discharge"), 
+		result.put("dischargeMeasurement!Discharge", 
+				new ColumnMetadata("dischargeMeasurement!Discharge", "Discharge Measurements and Associated Error (Percent) excluding methods Observation or Estimate", 
+				new ColumnMetadata.SpecEntry(ParameterCode.parseParameterCode("dischargeMeasurement!Discharge"), 
 						ColumnMetadata.SpecEntry.SpecType.DISCHARGEERROR)));
 		
 		return result;

@@ -22,8 +22,8 @@ public class DischargeErrorSpec extends DataSpec {
 	 */
 	private static final long serialVersionUID = 1L;
 	
-	public static final String OBS_ONLY = "errorObs";	
-	public static final String NON_OBS_ONLY = "errorNonObs";
+	public static final String OBS_ONLY = "dischargeObservation";	
+	public static final String NON_OBS_ONLY = "dischargeMeasurement";
 	
 	private static final Logger log = LoggerFactory.getLogger(DischargeErrorSpec.class);
 

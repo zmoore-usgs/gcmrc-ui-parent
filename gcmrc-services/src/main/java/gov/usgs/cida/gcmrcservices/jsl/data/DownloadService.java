@@ -30,6 +30,7 @@ public class DownloadService extends WebService {
 		this.specMapping.put("BIBEbedSediment", CentralBedSedimentDownloadSpec.class);
 		this.specMapping.put("CRDbedSediment", BedSedimentDownloadSpec.class);
 		this.specMapping.put("DINObedSediment", BedSedimentDownloadSpec.class);
+		this.specMapping.put("dischargeError", DischargeErrorSpec.class);
 	}
 	
 	@Override

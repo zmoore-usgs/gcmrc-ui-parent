@@ -22,6 +22,9 @@ public class DischargeErrorSpec extends DataSpec {
 	 */
 	private static final long serialVersionUID = 1L;
 	
+	public static final String OBS_ONLY = "errorObs";	
+	public static final String NON_OBS_ONLY = "errorNonObs";
+	
 	private static final Logger log = LoggerFactory.getLogger(DischargeErrorSpec.class);
 
 	public DischargeErrorSpec(String stationName, ParameterCode parameterCode, SpecOptions options) {
@@ -38,6 +41,7 @@ public class DischargeErrorSpec extends DataSpec {
 				new ColumnMapping(ColumnMetadata.createColumnName(this.stationName, this.parameterCode), C_FINAL_VALUE_NAME, ASCENDING_ORDER, C_FINAL_VALUE_NAME, null, null, null, "CASE WHEN ERROR_PERCENT IS NOT NULL THEN (CASE WHEN ERRORBAR_LOWER_VA < 0 THEN 0 ELSE ERRORBAR_LOWER_VA END) || ';' || RESULT_VA || ';' || ERRORBAR_UPPER_VA ELSE TO_CHAR(RESULT_VA) END", null, null),
 				new ColumnMapping(C_SITE_NAME, S_SITE_NAME),
 				new ColumnMapping(C_GROUP_NAME, S_GROUP_NAME),
+				new ColumnMapping(C_METHOD_NAME, S_METHOD_NAME),
 				new ColumnMapping(C_FINAL_VALUE_NAME, S_FINAL_VALUE_NAME),
 				new ColumnMapping(C_UPPER_ERROR_NAME, C_UPPER_ERROR_NAME),
 				new ColumnMapping(C_LOWER_ERROR_NAME, C_LOWER_ERROR_NAME)
@@ -54,6 +58,7 @@ public class DischargeErrorSpec extends DataSpec {
 		SearchMapping[] result = new SearchMapping[] {
 			new SearchMapping(ParameterSpec.S_SITE_NAME, C_SITE_NAME, null, WhereClauseType.equals, null, null, null),
 			new SearchMapping(ParameterSpec.S_GROUP_NAME, C_GROUP_NAME, null, WhereClauseType.equals, null, null, null),
+			new SearchMapping(S_METHOD_NAME, C_METHOD_NAME, null, WhereClauseType.equals, null, null, null),
 			new SearchMapping(Endpoint.BEGIN_KEYWORD, C_SAMPLE_START_DT, null, WhereClauseType.special, CleaningOption.none, FIELD_NAME_KEY + " >= TO_DATE(" + USER_VALUE_KEY + ", 'YYYY-MM-DD\"T\"HH24:MI:SS')", null),
 			new SearchMapping(Endpoint.END_KEYWORD, C_SAMPLE_START_DT, null, WhereClauseType.special, CleaningOption.none, FIELD_NAME_KEY + " <= TO_DATE(" + USER_VALUE_KEY + ", 'YYYY-MM-DD\"T\"HH24:MI:SS')", null)
 		};
@@ -84,6 +89,7 @@ public class DischargeErrorSpec extends DataSpec {
 		result.append("    THEN NULL");
 		result.append("    ELSE DED.FINAL_VALUE * (1 - DED.ERROR_PERCENT * 0.01)");
 		result.append("  END AS ERRORBAR_LOWER_VA,");
+		result.append("  DED.METHOD,");
 		result.append("  DED.GROUP_ID,");
 		result.append("  G.NAME AS GROUP_NAME");
 		result.append(" FROM DISCHARGE_ERROR_DATA DED,");
@@ -93,6 +99,15 @@ public class DischargeErrorSpec extends DataSpec {
 		result.append(" WHERE DED.SITE_ID          = S.SITE_ID(+)");
 		result.append("  AND DED.SUBSITE_ID       = SS.SUBSITE_ID(+)");
 		result.append("  AND DED.GROUP_ID         = G.GROUP_ID(+)");
+		
+		if(this.parameterCode != null && this.parameterCode.sampleMethod != null) {
+			if(this.parameterCode.sampleMethod.equals(OBS_ONLY)) {
+				result.append("  AND (LOWER(DED.METHOD) = 'observation' OR LOWER(DED.METHOD) = 'estimate')");
+			} else if(this.parameterCode.sampleMethod.equals(NON_OBS_ONLY)) {
+				result.append("  AND LOWER(DED.METHOD) != 'observation' AND LOWER(DED.METHOD) != 'estimate'");
+			}
+		}
+			
 		result.append(") T_A_INNER");
 
 		return result.toString();
@@ -121,6 +136,7 @@ public class DischargeErrorSpec extends DataSpec {
 	
 	public static final String C_SAMPLE_START_DT = "SAMP_START_DT";
 	public static final String C_LAGGED_SAMPLE_START_DT = "LAGGED_SAMP_START_DT";
+	public static final String C_METHOD_NAME = "METHOD";
 	public static final String C_FINAL_VALUE_NAME = "RESULT_VA";
 	public static final String C_UPPER_ERROR_NAME = "ERRORBAR_UPPER_VA";
 	public static final String C_LOWER_ERROR_NAME = "ERRORBAR_LOWER_VA";
@@ -128,6 +144,7 @@ public class DischargeErrorSpec extends DataSpec {
 	public static final String S_SAMPLE_START_DT = "SAMP_START_DT";
 	public static final String S_LAGGED_SAMPLE_START_DT = "LAGGED_SAMP_START_DT";
 	public static final String S_FINAL_VALUE_NAME = "FINAL_VALUE";
+	public static final String S_METHOD_NAME = "METHOD";
 	
 	public static final String S_SITE_NAME = "site";
 	public static final String C_SITE_NAME = "SITE_NAME";

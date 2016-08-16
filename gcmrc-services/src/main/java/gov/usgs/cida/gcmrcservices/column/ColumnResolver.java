@@ -375,8 +375,20 @@ public class ColumnResolver {
 		Map<String, ColumnMetadata> result = new HashMap<String, ColumnMetadata>();
 		
 		//WAYYY HAAACK
-		result.put("error!Discharge", new ColumnMetadata("error!Discharge", "Discharge Measurements and Associated Error (Percent)", 
-				new ColumnMetadata.SpecEntry(ParameterCode.parseParameterCode("error!Discharge"), ColumnMetadata.SpecEntry.SpecType.DISCHARGEERROR)));
+		result.put("error!Discharge", 
+				new ColumnMetadata("error!Discharge", "Discharge Measurements and Associated Error (Percent)", 
+				new ColumnMetadata.SpecEntry(ParameterCode.parseParameterCode("error!Discharge"), 
+						ColumnMetadata.SpecEntry.SpecType.DISCHARGEERROR)));
+
+		result.put("errorObs!Discharge", 
+				new ColumnMetadata("errorObs!Discharge", "Discharge Measurements and Associated Error (Percent) for only methods Observation or Estimate", 
+				new ColumnMetadata.SpecEntry(ParameterCode.parseParameterCode("errorObs!Discharge"), 
+						ColumnMetadata.SpecEntry.SpecType.DISCHARGEERROR)));
+
+		result.put("errorNonObs!Discharge", 
+				new ColumnMetadata("errorNonObs!Discharge", "Discharge Measurements and Associated Error (Percent) excluding methods Observation or Estimate", 
+				new ColumnMetadata.SpecEntry(ParameterCode.parseParameterCode("errorNonObs!Discharge"), 
+						ColumnMetadata.SpecEntry.SpecType.DISCHARGEERROR)));
 		
 		return result;
 	}

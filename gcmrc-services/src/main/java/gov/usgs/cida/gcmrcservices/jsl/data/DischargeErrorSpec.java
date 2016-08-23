@@ -11,6 +11,7 @@ import gov.usgs.webservices.jdbc.spec.mapping.ColumnMapping;
 import gov.usgs.webservices.jdbc.spec.mapping.SearchMapping;
 import gov.usgs.webservices.jdbc.spec.mapping.WhereClauseType;
 import gov.usgs.webservices.jdbc.util.CleaningOption;
+import gov.usgs.webservices.jdbc.util.SqlUtils;
 
 /**
  *
@@ -98,7 +99,7 @@ public class DischargeErrorSpec extends DataSpec {
 		result.append("  AND DED.GROUP_ID         = G.GROUP_ID(+)");
 		
 		if(this.parameterCode != null && this.parameterCode.sampleMethod != null) {
-			String sqlCleanMethod = this.parameterCode.sampleMethod;
+			String sqlCleanMethod = SqlUtils.cleanWordForContains(new StringBuilder(this.parameterCode.sampleMethod)).toString();
 			result.append("  AND LOWER(DED.METHOD) = '" + sqlCleanMethod + "'");
 		}
 			

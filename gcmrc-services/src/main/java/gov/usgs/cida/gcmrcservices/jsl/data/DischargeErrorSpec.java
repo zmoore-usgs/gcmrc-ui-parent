@@ -99,7 +99,7 @@ public class DischargeErrorSpec extends DataSpec {
 		result.append("  AND DED.GROUP_ID         = G.GROUP_ID(+)");
 		
 		if(this.parameterCode != null && this.parameterCode.sampleMethod != null) {
-			String sqlCleanMethod = SqlUtils.cleanWordForContains(new StringBuilder(this.parameterCode.sampleMethod)).toString();
+			String sqlCleanMethod = cleanSql(this.parameterCode.sampleMethod);
 			result.append("  AND LOWER(DED.METHOD) = '" + sqlCleanMethod + "'");
 		}
 			
@@ -145,4 +145,16 @@ public class DischargeErrorSpec extends DataSpec {
 	public static final String C_SITE_NAME = "SITE_NAME";
 	public static final String S_GROUP_NAME = "groupName";
 	public static final String C_GROUP_NAME = "GROUP_NAME";
+	
+	public static String cleanSql(String input) {
+		if (input == null) {
+			return null;
+		}
+		String output = input.trim();
+		output = output.replace("'", "");
+		output = output.replace("|", "");
+		output = output.replace(";", "");
+
+		return output;
+	}
 }

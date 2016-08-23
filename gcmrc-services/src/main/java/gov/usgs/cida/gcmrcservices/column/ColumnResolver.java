@@ -47,7 +47,7 @@ public class ColumnResolver {
 		qwColumnMetadatas = Collections.unmodifiableMap(buildQWParametersCols(sqlProvider));
 		CM_LOOKUP.putAll(qwColumnMetadatas);
 
-		dischargeErrorColumnMetadatas = Collections.unmodifiableMap(buildQErrorCols());
+		dischargeErrorColumnMetadatas = Collections.unmodifiableMap(buildQErrorCols(sqlProvider));
 		CM_LOOKUP.putAll(dischargeErrorColumnMetadatas);
 		
 		ancillaryColumnMetadatas = Collections.unmodifiableMap(buildAncillaryCols(sqlProvider));
@@ -371,25 +371,35 @@ public class ColumnResolver {
 	 * Cols for error values
 	 * @return 
 	 */
-	protected static Map<String, ColumnMetadata> buildQErrorCols() {
+	protected static Map<String, ColumnMetadata> buildQErrorCols(SQLProvider sqlProvider) {
 		Map<String, ColumnMetadata> result = new HashMap<String, ColumnMetadata>();
 		
-		//WAYYY HAAACK
-		result.put("error!Discharge", 
-				new ColumnMetadata("error!Discharge", "Discharge Measurements and Associated Error (Percent)", 
-				new ColumnMetadata.SpecEntry(ParameterCode.parseParameterCode("error!Discharge"), 
-						ColumnMetadata.SpecEntry.SpecType.DISCHARGEERROR)));
+		Column methodCol = new SimpleColumn("METHOD");
+		ResultSet rs = null;
+		try {
+			ParameterizedString ps = new ParameterizedString();
+			ps.append("SELECT DISTINCT");
+			ps.append("  METHOD");
+			ps.append(" FROM ");
+			ps.append("  DISCHARGE_ERROR_DATA");
+			
+			rs = sqlProvider.getResults(null, ps);
+			while (rs.next()) {
+				TableRow row = TableRow.buildTableRow(rs);
+				
+				String method = row.getValue(methodCol); //TODO may need to clean/camelCaseThis
 
-		result.put("dischargeObservation!Discharge", 
-				new ColumnMetadata("dischargeObservation!Discharge", "Discharge Measurements and Associated Error (Percent) for only methods Observation or Estimate", 
-				new ColumnMetadata.SpecEntry(ParameterCode.parseParameterCode("dischargeObservation!Discharge"), 
-						ColumnMetadata.SpecEntry.SpecType.DISCHARGEERROR)));
-
-		result.put("dischargeMeasurement!Discharge", 
-				new ColumnMetadata("dischargeMeasurement!Discharge", "Discharge Measurements and Associated Error (Percent) excluding methods Observation or Estimate", 
-				new ColumnMetadata.SpecEntry(ParameterCode.parseParameterCode("dischargeMeasurement!Discharge"), 
-						ColumnMetadata.SpecEntry.SpecType.DISCHARGEERROR)));
-		
+				result.put(method + "!Discharge", 
+						new ColumnMetadata(method + "!Discharge", "Discharge Measurements and Associated Error (" + method + ")", 
+						new ColumnMetadata.SpecEntry(ParameterCode.parseParameterCode(method + "!Discharge"), 
+								ColumnMetadata.SpecEntry.SpecType.DISCHARGEERROR)));
+			}
+			log.debug("Discharge Measurements data columns constructed : " + result.keySet().toString());
+		} catch (Exception e) {
+			log.error("Could not get columns", e);
+		} finally {
+			Closers.closeQuietly(rs);
+		}
 		return result;
 	}
 }

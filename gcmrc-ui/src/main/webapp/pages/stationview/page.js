@@ -71,6 +71,7 @@ GCMRC.Page = {
 		
 		var pCode = el;
 		var displayName = description["displayName"];
+		var sampleTypeDisplay = displayName == "Discharge" ? "Measurements" : "Physical Samples";
 		var fromDate = description.earliestMethod.split("T")[0];
 		var toDate = description.latestMethod.split("T")[0];
 		var ppq = instParam["ppq"];
@@ -114,7 +115,7 @@ GCMRC.Page = {
 						el,
 						'" value="',
 						fixOrder(allMethods).join(CONFIG.delims.sampleMethod),
-						'">' + ppqualifier + ' Data and Physical Samples',
+						'">' + ppqualifier + ' Data and ' + sampleTypeDisplay,
 						'</li>'
 					);
 			}
@@ -124,7 +125,7 @@ GCMRC.Page = {
 					el,
 					'" value="',
 					fixOrder(allMethods.filter(function(e){return "inst" !== e})).join(CONFIG.delims.sampleMethod),
-					'">Physical Samples Only',
+					'">' + sampleTypeDisplay + ' Only',
 					'</li></ul>'
 				);
 		}
@@ -261,12 +262,6 @@ GCMRC.Page = {
 			} else {
 				var groupName = GCMRC.Page.params[el.name].inst.groupName;
 				cols.push("inst!" + groupName + "!" + CONFIG.stationName);
-				
-				//for Discharge, get explicit error bars.
-				if(groupName == "Discharge") {
-					cols.push("dischargeObservation!" + groupName + "!" + CONFIG.stationName);
-					cols.push("dischargeMeasurement!" + groupName + "!" + CONFIG.stationName);
-				}
 			}
 
 			result.push({
@@ -695,7 +690,7 @@ GCMRC.Page = {
 			}
 		}
 	}),
-	qwLoad : JSL.ResourceLoad(function(el) {
+	qwAndDiscMeasurementLoad : JSL.ResourceLoad(function(el) {
 		var identifier = el.groupId;
 		
 		if ("89" === identifier) {

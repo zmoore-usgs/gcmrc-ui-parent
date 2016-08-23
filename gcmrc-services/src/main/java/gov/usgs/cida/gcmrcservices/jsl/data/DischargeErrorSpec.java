@@ -22,9 +22,6 @@ public class DischargeErrorSpec extends DataSpec {
 	 */
 	private static final long serialVersionUID = 1L;
 	
-	public static final String OBS_ONLY = "dischargeObservation";	
-	public static final String NON_OBS_ONLY = "dischargeMeasurement";
-	
 	private static final Logger log = LoggerFactory.getLogger(DischargeErrorSpec.class);
 
 	public DischargeErrorSpec(String stationName, ParameterCode parameterCode, SpecOptions options) {
@@ -101,11 +98,8 @@ public class DischargeErrorSpec extends DataSpec {
 		result.append("  AND DED.GROUP_ID         = G.GROUP_ID(+)");
 		
 		if(this.parameterCode != null && this.parameterCode.sampleMethod != null) {
-			if(this.parameterCode.sampleMethod.equals(OBS_ONLY)) {
-				result.append("  AND (LOWER(DED.METHOD) = 'observation' OR LOWER(DED.METHOD) = 'estimate')");
-			} else if(this.parameterCode.sampleMethod.equals(NON_OBS_ONLY)) {
-				result.append("  AND LOWER(DED.METHOD) != 'observation' AND LOWER(DED.METHOD) != 'estimate'");
-			}
+			String sqlCleanMethod = this.parameterCode.sampleMethod;
+			result.append("  AND LOWER(DED.METHOD) = '" + sqlCleanMethod + "'");
 		}
 			
 		result.append(") T_A_INNER");

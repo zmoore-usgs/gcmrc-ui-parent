@@ -71,7 +71,7 @@ GCMRC.Page = {
 		
 		var pCode = el;
 		var displayName = description["displayName"];
-		var sampleTypeDisplay = displayName == "Discharge" ? "Measurements" : "Physical Samples";
+		var sampleTypeDisplay = displayName == "Discharge" ? "Physical Measurements" : "Physical Samples";
 		var fromDate = description.earliestMethod.split("T")[0];
 		var toDate = description.latestMethod.split("T")[0];
 		var ppq = instParam["ppq"];

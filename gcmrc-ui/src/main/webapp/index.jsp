@@ -133,7 +133,7 @@
 									</div>
 								</div>
 								<div class="media">
-									<a class="pull-left" href="http://cida.usgs.gov/"><img class="media-object" src="app/sources/source-cida.gif"></a>
+									<a class="pull-left" href="http://cida.usgs.gov/"><img class="media-object" src="./template/images/source-cida.gif"></a>
 									<div class="media-body">
 										<h5 class="media-heading">Website Design and Programming</h5>
 										<ul class="unstyled">
@@ -153,7 +153,7 @@
 							<div class="well half">
 								<div class="media">
 									<a href="http://www.usbr.gov/">
-										<div class="media-object pull-left" style="width:106px; text-align: center;"><img src="app/sources/source-usbr.gif"></div>
+										<div class="media-object pull-left" style="width:106px; text-align: center;"><img src="./template/images/source-usbr.gif"></div>
 										<div class="media-body">
 											<h4 class="media-heading">Bureau of Reclamation</h4>
 										</div>
@@ -161,7 +161,7 @@
 								</div>
 								<div class="media">
 									<a href="http://www.nps.gov/">
-										<div class="media-object pull-left" style="width:106px; text-align: center;"><img src="app/sources/source-nps.gif"></div>
+										<div class="media-object pull-left" style="width:106px; text-align: center;"><img src="./template/images/source-nps.gif"></div>
 										<div class="media-body">
 											<h4 class="media-heading">National Park Service</h4>
 										</div>
@@ -169,7 +169,7 @@
 								</div>
 								<div class="media">
 									<a href="http://www.blm.gov/">
-										<div class="media-object pull-left" style="width:106px; text-align: center;"><img src="app/sources/source-blm.jpg"></div>
+										<div class="media-object pull-left" style="width:106px; text-align: center;"><img src="./template/images/source-blm.jpg"></div>
 										<div class="media-body">
 											<h4 class="media-heading">Bureau of Land Management</h4>
 										</div>
@@ -177,7 +177,7 @@
 								</div>
 								<div class="media">
 									<a href="http://www.cec.org/">
-										<div class="media-object pull-left" style="width:106px; text-align: center;"><img src="app/sources/source-cec.gif"></div>
+										<div class="media-object pull-left" style="width:106px; text-align: center;"><img src="./template/images/source-cec.gif"></div>
 										<div class="media-body">
 											<h4 class="media-heading">Commission for Environmental Cooperation</h4>
 										</div>
@@ -185,7 +185,7 @@
 								</div>
 								<div class="media">
 									<a href="http://www.usu.edu/">
-										<div class="media-object pull-left" style="width:106px; text-align: center;"><img src="app/sources/source-usu.gif"></div>
+										<div class="media-object pull-left" style="width:106px; text-align: center;"><img src="./template/images/source-usu.gif"></div>
 										<div class="media-body">
 											<h4 class="media-heading">Utah State University</h4>
 										</div>

@@ -12,18 +12,18 @@
 <meta name="review" content="${param['nextReview']}">
 <%--<meta name="expires" content="${param['expires']}">--%>
 
-<link type="text/css" media="screen" rel="stylesheet" href="http://www.gcmrc.gov/styles/common.css" title="default"/>
-<link type="text/css" media="screen" rel="stylesheet" href="http://www.gcmrc.gov/styles/custom.css" title="default"/>
-<link rel="alternate stylesheet" media="screen" type="text/css" href="http://www.gcmrc.gov/styles/none.css" title="no_style" />
-<link rel="stylesheet" media="print" type="text/css" href="http://www.gcmrc.gov/styles/print.css" />
+<link type="text/css" media="screen" rel="stylesheet" href="${param['relPath']}template/common.css" title="default"/>
+<link type="text/css" media="screen" rel="stylesheet" href="${param['relPath']}template/custom.css" title="default"/>
+<link rel="alternate stylesheet" media="screen" type="text/css" href="${param['relPath']}template/none.css" title="no_style" />
+<link rel="stylesheet" media="print" type="text/css" href="${param['relPath']}template/print.css" />
 <%-- fix for macs --%>
 <style type="text/css">
 	#usgstitle p {
 		padding : 4px;
 	}
 </style>
-<script type="text/javascript" src="http://www.gcmrc.gov/scripts/styleswitch.js"></script>
-<script type="text/javascript" src="http://www.gcmrc.gov/scripts/external.js"></script>
+<script type="text/javascript" src="${param['relPath']}template/styleswitch.js"></script>
+<script type="text/javascript" src="${param['relPath']}template/external.js"></script>
 
 <% 
     String gaAccountCode = request.getParameter("google-analytics-account-code");

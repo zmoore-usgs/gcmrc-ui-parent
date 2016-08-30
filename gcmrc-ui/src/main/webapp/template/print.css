@@ -1,590 +1,343 @@
-body {
-    font-size: small;
-}
-#wrapper {
-    margin-left: auto;
-    margin-right: auto;
-    min-width: 850px;
-    width: 100%;
-}
-#usgscolorband {
-}
-#usgstitle {
-    display: none;
-}
-#usgstitle form {
-    display: none;
-}
-#usgsccsabox {
-    display: none;
-}
-#usgsidentifier {
-    display: none;
-}
-#usgsbanner {
-    height: 72px;
-    width: 100%;
-}
-.menu {
-    display: none;
-}
-.menu ul li a, .menu ul li a:visited {
-}
-.menu ul {
-}
-.menu ul li {
-}
-.menu ul li ul {
-    display: none;
-}
-.menu ul li:hover a {
-}
-.menu ul li:hover ul {
-}
-.menu ul li:hover ul li a.hide {
-}
-.menu ul li:hover ul li:hover a.hide {
-}
-.menu ul li:hover ul li ul {
-    display: none;
-}
-.menu ul li:hover ul li a {
-}
-.menu ul li:hover ul li a:hover {
-}
-.menu ul li:hover ul li:hover ul {
-}
-.menu ul li:hover ul li:hover ul.left {
-}
-.menu .drop {
-}
-#topnav {
-}
-#topnav a:link, #topnav a:visited {
-}
-#topnav a:hover {
-}
-#topnav2 {
-    display: none;
-}
-.skipNav {
-    display: none;
-}
-#pageMainHeader {
-    margin-bottom: 5px;
-    margin-right: 15px;
-    margin-top: 16px;
-}
-#pageMainHeader h2 {
-    color: #000000;
-    font-size: 16px;
-    font-weight: bold;
-    margin: 0 0 2px;
-}
-#pageMainHeader p {
-    margin-bottom: 0;
-    margin-top: 0;
-}
-#breadcrumb {
-    margin-bottom: 8px;
-    margin-right: 15px;
-    margin-top: 8px;
-}
-#breadcrumb h2 {
-    color: #000000;
-    font-size: 16px;
-    font-weight: bold;
-    margin: 5px 0;
-}
-#breadcrumb p {
-    margin-bottom: 0;
-    margin-top: 0;
-}
-.pageTitle {
-    font-size: 1.1em;
-    font-weight: bold;
-}
-#content {
-    padding: 2px 4px 8px;
-}
-.sectionWide {
-    padding-right: 12px;
-    padding-top: 8px;
-}
-#sectionBlock {
-    background-color: #F3EBE7;
-    background-image: url("../images/bg_sectionList.jpg");
-    background-position: center top;
-    background-repeat: repeat-x;
-    border-bottom: 1px solid #993300;
-    border-left: 1px solid #993300;
-    border-right: 1px solid #993300;
-    float: left;
-    font-size: 12px;
-    height: auto !important;
-    margin-bottom: 8px;
-    margin-top: 0;
-    min-height: 140px;
-    width: 100%;
-}
-#sectionBlock2 {
-    background-color: #E7E7E9;
-    background-image: url("../images/bg_sectionList2.jpg");
-    background-position: center top;
-    background-repeat: repeat-x;
-    border-color: #96ABC5;
-    border-right: 1px solid #96ABC5;
-    border-style: solid;
-    border-width: 1px;
-    float: left;
-    font-size: 12px;
-    height: auto !important;
-    margin-bottom: 8px;
-    margin-top: 0;
-    min-height: 140px;
-    width: 100%;
-}
-#LeftSpread {
-    margin-right: 310px;
-    padding-left: 4px;
-    padding-right: 10px;
-}
-#login {
-    margin-bottom: 4px;
-    text-align: right;
-}
-#rightSidebar {
-    float: right;
-    margin-top: 0;
-    width: 300px;
-}
-#rightSidebar h2 {
-    color: #996633;
-    font-size: 15px;
-    margin-left: 6px;
-    margin-top: 0;
-}
-#rightSidebar p {
-}
-.innerRightSidebar {
-    background-color: #F6F6F5;
-    border: 1px solid #99CCCC;
-    margin-bottom: 15px;
-}
-.sectionTitle {
-    background-color: #F1F2F6;
-    background-image: url("../images/bg_frontSections.jpg");
-    background-position: left top;
-    background-repeat: no-repeat;
-    border-bottom: 1px solid #96ABC5;
-    color: #003366;
-    font-size: 14px;
-    font-weight: bold;
-    height: 15px;
-    margin: 0 0 4px;
-    padding-bottom: 4px;
-    padding-left: 8px;
-    padding-top: 3px;
-}
-.sectionTitle a {
-    color: #003366;
-}
-.sectionTitle a:visited {
-    color: #003366;
-}
-.boldtopline {
-    border-top: 1px solid #CCCCCC;
-    font-weight: bold;
-    padding-top: 2px;
-}
-.rightSidebarText {
-    padding-left: 13px;
-    padding-right: 12px;
-}
-#homePageFlash {
-    display: none;
-}
-#features_box_note {
-    display: none;
-}
-.textBox {
-    clear: left;
-    margin-bottom: 10px;
-    margin-left: 4px;
-    min-height: 102px;
-    width: 99%;
-}
-#contactLeft {
-    margin-right: 445px;
-    margin-top: 12px;
-    padding-left: 4px;
-    padding-right: 10px;
-}
-#contactRight {
-    float: right;
-    margin-top: 12px;
-    width: 432px;
-}
-.titleContact {
-    background-color: #F1F2F6;
-    background-image: url("../images/bg_frontSections.jpg");
-    background-position: left top;
-    background-repeat: no-repeat;
-    border: 1px solid #99CCCC;
-    clear: left;
-    color: #003366;
-    font-size: 14px;
-    font-weight: bold;
-    height: 15px;
-    padding-bottom: 4px;
-    padding-left: 8px;
-    padding-top: 3px;
-}
-#UserContent {
-    margin-left: 230px;
-}
-#UserInfo {
-    background-color: #F6F6F5;
-    border: 1px solid #99CCCC;
-    float: left;
-    margin-right: 20px;
-    margin-top: 0;
-    width: 200px;
-}
-#adminWrap {
-    background-color: #FFFFFF;
-    border: 1px solid #333333;
-    margin: 20px auto 10px;
-    padding: 0 0 20px;
-    width: 95%;
-}
-.adminText {
-    font-weight: bold;
-    line-height: 20px;
-    padding-left: 13px;
-    padding-right: 12px;
-}
-.adminText a {
-    color: #003366;
-    text-decoration: none;
-}
-.adminText a:hover {
-    color: #0066FF;
-}
-#contactInfo {
-    background-color: #FCFCFC;
-    border-top: 1px solid #99CCCC;
-    color: #333333;
-    font-size: 10px;
-    font-weight: bold;
-    margin-top: 15px;
-    padding: 4px 10px;
-    text-align: center;
-}
-#styleSwap {
-    display: none;
-}
-#usgsfooter img {
-    display: none;
-}
-.clear {
-    clear: both;
-    height: 0;
-    width: auto;
-}
-.right140 {
-    margin-left: 140px;
-}
-.clearSection {
-    clear: both;
-    height: 0;
-    width: 50%;
-}
-.spacer {
-    display: block;
-    height: 15px;
-    width: 100%;
-}
-.clearL {
-    clear: left;
-}
-.tables {
-    border-collapse: collapse;
-    width: 100%;
-}
-.tables, th, td {
-    border: 1px solid #CCCCCC;
-    padding: 3px 7px;
-}
-.tableHead {
-    background-color: #CCCCCC;
-    font-weight: bold;
-}
-th, td {
-    border: 1px solid #CCCCCC;
-    padding: 3px 7px;
-}
-h1 {
-    color: #000000;
-    font-family: Verdana,Arial,Helvetica,sans-serif;
-    font-size: medium;
-    font-weight: bold;
-}
-h2 {
-    color: #336633;
-    font-size: large;
-    font-weight: bold;
-}
-h3 {
-    color: #003366;
-    font-size: large;
-    font-weight: bold;
-}
-.warning {
-    color: #FFFFFF;
-    font-size: 10px;
-}
-.italic {
-    font-style: italic;
-}
-.bold {
-    font-weight: bold;
-}
-.small {
-    font-family: Verdana,Arial,Helvetica,sans-serif;
-    font-size: x-small;
-}
-.capitalize {
-    text-transform: capitalize;
-}
-.quote {
-    font-style: italic;
-}
-.textBox p {
-    margin-left: 0;
-    margin-right: 0;
-    margin-top: 0;
-}
-.sectionWideTitle {
-    background-color: #F1F2F6;
-    background-image: url("../images/bg_frontSections.jpg");
-    background-position: left top;
-    background-repeat: no-repeat;
-    border: 1px solid #99CCCC;
-    clear: left;
-    color: #003366;
-    font-size: 14px;
-    font-weight: bold;
-    height: 15px;
-    margin-top: 22px;
-    padding-bottom: 4px;
-    padding-left: 8px;
-    padding-top: 3px;
-}
-.sectionWideTitle a {
-    color: #003366;
-}
-.sectionWideTitle a:visited {
-    color: #003366;
-}
-.pubTitle {
-    background-color: #F1F2F6;
-    background-image: url("../images/bg_frontSections.jpg");
-    background-position: left top;
-    background-repeat: no-repeat;
-    border-bottom: 1px solid #96ABC5;
-    font-size: 14px;
-    font-weight: bold;
-    height: 15px;
-    margin: 0;
-    padding-bottom: 4px;
-    padding-left: 8px;
-    padding-top: 3px;
-}
-#rSidebar h2 {
-    color: #996633;
-    font-size: 14px;
-    margin-top: 0;
-}
-.pubText {
-    padding-right: 12px;
-}
-#sidebar h2 {
-    color: #996633;
-    font: bold 14px Verdana,sans-serif;
-    margin-bottom: 2px;
-    margin-top: 0;
-}
-#sectionBlock2 h2 {
-    background-color: #CC9966;
-    background-image: url("../images/bg_section.jpg");
-    background-position: left center;
-    background-repeat: repeat-y;
-    color: white;
-    font: bold 14px Verdana,sans-serif;
-    margin-bottom: 7px;
-    margin-top: 0;
-    padding: 5px;
-}
-#sectionBlock h2 {
-    background-color: #CC9966;
-    background-image: url("../images/bg_section.jpg");
-    background-position: left center;
-    background-repeat: repeat-y;
-    color: white;
-    font: bold 14px Verdana,sans-serif;
-    margin-bottom: 7px;
-    margin-top: 0;
-    padding: 5px;
-}
-.section_header {
-    background-color: #996633;
-    color: #FFFFFF;
-    font: bold 14px Verdana,sans-serif;
-    margin: 7px 0 6px 5px;
-    width: 252px;
-}
-a[href$=".pdf"] {
-    background: url("../images/icon_pdf.gif") no-repeat scroll right center transparent;
-    padding-right: 18px;
-}
-a[rel="pdf"] {
-    background: url("../images/icon_pdf.gif") no-repeat scroll right center transparent;
-    padding-right: 18px;
-}
-a[rel*="pdf"] {
-    background: url("../images/icon_pdf.gif") no-repeat scroll right center transparent;
-    padding-right: 18px;
-}
-a[rel~="pdf"] {
-    background: url("../images/icon_pdf.gif") no-repeat scroll right center transparent;
-    padding-right: 18px;
-}
+body {font-size: small;}
+
+/* wrapper for all content on page. This div stes the minimum page width. */
+#wrapper { width: 100%; min-width: 850px; margin-right: auto; margin-left: auto; }
+
+/* Header and Banner */
+#usgscolorband {} 
+#usgstitle { display:none;} 
+#usgstitle form { display:none;}
+#usgsccsabox {display:none;}
+#usgsidentifier {display:none;}
+
+#usgsbanner {height:72px; width: 100%;}
+/* End Header and Banner styles */
+
+/* top navigation bar */
+.menu {display: none;}
+
+.menu ul li a, .menu ul li a:visited {}
+.menu ul {}
+.menu ul li {}
+.menu ul li ul {display: none;}
+
+/* specific to non IE browsers */
+.menu ul li:hover a {}
+.menu ul li:hover ul {}
+.menu ul li:hover ul li a.hide {}
+.menu ul li:hover ul li:hover a.hide {}
+.menu ul li:hover ul li ul {display: none;}
+.menu ul li:hover ul li a {}
+.menu ul li:hover ul li a:hover {}
+.menu ul li:hover ul li:hover ul {}
+.menu ul li:hover ul li:hover ul.left {}
+
+.menu .drop {}
+
+
+#topnav {}
+#topnav a:link, #topnav a:visited {}
+#topnav a:hover {}
+#topnav2 {display:none;}
+.skipNav{ display:none; }
+
+/* --- end of top navigation bar styles--- */
+
+/* Page Title Header and Breadcrumbs */
+#pageMainHeader { margin-right: 15px; margin-bottom: 5px; margin-top: 16px;}
+#pageMainHeader h2 { font-size:16px; color:#000000; font-weight:bold; margin-top: 0px;margin-right: 0px; margin-bottom: 2px;
+	margin-left: 0px; }		
+#pageMainHeader p {margin-top:0px; margin-bottom:0px;}
+
+#breadcrumb { margin-right: 15px; margin-bottom: 8px; margin-top: 8px; }
+#breadcrumb h2 { font-size:16px; color:#000000; font-weight:bold; margin-top: 5px; margin-right: 0px;margin-bottom: 5px;
+	margin-left: 0px; }		
+#breadcrumb p {margin-top:0px; margin-bottom:0px;}
+.pageTitle { font-weight: bold; font-size: 1.1em; }
+/*   end of Page Title Header and Breadcrumb styles */		
+
+
+/* Main Content Layout */
+#content {padding-top: 2px; padding-right: 4px; padding-bottom: 8px; padding-left: 4px;}
+.sectionWide { padding-right: 12px; padding-top: 8px; }
+
+
+#sectionBlock { min-height: 140px; height: auto !important; height: 140px; width: 100%; margin-top: 0px; margin-bottom: 8px; font-size: 12px; float: left;border-right-width: 1px; border-bottom-width: 1px; border-left-width: 1px; border-right-style: solid; border-bottom-style: solid;border-left-style: solid; border-right-color: #993300; border-bottom-color: #993300; border-left-color: #993300; background-image: url(../images/bg_sectionList.jpg); background-repeat: repeat-x; background-position: top; background-color: #f3ebe7; }
+#sectionBlock2 { min-height: 140px; height: auto !important; height: 140px; width: 100%; margin-top: 0px; margin-bottom: 8px; font-size: 12px; float: left; border-right-width: 1px; border-bottom-width: 1px; border-left-width: 1px; border-right-style: solid; border-bottom-style: solid;border-left-style: solid; border-right-color: #96abc5; border-bottom-color: #96abc5; border-left-color: #96abc5; background-image: url(../images/bg_sectionList2.jpg); background-repeat: repeat-x; background-position: top; background-color: #e7e7e9; border-top-color: #96abc5;border-top-width: 1px; border-top-style: solid; }
+
+
+
+/* Styles used in two column layout */ 
+
+/* Right sidebar styles */ 
+#LeftSpread { padding-right: 10px; padding-left: 4px; margin-right: 310px; }
+#login {margin-bottom: 4px; text-align: right; }
+#rightSidebar { float: right; width: 300px; margin-top: 0px;}
+
+#rightSidebar h2 {	margin-top:0px; margin-left:6px; font-size: 15px; color: #996633;}
+#rightSidebar p {}
+.innerRightSidebar { margin-bottom: 15px; border: 1px solid #99cccc; background-color: #f6f6f5; }
+.sectionTitle { font-size: 14px; height: 15px; padding-top: 3px; padding-bottom: 4px; padding-left: 8px; font-weight: bold;
+	background-color: #f1f2f6; background-image: url(../images/bg_frontSections.jpg); background-repeat: no-repeat;
+	background-position: left top; margin-top: 0px; margin-right: 0px; margin-bottom: 4px; margin-left: 0px; 
+    border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: #96abc5; color: #003366; }
+.sectionTitle a {color:#003366; }
+.sectionTitle a:visited {color:#003366; }
+.boldtopline { font-weight:bold; padding-top: 2px; border-top-width: 1px; border-top-style: solid; border-top-color: #CCCCCC; }
+.rightSidebarText { padding-right: 12px; padding-left: 13px; }
+/* End of Right sidebar styles */ 
+
+/* Flash banner on home page */
+#homePageFlash {display:none; }
+#features_box_note {display:none;}
+/* end of Flash banner styles */
+
+/* Box for list of latest pubs on home page */
+.textBox { width: 99%; clear: left; min-height: 102px; margin-bottom: 10px; margin-left: 4px;}
+
+
+/* #left75 { padding-right: 10px; padding-left: 4px; width: 75%; }
+#left95 { padding-right: 10px; padding-left: 4px; width: 95%; } */
+
+/* Styles used in THREE column layout */ 
+/*#rSidebar {float: right; width: 20%; border-left-width: 1px; border-left-style: solid; border-left-color: #996633; padding-right: 1%; padding-top: 2px; margin-top: 10px; padding-left: 1%; }
+.sidebarlist { font-size:12px; list-style-type:none; margin-top:0px; margin-left:10px; padding-left:0; }
+#sections { margin-right: 22%; padding-top: 10px; padding-right: 1%; padding-left: 1%; width: 75%; }
+#sectionL {height: auto; width: 48%; float: left; }
+#sectionR { float: left; width: 48%; margin-left: 2%; } */
+
+/* Contact Page Styles */
+#contactLeft { padding-right: 10px; padding-left: 4px; margin-right: 445px; margin-top:12px; }
+#contactRight { float: right; width: 432px; margin-top:12px;}
+.titleContact { font-size: 14px; height: 15px; padding-top: 3px;  padding-bottom: 4px; padding-left: 8px;
+    font-weight: bold; background-color: #f1f2f6; background-image: url(../images/bg_frontSections.jpg);
+    background-repeat: no-repeat; background-position: left top; border: 1px solid #99cccc;
+    clear: left; color: #003366; }
+/* End of Contact page Styles */
+
+
+/* User Login Stlyes */
+#UserContent { margin-left:230px; }
+#UserInfo {width: 200px; float: left; background-color: #f6f6f5; border: 1px solid #99cccc; margin-right: 20px;
+	margin-top: 0px;}
+#adminWrap {  border: 1px solid #333333; width: 95%; margin: 20px auto 10px auto; padding: 0px 0px 20px 0px;
+    background-color: #FFFFFF; }
+.adminText { padding-right: 12px; padding-left: 13px; line-height: 20px; font-weight: bold; }
+.adminText a{ text-decoration:none; color:#003366;}
+.adminText a:hover{ color:#0066FF;}
+/* End of User Login Stlyes */
+
+
+
+
+
+/* Footer Styles */
+#contactInfo { font-size:10px; font-weight:bold; text-align:center; color:#333333; border-top-width: 1px; border-top-style: solid; border-top-color: #99cccc; background-color: #fcfcfc;
+	padding-top: 4px; padding-right: 10px; padding-bottom: 4px; padding-left: 10px; margin-top:15px; }
+#styleSwap { display:none;}
+#usgsfooter img {display:none;}
+/* End of Footer Styles */
+
+
+/* Sitewide Layout Tools */
+.clear { clear: both; height: 0px; width: auto; }
+.right140 { margin-left: 140px; }
+.clearSection { clear:both; width:100%; height:0px;  width: 50%;}
+
+.spacer { display: block; height: 15px; width: 100%;}
+.clearL {clear: left; }
+.tables { border-collapse:collapse; width:100%;}
+.tables ,th, td { border: 1px solid #CCCCCC; padding:3px 7px 3px 7px;}
+.tableHead { background-color:#CCCCCC; font-weight:bold; }
+th, td {border: 1px solid #CCCCCC; padding:3px 7px 3px 7px; }
+/* End of Sitewide Layout Tools */
+
+/* Font Styles */
+h1 {font-family: Verdana, Arial, Helvetica, sans-serif; font-size: medium; font-weight: bold; color: #000000;}
+h2 {font-weight:bold; font-size:large; color: #336633;}
+h3 {font-weight:bold; color:#003366; font-size:large;}
+.warning { color:#FFFFFF; font-size: 10px; }
+.italic {font-style: italic; }
+.bold {font-weight: bold;}
+.small {font-family: Verdana, Arial, Helvetica, sans-serif; font-size: x-small;}
+.capitalize {text-transform: capitalize;}
+.quote {font-style: italic; }
+.textBox p { margin-top: 0px; margin-right: 0px; margin-left: 0px; }
+.sectionWideTitle { font-size: 14px; height: 15px; padding-top: 3px; padding-bottom: 4px; padding-left: 8px;
+    font-weight: bold; background-color: #f1f2f6; background-image: url(../images/bg_frontSections.jpg);
+    background-repeat: no-repeat; background-position: left top; border: 1px solid #99cccc;
+    clear: left; color: #003366; margin-top: 22px; }
+.sectionWideTitle a {color:#003366; }
+.sectionWideTitle a:visited {color:#003366; }
+.pubTitle { font-size: 14px; height: 15px; padding-top: 3px; padding-bottom: 4px; padding-left: 8px; margin: 0px; font-weight: bold; background-color: #f1f2f6; background-image: url(../images/bg_frontSections.jpg); background-repeat: no-repeat; background-position: left top; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: #96abc5;}
+#rSidebar h2{ margin-top:0px; font-size: 14px; color: #996633; }
+.pubText { padding-right: 12px; }
+#sidebar h2 {font: bold 14px Verdana, sans-serif; color:#996633; margin-top:0px; margin-bottom:2px; }
+#sectionBlock2 h2 {font: bold 14px Verdana, sans-serif; color:white; margin-top:0; margin-bottom:7px; padding: 5px; background-color:#cc9966; background-image: url(../images/bg_section.jpg); background-repeat: repeat-y; background-position: left; }
+#sectionBlock h2 { font: bold 14px Verdana, sans-serif; color:white; margin-top:0; margin-bottom:7px; padding: 5px; background-color:#cc9966;background-image: url(../images/bg_section.jpg); background-repeat: repeat-y; background-position: left; }
+.section_header {font: bold 14px Verdana, sans-serif; color:#FFFFFF; margin: 7px 0px 6px 5px; width: 252px; background-color:#996633; }
+
+/* End of Font Styles */
+
+
+
+
+/* DOC TYPE LINK ICONS */
+/* all A tags whose HREF attribute ends in .pdf */
+a[href$='.pdf'] { 
+	padding-right: 18px;
+	background: transparent url(../images/icon_pdf.gif) no-repeat center right;
+}
+ 
+/* all A tags whose REL attribute equals pdf */
+a[rel='pdf'] { 
+	padding-right: 18px;
+	background: transparent url(../images/icon_pdf.gif) no-repeat center right;
+}
+ 
+/*  all A tags whose REL attributes has the letters pdf somewhere mixed in*/
+a[rel*='pdf'] { 
+	padding-right: 18px;
+	background: transparent url(../images/icon_pdf.gif) no-repeat center right;
+}
+ 
+/* all A tags whose REL attribute contains the value pdf, seperated from other values with a space */
+a[rel~='pdf'] { 
+	padding-right: 18px;
+	background: transparent url(../images/icon_pdf.gif) no-repeat center right;
+}
+ 
+/* all A tags whose HREF attribute starts with mailto: */
 a[href^="mailto:"] {
-    background: url("../images/icon_mailto.gif") no-repeat scroll right center transparent;
-    padding-right: 18px;
+	padding-right: 18px;
+    background: transparent url(../images/icon_mailto.gif) no-repeat center right;
+   
 }
+ 
+/* all A tags whose CLASS attribute is popup */
 a[class="popup"] {
-    background: url("../images/icon_popup.gif") no-repeat scroll right center transparent;
-    padding-right: 18px;
+	padding-right: 18px;
+    background: transparent url(../images/icon_popup.gif) no-repeat center right;
 }
-a[href$=".doc"] {
-    background: url("../images/icon_doc.gif") no-repeat scroll right center transparent;
-    padding-right: 18px;
+ 
+ 
+a[href$='.doc'] { 
+	padding-right: 18px;
+	background: transparent url(../images/icon_doc.gif) no-repeat center right;
 }
-a[href$=".xls"] {
-    background: url("../images/icon_xls.gif") no-repeat scroll right center transparent;
-    padding-right: 18px;
+a[href$='.xls'] { 
+	padding-right: 18px;
+	background: transparent url(../images/icon_xls.gif) no-repeat center right;
 }
-a[rel~="external"] {
-    background: url("../images/icon_external.gif") no-repeat scroll right center transparent;
-    padding-right: 18px;
+a[rel~='external'] {
+	padding-right: 18px;
+	background: transparent url(../images/icon_external.gif) no-repeat center right;
 }
-a:visited {
-    color: #0000FF;
-}
-#crumbs a {
-    color: #006699;
-    font-weight: bold;
-}
-#crumbs a:hover {
-    color: #003366;
-    font-weight: bold;
-}
-#sectionBlock2 h2 a {
-    color: #FFFFFF;
-    text-decoration: underline;
-}
-#sectionBlock h2 a {
-    color: #FFFFFF;
-    text-decoration: underline;
-}
-#maps h2 a {
-    color: #FFFFFF;
-    text-decoration: underline;
-}
-.imgRight {
-    float: right;
-    margin-bottom: 12px;
-    margin-left: 20px;
-}
-.imgLeft {
-    float: left;
-    margin-bottom: 12px;
-    margin-right: 20px;
-}
-.subIMG {
-    float: left;
-    height: 105px;
-    margin-left: 7px;
-    margin-right: 0;
-    width: 110px;
-}
-.img-border {
-    border: 1px solid #000000;
-    margin-bottom: 5px;
-    margin-left: 5px;
-    margin-right: 5px;
-}
-.img-right {
-    border: 1px solid #CCCCCC;
-    float: right;
-    font-family: Verdana,Arial,Helvetica,sans-serif;
-    font-size: x-small;
-    font-style: italic;
-    margin: 2px;
-    padding: 2px;
-    text-align: justify;
-    width: 300px;
-}
-.img-right img {
-    border: 1px solid #000000;
-    margin-bottom: 3px;
-}
-.thumbnail {
-    padding: 3px;
-    text-align: center;
-    vertical-align: top;
-    width: 150px;
-}
-.thumbnail img {
-    border: 1px solid #000000;
-}
-#gallery img {
-    float: left;
-    margin-top: 5px;
-    padding-right: 10px;
-}
-.imgLeftBorder {
-    border: 1px solid #993300;
-    float: left;
-    margin-bottom: 20px;
-    margin-right: 20px;
-}
-img.floatLeft {
-    float: left;
-    height: 105px;
-    margin: 0 20px 4px 7px;
-    width: 108px;
-}
-#sectionBlock ul {
-}
-#sectionBlock ul li {
-    list-style-type: square;
-    margin-bottom: 2px;
-}
-.pubText li {
-    list-style-type: square;
-    margin-bottom: 6px;
-}
-.pubText ul {
-}
-#maps ul {
-    list-style-type: none;
-    margin-top: 0;
-}
-#maps ul li {
-    list-style-type: none;
-    margin-left: 0;
-    margin-top: 0;
-}
+/* End of DOC TYPE LINK ICONS */
+
+
+
+/* NOT USED _____________________________________________
+#maps h2 { font: bold 14px Verdana, sans-serif; color:white; margin-top:0; margin-bottom:7px; padding: 5px; background-color:#996633; }
+.section-titles {font-family: Verdana, Arial, Helvetica, sans-serif; font-size: medium; font-weight: bold; background-color: #A6C4E1; padding: 3px; font-style: italic; border-bottom-width: 1px; border-bottom-style: dashed; border-bottom-color: #666666;}
+.story_cap_letter:first-letter {font-family: "Times New Roman", Times, serif; font-size: 350%; color: #666666; float: left;}
+.bucket_box {height: 175px; padding: 3px; font-family: Verdana, Arial, Helvetica, sans-serif; font-size: small;}
+#gallery h2 {font: bold 14px Verdana, sans-serif; color:#996633; margin-top: 5px; }
+#gallery p {font-size: 12px; }
+.program-site { font-size: medium; font-weight: bold;}
+.subtitles { font-family: Verdana, Arial, Helvetica, sans-serif; font-size: medium; font-weight: bold; }
+.bg-lightblue {background-color: #A0BFF1; padding-top: 3px; padding-bottom: 3px;padding-left: 3px; font-family: Verdana, Arial, Helvetica, 		 	sans-serif; font-weight: bold; font-size: small;}
+*/
+
+
+/* Font Styles */
+
+
+/* Links */
+a:visited {color:#0000FF;}
+#crumbs a{color:#006699; font-weight: bold;}
+#crumbs a:hover{color:#003366; font-weight: bold;}
+#sectionBlock2 h2 a {text-decoration:underline; color:#FFFFFF; } 
+#sectionBlock h2 a {text-decoration:underline; color:#FFFFFF; }
+#maps h2 a {text-decoration:underline; color:#FFFFFF; } 
+/* End Links */
+
+
+/* Image Styles */
+.imgRight {margin-bottom: 12px; margin-left: 20px; float: right; }	
+.imgLeft {margin-bottom: 12px; margin-right: 20px; float: left; }		
+.subIMG { height: 105px; width: 110px; margin-right: 0px; margin-left: 7px; float: left; }
+.img-border { border: 1px solid #000000; margin-right: 5px; margin-left: 5px; margin-bottom: 5px;}
+.img-right {padding: 2px; border: 1px solid #CCCCCC; float: right; font-family: Verdana, Arial, Helvetica, sans-serif; font-size: x-small; font-style: italic; margin: 2px; width: 300px; text-align: justify;}
+.img-right img {margin-bottom: 3px; border: 1px solid #000000;}
+.thumbnail { width: 150px; padding: 3px; text-align: center; vertical-align: top;}
+.thumbnail img {border: 1px solid #000000;}
+#gallery img {float: left; padding-right:10px; margin-top:5px; }
+.imgLeftBorder { float: left; margin-right: 20px; margin-bottom: 20px; border: 1px solid #993300; }
+img.floatLeft { float: left; height: 105px; width: 108px; margin-top: 0px; margin-right: 20px;margin-bottom: 4px; margin-left: 7px;}
+/* End Image Styles */
+
+
+/* Lists */
+
+#sectionBlock ul {}
+#sectionBlock ul li {margin-bottom: 2px; list-style-type: square;}
+.pubText li{list-style-type: square; margin-bottom:6px;}
+.pubText ul {}
+#maps ul { list-style-type:none; margin-top:0px; }
+#maps ul li { list-style-type:none; margin-top:0px; margin-left:0px; }
+/* Lists  */
+
+
+/* --- Personnel List --- 
+#personel { width: 370px; height: 180px; background: #9BBEBE; margin: 20px 0 0 0; padding: 18px; border: 2px solid #628585; }
+#personel p { margin: 0; padding: 0 0 15px 0; }
+#personel strong { font-weight: bold; font-size: 1.3em; }
+#personel img { float: left; margin: 0 20px 0 0; padding: 0; border: 1px solid #fff; }
+#personel a:link, #personel a:visited { color: #003366; }
+#personel a:hover { color: #99cccc; }
+
+#personnel_aspx a:link, #personnel_aspx a:visited { color:#fff; text-decoration: underline; }
+#personnel_aspx a:hover { text-decoration: none; }
+--- Personnel List --- 
+
+--- Product DB Selection --- 
+#database { background: #9BBEBE; border: 1px solid #628585; border-width: 1px 1px 1px 1px; margin: 0; padding: 20px; }
+#database dt { display: inline; }
+#database dd { margin: -1.8em 0 15px 200px; }
+ --- Product DB Selection ---
+
+--- Product DB Results --- 
+#results { margin-top: 0; overflow: auto; padding: 0 15px 0 5px; }
+#results ol { margin: 0; padding: 15px 15px 15px 50px; }
+#results ol li { border-bottom: 1px solid #628585; margin: 0; padding: 0; }
+ --- Product DB Results ---
+
+ --- Project Displays ---
+#projectSelection { display: block; margin-top: 25px; }
+h3.pTitle { background: #9BBEBE url("../images/visual_layout/project_hdr.gif") repeat-x; border: 2px solid #628585; border-width: 2px 2px 1px 2px; padding: 5px 25px !important; margin-bottom: -1px; padding-bottom: 0; }
+
+dl.project_a { height: 350px; overflow: auto; border: 2px solid #628585; border-top: none; margin: 0; padding: 0; }
+dl.project_a dt { background: #b5c1dc; font-weight:bold; border: 1px solid #628585; border-width: 1px 0; margin: 0; padding: 2px 25px; }
+
+dl.project_a dd { padding: 0 25px 15px 25px; }
+dl.project_a h3 { margin: 0; }
+
+dl.project_b { height: 350px; overflow: auto; border: 2px solid #628585; border-top: none; margin: 0; padding: 0; }
+dl.project_b dt { background: #b5c1dc; font-weight:bold; border: 1px solid #628585; border-width: 1px 0; margin: 0; padding: 2px 25px; }
+dl.project_b dd { padding: 0 25px 15px 25px; }
+dl.project_b h3 { margin: 0; }
+
+dt.p_img { float:right; background: #fff url("../images/visual_layout/project_drop.jpg") top no-repeat; height:160px; width:250px; border: none !important; margin: 24px 0 8px 15px !important; padding: 0 0 0 16px !important; }
+dt.p_img img { width: 225px; height:150px; border: 1px solid #628585; border-width: 1px !important; }
+ Project Displays ---
+
+From USGS - Not Is use *
+.bg-earthquake { background-color: #E5D680; padding-top: 3px; padding-bottom: 3px; padding-left: 3px; font-family: Verdana, Arial, Helvetica, sans-serif; font-weight: bold; font-size: small; color: #000000; margin-top: 0px; }
+
+*/
+
+
+
+
+	 		    

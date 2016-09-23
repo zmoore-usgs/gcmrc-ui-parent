@@ -95,7 +95,6 @@ public class DischargeErrorSpec extends DataSpec {
 		result.append("  SUBSITE_STAR SS,");
 		result.append("  GROUP_NAME G");
 		result.append(" WHERE DED.SITE_ID          = S.SITE_ID(+)");
-		result.append("  AND DED.SUBSITE_ID       = SS.SUBSITE_ID(+)");
 		result.append("  AND DED.GROUP_ID         = G.GROUP_ID(+)");
 		
 		if(this.parameterCode != null && this.parameterCode.sampleMethod != null) {

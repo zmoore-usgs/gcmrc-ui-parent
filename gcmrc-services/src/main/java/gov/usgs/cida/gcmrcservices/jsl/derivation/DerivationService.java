@@ -4,6 +4,7 @@ import gov.usgs.webservices.jdbc.routing.InvalidServiceException;
 import gov.usgs.webservices.jdbc.routing.UriRouter;
 import gov.usgs.webservices.jdbc.service.WebService;
 import gov.usgs.webservices.jdbc.spec.Spec;
+import java.security.InvalidParameterException;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -32,6 +33,8 @@ public class DerivationService extends WebService {
 				
 		result.putAll(super.defineParameters(req, router, params));
 		
+		parameters.clear();
+		
 		//Store params locally
 		for(Map.Entry<String, String[]> entry : result.entrySet()){
 			parameters.put(entry.getKey(), entry.getValue()[0]);
@@ -43,6 +46,13 @@ public class DerivationService extends WebService {
 	@Override
 	protected void checkForValidParams(Spec spec) {
 		//empty method to allow for query without search parameters
+		
+		if( !parameters.containsKey("siteId") || 
+			!parameters.containsKey("fromTime") ||
+			!parameters.containsKey("toTime") ||
+			!parameters.containsKey("binCount")) {
+			throw new InvalidParameterException("A required parameter was missing from the request.");
+		}
 	}
 	
 }

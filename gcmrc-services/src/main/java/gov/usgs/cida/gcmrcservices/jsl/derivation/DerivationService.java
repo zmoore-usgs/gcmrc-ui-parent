@@ -3,6 +3,7 @@ package gov.usgs.cida.gcmrcservices.jsl.derivation;
 import gov.usgs.webservices.jdbc.routing.InvalidServiceException;
 import gov.usgs.webservices.jdbc.routing.UriRouter;
 import gov.usgs.webservices.jdbc.service.WebService;
+import gov.usgs.webservices.jdbc.spec.GCMRCSpec;
 import gov.usgs.webservices.jdbc.spec.Spec;
 import java.security.InvalidParameterException;
 
@@ -44,14 +45,13 @@ public class DerivationService extends WebService {
 	}
 	
 	@Override
-	protected void checkForValidParams(Spec spec) {
-		//empty method to allow for query without search parameters
-		
-		if( !parameters.containsKey("siteId") || 
-			!parameters.containsKey("fromTime") ||
-			!parameters.containsKey("toTime") ||
-			!parameters.containsKey("binCount")) {
-			throw new InvalidParameterException("A required parameter was missing from the request.");
+	protected void checkForValidParams(Spec spec) {		
+		if(spec instanceof GCMRCSpec){
+			for(String param : ((GCMRCSpec) spec).getRequiredParams()){
+				if(!parameters.containsKey(param)){
+					throw new InvalidParameterException("A required parameter was missing from the request.");
+				}
+			}
 		}
 	}
 	

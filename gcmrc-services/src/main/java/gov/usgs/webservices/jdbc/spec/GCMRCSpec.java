@@ -25,6 +25,11 @@ public abstract class GCMRCSpec extends Spec {
 	 * 
 	 * @return The query hint.
 	 */
+	
+	public String[] getRequiredParams() {
+		return new String[] {};
+	}
+	
 	@Override
 	protected String getSelectHint() {
 		return "/*+ OPT_PARAM('optimizer_features_enable' '11.2.0.3') */";

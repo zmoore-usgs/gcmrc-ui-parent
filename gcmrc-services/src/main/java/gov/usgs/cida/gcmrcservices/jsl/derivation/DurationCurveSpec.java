@@ -13,7 +13,12 @@ import org.slf4j.LoggerFactory;
  */
 public class DurationCurveSpec extends GCMRCSpec {
 	private static final Logger log = LoggerFactory.getLogger(DurationCurveSpec.class);
-		
+	
+	@Override
+	public String[] getRequiredParams() {
+		return new String[] {"siteId", "fromTime", "toTime", "binCount"};
+	}
+			
 	@Override
 	public boolean setupAccess_DELETE() {
 		return false;

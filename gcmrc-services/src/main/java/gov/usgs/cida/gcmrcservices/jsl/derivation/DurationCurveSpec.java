@@ -13,12 +13,7 @@ import org.slf4j.LoggerFactory;
  */
 public class DurationCurveSpec extends GCMRCSpec {
 	private static final Logger log = LoggerFactory.getLogger(DurationCurveSpec.class);
-	
-	private final String siteId = "09522100";
-	private final String fromTime = "2014-03-30";
-	private final String toTime = "2014-04-30";
-	private final String binCount = "100";
-	
+		
 	@Override
 	public boolean setupAccess_DELETE() {
 		return false;
@@ -72,7 +67,7 @@ public class DurationCurveSpec extends GCMRCSpec {
 	@Override
 	public String setupTableName() {
 		StringBuilder result = new StringBuilder();
-		
+						
 		result.append("(");
 		result.append("WITH CONST (DISCHARGE_MEASURE_ID, ONE_DAY_OF_MINUTES, DATA_GAP_MARKER, MAX_GAP_MINUTES, MAX_INTERPOLATION_DAYS, MIN_LOG_BIN_VALUE) AS");
 		result.append(" (");
@@ -111,10 +106,10 @@ public class DurationCurveSpec extends GCMRCSpec {
 		result.append("          LEAD(MEASUREMENT_DATE) OVER (ORDER BY MEASUREMENT_DATE) AS END_TIME");
 		result.append("        From TIME_SERIES_STAR");
 		result.append("        Where ");
-		result.append("          SITE_ID=" + this.siteId + " ");
+		result.append("          SITE_ID=" + DerivationService.parameters.get("siteId") + " ");
 		result.append("          And GROUP_ID= (SELECT DISCHARGE_MEASURE_ID FROM CONST) ");
-		result.append("          AND MEASUREMENT_DATE > (to_timestamp('" + this.fromTime + "', 'YYYY-MM-DD\"T\"HH24:MI:SS') - (SELECT MAX_INTERPOLATION_DAYS FROM CONST))");
-		result.append("          AND MEASUREMENT_DATE < (to_timestamp('" + this.toTime + "', 'YYYY-MM-DD\"T\"HH24:MI:SS') + (SELECT MAX_INTERPOLATION_DAYS FROM CONST))");
+		result.append("          AND MEASUREMENT_DATE > (to_timestamp('" + DerivationService.parameters.get("fromTime") + "', 'YYYY-MM-DD\"T\"HH24:MI:SS') - (SELECT MAX_INTERPOLATION_DAYS FROM CONST))");
+		result.append("          AND MEASUREMENT_DATE < (to_timestamp('" + DerivationService.parameters.get("toTime") + "', 'YYYY-MM-DD\"T\"HH24:MI:SS') + (SELECT MAX_INTERPOLATION_DAYS FROM CONST))");
 		result.append("      )");
 		result.append("    ) WHERE");
 		result.append("      NOT (START_VALUE = (SELECT DATA_GAP_MARKER FROM CONST) AND END_VALUE = (SELECT DATA_GAP_MARKER FROM CONST)) ");
@@ -131,25 +126,25 @@ public class DurationCurveSpec extends GCMRCSpec {
 		result.append("  FROM (");
 		result.append("    SELECT");
 		result.append("      CASE");
-		result.append("        WHEN START_TIME < to_timestamp('" + this.fromTime + "', 'YYYY-MM-DD\"T\"HH24:MI:SS') THEN");
-		result.append("        START_VALUE + (EXTRACT(DAY FROM ((to_timestamp('" + this.fromTime + "', 'YYYY-MM-DD\"T\"HH24:MI:SS') - START_TIME) * (SELECT ONE_DAY_OF_MINUTES FROM CONST)))) * ((END_VALUE - START_VALUE)/(EXTRACT(DAY FROM ((END_TIME - START_TIME) * (SELECT ONE_DAY_OF_MINUTES FROM CONST)))))");
+		result.append("        WHEN START_TIME < to_timestamp('" + DerivationService.parameters.get("fromTime") + "', 'YYYY-MM-DD\"T\"HH24:MI:SS') THEN");
+		result.append("        START_VALUE + (EXTRACT(DAY FROM ((to_timestamp('" + DerivationService.parameters.get("fromTime") + "', 'YYYY-MM-DD\"T\"HH24:MI:SS') - START_TIME) * (SELECT ONE_DAY_OF_MINUTES FROM CONST)))) * ((END_VALUE - START_VALUE)/(EXTRACT(DAY FROM ((END_TIME - START_TIME) * (SELECT ONE_DAY_OF_MINUTES FROM CONST)))))");
 		result.append("        ELSE START_VALUE");
 		result.append("      END AS START_VALUE,");
 		result.append("      CASE");
-		result.append("        WHEN END_TIME > to_timestamp('" + this.toTime + "', 'YYYY-MM-DD\"T\"HH24:MI:SS') THEN");
-		result.append("        START_VALUE + (EXTRACT(DAY FROM ((to_timestamp('" + this.toTime + "', 'YYYY-MM-DD\"T\"HH24:MI:SS') - START_TIME) * (SELECT ONE_DAY_OF_MINUTES FROM CONST)))) * ((END_VALUE - START_VALUE)/(EXTRACT(DAY FROM ((END_TIME - START_TIME) * (SELECT ONE_DAY_OF_MINUTES FROM CONST)))))");
+		result.append("        WHEN END_TIME > to_timestamp('" + DerivationService.parameters.get("toTime") + "', 'YYYY-MM-DD\"T\"HH24:MI:SS') THEN");
+		result.append("        START_VALUE + (EXTRACT(DAY FROM ((to_timestamp('" + DerivationService.parameters.get("toTime") + "', 'YYYY-MM-DD\"T\"HH24:MI:SS') - START_TIME) * (SELECT ONE_DAY_OF_MINUTES FROM CONST)))) * ((END_VALUE - START_VALUE)/(EXTRACT(DAY FROM ((END_TIME - START_TIME) * (SELECT ONE_DAY_OF_MINUTES FROM CONST)))))");
 		result.append("        ELSE END_VALUE");
 		result.append("      END AS END_VALUE,");
-		result.append("      CASE WHEN START_TIME < to_timestamp('" + this.fromTime + "', 'YYYY-MM-DD\"T\"HH24:MI:SS') THEN to_timestamp('" + this.fromTime + "', 'YYYY-MM-DD\"T\"HH24:MI:SS') ELSE START_TIME END AS START_TIME,");
-		result.append("      CASE WHEN END_TIME > to_timestamp('" + this.toTime + "', 'YYYY-MM-DD\"T\"HH24:MI:SS') THEN to_timestamp('" + this.toTime + "', 'YYYY-MM-DD\"T\"HH24:MI:SS') ELSE END_TIME END AS END_TIME,");
+		result.append("      CASE WHEN START_TIME < to_timestamp('" + DerivationService.parameters.get("fromTime") + "', 'YYYY-MM-DD\"T\"HH24:MI:SS') THEN to_timestamp('" + DerivationService.parameters.get("fromTime") + "', 'YYYY-MM-DD\"T\"HH24:MI:SS') ELSE START_TIME END AS START_TIME,");
+		result.append("      CASE WHEN END_TIME > to_timestamp('" + DerivationService.parameters.get("toTime") + "', 'YYYY-MM-DD\"T\"HH24:MI:SS') THEN to_timestamp('" + DerivationService.parameters.get("toTime") + "', 'YYYY-MM-DD\"T\"HH24:MI:SS') ELSE END_TIME END AS END_TIME,");
 		result.append("      GAP_MINUTES,");
-		result.append("      CASE WHEN START_TIME < to_timestamp('" + this.fromTime + "', 'YYYY-MM-DD\"T\"HH24:MI:SS') THEN 1 ELSE 0 END AS IS_START_INTERPOLATED,");
-		result.append("      CASE WHEN END_TIME > to_timestamp('" + this.toTime + "', 'YYYY-MM-DD\"T\"HH24:MI:SS') THEN 1 ELSE 0 END AS IS_END_INTERPOLATED");
+		result.append("      CASE WHEN START_TIME < to_timestamp('" + DerivationService.parameters.get("fromTime") + "', 'YYYY-MM-DD\"T\"HH24:MI:SS') THEN 1 ELSE 0 END AS IS_START_INTERPOLATED,");
+		result.append("      CASE WHEN END_TIME > to_timestamp('" + DerivationService.parameters.get("toTime") + "', 'YYYY-MM-DD\"T\"HH24:MI:SS') THEN 1 ELSE 0 END AS IS_END_INTERPOLATED");
 		result.append("    FROM RAW_MTI_DATA");
 		result.append("    WHERE");
 		result.append("      START_VALUE != (SELECT DATA_GAP_MARKER FROM CONST) ");
-		result.append("      AND END_TIME > to_timestamp('" + this.fromTime + "', 'YYYY-MM-DD\"T\"HH24:MI:SS')");
-		result.append("      AND START_TIME < to_timestamp('" + this.toTime + "', 'YYYY-MM-DD\"T\"HH24:MI:SS')");
+		result.append("      AND END_TIME > to_timestamp('" + DerivationService.parameters.get("fromTime") + "', 'YYYY-MM-DD\"T\"HH24:MI:SS')");
+		result.append("      AND START_TIME < to_timestamp('" + DerivationService.parameters.get("toTime") + "', 'YYYY-MM-DD\"T\"HH24:MI:SS')");
 		result.append("      AND NOT GAP_MINUTES > (SELECT MAX_GAP_MINUTES FROM CONST)");
 		result.append("      AND NOT EXTRACT(DAY FROM (END_TIME - START_TIME)) > (SELECT MAX_INTERPOLATION_DAYS FROM CONST)");
 		result.append("    Order by START_TIME ");
@@ -160,7 +155,7 @@ public class DurationCurveSpec extends GCMRCSpec {
 		result.append("    MIN(START_TIME) as FIRST_MEASURE_DATE,");
 		result.append("    MAX(END_TIME) as LAST_MEASURE_DATE,");
 		result.append("    SUM(DURATION_MINUTES) as OVERALL_DURATION_MINUTES,");
-		result.append("    EXTRACT(DAY FROM (to_timestamp('" + this.toTime + "', 'YYYY-MM-DD\"T\"HH24:MI:SS') - to_timestamp ('" + this.fromTime + "', 'YYYY-MM-DD\"T\"HH24:MI:SS'))*60*24) as USER_DURATION_MINUTES,");
+		result.append("    EXTRACT(DAY FROM (to_timestamp('" + DerivationService.parameters.get("toTime") + "', 'YYYY-MM-DD\"T\"HH24:MI:SS') - to_timestamp ('" + DerivationService.parameters.get("fromTime") + "', 'YYYY-MM-DD\"T\"HH24:MI:SS'))*60*24) as USER_DURATION_MINUTES,");
 		result.append("    MIN(MIN_VALUE) AS OVERALL_MIN_VALUE,");
 		result.append("    MAX(MAX_VALUE) AS OVERALL_MAX_VALUE,");
 		result.append("    MAX(MAX_VALUE) - MIN(MIN_VALUE) AS OVERALL_VALUE_RANGE,");
@@ -170,14 +165,14 @@ public class DurationCurveSpec extends GCMRCSpec {
 		result.append("(");
 		result.append("  SELECT level BIN_NUMBER   ");
 		result.append("  FROM DUAL   ");
-		result.append("  CONNECT BY level <='" + this.binCount + "'");
+		result.append("  CONNECT BY level <='" + DerivationService.parameters.get("binCount") + "'");
 		result.append("), LIN_BINS (BIN_NUMBER, LOW_BOUND, HIGH_BOUND) AS (");
 		result.append("  SELECT");
 		result.append("    BIN_NUMBER,");
-		result.append("    (SELECT ((OVERALL_VALUE_RANGE / " + this.binCount + ") * (BIN_NUMBER - 1)) + OVERALL_MIN_VALUE FROM CONST_DATA) AS LOW_BOUND,");
+		result.append("    (SELECT ((OVERALL_VALUE_RANGE / " + DerivationService.parameters.get("binCount") + ") * (BIN_NUMBER - 1)) + OVERALL_MIN_VALUE FROM CONST_DATA) AS LOW_BOUND,");
 		result.append("    CASE");
-		result.append("    WHEN BIN_NUMBER = " + this.binCount + " THEN (SELECT OVERALL_MAX_VALUE FROM CONST_DATA) ");
-		result.append("    ELSE (SELECT ((OVERALL_VALUE_RANGE / " + this.binCount + ") * BIN_NUMBER) + OVERALL_MIN_VALUE FROM CONST_DATA) ");
+		result.append("    WHEN BIN_NUMBER = " + DerivationService.parameters.get("binCount") + " THEN (SELECT OVERALL_MAX_VALUE FROM CONST_DATA) ");
+		result.append("    ELSE (SELECT ((OVERALL_VALUE_RANGE / " + DerivationService.parameters.get("binCount") + ") * BIN_NUMBER) + OVERALL_MIN_VALUE FROM CONST_DATA) ");
 		result.append("    END AS HIGH_BOUND");
 		result.append("  FROM INT_BINS");
 		result.append("  ORDER BY BIN_NUMBER");
@@ -187,12 +182,12 @@ public class DurationCurveSpec extends GCMRCSpec {
 		result.append("  SELECT");
 		result.append("    BIN_NUMBER,");
 		result.append("    CASE WHEN BIN_NUMBER = 1 THEN (SELECT GREATEST(OVERALL_MIN_VALUE, (SELECT MIN_LOG_BIN_VALUE FROM CONST)) FROM CONST_DATA) ELSE POWER(10, LOG_LOW_BOUND) END AS LOW_BOUND,");
-		result.append("    CASE WHEN BIN_NUMBER = " + this.binCount + " THEN (SELECT OVERALL_MAX_VALUE FROM CONST_DATA) ELSE POWER(10, LOG_HIGH_BOUND) END AS HIGH_BOUND");
+		result.append("    CASE WHEN BIN_NUMBER = " + DerivationService.parameters.get("binCount") + " THEN (SELECT OVERALL_MAX_VALUE FROM CONST_DATA) ELSE POWER(10, LOG_HIGH_BOUND) END AS HIGH_BOUND");
 		result.append("  FROM (");
 		result.append("    SELECT");
 		result.append("      BIN_NUMBER,");
-		result.append("      (SELECT (((LOG(10, OVERALL_MAX_VALUE) - LOG(10, GREATEST(OVERALL_MIN_VALUE, (SELECT MIN_LOG_BIN_VALUE FROM CONST)))) / " + this.binCount + ") * (BIN_NUMBER - 1)) + LOG(10, GREATEST(OVERALL_MIN_VALUE, (SELECT MIN_LOG_BIN_VALUE FROM CONST))) FROM CONST_DATA) AS LOG_LOW_BOUND,");
-		result.append("      (SELECT (((LOG(10, OVERALL_MAX_VALUE) - LOG(10, GREATEST(OVERALL_MIN_VALUE, (SELECT MIN_LOG_BIN_VALUE FROM CONST)))) / " + this.binCount + ") * BIN_NUMBER) + LOG(10, GREATEST(OVERALL_MIN_VALUE, (SELECT MIN_LOG_BIN_VALUE FROM CONST))) FROM CONST_DATA) AS LOG_HIGH_BOUND");
+		result.append("      (SELECT (((LOG(10, OVERALL_MAX_VALUE) - LOG(10, GREATEST(OVERALL_MIN_VALUE, (SELECT MIN_LOG_BIN_VALUE FROM CONST)))) / " + DerivationService.parameters.get("binCount") + ") * (BIN_NUMBER - 1)) + LOG(10, GREATEST(OVERALL_MIN_VALUE, (SELECT MIN_LOG_BIN_VALUE FROM CONST))) FROM CONST_DATA) AS LOG_LOW_BOUND,");
+		result.append("      (SELECT (((LOG(10, OVERALL_MAX_VALUE) - LOG(10, GREATEST(OVERALL_MIN_VALUE, (SELECT MIN_LOG_BIN_VALUE FROM CONST)))) / " + DerivationService.parameters.get("binCount") + ") * BIN_NUMBER) + LOG(10, GREATEST(OVERALL_MIN_VALUE, (SELECT MIN_LOG_BIN_VALUE FROM CONST))) FROM CONST_DATA) AS LOG_HIGH_BOUND");
 		result.append("    FROM INT_BINS");
 		result.append("    ORDER BY BIN_NUMBER");
 		result.append("  )");
@@ -203,7 +198,7 @@ public class DurationCurveSpec extends GCMRCSpec {
 		result.append("    (SELECT OVERALL_DURATION_MINUTES FROM CONST_DATA) * 100 AS CUMULATIVE_BIN_PERC,");
 		result.append("  CASE");
 		result.append("    WHEN BIN_NUMBER = 1 THEN LOW_BOUND");
-		result.append("    WHEN BIN_NUMBER = " + this.binCount + " THEN HIGH_BOUND");
+		result.append("    WHEN BIN_NUMBER = " + DerivationService.parameters.get("binCount") + " THEN HIGH_BOUND");
 		result.append("    ELSE (LOW_BOUND + HIGH_BOUND) / 2");
 		result.append("  END AS BIN_VALUE,");
 		result.append("  IN_BIN_MINUTES,");
@@ -229,7 +224,7 @@ public class DurationCurveSpec extends GCMRCSpec {
 		result.append("    FROM LOG_BINS bin INNER JOIN CLEAN_MTI_DATA data ON");
 		result.append("      (data.MIN_VALUE < bin.HIGH_BOUND AND data.MAX_VALUE > bin.LOW_BOUND) ");
 		result.append("      OR (data.MIN_VALUE = data.MAX_VALUE AND data.MIN_VALUE = bin.LOW_BOUND) ");
-		result.append("      OR (data.MIN_VALUE = bin.HIGH_BOUND AND bin.BIN_NUMBER = " + this.binCount + ") ");
+		result.append("      OR (data.MIN_VALUE = bin.HIGH_BOUND AND bin.BIN_NUMBER = " + DerivationService.parameters.get("binCount") + ") ");
 		result.append("    ORDER BY bin.BIN_NUMBER, START_TIME");
 		result.append("  ) ");
 		result.append("  GROUP BY BIN_NUMBER");
@@ -237,9 +232,7 @@ public class DurationCurveSpec extends GCMRCSpec {
 		result.append(")");
 		result.append("ORDER BY BIN_NUMBER");
 		result.append(")");
-		
-		System.out.println(result.toString());
-		
+				
 		return result.toString();
 	}
 

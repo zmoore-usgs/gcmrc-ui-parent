@@ -15,10 +15,12 @@ import org.slf4j.LoggerFactory;
 
 /**
  *
- * @author dmsibley
+ * @author dmsibley, zmoore
  */
 public class DerivationService extends WebService {
 	private static final Logger log = LoggerFactory.getLogger(DerivationService.class);
+	
+	public static HashMap<String, String> parameters = new HashMap<String, String>();
 
 	public DerivationService() {
 		this.specMapping.put("durationCurve", DurationCurveSpec.class);
@@ -27,8 +29,13 @@ public class DerivationService extends WebService {
 	@Override
 	protected Map<String, String[]> defineParameters(HttpServletRequest req, UriRouter router, Map<String, String[]> params) throws InvalidServiceException {
 		Map<String, String[]> result = new HashMap<String, String[]>();
-		
+				
 		result.putAll(super.defineParameters(req, router, params));
+		
+		//Store params locally
+		for(Map.Entry<String, String[]> entry : result.entrySet()){
+			parameters.put(entry.getKey(), entry.getValue()[0]);
+		}
 		
 		return result;
 	}

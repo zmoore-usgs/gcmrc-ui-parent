@@ -6,12 +6,9 @@ import gov.usgs.webservices.jdbc.service.WebService;
 import gov.usgs.webservices.jdbc.spec.GCMRCSpec;
 import gov.usgs.webservices.jdbc.spec.Spec;
 import java.security.InvalidParameterException;
-
 import java.util.HashMap;
 import java.util.Map;
-
 import javax.servlet.http.HttpServletRequest;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

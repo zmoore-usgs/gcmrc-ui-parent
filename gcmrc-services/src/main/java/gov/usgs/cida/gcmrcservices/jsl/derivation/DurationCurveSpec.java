@@ -3,7 +3,6 @@ package gov.usgs.cida.gcmrcservices.jsl.derivation;
 import gov.usgs.webservices.jdbc.spec.GCMRCSpec;
 import gov.usgs.webservices.jdbc.spec.mapping.ColumnMapping;
 import gov.usgs.webservices.jdbc.spec.mapping.SearchMapping;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

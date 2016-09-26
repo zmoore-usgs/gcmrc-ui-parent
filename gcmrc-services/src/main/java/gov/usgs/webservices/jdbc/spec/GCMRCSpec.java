@@ -25,14 +25,21 @@ public abstract class GCMRCSpec extends Spec {
 	 * 
 	 * @return The query hint.
 	 */
-	
-	public String[] getRequiredParams() {
-		return new String[] {};
-	}
-	
 	@Override
 	protected String getSelectHint() {
 		return "/*+ OPT_PARAM('optimizer_features_enable' '11.2.0.3') */";
+	}
+	
+	/**
+	 * This returns a list of all the additional URL params that this spec needs.
+	 * 
+	 * This should be overridden by any child specs that have additional REQUIRED
+	 * URL parameters.
+	 * 
+	 * @return A list of required verbatim parameter names.
+	 */
+	public String[] getRequiredParams() {
+		return new String[] {};
 	}
 
 }

@@ -242,23 +242,23 @@ public class DurationCurveSpec extends GCMRCSpec {
 	}
 
 	public static final String C_BIN_NUMBER = "BIN_NUMBER";
-	public static final String S_BIN_NUMBER = "BIN_NUMBER";
+	public static final String S_BIN_NUMBER = "binNumber";
 	
 	public static final String C_CUMUL_BIN_PERC = "CUMULATIVE_BIN_PERC";
-	public static final String S_CUMUL_BIN_PERC = "CUMULATIVE_BIN_PERC";
+	public static final String S_CUMUL_BIN_PERC = "cumulativeBinPerc";
 	
 	public static final String C_BIN_VALUE = "BIN_VALUE";
-	public static final String S_BIN_VALUE = "BIN_VALUE";
+	public static final String S_BIN_VALUE = "binValue";
 	
 	public static final String C_BIN_MIN = "IN_BIN_MINUTES";
-	public static final String S_BIN_MIN = "IN_BIN_MINUTES";
+	public static final String S_BIN_MIN = "inBinMinutes";
 	
 	public static final String C_CUMUL_BIN_MIN = "CUMULATIVE_IN_BIN_MINUTES";
-	public static final String S_CUMUL_BIN_MIN = "CUMULATIVE_IN_BIN_MINUTES";
+	public static final String S_CUMUL_BIN_MIN = "cumulativeInBinMinutes";
 	
 	public static final String C_LOW_BOUND = "LOW_BOUND";
-	public static final String S_LOW_BOUND = "LOW_BOUND";
+	public static final String S_LOW_BOUND = "lowBound";
 	
 	public static final String C_HIGH_BOUND = "HIGH_BOUND";
-	public static final String S_HIGH_BOUND = "HIGH_BOUND";
+	public static final String S_HIGH_BOUND = "highBound";
 }

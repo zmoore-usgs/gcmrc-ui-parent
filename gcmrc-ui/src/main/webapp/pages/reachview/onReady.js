@@ -18,10 +18,17 @@ $(document).ready(function onReady() {
 	});
 	
 	GCMRC.Page.buildPORView($('#porContainer'), GCMRC.Page.earliestPositionISO, GCMRC.Page.latestPositionISO);
-
-	var bedLoadList = [GCMRC.Page.sliderConfig.bedLoad];
+        
+        if ("DINO" === CONFIG.networkName) {
 	
-	GCMRC.Page.createParameterList($('#bedLoadList'), bedLoadList);
+        $('#bedLoadSlider').children().first().text('Sand Bedload Included in Sand Budget');
+        GCMRC.Page.buildRadioInfo($('#bedLoadList'));
+        } else {
+        
+        var bedLoadList = [GCMRC.Page.sliderConfig.bedLoad];
+        
+        GCMRC.Page.createParameterList($('#bedLoadList'), bedLoadList);
+        }
 	
 	GCMRC.Page.createDateList($('#lastSedDates'), GCMRC.Page.reach);
 	

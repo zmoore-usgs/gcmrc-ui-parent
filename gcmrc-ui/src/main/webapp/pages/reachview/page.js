@@ -73,6 +73,9 @@ GCMRC.Page = {
 	buildSliderInfo : function(div, dateStr, multiplier, loadDivKey, dataType) {
 		div.append('<div>Uncertainty for ' + (("BIBE" === CONFIG.networkName)?"Tornillo Creek":"Major Tributary") + ' ' + dataType + ' Loads <span class="' + loadDivKey + '_qual' + multiplier + '"></span>% after ' + dateStr + '</div>');
 	},
+        buildRadioInfo : function(div) {
+		div.append('<div class="form-inline"><label class="radio bedRadio"><input type="radio" name="bedLoadToggle" value="yes">Yes</label><label class="radio bedRadio"><input type="radio" name="bedLoadToggle" value="no">No</label></div>');
+	},
 	buildGraphClicked: function() {
 		var NETWORK_DINO = "DINO";
 		var begin = $("input[name='beginPosition']").val();

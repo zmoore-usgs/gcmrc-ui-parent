@@ -19,8 +19,8 @@ import org.slf4j.LoggerFactory;
  * @author dmsibley, zmoore
  */
 @Path("derivation")
-public class DurationCurveEndpoint {
-	private static final Logger log = LoggerFactory.getLogger(DurationCurveEndpoint.class);
+public class DerivationEndpoint {
+	private static final Logger log = LoggerFactory.getLogger(DerivationEndpoint.class);
 	
 	@GET
 	@JSONP(queryParam="jsonp_callback")

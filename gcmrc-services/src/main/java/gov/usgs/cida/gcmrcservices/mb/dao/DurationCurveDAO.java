@@ -1,7 +1,7 @@
 package gov.usgs.cida.gcmrcservices.mb.dao;
 
 import gov.usgs.cida.gcmrcservices.mb.MyBatisConnectionFactory;
-import gov.usgs.cida.gcmrcservices.mb.model.DurationCurve;
+import gov.usgs.cida.gcmrcservices.mb.model.DurationCurvePoint;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -29,8 +29,8 @@ public class DurationCurveDAO {
 	
 	public static final String queryPackage = "gov.usgs.cida.gcmrcservices.mb.mappers";
 	
-	public List<DurationCurve> getDurationCurve(String siteId, String startTime, String endTime, String binCount, String dataParam) {		
-		List<DurationCurve> result = null;
+	public List<DurationCurvePoint> getDurationCurve(String siteId, String startTime, String endTime, String binCount, String dataParam) {		
+		List<DurationCurvePoint> result = null;
 		
 		Map<String, String> params = new HashMap<String, String>();
 		params.put("siteId", siteId);

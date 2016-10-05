@@ -3,7 +3,7 @@ package gov.usgs.cida.gcmrcservices.mb.endpoint;
 import gov.usgs.cida.gcmrcservices.mb.dao.DurationCurveDAO;
 import gov.usgs.cida.gcmrcservices.mb.endpoint.response.ResponseEnvelope;
 import gov.usgs.cida.gcmrcservices.mb.endpoint.response.SuccessResponse;
-import gov.usgs.cida.gcmrcservices.mb.model.DurationCurve;
+import gov.usgs.cida.gcmrcservices.mb.model.DurationCurvePoint;
 import java.util.ArrayList;
 import java.util.List;
 import javax.ws.rs.GET;
@@ -26,9 +26,9 @@ public class DerivationEndpoint {
 	@JSONP(queryParam="jsonp_callback")
 	@Path("durationCurve")
 	@Produces("application/javascript")
-	public SuccessResponse<DurationCurve> getDurationCurve(@QueryParam("siteId") String siteId, @QueryParam("startTime") String startTime, @QueryParam("endTime") String endTime, @QueryParam("binCount") String binCount, @QueryParam("dataParam") String dataParam) {
-		SuccessResponse<DurationCurve> result = null;
-		List<DurationCurve> durationCurve = new ArrayList<>();
+	public SuccessResponse<DurationCurvePoint> getDurationCurve(@QueryParam("siteId") String siteId, @QueryParam("startTime") String startTime, @QueryParam("endTime") String endTime, @QueryParam("binCount") String binCount, @QueryParam("dataParam") String dataParam) {
+		SuccessResponse<DurationCurvePoint> result = null;
+		List<DurationCurvePoint> durationCurve = new ArrayList<>();
 				
 		try {
 			durationCurve = new DurationCurveDAO().getDurationCurve(siteId, startTime, endTime, binCount, dataParam);

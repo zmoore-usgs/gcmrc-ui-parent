@@ -7,8 +7,8 @@ import org.slf4j.LoggerFactory;
  *
  * @author dmsibley, zmoore
  */
-public class DurationCurve {
-	private static final Logger log = LoggerFactory.getLogger(DurationCurve.class);
+public class DurationCurvePoint {
+	private static final Logger log = LoggerFactory.getLogger(DurationCurvePoint.class);
 	
 	private String binNumber;
 	private String cumulativeBinPerc;
@@ -18,17 +18,10 @@ public class DurationCurve {
 	private String lowBound;
 	private String highBound;
 
-	public DurationCurve() {
-		this.binNumber = null;
-		this.cumulativeBinPerc = null;
-		this.binValue = null;
-		this.inBinMinutes = null;
-		this.cumulativeInBinMinutes = null;
-		this.lowBound = null;
-		this.highBound = null;
+	public DurationCurvePoint() {
 	}
 
-	public DurationCurve(String binNumber, String cumulativeBinPerc, String binValue, String inBinMinutes, String cumulativeInBinMinutes, String lowBound, String highBound) {
+	public DurationCurvePoint(String binNumber, String cumulativeBinPerc, String binValue, String inBinMinutes, String cumulativeInBinMinutes, String lowBound, String highBound) {
 		this.binNumber = binNumber;
 		this.cumulativeBinPerc = cumulativeBinPerc;
 		this.binValue = binValue;

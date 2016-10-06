@@ -15,7 +15,7 @@
 		<result property="highBound" column="HIGH_BOUND"/>
 	</resultMap>
 	<select id="getDurationCurve" parameterType="map" resultMap="durationCurveResult">	
-		WITH CONST (DISCHARGE_MEASURE_ID, ONE_DAY_OF_MINUTES, DATA_GAP_MARKER, MAX_GAP_MINUTES, MAX_INTERPOLATION_DAYS, MIN_LOG_BIN_VALUE) AS
+		WITH CONST (ONE_DAY_OF_MINUTES, DATA_GAP_MARKER, MAX_GAP_MINUTES, MAX_INTERPOLATION_DAYS, MIN_LOG_BIN_VALUE) AS
 				(
 				   <!-- CONSTANTS
 
@@ -35,7 +35,6 @@
 
 					-->
 					 SELECT
-					   2 DISCHARGE_MEASURE_ID,
 					   60*24 ONE_DAY_OF_MINUTES,
 					   -999 DATA_GAP_MARKER, <!-- Known value in the db used to mark the start and end of a timespan for which we do not have data. -->
 					   60 MAX_GAP_MINUTES, <!-- Max single invalid timespan that interpolation is allowed through. -->
@@ -116,7 +115,7 @@
 						   From TIME_SERIES_STAR
 						   Where 
 							 SITE_ID=#{siteId, jdbcType=NUMERIC} <!-- Only this site -->
-							 And GROUP_ID= (SELECT DISCHARGE_MEASURE_ID FROM CONST) <!-- Only discharge measurements -->
+							 And GROUP_ID= #{groupId, jdbcType=NUMERIC} <!-- Only measurements from selected parameter -->
 							 <!-- Filter the time window to the specified range + the max interpolation time period -->
 							 AND MEASUREMENT_DATE > (to_timestamp(#{startTime, jdbcType=CHAR}, 'YYYY-MM-DD"T"HH24:MI:SS') - (SELECT MAX_INTERPOLATION_DAYS FROM CONST))
 							 AND MEASUREMENT_DATE &lt; (to_timestamp(#{endTime, jdbcType=CHAR}, 'YYYY-MM-DD"T"HH24:MI:SS') + (SELECT MAX_INTERPOLATION_DAYS FROM CONST))

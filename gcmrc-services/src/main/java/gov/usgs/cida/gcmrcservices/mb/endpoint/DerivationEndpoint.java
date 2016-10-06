@@ -26,12 +26,12 @@ public class DerivationEndpoint {
 	@JSONP(queryParam="jsonp_callback")
 	@Path("durationCurve")
 	@Produces("application/javascript")
-	public SuccessResponse<DurationCurvePoint> getDurationCurve(@QueryParam("siteId") String siteId, @QueryParam("startTime") String startTime, @QueryParam("endTime") String endTime, @QueryParam("binCount") String binCount, @QueryParam("dataParam") String dataParam) {
+	public SuccessResponse<DurationCurvePoint> getDurationCurve(@QueryParam("siteId") String siteId, @QueryParam("startTime") String startTime, @QueryParam("endTime") String endTime, @QueryParam("binCount") String binCount, @QueryParam("groupId") String groupId) {
 		SuccessResponse<DurationCurvePoint> result = null;
 		List<DurationCurvePoint> durationCurve = new ArrayList<>();
 				
 		try {
-			durationCurve = new DurationCurveDAO().getDurationCurve(siteId, startTime, endTime, binCount, dataParam);
+			durationCurve = new DurationCurveDAO().getDurationCurve(siteId, startTime, endTime, binCount, groupId);
 		} catch (Exception e) {
 			log.error("Could not get duration curve!", e);
 		}

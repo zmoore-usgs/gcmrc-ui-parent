@@ -317,7 +317,7 @@ GCMRC.Page = {
 					var elEnd = param.endPosition;
 					
 					if (new Date(reqBegin) <= new Date(elEnd) &&
-						new Date(reqEnd) > new Date(elBegin)) {
+						new Date(reqEnd) >= new Date(elBegin)) {
 						thisDataPresent = true;
 					}
 				    }

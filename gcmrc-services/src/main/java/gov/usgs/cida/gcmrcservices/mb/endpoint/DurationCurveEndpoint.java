@@ -18,15 +18,14 @@ import org.slf4j.LoggerFactory;
  *
  * @author dmsibley, zmoore
  */
-@Path("derivation")
-public class DerivationEndpoint {
-	private static final Logger log = LoggerFactory.getLogger(DerivationEndpoint.class);
+@Path("durationcurve")
+public class DurationCurveEndpoint {
+	private static final Logger log = LoggerFactory.getLogger(DurationCurveEndpoint.class);
 	
 	@GET
 	@JSONP(queryParam="jsonp_callback")
-	@Path("durationCurve")
 	@Produces("application/javascript")
-	public SuccessResponse<DurationCurvePoint> getDurationCurve(@QueryParam("siteId") String siteId, @QueryParam("startTime") String startTime, @QueryParam("endTime") String endTime, @QueryParam("binCount") String binCount, @QueryParam("groupId") String groupId) {
+	public SuccessResponse<DurationCurvePoint> getDurationCurve(@QueryParam("siteId") int siteId, @QueryParam("startTime") String startTime, @QueryParam("endTime") String endTime, @QueryParam("binCount") int binCount, @QueryParam("groupId") int groupId) {
 		SuccessResponse<DurationCurvePoint> result = null;
 		List<DurationCurvePoint> durationCurve = new ArrayList<>();
 				

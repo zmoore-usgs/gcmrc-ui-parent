@@ -29,10 +29,10 @@ public class DurationCurveDAO {
 	
 	public static final String queryPackage = "gov.usgs.cida.gcmrcservices.mb.mappers";
 	
-	public List<DurationCurvePoint> getDurationCurve(String siteId, String startTime, String endTime, String binCount, String groupId) {		
+	public List<DurationCurvePoint> getDurationCurve(int siteId, String startTime, String endTime, int binCount, int groupId) {		
 		List<DurationCurvePoint> result = null;
 		
-		Map<String, String> params = new HashMap<String, String>();
+		Map<String, Object> params = new HashMap<String, Object>();
 		params.put("siteId", siteId);
 		params.put("startTime", startTime);
 		params.put("endTime", endTime);

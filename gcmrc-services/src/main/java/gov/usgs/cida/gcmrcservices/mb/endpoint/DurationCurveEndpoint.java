@@ -26,15 +26,29 @@ public class DurationCurveEndpoint {
 	@GET
 	@JSONP(queryParam="jsonp_callback")
 	@Produces("application/javascript")
-	public SuccessResponse<DurationCurvePoint> getDurationCurve(@QueryParam("siteId") int siteId, @QueryParam("startTime") String startTime, @QueryParam("endTime") String endTime, @QueryParam("binCount") int binCount, @QueryParam("groupId") int groupId) {
+	public SuccessResponse<DurationCurvePoint> getDurationCurve(@QueryParam("siteId") int siteId, @QueryParam("startTime") String startTime, @QueryParam("endTime") String endTime, @QueryParam("groupId") int groupId, @QueryParam("binCount") int binCount, @QueryParam("binType") String binType) {
 		SuccessResponse<DurationCurvePoint> result = null;
 		List<DurationCurvePoint> durationCurve = new ArrayList<>();
 		
+		boolean validParams = true;
+		
 		if(binCount > MAX_BINS){
-			log.error("Too many bins: ", binCount);
+			log.error("Too many bins: " + binCount + " (Max: " + MAX_BINS + ")");
+			validParams = false;
+		}
+		
+		if(binType!= null && binType.compareTo("log") == 0){
+			binType = "LOG_BINS";
+		} else if(binType!= null && binType.compareTo("lin") == 0){
+			binType = "LIN_BINS";
 		} else {
+			log.error("Invalid bin type: " + binType + " (Valid: 'lin' or 'log')");
+			validParams = false;
+		}
+		
+		if(validParams) {
 			try {
-				durationCurve = new DurationCurveDAO().getDurationCurve(siteId, startTime, endTime, binCount, groupId);
+				durationCurve = new DurationCurveDAO().getDurationCurve(siteId, startTime, endTime, groupId, binCount, binType);
 			} catch (Exception e) {
 				log.error("Could not get duration curve!", e);
 			}

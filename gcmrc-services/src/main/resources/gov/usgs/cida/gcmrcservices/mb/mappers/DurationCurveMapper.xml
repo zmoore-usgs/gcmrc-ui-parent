@@ -296,7 +296,7 @@
 						 END AS IN_BIN_MINUTES,
 						 MIN_VALUE, MAX_VALUE, LOW_BOUND, HIGH_BOUND, DURATION_MINUTES,
 						 START_VALUE, END_VALUE, START_TIME, END_TIME, BIN_NUMBER, GAP_MINUTES
-					   FROM LOG_BINS bin INNER JOIN CLEAN_MTI_DATA data ON
+					   FROM ${binType} bin INNER JOIN CLEAN_MTI_DATA data ON
 						 (data.MIN_VALUE &lt; bin.HIGH_BOUND AND data.MAX_VALUE > bin.LOW_BOUND) <!-- Std case where data values do not fall on bin boundaries -->
 						 OR (data.MIN_VALUE = data.MAX_VALUE AND data.MIN_VALUE = bin.LOW_BOUND) <!-- Single value case that falls on a bin bondaries (goes w/ the bin above that value) -->
 						 OR (data.MIN_VALUE = bin.HIGH_BOUND AND bin.BIN_NUMBER = #{binCount, jdbcType=NUMERIC}) <!-- Single values falling on a bin boundary go in the bin above it, however, a single value that falls on the top bin's upper bound goes in that bin. -->

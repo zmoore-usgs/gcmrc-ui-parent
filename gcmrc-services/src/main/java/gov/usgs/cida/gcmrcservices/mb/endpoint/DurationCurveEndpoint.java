@@ -21,6 +21,7 @@ import org.slf4j.LoggerFactory;
 @Path("durationcurve")
 public class DurationCurveEndpoint {
 	private static final Logger log = LoggerFactory.getLogger(DurationCurveEndpoint.class);
+	private final int MAX_BINS = 2000;
 	
 	@GET
 	@JSONP(queryParam="jsonp_callback")
@@ -28,11 +29,15 @@ public class DurationCurveEndpoint {
 	public SuccessResponse<DurationCurvePoint> getDurationCurve(@QueryParam("siteId") int siteId, @QueryParam("startTime") String startTime, @QueryParam("endTime") String endTime, @QueryParam("binCount") int binCount, @QueryParam("groupId") int groupId) {
 		SuccessResponse<DurationCurvePoint> result = null;
 		List<DurationCurvePoint> durationCurve = new ArrayList<>();
-				
-		try {
-			durationCurve = new DurationCurveDAO().getDurationCurve(siteId, startTime, endTime, binCount, groupId);
-		} catch (Exception e) {
-			log.error("Could not get duration curve!", e);
+		
+		if(binCount > MAX_BINS){
+			log.error("Too many bins: ", binCount);
+		} else {
+			try {
+				durationCurve = new DurationCurveDAO().getDurationCurve(siteId, startTime, endTime, binCount, groupId);
+			} catch (Exception e) {
+				log.error("Could not get duration curve!", e);
+			}
 		}
 		
 		result = new SuccessResponse<>(new ResponseEnvelope<>(durationCurve));

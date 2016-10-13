@@ -10,6 +10,9 @@ import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
+import javax.ws.rs.WebApplicationException;
+import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Response.Status;
 import org.glassfish.jersey.server.JSONP;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -34,16 +37,16 @@ public class DurationCurveEndpoint {
 		
 		if(binCount > MAX_BINS){
 			log.error("Too many bins: " + binCount + " (Max: " + MAX_BINS + ")");
-			validParams = false;
+			throw new WebApplicationException(Response.status(Status.BAD_REQUEST).type("text/plain").entity("Too many bins: " + binCount + " (Max: " + MAX_BINS + ")").build());
 		}
 		
-		if(binType!= null && binType.compareTo("log") == 0){
+		if(binType!= null && binType.equalsIgnoreCase("log")){
 			binType = "LOG_BINS";
-		} else if(binType!= null && binType.compareTo("lin") == 0){
+		} else if(binType!= null && binType.equalsIgnoreCase("lin")){
 			binType = "LIN_BINS";
 		} else {
-			log.error("Invalid bin type: " + binType + " (Valid: 'lin' or 'log')");
-			validParams = false;
+			log.error("Invalid bin type: '" + binType + "' (Valid: 'lin' or 'log')");
+			throw new WebApplicationException(Response.status(Status.BAD_REQUEST).type("text/plain").entity("Invalid bin type: '" + binType + "' (Valid: 'lin' or 'log')").build());
 		}
 		
 		if(validParams) {
@@ -51,6 +54,7 @@ public class DurationCurveEndpoint {
 				durationCurve = new DurationCurveDAO().getDurationCurve(siteId, startTime, endTime, groupId, binCount, binType);
 			} catch (Exception e) {
 				log.error("Could not get duration curve!", e);
+				throw new WebApplicationException(Response.status(500).type("text/plain").entity("Unable to get duration curve for the specified parameters.\n\nError: " + e.getMessage()).build());
 			}
 		}
 		

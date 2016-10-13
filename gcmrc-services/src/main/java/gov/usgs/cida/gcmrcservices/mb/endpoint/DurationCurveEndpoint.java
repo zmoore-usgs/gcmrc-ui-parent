@@ -51,7 +51,7 @@ public class DurationCurveEndpoint {
 			durationCurve = new DurationCurveDAO().getDurationCurve(siteId, startTime, endTime, groupId, binCount, binType);
 		} catch (Exception e) {
 			log.error("Could not get duration curve!", e);
-			throw new WebApplicationException(Response.status(500).type("text/plain").entity("Unable to get duration curve for the specified parameters.\n\nError: " + e.getMessage()).build());
+			throw new WebApplicationException(Response.status(Status.INTERNAL_SERVER_ERROR).type("text/plain").entity("Unable to get duration curve for the specified parameters.\n\nError: " + e.getMessage()).build());
 		}
 		
 		result = new SuccessResponse<>(new ResponseEnvelope<>(durationCurve));

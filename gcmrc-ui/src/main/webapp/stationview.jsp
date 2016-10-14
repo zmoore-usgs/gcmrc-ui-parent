@@ -221,10 +221,10 @@
 							<div class="sectionTitle">Data</div>
 							<div class="rightSidebarText">
 								<div onselectstart="return false" class="curveSelectButton">
-									<input type="radio" id="chart-view" name="toggle-curve" />
-									<label for="chart-view">Chart</label>
+									<input type="radio" id="chart-view" name="toggle-curve" checked="checked" value=""/>
+									<label for="chart-view" id="chart-view-label">Time Series Plot</label>
 									<input type="radio" id="curve-view" name="toggle-curve" />
-									<label for="curve-view">Curve</label>
+									<label for="curve-view" id="curve-view-label">Duration Curve Plot</label>
 								</div>
 								<div id="errorMsg"></div>
 								<div id="infoMsg">

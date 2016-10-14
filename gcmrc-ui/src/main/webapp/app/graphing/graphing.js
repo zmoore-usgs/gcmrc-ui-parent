@@ -9,7 +9,8 @@ GCMRC.Graphing = function(hoursOffset) {
 	var isResizeListenerAttached = false;
 
 	var urls = {
-		agg: 'services/agg/'
+		agg: 'services/agg/',
+		durationCurve: 'services/rest/durationcurve/'
 	};
 
 	var showInfoMessage = function(locator, msg) {
@@ -359,6 +360,91 @@ GCMRC.Graphing = function(hoursOffset) {
 								} else {
 									dealWithResponse(graphToMake, data, config, buildGraph);
 								}
+							});
+						} else if (data.data && data.data.ERROR) {
+							clearErrorMessage();
+							showErrorMessage("Please select a parameter to graph!");
+						} else {
+							LOG.error("what the heck just happened?");
+						}
+					}
+				},
+				error: function(jqXHR, textStatus, errorThrown) {
+					clearErrorMessage();
+					var msg = "";
+					switch(textStatus) {
+						case 'timeout':
+							msg = "The browser timed out waiting for a response from the server.";
+						break;
+						case 'abort':
+							msg = "The request was aborted.";
+						break;
+						case 'parsererror':
+							msg = "A response was received, but it was unreadable.";
+						break;
+						case 'error':
+						//break; fall thru
+					default:
+						msg = "Some type of server or network error occured.";
+					}
+					showErrorMessage("Your request could not be completed.  Reason: '" + msg + "'  If you repeatedly receive this message, contact <a href='mailto:" + GCMRC.administrator + "@usgs.gov'>" + GCMRC.administrator + "@usgs.gov</a>");
+				}
+			});
+		},
+		createDurationCurveGraph: function(param, config, urlParams) {
+			urlParams["output"] = "json";
+			$.ajax({
+				type: 'GET',
+				dataType: 'json',
+				url: CONFIG.relativePath + urls[param],
+				data: urlParams,
+				timeout: 1200000, /* 20 minutes allowed, from start to data complete */
+				success: function(data, textStatus, jqXHR) {
+					if (!data || (!data.contentType && data.contentType === "text/xml")) {
+						clearErrorMessage();
+						showErrorMessage("An error has occurred.  Please contact <a href='mailto:" + GCMRC.administrator + "@usgs.gov'>" + GCMRC.administrator + "@usgs.gov</a> The error that occured was:<br>" + data ? data : "No data returned.");
+					} else {
+						if (data.data && !data.data.ERROR && data.data.time) {
+							data = {
+								success : {
+									"@rowCount" : "-1",
+									data : [
+										data.data
+									]
+								}
+							};
+						}
+						//success
+						if (data.success && data.success.data && $.isArray(data.success.data)) {
+							var containerDiv = $("#" + config.divId);
+							var labelDiv = $("#" + config.labelDivId);
+							
+							if (graphs[config.divId]) {
+								graphs[config.divId].values(function(el) {
+									el.destroy();
+								});
+							}
+							
+							/*
+							 * Clean out and repopulated the container/graph divs
+							 * for the correct display order
+							 */
+							containerDiv.empty();
+							labelDiv.empty();
+							GCMRC.Page.params.values().sortBy(function(n) {
+								return parseInt(n.description.displayOrder || 9999999);
+							}).map(function(n) {
+								return n.description.groupId;
+							}).forEach(function(el) {
+								containerDiv.append($('<div class="p' + el + '"></div>'));
+								labelDiv.append($('<div class="p' + el +'"></div>'));
+							});
+							
+							graphs[config.divId] = {};
+							
+							config.graphsToMake.forEach(function(graphToMake) {
+								console.log("Graph to make: ");
+								console.log(graphToMake.toString());
 							});
 						} else if (data.data && data.data.ERROR) {
 							clearErrorMessage();

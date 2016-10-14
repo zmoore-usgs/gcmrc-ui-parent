@@ -272,6 +272,19 @@ GCMRC.Page = {
 		});
 		return result;
 	},
+	getExpectedDurationCurveColumns : function() {
+		var result = [];
+		var chosenParameters = $('.parameterListing input:checkbox:checked');
+		result = $.map(chosenParameters, function(el, i) {
+			var result = [];
+
+			result.push({
+				groupId: el.name
+			});
+			return result;
+		});
+		return result;
+	},
 	getExpectedDownloadColumns : function() {
 		var expectedGraphColumns = GCMRC.Page.getExpectedGraphColumns();
 		var result = expectedGraphColumns.filter(function(el) {
@@ -368,6 +381,15 @@ GCMRC.Page = {
 					noDataFilter: 'true',
 					useLagged: 'true'
 				};
+				
+				var durationCurveOptions = {
+					startTime: begin,
+					endTime: end,
+					binCount: 200,
+					binType: "lin",
+					siteId: CONFIG.stationName,
+					groupId: 5
+				};
 
 				var aggTime = GCMRC.Page.checkIfAgg(serviceOptions);
 
@@ -384,6 +406,16 @@ GCMRC.Page = {
 							dateWindow : [beginMillis, endMillis]
 						},
 				serviceOptions);
+				
+				GCMRC.Graphing.createDurationCurveGraph(
+						'durationCurve',
+						{
+							divId: 'data-duration-curve',
+							labelDivId: 'legend-duration-curve',
+							graphsToMake : expectedGraphColumns,
+							dateWindow : [beginMillis, endMillis]
+						},
+				durationCurveOptions);
 			} else {
 				if (0 < expectedGraphColumns.length) {
 					GCMRC.Graphing.clearErrorMsg();

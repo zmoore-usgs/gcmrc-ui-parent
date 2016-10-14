@@ -221,10 +221,10 @@
 							<div class="sectionTitle">Data</div>
 							<div class="rightSidebarText">
 								<div onselectstart="return false" class="curveSelectButton">
-									<input type="radio" id="chart-view" name="toggle-curve" checked="checked" value=""/>
-									<label for="chart-view" id="chart-view-label">Time Series Plot</label>
-									<input type="radio" id="curve-view" name="toggle-curve" />
-									<label for="curve-view" id="curve-view-label">Duration Curve Plot</label>
+									<input class="curve-select" type="radio" id="chart-view-input" name="toggle-curve" checked="checked" value="chart"/>
+									<label for="chart-view-input" id="chart-view-label">Time Series Plot</label>
+									<input class="curve-select" type="radio" id="curve-view-input" name="toggle-curve" value="curve"/>
+									<label for="curve-view-input" id="curve-view-label">Duration Curve Plot</label>
 								</div>
 								<div id="errorMsg"></div>
 								<div id="infoMsg">
@@ -233,6 +233,8 @@
 								<div id="loading" class="ajaxLoading"><div class="alert alert-info">Your graph is being constructed...</div><div style="margin-bottom: 20px;"><img src="${relativePath}app/ajax-loader-trsp.gif" alt="Loading..." height="32px" width="32px"></div></div>
 								<div id="legend-dygraph"></div>
 								<div id="data-dygraph"></div>
+								<div id="legend-duration-curve"></div>
+								<div id="data-duration-curve"></div>
 							</div>
 						</div>
 					</div>

@@ -24,6 +24,14 @@ $(document).ready(function() {
 	GCMRC.Page.createMiniMap({stationName: CONFIG.stationName});
 
 	$('#buildGraph').click(GCMRC.Page.buildGraphClicked);
+	
+	$('#chart-view-input').on('change', function() {
+		$('#chart-view-input').prop("checked", true);
+	 });
+	 
+	 $('#curve-view-input').on('change', function() {
+		$('#curve-view-input').prop("checked", true);
+	 });
 
 	$('#bedSedimentDownloadButton').click(GCMRC.Page.downloadBedSedimentClicked);
 	$('#physicalDownloadButton').click(GCMRC.Page.downloadSamplesClicked);

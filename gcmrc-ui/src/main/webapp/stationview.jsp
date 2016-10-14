@@ -220,6 +220,12 @@
 						<div id="viz" class="innerRightSidebar">
 							<div class="sectionTitle">Data</div>
 							<div class="rightSidebarText">
+								<div onselectstart="return false" class="curveSelectButton">
+									<input type="radio" id="chart-view" name="toggle-curve" />
+									<label for="chart-view">Chart</label>
+									<input type="radio" id="curve-view" name="toggle-curve" />
+									<label for="curve-view">Curve</label>
+								</div>
 								<div id="errorMsg"></div>
 								<div id="infoMsg">
 									To visualize data in a graph, please select parameters from the left as well as a date range from above.

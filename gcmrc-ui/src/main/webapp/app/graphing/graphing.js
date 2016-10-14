@@ -295,6 +295,7 @@ GCMRC.Graphing = function(hoursOffset) {
 		createDataGraph: function(param, config, urlParams) {
 			$('#infoMsg').empty();
 			$("#errorMsg").empty();
+			$(".curveSelectButton").css("display", "none");
 
 			if (urlParams['downscale']) {
 				clearWarningMessage();
@@ -327,6 +328,7 @@ GCMRC.Graphing = function(hoursOffset) {
 						if (data.success && data.success.data && $.isArray(data.success.data)) {
 							var containerDiv = $("#" + config.divId);
 							var labelDiv = $("#" + config.labelDivId);
+							$(".curveSelectButton").css("display", "inline-block");
 							
 							if (graphs[config.divId]) {
 								graphs[config.divId].values(function(el) {

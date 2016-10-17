@@ -25,12 +25,14 @@ $(document).ready(function() {
 
 	$('#buildGraph').click(GCMRC.Page.buildGraphClicked);
 	
-	$('#chart-view-input').on('change', function() {
-		$('#chart-view-input').prop("checked", true);
+	$('input[id^="chart-view-input"').on('change', function() {
+		$('input[name^="chart-view-input"').prop("checked", true);
+		console.log("chart");
 	 });
 	 
-	 $('#curve-view-input').on('change', function() {
-		$('#curve-view-input').prop("checked", true);
+	 $('input[id^="curve-view-input"').on('change', function() {
+		$('input[name^="curve-view-input"').prop("checked", true);
+		console.log("curve");
 	 });
 
 	$('#bedSedimentDownloadButton').click(GCMRC.Page.downloadBedSedimentClicked);

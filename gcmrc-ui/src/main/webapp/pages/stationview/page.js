@@ -387,8 +387,7 @@ GCMRC.Page = {
 					endTime: end,
 					binCount: 200,
 					binType: "lin",
-					siteId: CONFIG.stationName,
-					groupId: 5
+					siteId: CONFIG.stationName
 				};
 
 				var aggTime = GCMRC.Page.checkIfAgg(serviceOptions);
@@ -412,7 +411,7 @@ GCMRC.Page = {
 						{
 							divId: 'data-duration-curve',
 							labelDivId: 'legend-duration-curve',
-							graphsToMake : expectedGraphColumns,
+							graphsToMake : GCMRC.Page.getExpectedDurationCurveColumns(),
 							dateWindow : [beginMillis, endMillis]
 						},
 				durationCurveOptions);

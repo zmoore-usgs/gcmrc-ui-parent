@@ -283,6 +283,15 @@ GCMRC.Graphing = function(hoursOffset) {
 				opts
 				);
 	};
+	
+	var createDurationCurveToggle = function(chartId) {
+		return '<div onselectstart="return false" class="curveSelectButton" style="display: inline-block;">' +
+					'<input class="curve-select" type="radio" id="chart-view-input-' + chartId + '" name="toggle-curve-' + chartId + '" checked="checked" value="chart">' +
+					'<label for="chart-view-input-' + chartId + '" class="chart-view-label">Time Series Plot</label>' +
+					'<input class="curve-select" type="radio" id="curve-view-input-' + chartId + '" name="toggle-curve-' + chartId + '" value="curve">' +
+					'<label for="curve-view-input-' + chartId + '" class="curve-view-label">Duration Curve Plot</label>' +
+				'</div>';
+	};
 
 	return {
 		graphs: graphs,
@@ -296,7 +305,6 @@ GCMRC.Graphing = function(hoursOffset) {
 		createDataGraph: function(param, config, urlParams) {
 			$('#infoMsg').empty();
 			$("#errorMsg").empty();
-			$(".curveSelectButton").css("display", "none");
 
 			if (urlParams['downscale']) {
 				clearWarningMessage();
@@ -329,7 +337,6 @@ GCMRC.Graphing = function(hoursOffset) {
 						if (data.success && data.success.data && $.isArray(data.success.data)) {
 							var containerDiv = $("#" + config.divId);
 							var labelDiv = $("#" + config.labelDivId);
-							$(".curveSelectButton").css("display", "inline-block");
 							
 							if (graphs[config.divId]) {
 								graphs[config.divId].values(function(el) {
@@ -343,24 +350,41 @@ GCMRC.Graphing = function(hoursOffset) {
 							 */
 							containerDiv.empty();
 							labelDiv.empty();
+							
+							//Store individual chart divs for later populating with duration curve toggle
+							var plotDivs = new Array();
 							GCMRC.Page.params.values().sortBy(function(n) {
 								return parseInt(n.description.displayOrder || 9999999);
 							}).map(function(n) {
 								return n.description.groupId;
 							}).forEach(function(el) {
-								containerDiv.append($('<div class="p' + el + '"></div>'));
+								var plotDiv = $('<div class="plot-container"><div class="p' + el + '"></div></div>');
+								plotDiv.appendTo(containerDiv);
+								plotDivs.push({"div": plotDiv, "groupId": el});
 								labelDiv.append($('<div class="p' + el +'"></div>'));
 							});
-							
+																					
 							graphs[config.divId] = {};
 							
 							config.graphsToMake.forEach(function(graphToMake) {
+								//Find the div for the current chart
+								var div = plotDivs.filter(function(obj){
+									return obj.groupId === graphToMake.groupId;
+								})[0];
+								
+								//Add Duration Curve Toggle
+								if(div){
+									$(createDurationCurveToggle(graphToMake.groupId)).prependTo(div.div);
+								}
+								
+								//Build Plot
 								if (graphToMake.dealWithResponse) {
 									graphToMake.dealWithResponse(graphToMake, data, config, buildGraph);
 								} else {
 									dealWithResponse(graphToMake, data, config, buildGraph);
 								}
 							});
+							
 						} else if (data.data && data.data.ERROR) {
 							clearErrorMessage();
 							showErrorMessage("Please select a parameter to graph!");
@@ -392,7 +416,6 @@ GCMRC.Graphing = function(hoursOffset) {
 			});
 		},
 		createDurationCurveGraph: function(param, config, urlParams) {
-			urlParams["output"] = "json";
 			$.ajax({
 				type: 'GET',
 				dataType: 'json',

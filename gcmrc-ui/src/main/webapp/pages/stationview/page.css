@@ -122,12 +122,12 @@ img { max-width: none; }
 	color: #0000FF;
 }
 
-#chart-view-label {
+.chart-view-label {
 	border-radius: 6px 0px 0px 6px;
 	margin-right: -2px;
 }
 
-#curve-view-label {
+.curve-view-label {
 	border-radius: 0px 6px 6px 0px;
 	margin-left: -2px;
 }

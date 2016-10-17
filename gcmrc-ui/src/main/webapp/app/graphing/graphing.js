@@ -417,8 +417,8 @@ GCMRC.Graphing = function(hoursOffset) {
 		},
 		createDurationCurveGraph: function(param, config, urlParams) {
 			$.ajax({
-				type: 'GET',
-				dataType: 'json',
+				jsonp: "jsonp_callback",
+				dataType: 'jsonp',
 				url: CONFIG.relativePath + urls[param],
 				data: urlParams,
 				timeout: 1200000, /* 20 minutes allowed, from start to data complete */

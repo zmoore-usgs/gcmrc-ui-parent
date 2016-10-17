@@ -278,9 +278,7 @@ GCMRC.Page = {
 		result = $.map(chosenParameters, function(el, i) {
 			var result = [];
 
-			result.push({
-				groupId: el.name
-			});
+			result.push(el.name);
 			return result;
 		});
 		return result;
@@ -387,7 +385,8 @@ GCMRC.Page = {
 					endTime: end,
 					binCount: 200,
 					binType: "lin",
-					siteId: CONFIG.stationName
+					siteId: CONFIG.stationName,
+					groupId: GCMRC.Page.getExpectedDurationCurveColumns()
 				};
 
 				var aggTime = GCMRC.Page.checkIfAgg(serviceOptions);
@@ -411,7 +410,6 @@ GCMRC.Page = {
 						{
 							divId: 'data-duration-curve',
 							labelDivId: 'legend-duration-curve',
-							graphsToMake : GCMRC.Page.getExpectedDurationCurveColumns(),
 							dateWindow : [beginMillis, endMillis]
 						},
 				durationCurveOptions);

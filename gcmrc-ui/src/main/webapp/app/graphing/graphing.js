@@ -358,10 +358,10 @@ GCMRC.Graphing = function(hoursOffset) {
 							}).map(function(n) {
 								return n.description.groupId;
 							}).forEach(function(el) {
-								var plotDiv = $('<div class="plot-container"><div class="p' + el + '"></div></div>');
+								var plotDiv = $('<div class="plot-container"><div class="p' + el + '"></div><div class="d' + el + '"></div></div>');
 								plotDiv.appendTo(containerDiv);
 								plotDivs.push({"div": plotDiv, "groupId": el});
-								labelDiv.append($('<div class="p' + el +'"></div>'));
+								labelDiv.append($('<div class="p' + el +'"></div><div class="d' + el +'"></div>'));
 							});
 																					
 							graphs[config.divId] = {};
@@ -437,45 +437,8 @@ GCMRC.Graphing = function(hoursOffset) {
 								}
 							};
 						}
-						//success
-						if (data.success && data.success.data && $.isArray(data.success.data)) {
-							var containerDiv = $("#" + config.divId);
-							var labelDiv = $("#" + config.labelDivId);
-							
-							if (graphs[config.divId]) {
-								graphs[config.divId].values(function(el) {
-									el.destroy();
-								});
-							}
-							
-							/*
-							 * Clean out and repopulated the container/graph divs
-							 * for the correct display order
-							 */
-							containerDiv.empty();
-							labelDiv.empty();
-							GCMRC.Page.params.values().sortBy(function(n) {
-								return parseInt(n.description.displayOrder || 9999999);
-							}).map(function(n) {
-								return n.description.groupId;
-							}).forEach(function(el) {
-								containerDiv.append($('<div class="p' + el + '"></div>'));
-								labelDiv.append($('<div class="p' + el +'"></div>'));
-							});
-							
-							graphs[config.divId] = {};
-							
-							config.graphsToMake.forEach(function(graphToMake) {
-								console.log("Graph to make: ");
-								console.log(graphToMake.toString());
-							});
-						} else if (data.data && data.data.ERROR) {
-							clearErrorMessage();
-							showErrorMessage("Please select a parameter to graph!");
-						} else {
-							LOG.error("what the heck just happened?");
-						}
 					}
+						
 				},
 				error: function(jqXHR, textStatus, errorThrown) {
 					clearErrorMessage();

@@ -469,6 +469,18 @@ GCMRC.Page = {
 
 		container.append(result.join(""));
 	},
+	toggleDurationCurve : function(event) {
+		switch(event.target.value){
+			case "chart":
+				$(event.target).parent().siblings("div[class^=d]").hide();
+				$(event.target).parent().siblings("div[class^=p]").show();
+				break;
+			case "curve":
+				$(event.target).parent().siblings("div[class^=d]").show();
+				$(event.target).parent().siblings("div[class^=p]").hide();
+				break;
+		}
+	},
 	downloadPopupClicked : function() {
 		var begin = $("input[name='beginPosition']").val();
 		var end = $("input[name='endPosition']").val();

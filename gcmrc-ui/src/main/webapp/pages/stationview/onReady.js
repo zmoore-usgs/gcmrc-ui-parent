@@ -25,15 +25,8 @@ $(document).ready(function() {
 
 	$('#buildGraph').click(GCMRC.Page.buildGraphClicked);
 	
-	$('input[id^="chart-view-input"').on('change', function() {
-		$('input[name^="chart-view-input"').prop("checked", true);
-		console.log("chart");
-	 });
-	 
-	 $('input[id^="curve-view-input"').on('change', function() {
-		$('input[name^="curve-view-input"').prop("checked", true);
-		console.log("curve");
-	 });
+	$('input[name^="toggle-curve-"]').live('change', GCMRC.Page.toggleDurationCurve);
+	//Add listener for log/lin axis
 
 	$('#bedSedimentDownloadButton').click(GCMRC.Page.downloadBedSedimentClicked);
 	$('#physicalDownloadButton').click(GCMRC.Page.downloadSamplesClicked);

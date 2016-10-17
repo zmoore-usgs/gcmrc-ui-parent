@@ -401,18 +401,16 @@ GCMRC.Page = {
 							divId: 'data-dygraph',
 							labelDivId: 'legend-dygraph',
 							graphsToMake : expectedGraphColumns,
+							durationCurveParams: durationCurveOptions,
+							durationCurveConf: {
+								divId: 'data-dygraph',
+								labelDivId: 'legend-duration-curve',
+								graphsToMake: GCMRC.Page.getExpectedDurationCurveColumns(),
+								dateWindow : [beginMillis, endMillis]
+							},
 							dateWindow : [beginMillis, endMillis]
 						},
 				serviceOptions);
-				
-				GCMRC.Graphing.createDurationCurveGraph(
-						'durationCurve',
-						{
-							divId: 'data-duration-curve',
-							labelDivId: 'legend-duration-curve',
-							dateWindow : [beginMillis, endMillis]
-						},
-				durationCurveOptions);
 			} else {
 				if (0 < expectedGraphColumns.length) {
 					GCMRC.Graphing.clearErrorMsg();
@@ -470,12 +468,12 @@ GCMRC.Page = {
 	toggleDurationCurve : function(event) {
 		switch(event.target.value){
 			case "chart":
-				$(event.target).parent().siblings("div[class^=d]").hide();
-				$(event.target).parent().siblings("div[class^=p]").show();
+				$(event.target).parent().siblings("div[class^=duration-plot-]").hide();
+				$(event.target).parent().siblings("div[class^=timeseries-plot-]").show();
 				break;
 			case "curve":
-				$(event.target).parent().siblings("div[class^=d]").show();
-				$(event.target).parent().siblings("div[class^=p]").hide();
+				$(event.target).parent().siblings("div[class^=duration-plot-]").show();
+				$(event.target).parent().siblings("div[class^=timeseries-plot-]").hide();
 				break;
 		}
 	},

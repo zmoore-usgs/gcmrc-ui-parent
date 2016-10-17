@@ -41,6 +41,31 @@ GCMRC.Graphing = function(hoursOffset) {
 				isNaN(x));
 	};
 	
+	var dealWithDurationCurveResponse = function(graphToMake, data, config, buildGraph) {
+		
+		var percColumn = "cumulativeBinPerc";
+		var conf = $.extend({}, config);		
+		
+		var identifier = graphToMake;
+		var parameterMetadata = GCMRC.Page.params[identifier].description;
+		var graphName = parameterMetadata['displayName'];
+		
+		conf.labels = [percColumn];
+		
+		conf['yAxisLabel'] = graphToMake.yAxisLabel || graphName;
+		conf['dataformatter'] = GCMRC.Dygraphs.DataFormatter(parameterMetadata['decimalPlaces']);
+		conf['decimalPlaces'] = parameterMetadata['decimalPlaces'];
+		conf["parameterName"] = identifier;
+		conf["div"] = $('#' + conf.divId + ' div.duration-plot-' + identifier).get(0);
+		conf["labelDiv"] = $('#' + conf.labelDivId + ' div.duration-plot-' + identifier).get(0);
+		conf["colors"] = [];
+		conf["highlightColor"] = {};
+		
+		conf["series"] = {};
+
+		buildGraph(conf);
+	};
+	
 	var dealWithResponse = function(graphToMake, data, config, buildGraph) {
 		var parseColData = function(str) {
 			var result = null;
@@ -111,8 +136,8 @@ GCMRC.Graphing = function(hoursOffset) {
 			conf['dataformatter'] = GCMRC.Dygraphs.DataFormatter(parameterMetadata['decimalPlaces']);
 			conf['decimalPlaces'] = parameterMetadata['decimalPlaces'];
 			conf["parameterName"] = identifier;
-			conf["div"] = $('#' + conf.divId + ' div.p' + identifier).get(0);
-			conf["labelDiv"] = $('#' + conf.labelDivId + ' div.p' + identifier).get(0);
+			conf["div"] = $('#' + conf.divId + ' div.timeseries-plot-' + identifier).get(0);
+			conf["labelDiv"] = $('#' + conf.labelDivId + ' div.timeseries-plot-' + identifier).get(0);
 			conf["colors"] = [];
 			conf["highlightColor"] = {};
 			[].push.apply(conf.colors, graphToMake.columns.filter(function(n){return !n.startsWith(timeColumn)}).map(function(el) {
@@ -135,7 +160,7 @@ GCMRC.Graphing = function(hoursOffset) {
 		}
 
 	};
-
+	
 	var buildGraph = function(config) {
 		if (!config)
 			config = {};
@@ -283,6 +308,206 @@ GCMRC.Graphing = function(hoursOffset) {
 				opts
 				);
 	};
+
+	var buildDurationCurve = function(config) {
+		if (!config)
+			config = {};
+
+		var containerId = config.divId || "unknown";
+		var parameterName = config.parameterName || "unknown";
+		var div = config.div;
+//		var labelDiv = config.labelDiv;
+		
+		var labels = config['labels'];
+				
+		div.style.margin = "4px";
+
+		var data = config['data'];
+
+		var title = config['graphTitle'] || '';
+
+		var yAxisLabel = config['yAxisLabel'] || 'Data';
+
+		var dataformatter = config['dataformatter'] || GCMRC.Dygraphs.DataFormatter(0);
+		var decimalPlaces = config['decimalPlaces'] || 0;
+		
+		var confColors = config['colors'] || [CONFIG.instColor, CONFIG.pumpColor, CONFIG.sampColor, CONFIG.sampColor];
+		var highlightColor = config['highlightColor'];
+
+		var axes = {
+			y: {
+				axisLabelFormatter: dataformatter,
+				valueFormatter: dataformatter
+			},
+			x: {
+				axisLabelFormatter: GCMRC.Dygraphs.DataFormatter(0),
+				valueFormatter: GCMRC.Dygraphs.DataFormatter(0),
+				pixelsPerLabel: 50
+			}
+		};
+
+		var lighterColorHighlightPoint = function(g, name, ctx, canvasx, canvasy, color, radius) {
+			var lighterColor = highlightColor[name] || color;
+			ctx.beginPath();
+			ctx.fillStyle = lighterColor;
+			ctx.arc(canvasx, canvasy, radius, 0, 2 * Math.PI, false);
+			ctx.fill();
+		};
+		
+		var graphWidth = $('#' + containerId).width() - 15;//TODO add $(window).resize() listener
+		
+		var opts = {
+			title: title,
+			labelsDivStyles: {
+				'textAlign': 'right'
+			},
+			width: graphWidth,
+			height: 420,
+			xlabel: 'Time',
+			ylabel: yAxisLabel,
+			axisLabelWidth: 85,
+			yAxisLabelWidth: 85,
+			xAxisLabelWidth: 85,
+			xAxisHeight: 50,
+			axes: axes,
+			yRangePad: 5,
+//			includeZero: true,
+			labels: labels,
+			//To be used in "fixed" legend
+//			labelsDiv: labelDiv,
+//			labelsSeparateLines: true,
+//			legend: 'always',
+			showRangeSelector: true,
+			connectSeparatedPoints: false,
+			highlightCircleSize: 4,
+			strokeWidth: 2,
+			pixelsPerTimeLabel : 95,
+			ticker: GCMRC.Dygraphs.ScaledTicker(decimalPlaces),
+			drawHighlightPointCallback: lighterColorHighlightPoint,
+			customBars: true,
+			drawPoints: true,
+			stackedGraph: false,
+			colors: confColors,
+			drawCallback: function(me, initial) {
+				if (blockRedraw || initial)
+					return;
+				blockRedraw = true;
+				var range = me.xAxisRange();
+				$.each(graphs[containerId], function(key, val) {
+					if (val !== me) {
+						val.updateOptions({
+							dateWindow: range
+						});
+					}
+				});
+				blockRedraw = false;
+			},
+			highlightCallback: function(event, x, points, row, seriesName) {
+				if (blockHighlight) {
+					return;
+				}
+				blockHighlight = true;
+				$.each(graphs[containerId], function(key, graph) {
+					graph.setSelection(row);
+					var canvasx;
+					if (graph && graph.selPoints_.length > 0 && graph.selPoints_[0]) {
+						canvasx = graph.selPoints_[0].canvasx;
+					} else {
+						//if no selected point?  TODO, is this needed now that we interpolate?
+						if (points && points.length > 0 && points[0]) { 
+							canvasx = points[0].canvasx;
+						} else {
+							var canvasCoords = graph.eventToDomCoords(event);
+							canvasx = canvasCoords[0];
+						}
+					}
+					var ctx = graph.canvas_ctx_;
+					ctx.fillStyle = '#FF0000';
+					ctx.fillRect(canvasx - 0.5, 0, 1, graph.height_);
+				});
+				blockHighlight = false;
+			},
+			unhighlightCallback: function(event, x, points, row, seriesName) {
+				if (blockHighlight) {
+					return;
+				}
+				blockHighlight = true;
+				$.each(graphs[containerId], function(key, val) {
+					val.clearSelection();
+				});
+				blockHighlight = false;
+			}
+		};
+		
+		if (config.series) {
+			opts.series = config.series.clone();
+		}
+		
+		graphs[containerId][parameterName] = new Dygraph(
+				div,
+				data,
+				opts
+				);
+	};
+	
+	var createDurationCurvePlot = function(param, config, urlParams) {
+		$.ajax({
+			jsonp: "jsonp_callback",
+			dataType: 'jsonp',
+			url: CONFIG.relativePath + urls[param],
+			data: urlParams,
+			timeout: 1200000, /* 20 minutes allowed, from start to data complete */
+			success: function(data, textStatus, jqXHR) {
+				if (!data || (!data.contentType && data.contentType === "text/xml")) {
+					clearErrorMessage();
+					showErrorMessage("An error has occurred.  Please contact <a href='mailto:" + GCMRC.administrator + "@usgs.gov'>" + GCMRC.administrator + "@usgs.gov</a>");
+				} else {
+					if (data.data && !data.data.ERROR && data.data.points && data.data.groupId) {
+						data = {
+							success : {
+								"@rowCount" : "-1",
+								data : [
+									data.data
+								]
+							}
+						};
+					}
+					//success
+					if (data.success && data.success.data && $.isArray(data.success.data)) {
+						config.graphsToMake.forEach(function(graphToMake) {
+							//Build Plot
+							dealWithDurationCurveResponse(graphToMake, data, config, buildDurationCurve);
+						});							
+					} else if (data.data && data.data.ERROR) {
+						clearErrorMessage();
+						showErrorMessage("Please select a parameter to graph!");
+					} else {
+						LOG.error("what the heck just happened?");
+					}
+				}
+			},
+			error: function(jqXHR, textStatus, errorThrown) {
+				clearErrorMessage();
+				var msg = "";
+				switch(textStatus) {
+					case 'timeout':
+						msg = "The browser timed out waiting for a response from the server.";
+					break;
+					case 'abort':
+						msg = "The request was aborted.";
+					break;
+					case 'parsererror':
+						msg = "A response was received, but it was unreadable.";
+					break;
+					case 'error':
+					//break; fall thru
+				default:
+					msg = "Some type of server or network error occured.";
+				}
+				showErrorMessage("Your request could not be completed.  Reason: '" + msg + "'  If you repeatedly receive this message, contact <a href='mailto:" + GCMRC.administrator + "@usgs.gov'>" + GCMRC.administrator + "@usgs.gov</a>");
+			}
+		});
+	};
 	
 	var createDurationCurveToggle = function(chartId) {
 		return '<div onselectstart="return false" class="curveSelectButton" style="display: inline-block;">' +
@@ -358,10 +583,10 @@ GCMRC.Graphing = function(hoursOffset) {
 							}).map(function(n) {
 								return n.description.groupId;
 							}).forEach(function(el) {
-								var plotDiv = $('<div class="plot-container"><div class="p' + el + '"></div><div class="d' + el + '"></div></div>');
+								var plotDiv = $('<div class="plot-container"><div class="timeseries-plot-' + el + '"></div><div class="duration-plot-' + el + '"></div></div>');
 								plotDiv.appendTo(containerDiv);
 								plotDivs.push({"div": plotDiv, "groupId": el});
-								labelDiv.append($('<div class="p' + el +'"></div><div class="d' + el +'"></div>'));
+								labelDiv.append($('<div class="timeseries-plot-' + el +'"></div><div class="duration-plot-' + el +'"></div>'));
 							});
 																					
 							graphs[config.divId] = {};
@@ -385,6 +610,9 @@ GCMRC.Graphing = function(hoursOffset) {
 								}
 							});
 							
+							//Build Duration Curve Plots
+							//createDurationCurvePlot('durationCurve', config.durationCurveConf, config.durationCurveParams);
+							
 						} else if (data.data && data.data.ERROR) {
 							clearErrorMessage();
 							showErrorMessage("Please select a parameter to graph!");
@@ -392,53 +620,6 @@ GCMRC.Graphing = function(hoursOffset) {
 							LOG.error("what the heck just happened?");
 						}
 					}
-				},
-				error: function(jqXHR, textStatus, errorThrown) {
-					clearErrorMessage();
-					var msg = "";
-					switch(textStatus) {
-						case 'timeout':
-							msg = "The browser timed out waiting for a response from the server.";
-						break;
-						case 'abort':
-							msg = "The request was aborted.";
-						break;
-						case 'parsererror':
-							msg = "A response was received, but it was unreadable.";
-						break;
-						case 'error':
-						//break; fall thru
-					default:
-						msg = "Some type of server or network error occured.";
-					}
-					showErrorMessage("Your request could not be completed.  Reason: '" + msg + "'  If you repeatedly receive this message, contact <a href='mailto:" + GCMRC.administrator + "@usgs.gov'>" + GCMRC.administrator + "@usgs.gov</a>");
-				}
-			});
-		},
-		createDurationCurveGraph: function(param, config, urlParams) {
-			$.ajax({
-				jsonp: "jsonp_callback",
-				dataType: 'jsonp',
-				url: CONFIG.relativePath + urls[param],
-				data: urlParams,
-				timeout: 1200000, /* 20 minutes allowed, from start to data complete */
-				success: function(data, textStatus, jqXHR) {
-					if (!data || (!data.contentType && data.contentType === "text/xml")) {
-						clearErrorMessage();
-						showErrorMessage("An error has occurred.  Please contact <a href='mailto:" + GCMRC.administrator + "@usgs.gov'>" + GCMRC.administrator + "@usgs.gov</a> The error that occured was:<br>" + data ? data : "No data returned.");
-					} else {
-						if (data.data && !data.data.ERROR && data.data.time) {
-							data = {
-								success : {
-									"@rowCount" : "-1",
-									data : [
-										data.data
-									]
-								}
-							};
-						}
-					}
-						
 				},
 				error: function(jqXHR, textStatus, errorThrown) {
 					clearErrorMessage();

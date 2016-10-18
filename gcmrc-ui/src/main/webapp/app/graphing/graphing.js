@@ -5,6 +5,8 @@ GCMRC.Graphing = function(hoursOffset) {
 	var blockHighlight = false;
 
 	var graphs = {};
+	
+	var durationCurves = {};
 
 	var isResizeListenerAttached = false;
 
@@ -50,7 +52,19 @@ GCMRC.Graphing = function(hoursOffset) {
 		var parameterMetadata = GCMRC.Page.params[identifier].description;
 		var graphName = parameterMetadata['displayName'];
 		
-		conf.labels = [percColumn];
+		var relevantData = data.success.data.filter(function(o){return o.groupId.toString() === graphToMake;})[0].points;
+		var displayData = new Array();
+		
+		relevantData.forEach(function(point){
+			var xVal = parseFloat(point.cumulativeBinPerc);
+			var yVal = parseFloat(point.binValue);
+						
+			displayData.push([xVal, [yVal, yVal, yVal]]);
+		});
+		
+		displayData.reverse();
+				
+		conf.labels = [percColumn, "Other"];
 		
 		conf['yAxisLabel'] = graphToMake.yAxisLabel || graphName;
 		conf['dataformatter'] = GCMRC.Dygraphs.DataFormatter(parameterMetadata['decimalPlaces']);
@@ -58,11 +72,13 @@ GCMRC.Graphing = function(hoursOffset) {
 		conf["parameterName"] = identifier;
 		conf["div"] = $('#' + conf.divId + ' div.duration-plot-' + identifier).get(0);
 		conf["labelDiv"] = $('#' + conf.labelDivId + ' div.duration-plot-' + identifier).get(0);
-		conf["colors"] = [];
+		conf["colors"] = ["#71be6e"];
 		conf["highlightColor"] = {};
+				
+		conf["data"] = displayData;
 		
-		conf["series"] = {};
-
+		conf["series"] = "Gage Height";
+		
 		buildGraph(conf);
 	};
 	
@@ -363,7 +379,7 @@ GCMRC.Graphing = function(hoursOffset) {
 			},
 			width: graphWidth,
 			height: 420,
-			xlabel: 'Time',
+			xlabel: 'Percentage',
 			ylabel: yAxisLabel,
 			axisLabelWidth: 85,
 			yAxisLabelWidth: 85,
@@ -371,6 +387,7 @@ GCMRC.Graphing = function(hoursOffset) {
 			xAxisHeight: 50,
 			axes: axes,
 			yRangePad: 5,
+			pointSize: 4,
 //			includeZero: true,
 			labels: labels,
 			//To be used in "fixed" legend
@@ -383,31 +400,19 @@ GCMRC.Graphing = function(hoursOffset) {
 			strokeWidth: 2,
 			pixelsPerTimeLabel : 95,
 			ticker: GCMRC.Dygraphs.ScaledTicker(decimalPlaces),
+			plotter: GCMRC.Dygraphs.DotPlotter,
 			drawHighlightPointCallback: lighterColorHighlightPoint,
 			customBars: true,
 			drawPoints: true,
 			stackedGraph: false,
 			colors: confColors,
-			drawCallback: function(me, initial) {
-				if (blockRedraw || initial)
-					return;
-				blockRedraw = true;
-				var range = me.xAxisRange();
-				$.each(graphs[containerId], function(key, val) {
-					if (val !== me) {
-						val.updateOptions({
-							dateWindow: range
-						});
-					}
-				});
-				blockRedraw = false;
-			},
+			
 			highlightCallback: function(event, x, points, row, seriesName) {
 				if (blockHighlight) {
 					return;
 				}
 				blockHighlight = true;
-				$.each(graphs[containerId], function(key, graph) {
+				$.each(durationCurves[containerId], function(key, graph) {
 					graph.setSelection(row);
 					var canvasx;
 					if (graph && graph.selPoints_.length > 0 && graph.selPoints_[0]) {
@@ -432,7 +437,7 @@ GCMRC.Graphing = function(hoursOffset) {
 					return;
 				}
 				blockHighlight = true;
-				$.each(graphs[containerId], function(key, val) {
+				$.each(durationCurves[containerId], function(key, val) {
 					val.clearSelection();
 				});
 				blockHighlight = false;
@@ -443,7 +448,7 @@ GCMRC.Graphing = function(hoursOffset) {
 			opts.series = config.series.clone();
 		}
 		
-		graphs[containerId][parameterName] = new Dygraph(
+		durationCurves[containerId][parameterName] = new Dygraph(
 				div,
 				data,
 				opts
@@ -520,6 +525,7 @@ GCMRC.Graphing = function(hoursOffset) {
 
 	return {
 		graphs: graphs,
+		durationCurves: durationCurves,
 		urls: urls,
 		isResizeListenerAttached : isResizeListenerAttached,
 		showInfoMsg : showInfoMessage,
@@ -569,6 +575,12 @@ GCMRC.Graphing = function(hoursOffset) {
 								});
 							}
 							
+							if (durationCurves[config.divId]) {
+								durationCurves[config.divId].values(function(el) {
+									el.destroy();
+								});
+							}
+							
 							/*
 							 * Clean out and repopulated the container/graph divs
 							 * for the correct display order
@@ -590,6 +602,7 @@ GCMRC.Graphing = function(hoursOffset) {
 							});
 																					
 							graphs[config.divId] = {};
+							durationCurves[config.divId] = {};
 							
 							config.graphsToMake.forEach(function(graphToMake) {
 								//Find the div for the current chart
@@ -611,7 +624,7 @@ GCMRC.Graphing = function(hoursOffset) {
 							});
 							
 							//Build Duration Curve Plots
-							//createDurationCurvePlot('durationCurve', config.durationCurveConf, config.durationCurveParams);
+							createDurationCurvePlot('durationCurve', config.durationCurveConf, config.durationCurveParams);
 							
 						} else if (data.data && data.data.ERROR) {
 							clearErrorMessage();

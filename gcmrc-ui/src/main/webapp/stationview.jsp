@@ -220,12 +220,6 @@
 						<div id="viz" class="innerRightSidebar">
 							<div class="sectionTitle">Data</div>
 							<div class="rightSidebarText">
-								<div onselectstart="return false" class="curveSelectButton">
-									<input class="curve-select" type="radio" id="chart-view-input" name="toggle-curve" checked="checked" value="chart"/>
-									<label for="chart-view-input" id="chart-view-label">Time Series Plot</label>
-									<input class="curve-select" type="radio" id="curve-view-input" name="toggle-curve" value="curve"/>
-									<label for="curve-view-input" id="curve-view-label">Duration Curve Plot</label>
-								</div>
 								<div id="errorMsg"></div>
 								<div id="infoMsg">
 									To visualize data in a graph, please select parameters from the left as well as a date range from above.

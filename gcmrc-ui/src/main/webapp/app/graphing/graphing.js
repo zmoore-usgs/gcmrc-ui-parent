@@ -7,6 +7,10 @@ GCMRC.Graphing = function(hoursOffset) {
 	var graphs = {};
 	
 	var durationCurves = {};
+	
+	var toggleSwitches = {};
+	
+	var durationCurveConfiguration = {};
 
 	var isResizeListenerAttached = false;
 
@@ -44,42 +48,48 @@ GCMRC.Graphing = function(hoursOffset) {
 	};
 	
 	var dealWithDurationCurveResponse = function(graphToMake, data, config, buildGraph) {
-		
-		var percColumn = "cumulativeBinPerc";
 		var conf = $.extend({}, config);		
-		
 		var identifier = graphToMake;
 		var parameterMetadata = GCMRC.Page.params[identifier].description;
 		var graphName = parameterMetadata['displayName'];
+		var hasData = false;
 		
 		var relevantData = data.success.data.filter(function(o){return o.groupId.toString() === graphToMake;})[0].points;
 		var displayData = new Array();
 		
-		relevantData.forEach(function(point){
-			var xVal = parseFloat(point.cumulativeBinPerc);
-			var yVal = parseFloat(point.binValue);
-						
-			displayData.push([xVal, [yVal, yVal, yVal]]);
-		});
+		if(Array.isArray(relevantData) && relevantData.length > 0){
+			hasData = true;
+		}
 		
-		displayData.reverse();
-				
-		conf.labels = [percColumn, "Other"];
-		
-		conf['yAxisLabel'] = graphToMake.yAxisLabel || graphName;
-		conf['dataformatter'] = GCMRC.Dygraphs.DataFormatter(parameterMetadata['decimalPlaces']);
-		conf['decimalPlaces'] = parameterMetadata['decimalPlaces'];
-		conf["parameterName"] = identifier;
-		conf["div"] = $('#' + conf.divId + ' div.duration-plot-' + identifier).get(0);
-		conf["labelDiv"] = $('#' + conf.labelDivId + ' div.duration-plot-' + identifier).get(0);
-		conf["colors"] = ["#71be6e"];
-		conf["highlightColor"] = {};
-				
-		conf["data"] = displayData;
-		
-		conf["series"] = "Gage Height";
-		
-		buildGraph(conf);
+		if (hasData) {
+			relevantData.forEach(function(point){
+				var xVal = parseFloat(point.cumulativeBinPerc);
+				var yVal = parseFloat(point.binValue);
+
+				displayData.push([xVal, [yVal, yVal, yVal]]);
+			});
+
+			displayData.reverse();
+
+			conf.labels = ["Percentage", "Bin Value"];
+
+			conf['yAxisLabel'] = graphToMake.yAxisLabel || graphName;
+			conf['dataformatter'] = GCMRC.Dygraphs.DataFormatter(parameterMetadata['decimalPlaces']);
+			conf['decimalPlaces'] = parameterMetadata['decimalPlaces'];
+			conf["parameterName"] = identifier;
+			conf["div"] = $('#' + conf.divId + ' div.duration-plot-' + identifier).get(0);
+			conf["labelDiv"] = $('#' + conf.labelDivId + ' div.duration-plot-' + identifier).get(0);
+			conf["colors"] = durationCurveConfiguration.identifier.colors;
+			conf["highlightColor"] = durationCurveConfiguration.identifier.highlightColor.values()[0];
+			conf["data"] = displayData;
+			
+			//Show relevant duration curve toggle switch
+			$('.toggle-switch-'+identifier).show();
+			
+			buildGraph(conf);
+		} else {
+			showInfoMessage("#" + conf.divId + ' div.duration-plot-' + identifier, "There were no duration curve data during this period for " + graphName);
+		}
 	};
 	
 	var dealWithResponse = function(graphToMake, data, config, buildGraph) {
@@ -169,10 +179,13 @@ GCMRC.Graphing = function(hoursOffset) {
 				var idiot = ("inst" === param.sampleMethod) ? param.displayName : param.sampleMethod;
 				this[idiot] = param.series;
 			}, conf["series"]);
+			
+			//Save Configuration so Duration Curve Plots can access it
+			durationCurveConfiguration.identifier = conf;
 
 			buildGraph(conf);
 		} else {
-			showInfoMessage("#" + conf.divId + ' div.p' + identifier, "There were no data during this period for " + graphName);
+			showInfoMessage("#" + conf.divId + ' div.timeseries-plot-' + identifier, "There were no data during this period for " + graphName);
 		}
 
 	};
@@ -335,7 +348,8 @@ GCMRC.Graphing = function(hoursOffset) {
 //		var labelDiv = config.labelDiv;
 		
 		var labels = config['labels'];
-				
+		
+		div.style.display = "inline-block";
 		div.style.margin = "4px";
 
 		var data = config['data'];
@@ -363,7 +377,7 @@ GCMRC.Graphing = function(hoursOffset) {
 		};
 
 		var lighterColorHighlightPoint = function(g, name, ctx, canvasx, canvasy, color, radius) {
-			var lighterColor = highlightColor[name] || color;
+			var lighterColor = highlightColor;
 			ctx.beginPath();
 			ctx.fillStyle = lighterColor;
 			ctx.arc(canvasx, canvasy, radius, 0, 2 * Math.PI, false);
@@ -387,14 +401,15 @@ GCMRC.Graphing = function(hoursOffset) {
 			xAxisHeight: 50,
 			axes: axes,
 			yRangePad: 5,
-			pointSize: 4,
+			pointSize: 2,
 //			includeZero: true,
 			labels: labels,
 			//To be used in "fixed" legend
 //			labelsDiv: labelDiv,
 //			labelsSeparateLines: true,
 //			legend: 'always',
-			showRangeSelector: true,
+			originalDateWindow: null,
+			showRangeSelector: false,
 			connectSeparatedPoints: false,
 			highlightCircleSize: 4,
 			strokeWidth: 2,
@@ -406,7 +421,6 @@ GCMRC.Graphing = function(hoursOffset) {
 			drawPoints: true,
 			stackedGraph: false,
 			colors: confColors,
-			
 			highlightCallback: function(event, x, points, row, seriesName) {
 				if (blockHighlight) {
 					return;
@@ -482,7 +496,13 @@ GCMRC.Graphing = function(hoursOffset) {
 						config.graphsToMake.forEach(function(graphToMake) {
 							//Build Plot
 							dealWithDurationCurveResponse(graphToMake, data, config, buildDurationCurve);
-						});							
+						});
+						
+						//Hide Duration Curve Plots after building because TS Plots are the default
+						$('div[class^="duration-plot"]').hide();
+
+						//Show the Time Series Plots and toggle switches after everything is done building because they're default
+						$('div[class^="timeseries-plot"]').show();
 					} else if (data.data && data.data.ERROR) {
 						clearErrorMessage();
 						showErrorMessage("Please select a parameter to graph!");
@@ -515,7 +535,7 @@ GCMRC.Graphing = function(hoursOffset) {
 	};
 	
 	var createDurationCurveToggle = function(chartId) {
-		return '<div onselectstart="return false" class="curveSelectButton" style="display: inline-block;">' +
+		return '<div onselectstart="return false" class="curveSelectButton toggle-switch-' + chartId + '" style="display: inline-block;">' +
 					'<input class="curve-select" type="radio" id="chart-view-input-' + chartId + '" name="toggle-curve-' + chartId + '" checked="checked" value="chart">' +
 					'<label for="chart-view-input-' + chartId + '" class="chart-view-label">Time Series Plot</label>' +
 					'<input class="curve-select" type="radio" id="curve-view-input-' + chartId + '" name="toggle-curve-' + chartId + '" value="curve">' +
@@ -603,7 +623,7 @@ GCMRC.Graphing = function(hoursOffset) {
 																					
 							graphs[config.divId] = {};
 							durationCurves[config.divId] = {};
-							
+														
 							config.graphsToMake.forEach(function(graphToMake) {
 								//Find the div for the current chart
 								var div = plotDivs.filter(function(obj){
@@ -623,9 +643,12 @@ GCMRC.Graphing = function(hoursOffset) {
 								}
 							});
 							
-							//Build Duration Curve Plots
-							createDurationCurvePlot('durationCurve', config.durationCurveConf, config.durationCurveParams);
+							//Hide TS plots and toggle switches after they've built until the duration curve plots are finished building.
+							$('div[class^="timeseries-plot"]').hide();
+							$('.curveSelectButton').hide();
 							
+							//Build Duration Curve Plots. Note: Non-blocking function because of AJAX call.
+							createDurationCurvePlot('durationCurve', config.durationCurveConf, config.durationCurveParams);
 						} else if (data.data && data.data.ERROR) {
 							clearErrorMessage();
 							showErrorMessage("Please select a parameter to graph!");

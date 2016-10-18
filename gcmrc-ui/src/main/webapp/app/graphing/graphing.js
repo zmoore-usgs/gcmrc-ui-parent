@@ -8,8 +8,6 @@ GCMRC.Graphing = function(hoursOffset) {
 	
 	var durationCurves = {};
 	
-	var toggleSwitches = {};
-	
 	var durationCurveConfiguration = {};
 
 	var isResizeListenerAttached = false;
@@ -409,7 +407,7 @@ GCMRC.Graphing = function(hoursOffset) {
 //			labelsSeparateLines: true,
 //			legend: 'always',
 			originalDateWindow: null,
-			showRangeSelector: false,
+			showRangeSelector: true,
 			connectSeparatedPoints: false,
 			highlightCircleSize: 4,
 			strokeWidth: 2,
@@ -425,25 +423,31 @@ GCMRC.Graphing = function(hoursOffset) {
 				if (blockHighlight) {
 					return;
 				}
+								
 				blockHighlight = true;
-				$.each(durationCurves[containerId], function(key, graph) {
-					graph.setSelection(row);
-					var canvasx;
-					if (graph && graph.selPoints_.length > 0 && graph.selPoints_[0]) {
-						canvasx = graph.selPoints_[0].canvasx;
-					} else {
-						//if no selected point?  TODO, is this needed now that we interpolate?
-						if (points && points.length > 0 && points[0]) { 
-							canvasx = points[0].canvasx;
-						} else {
-							var canvasCoords = graph.eventToDomCoords(event);
-							canvasx = canvasCoords[0];
-						}
-					}
+				var graph = durationCurves[containerId][parameterName];
+				
+				if(!graph){
+					return;
+				}
+										
+				graph.setSelection(row);
+				var canvasx;
+				if (graph && graph.selPoints_.length > 0 && graph.selPoints_[0]) {
+					canvasx = graph.selPoints_[0].canvasx;
 					var ctx = graph.canvas_ctx_;
 					ctx.fillStyle = '#FF0000';
 					ctx.fillRect(canvasx - 0.5, 0, 1, graph.height_);
-				});
+				} else {
+					//if no selected point?  TODO, is this needed now that we interpolate?
+					if (points && points.length > 0 && points[0]) { 
+						canvasx = points[0].canvasx;
+					} else {
+						var canvasCoords = graph.eventToDomCoords(event);
+						canvasx = canvasCoords[0];
+					}
+				}
+				
 				blockHighlight = false;
 			},
 			unhighlightCallback: function(event, x, points, row, seriesName) {
@@ -470,6 +474,8 @@ GCMRC.Graphing = function(hoursOffset) {
 	};
 	
 	var createDurationCurvePlot = function(param, config, urlParams) {
+		urlParams.groupId = config.graphsToMake;
+		
 		$.ajax({
 			jsonp: "jsonp_callback",
 			dataType: 'jsonp',
@@ -600,13 +606,13 @@ GCMRC.Graphing = function(hoursOffset) {
 									el.destroy();
 								});
 							}
-							
+														
 							/*
 							 * Clean out and repopulated the container/graph divs
 							 * for the correct display order
 							 */
 							containerDiv.empty();
-							labelDiv.empty();
+							labelDiv.empty();							
 							
 							//Store individual chart divs for later populating with duration curve toggle
 							var plotDivs = new Array();
@@ -623,6 +629,7 @@ GCMRC.Graphing = function(hoursOffset) {
 																					
 							graphs[config.divId] = {};
 							durationCurves[config.divId] = {};
+							durationCurveConfiguration[config.divId] = {};
 														
 							config.graphsToMake.forEach(function(graphToMake) {
 								//Find the div for the current chart
@@ -646,6 +653,11 @@ GCMRC.Graphing = function(hoursOffset) {
 							//Hide TS plots and toggle switches after they've built until the duration curve plots are finished building.
 							$('div[class^="timeseries-plot"]').hide();
 							$('.curveSelectButton').hide();
+							
+							//Build List of Graphs that Populated and thus should have duration curves
+							var durationCurveIds = graphs[config.divId].keys();
+							
+							config.durationCurveConf.graphsToMake = durationCurveIds;
 							
 							//Build Duration Curve Plots. Note: Non-blocking function because of AJAX call.
 							createDurationCurvePlot('durationCurve', config.durationCurveConf, config.durationCurveParams);

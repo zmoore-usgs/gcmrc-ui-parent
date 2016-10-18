@@ -272,17 +272,6 @@ GCMRC.Page = {
 		});
 		return result;
 	},
-	getExpectedDurationCurveColumns : function() {
-		var result = [];
-		var chosenParameters = $('.parameterListing input:checkbox:checked');
-		result = $.map(chosenParameters, function(el, i) {
-			var result = [];
-
-			result.push(el.name);
-			return result;
-		});
-		return result;
-	},
 	getExpectedDownloadColumns : function() {
 		var expectedGraphColumns = GCMRC.Page.getExpectedGraphColumns();
 		var result = expectedGraphColumns.filter(function(el) {
@@ -385,8 +374,7 @@ GCMRC.Page = {
 					endTime: end,
 					binCount: 200,
 					binType: "lin",
-					siteId: CONFIG.stationName,
-					groupId: GCMRC.Page.getExpectedDurationCurveColumns()
+					siteId: CONFIG.stationName
 				};
 
 				var aggTime = GCMRC.Page.checkIfAgg(serviceOptions);
@@ -405,7 +393,6 @@ GCMRC.Page = {
 							durationCurveConf: {
 								divId: 'data-dygraph',
 								labelDivId: 'legend-duration-curve',
-								graphsToMake: GCMRC.Page.getExpectedDurationCurveColumns(),
 								dateWindow : [beginMillis, endMillis]
 							},
 							dateWindow : [beginMillis, endMillis]

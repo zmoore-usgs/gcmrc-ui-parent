@@ -368,6 +368,14 @@ GCMRC.Page = {
 					noDataFilter: 'true',
 					useLagged: 'true'
 				};
+				
+				var durationCurveOptions = {
+					startTime: begin,
+					endTime: end,
+					binCount: 200,
+					binType: "both",
+					siteId: CONFIG.stationName
+				};
 
 				var aggTime = GCMRC.Page.checkIfAgg(serviceOptions);
 
@@ -381,6 +389,12 @@ GCMRC.Page = {
 							divId: 'data-dygraph',
 							labelDivId: 'legend-dygraph',
 							graphsToMake : expectedGraphColumns,
+							durationCurveParams: durationCurveOptions,
+							durationCurveConf: {
+								divId: 'data-dygraph',
+								labelDivId: 'legend-duration-curve',
+								dateWindow : [beginMillis, endMillis]
+							},
 							dateWindow : [beginMillis, endMillis]
 						},
 				serviceOptions);
@@ -437,6 +451,64 @@ GCMRC.Page = {
 		}
 
 		container.append(result.join(""));
+	},
+	toggleDurationCurve : function(event) {
+		switch(event.target.value){
+			case "chart":
+				$(event.target).parent().siblings('.scaleSelectButton').hide();
+				$(event.target).parent().siblings("div[class*=duration-plot-][class*=selected-duration-scale]").hide();
+				$(event.target).parent().siblings("div[class^=timeseries-plot-]").show();
+				break;
+			case "curve":
+				$(event.target).parent().siblings('.scaleSelectButton').show();
+				$(event.target).parent().siblings("div[class*=duration-plot-][class*=selected-duration-scale]").show();
+				$(event.target).parent().siblings("div[class^=timeseries-plot-]").hide();
+				break;
+		}
+		
+		var id = parseInt(event.target.id.substring(event.target.id.length-1));
+		
+		if(id){
+			GCMRC.Page.redrawGraphs(id);
+		}
+	},
+	toggleDurationCurveScale : function(event) {
+		switch(event.target.value){
+			case "log":
+				$(event.target).parent().siblings("div[class*=duration-plot-][id=lin]").removeClass("selected-duration-scale").hide();
+				$(event.target).parent().siblings("div[class*=duration-plot-][id=log]").addClass("selected-duration-scale").show();
+				break;
+			case "lin":
+				$(event.target).parent().siblings("div[class*=duration-plot-][id=lin]").addClass("selected-duration-scale").show();
+				$(event.target).parent().siblings("div[class*=duration-plot-][id=log]").removeClass("selected-duration-scale").hide();
+				break;
+		}
+		
+		var id = parseInt(event.target.id.substring(event.target.id.length-1));
+		
+		if(id){
+			GCMRC.Page.redrawGraphs(id);
+		}
+	},
+	redrawGraphs : function(id) {
+		var graphs = new Array();
+		
+		graphs.push(GCMRC.Graphing.graphs['data-dygraph'][id]);
+		graphs.push(GCMRC.Graphing.durationCurves['data-dygraph']['log'][id]);
+		graphs.push(GCMRC.Graphing.durationCurves['data-dygraph']['lin'][id]);
+				
+		graphs.forEach(function(graph){
+			if(graph){
+				graph.updateOptions({
+					//width: $('#data-dygraph').width() - 15
+				});
+				graph.resize();
+			}
+		});
+		
+		var evt = document.createEvent('UIEvents');
+		evt.initUIEvent('resize', true, false,window,0);
+		window.dispatchEvent(evt);
 	},
 	downloadPopupClicked : function() {
 		var begin = $("input[name='beginPosition']").val();

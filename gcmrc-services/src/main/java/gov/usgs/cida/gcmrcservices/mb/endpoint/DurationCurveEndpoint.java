@@ -3,7 +3,7 @@ package gov.usgs.cida.gcmrcservices.mb.endpoint;
 import gov.usgs.cida.gcmrcservices.mb.dao.DurationCurveDAO;
 import gov.usgs.cida.gcmrcservices.mb.endpoint.response.ResponseEnvelope;
 import gov.usgs.cida.gcmrcservices.mb.endpoint.response.SuccessResponse;
-import gov.usgs.cida.gcmrcservices.mb.model.DurationCurvePoint;
+import gov.usgs.cida.gcmrcservices.mb.model.DurationCurve;
 import java.util.ArrayList;
 import java.util.List;
 import javax.ws.rs.GET;
@@ -29,9 +29,10 @@ public class DurationCurveEndpoint {
 	@GET
 	@JSONP(queryParam="jsonp_callback")
 	@Produces("application/javascript")
-	public SuccessResponse<DurationCurvePoint> getDurationCurve(@QueryParam("siteId") int siteId, @QueryParam("startTime") String startTime, @QueryParam("endTime") String endTime, @QueryParam("groupId") int groupId, @QueryParam("binCount") int binCount, @QueryParam("binType") String binType) {
-		SuccessResponse<DurationCurvePoint> result = null;
-		List<DurationCurvePoint> durationCurve = new ArrayList<>();
+	public SuccessResponse<DurationCurve> getDurationCurve(@QueryParam("siteId") int siteId, @QueryParam("startTime") String startTime, @QueryParam("endTime") String endTime, @QueryParam("binCount") int binCount, @QueryParam("binType") String binType, @QueryParam(value = "groupId[]") final List<Integer> groupIds) {
+		SuccessResponse<DurationCurve> result = null;
+		List<DurationCurve> durationCurves = new ArrayList<>();
+		ArrayList<String> binTypes = new ArrayList<>();
 		
 		if(binCount > MAX_BINS){
 			log.error("Too many bins: " + binCount + " (Max: " + MAX_BINS + ")");
@@ -39,22 +40,29 @@ public class DurationCurveEndpoint {
 		}
 		
 		if(binType!= null && binType.equalsIgnoreCase("log")){
-			binType = "LOG_BINS";
+			binTypes.add("LOG_BINS");
 		} else if(binType!= null && binType.equalsIgnoreCase("lin")){
-			binType = "LIN_BINS";
+			binTypes.add("LIN_BINS");
+		} else if(binType != null && binType.equalsIgnoreCase("both")){
+			binTypes.add("LOG_BINS");
+			binTypes.add("LIN_BINS");
 		} else {
-			log.error("Invalid bin type: '" + binType + "' (Valid: 'lin' or 'log')");
-			throw new WebApplicationException(Response.status(Status.BAD_REQUEST).type("text/plain").entity("Invalid bin type: '" + binType + "' (Valid: 'lin' or 'log')").build());
+			log.error("Invalid bin type: '" + binType + "' (Valid: 'lin' or 'log' or 'both')");
+			throw new WebApplicationException(Response.status(Status.BAD_REQUEST).type("text/plain").entity("Invalid bin type: '" + binType + "' (Valid: 'lin' or 'log' or 'both')").build());
+		}
+				
+		for(String selectedBinType : binTypes){
+			for(int groupId : groupIds){
+				try {
+					durationCurves.add(new DurationCurve(new DurationCurveDAO().getDurationCurve(siteId, startTime, endTime, groupId, binCount, selectedBinType), groupId, selectedBinType));
+				} catch (Exception e) {
+					log.error("Could not get duration curve for groupId: " + groupId + " with binType: " + selectedBinType, e);
+					throw new WebApplicationException(Response.status(Status.INTERNAL_SERVER_ERROR).type("text/plain").entity("Unable to get duration curve for the specified parameters (failure on groupId: " + groupId + " with binType: " + selectedBinType + ".\n\nError: " + e.getMessage()).build());
+				}
+			}
 		}
 		
-		try {
-			durationCurve = new DurationCurveDAO().getDurationCurve(siteId, startTime, endTime, groupId, binCount, binType);
-		} catch (Exception e) {
-			log.error("Could not get duration curve!", e);
-			throw new WebApplicationException(Response.status(Status.INTERNAL_SERVER_ERROR).type("text/plain").entity("Unable to get duration curve for the specified parameters.\n\nError: " + e.getMessage()).build());
-		}
-		
-		result = new SuccessResponse<>(new ResponseEnvelope<>(durationCurve));
+		result = new SuccessResponse<>(new ResponseEnvelope<>(durationCurves));
 		
 		return result;
 	}

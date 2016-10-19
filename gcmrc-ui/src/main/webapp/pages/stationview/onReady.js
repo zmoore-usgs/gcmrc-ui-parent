@@ -24,6 +24,9 @@ $(document).ready(function() {
 	GCMRC.Page.createMiniMap({stationName: CONFIG.stationName});
 
 	$('#buildGraph').click(GCMRC.Page.buildGraphClicked);
+	
+	$('input[name^="toggle-curve-"]').live('change', GCMRC.Page.toggleDurationCurve);
+	$('input[name^="toggle-scale-"]').live('change', GCMRC.Page.toggleDurationCurveScale);
 
 	$('#bedSedimentDownloadButton').click(GCMRC.Page.downloadBedSedimentClicked);
 	$('#physicalDownloadButton').click(GCMRC.Page.downloadSamplesClicked);
@@ -52,7 +55,9 @@ $(document).ready(function() {
 
 	$('#loading').ajaxStart(function() {
 		$(this).show();
+		$('.buildButton').addClass("disabled");
 	}).ajaxStop(function() {
 		$(this).hide();
+		$('.buildButton').removeClass("disabled");
 	});
 });

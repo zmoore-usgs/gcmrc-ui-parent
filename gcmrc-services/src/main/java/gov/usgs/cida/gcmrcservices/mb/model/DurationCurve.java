@@ -1,22 +1,20 @@
 package gov.usgs.cida.gcmrcservices.mb.model;
 
 import java.util.List;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  *
- * @author dmsibley, zmoore
+ * @author zmoore
  */
-public class DurationCurve {
-	private static final Logger log = LoggerFactory.getLogger(DurationCurve.class);
-	
+public class DurationCurve {	
 	private List<DurationCurvePoint> points;
 	private int groupId;
+	private String binType;
 
-	public DurationCurve(List<DurationCurvePoint> pts, int id) {
+	public DurationCurve(List<DurationCurvePoint> pts, int id, String bin) {
 		points = pts;
 		groupId = id;
+		binType = bin;
 	}
 	
 	public List<DurationCurvePoint> getPoints() {
@@ -25,6 +23,10 @@ public class DurationCurve {
 	
 	public int getGroupId() {
 		return groupId;
+	}
+	
+	public String getBinType() {
+		return binType;
 	}
 
 }

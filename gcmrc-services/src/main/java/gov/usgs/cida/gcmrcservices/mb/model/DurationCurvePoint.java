@@ -1,14 +1,10 @@
 package gov.usgs.cida.gcmrcservices.mb.model;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 /**
  *
- * @author dmsibley, zmoore
+ * @author zmoore
  */
 public class DurationCurvePoint {
-	private static final Logger log = LoggerFactory.getLogger(DurationCurvePoint.class);
 	
 	private String binNumber;
 	private String cumulativeBinPerc;

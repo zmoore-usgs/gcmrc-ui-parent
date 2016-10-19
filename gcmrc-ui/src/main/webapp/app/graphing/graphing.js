@@ -673,7 +673,7 @@ GCMRC.Graphing = function(hoursOffset) {
 								plotDivs.push({"div": plotDiv, "groupId": el});
 								labelDiv.append($('<div class="timeseries-plot-' + el +'"></div><div class="duration-plot-' + el +'"></div>'));
 							});
-																					
+							
 							graphs[config.divId] = {};
 							durationCurves[config.divId] = {};
 							durationCurveConfiguration[config.divId] = {};

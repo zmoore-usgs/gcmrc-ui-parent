@@ -465,6 +465,12 @@ GCMRC.Page = {
 				$(event.target).parent().siblings("div[class^=timeseries-plot-]").hide();
 				break;
 		}
+		
+		var id = parseInt(event.target.id.substring(event.target.id.length-1));
+		
+		if(id){
+			GCMRC.Page.redrawGraphs(id);
+		}
 	},
 	toggleDurationCurveScale : function(event) {
 		switch(event.target.value){
@@ -477,6 +483,34 @@ GCMRC.Page = {
 				$(event.target).parent().siblings("div[class*=duration-plot-][id=log]").removeClass("selected-duration-scale").hide();
 				break;
 		}
+		
+		var id = parseInt(event.target.id.substring(event.target.id.length-1));
+		
+		if(id){
+			GCMRC.Page.redrawGraphs(id);
+		}
+	},
+	redrawGraphs : function(id) {
+		var graphs = new Array();
+		
+		graphs.push(GCMRC.Graphing.graphs.filter(function(obj){
+			return obj.groupId == id;
+		}));
+		
+		graphs.push(GCMRC.Graphing.durationCurves.filter(function(obj){
+			return obj.groupId == id;
+		}));
+				
+		graphs.forEach(function(graph){
+			graphs.updateOptions({
+				width: $('#data-dygraph').width() - 15
+			});
+			graph.resize();
+		});
+		
+		var evt = document.createEvent('UIEvents');
+		evt.initUIEvent('resize', true, false,window,0);
+		window.dispatchEvent(evt);
 	},
 	downloadPopupClicked : function() {
 		var begin = $("input[name='beginPosition']").val();

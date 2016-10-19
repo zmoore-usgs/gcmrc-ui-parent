@@ -55,9 +55,9 @@ $(document).ready(function() {
 
 	$('#loading').ajaxStart(function() {
 		$(this).show();
-		$('.buildButton').prop("disabled",true);
+		$('.buildButton').addClass("disabled");
 	}).ajaxStop(function() {
 		$(this).hide();
-		$('.buildButton').prop("disabled",false);
+		$('.buildButton').removeClass("disabled");
 	});
 });

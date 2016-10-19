@@ -379,7 +379,8 @@ GCMRC.Graphing = function(hoursOffset) {
 			x: {
 				axisLabelFormatter: GCMRC.Dygraphs.DataFormatter(0),
 				valueFormatter: GCMRC.Dygraphs.DataFormatter(0),
-				pixelsPerLabel: 50
+				pixelsPerLabel: 50,
+				logscale: false
 			}
 		};
 
@@ -391,7 +392,11 @@ GCMRC.Graphing = function(hoursOffset) {
 			ctx.fill();
 		};
 		
-		var graphWidth = $('#' + containerId).width() - 15;//TODO add $(window).resize() listener
+		var graphWidth = $('#' + containerId).width() - 15;
+		
+		//TODO add $(window).resize() listener
+		//Note: This listener will also need to temporarily show and then hide 
+		//the divs for all plots for resizing to work correctly
 		
 		var opts = {
 			title: title,
@@ -399,6 +404,7 @@ GCMRC.Graphing = function(hoursOffset) {
 				'textAlign': 'right'
 			},
 			width: graphWidth,
+			logscale: logScale,
 			height: 420,
 			xlabel: 'Percentage',
 			ylabel: yAxisLabel,
@@ -411,7 +417,6 @@ GCMRC.Graphing = function(hoursOffset) {
 			pointSize: 2,
 //			includeZero: true,
 			labels: labels,
-			logscale: logScale,
 			//To be used in "fixed" legend
 //			labelsDiv: labelDiv,
 //			labelsSeparateLines: true,
@@ -429,6 +434,27 @@ GCMRC.Graphing = function(hoursOffset) {
 			drawPoints: true,
 			stackedGraph: false,
 			colors: confColors,
+			drawCallback: function(me, initial) {
+				if (blockRedraw || initial)
+					return;
+				blockRedraw = true;
+				var range = me.xAxisRange();
+				$.each(durationCurves[containerId]["lin"], function(key, val) {
+					if (val !== me) {
+						val.updateOptions({
+							dateWindow: range
+						});
+					}
+				});
+				$.each(durationCurves[containerId]["log"], function(key, val) {
+					if (val !== me) {
+						val.updateOptions({
+							dateWindow: range
+						});
+					}
+				});
+				blockRedraw = false;
+			},
 			highlightCallback: function(event, x, points, row, seriesName) {
 				if (blockHighlight) {
 					return;

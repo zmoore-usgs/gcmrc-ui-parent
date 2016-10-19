@@ -373,7 +373,7 @@ GCMRC.Page = {
 					startTime: begin,
 					endTime: end,
 					binCount: 200,
-					binType: "lin",
+					binType: "both",
 					siteId: CONFIG.stationName
 				};
 
@@ -469,12 +469,12 @@ GCMRC.Page = {
 	toggleDurationCurveScale : function(event) {
 		switch(event.target.value){
 			case "log":
-				$(event.target).parent().siblings("div[class*=duration-plot-][id=lin]").removeClass("selected-duration-scale");
-				$(event.target).parent().siblings("div[class*=duration-plot-][id=log]").addClass("selected-duration-scale");
+				$(event.target).parent().siblings("div[class*=duration-plot-][id=lin]").removeClass("selected-duration-scale").hide();
+				$(event.target).parent().siblings("div[class*=duration-plot-][id=log]").addClass("selected-duration-scale").show();
 				break;
 			case "lin":
-				$(event.target).parent().siblings("div[class*=duration-plot-][id=lin]").addClass("selected-duration-scale");
-				$(event.target).parent().siblings("div[class*=duration-plot-][id=log]").removeClass("selected-duration-scale");
+				$(event.target).parent().siblings("div[class*=duration-plot-][id=lin]").addClass("selected-duration-scale").show();
+				$(event.target).parent().siblings("div[class*=duration-plot-][id=log]").removeClass("selected-duration-scale").hide();
 				break;
 		}
 	},

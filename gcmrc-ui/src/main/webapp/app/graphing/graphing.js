@@ -45,36 +45,26 @@ GCMRC.Graphing = function(hoursOffset) {
 				isNaN(x));
 	};
 	
-	var dealWithDurationCurveResponse = function(graphToMake, data, config, buildGraph) {
+	var dealWithDurationCurveResponse = function(graphToMake, relevantData, config, buildGraph) {
 		var conf = $.extend({}, config);		
 		var identifier = graphToMake;
 		var parameterMetadata = GCMRC.Page.params[identifier].description;
 		var graphName = parameterMetadata['displayName'];
 		var hasData = false;
-		var relevantData = data.success.data.filter(function(o){return o.groupId.toString() === graphToMake;})[0];
-		var logData = new Array();
-		var linData = new Array();
+		var displayData = new Array();
 		
-		if(Array.isArray(relevantData) && relevantData.length > 0){
+		if(Array.isArray(relevantData.points) && relevantData.points.length > 0){
 			hasData = true;
 		}
 		
 		if (hasData) {
-			relevantData.logPoints.forEach(function(point){
+			relevantData.points.forEach(function(point){
 				var xVal = parseFloat(point.cumulativeBinPerc);
 				var yVal = parseFloat(point.binValue);
-				logData.push([xVal, [yVal, yVal, yVal]]);
+				displayData.push([xVal, [yVal, yVal, yVal]]);
 			});
 			
-			logData.reverse();
-			
-			relevantData.linPoints.forEach(function(point){
-				var xVal = parseFloat(point.cumulativeBinPerc);
-				var yVal = parseFloat(point.binValue);
-				linData.push([xVal, [yVal, yVal, yVal]]);
-			});
-			
-			linData.reverse();
+			displayData.reverse();
 
 			conf.labels = ["Percentage", "Bin Value"];
 
@@ -85,16 +75,16 @@ GCMRC.Graphing = function(hoursOffset) {
 			conf["labelDiv"] = $('#' + conf.labelDivId + ' div.duration-plot-' + identifier).get(0);
 			conf["colors"] = durationCurveConfiguration.identifier.colors;
 			conf["highlightColor"] = durationCurveConfiguration.identifier.highlightColor.values()[0];
+			conf["data"] = displayData;
 			
-			//Logarithmic Plot
-			conf["data"] = logData;
-			conf["div"] = $('#' + conf.divId + ' div.duration-plot-' + identifier).get('[id=log]');
-			buildGraph(conf, true);
-			
-			//Linear Plot
-			conf["data"] = linData;
-			conf["div"] = $('#' + conf.divId + ' div.duration-plot-' + identifier).get('[id=lin]');
-			buildGraph(conf, false);
+			//Logarithmic vs Linear Plots
+			if(relevantData.binType.toUpperCase() === "LOG_BINS"){
+				conf["div"] = $('#' + conf.divId + ' div.duration-plot-' + identifier + '[id=log]').get(0);
+				buildGraph(conf, true);
+			} else {
+				conf["div"] = $('#' + conf.divId + ' div.duration-plot-' + identifier + '[id=lin]').get(0);
+				buildGraph(conf, false);
+			}
 			
 			//Show relevant duration curve toggle switch
 			$('.curveSelectButton.toggle-switch-'+identifier).show();
@@ -360,6 +350,12 @@ GCMRC.Graphing = function(hoursOffset) {
 		
 		var labels = config['labels'];
 		
+		var logScaleParam = logScale ? "log" : "lin";
+		
+		if(!durationCurves[containerId][logScaleParam]){
+			durationCurves[containerId][logScaleParam] = {};
+		}
+		
 		div.style.display = "inline-block";
 		div.style.margin = "4px";
 
@@ -439,7 +435,7 @@ GCMRC.Graphing = function(hoursOffset) {
 				}
 								
 				blockHighlight = true;
-				var graph = durationCurves[containerId][logScale][parameterName];
+				var graph = durationCurves[containerId][logScaleParam][parameterName];
 				
 				if(!graph){
 					return;
@@ -469,7 +465,7 @@ GCMRC.Graphing = function(hoursOffset) {
 					return;
 				}
 				blockHighlight = true;
-				var graph = durationCurves[containerId][logScale][parameterName];
+				var graph = durationCurves[containerId][logScaleParam][parameterName];
 				graph.clearSelection();
 				blockHighlight = false;
 			}
@@ -479,7 +475,7 @@ GCMRC.Graphing = function(hoursOffset) {
 			opts.series = config.series.clone();
 		}
 		
-		durationCurves[containerId][logScale][parameterName] = new Dygraph(
+		durationCurves[containerId][logScaleParam][parameterName] = new Dygraph(
 				div,
 				data,
 				opts
@@ -512,9 +508,9 @@ GCMRC.Graphing = function(hoursOffset) {
 					}
 					//success
 					if (data.success && data.success.data && $.isArray(data.success.data)) {
-						config.graphsToMake.forEach(function(graphToMake) {
+						data.success.data.forEach(function(graph) {
 							//Build Plot
-							dealWithDurationCurveResponse(graphToMake, data, config, buildDurationCurve);
+							dealWithDurationCurveResponse(graph.groupId, graph, config, buildDurationCurve);
 						});
 						
 						//Hide Duration Curve Plots after building because TS Plots are the default

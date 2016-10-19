@@ -51,23 +51,30 @@ GCMRC.Graphing = function(hoursOffset) {
 		var parameterMetadata = GCMRC.Page.params[identifier].description;
 		var graphName = parameterMetadata['displayName'];
 		var hasData = false;
-		
-		var relevantData = data.success.data.filter(function(o){return o.groupId.toString() === graphToMake;})[0].points;
-		var displayData = new Array();
+		var relevantData = data.success.data.filter(function(o){return o.groupId.toString() === graphToMake;})[0];
+		var logData = new Array();
+		var linData = new Array();
 		
 		if(Array.isArray(relevantData) && relevantData.length > 0){
 			hasData = true;
 		}
 		
 		if (hasData) {
-			relevantData.forEach(function(point){
+			relevantData.logPoints.forEach(function(point){
 				var xVal = parseFloat(point.cumulativeBinPerc);
 				var yVal = parseFloat(point.binValue);
-
-				displayData.push([xVal, [yVal, yVal, yVal]]);
+				logData.push([xVal, [yVal, yVal, yVal]]);
 			});
-
-			displayData.reverse();
+			
+			logData.reverse();
+			
+			relevantData.linPoints.forEach(function(point){
+				var xVal = parseFloat(point.cumulativeBinPerc);
+				var yVal = parseFloat(point.binValue);
+				linData.push([xVal, [yVal, yVal, yVal]]);
+			});
+			
+			linData.reverse();
 
 			conf.labels = ["Percentage", "Bin Value"];
 
@@ -75,16 +82,22 @@ GCMRC.Graphing = function(hoursOffset) {
 			conf['dataformatter'] = GCMRC.Dygraphs.DataFormatter(parameterMetadata['decimalPlaces']);
 			conf['decimalPlaces'] = parameterMetadata['decimalPlaces'];
 			conf["parameterName"] = identifier;
-			conf["div"] = $('#' + conf.divId + ' div.duration-plot-' + identifier).get(0);
 			conf["labelDiv"] = $('#' + conf.labelDivId + ' div.duration-plot-' + identifier).get(0);
 			conf["colors"] = durationCurveConfiguration.identifier.colors;
 			conf["highlightColor"] = durationCurveConfiguration.identifier.highlightColor.values()[0];
-			conf["data"] = displayData;
+			
+			//Logarithmic Plot
+			conf["data"] = logData;
+			conf["div"] = $('#' + conf.divId + ' div.duration-plot-' + identifier).get('[id=log]');
+			buildGraph(conf, true);
+			
+			//Linear Plot
+			conf["data"] = linData;
+			conf["div"] = $('#' + conf.divId + ' div.duration-plot-' + identifier).get('[id=lin]');
+			buildGraph(conf, false);
 			
 			//Show relevant duration curve toggle switch
-			$('.toggle-switch-'+identifier).show();
-			
-			buildGraph(conf);
+			$('.curveSelectButton.toggle-switch-'+identifier).show();
 		} else {
 			showInfoMessage("#" + conf.divId + ' div.duration-plot-' + identifier, "There were no duration curve data during this period for " + graphName);
 		}
@@ -336,7 +349,7 @@ GCMRC.Graphing = function(hoursOffset) {
 				);
 	};
 
-	var buildDurationCurve = function(config) {
+	var buildDurationCurve = function(config, logScale) {
 		if (!config)
 			config = {};
 
@@ -402,6 +415,7 @@ GCMRC.Graphing = function(hoursOffset) {
 			pointSize: 2,
 //			includeZero: true,
 			labels: labels,
+			logscale: logScale,
 			//To be used in "fixed" legend
 //			labelsDiv: labelDiv,
 //			labelsSeparateLines: true,
@@ -425,7 +439,7 @@ GCMRC.Graphing = function(hoursOffset) {
 				}
 								
 				blockHighlight = true;
-				var graph = durationCurves[containerId][parameterName];
+				var graph = durationCurves[containerId][logScale][parameterName];
 				
 				if(!graph){
 					return;
@@ -455,9 +469,8 @@ GCMRC.Graphing = function(hoursOffset) {
 					return;
 				}
 				blockHighlight = true;
-				$.each(durationCurves[containerId], function(key, val) {
-					val.clearSelection();
-				});
+				var graph = durationCurves[containerId][logScale][parameterName];
+				graph.clearSelection();
 				blockHighlight = false;
 			}
 		};
@@ -466,7 +479,7 @@ GCMRC.Graphing = function(hoursOffset) {
 			opts.series = config.series.clone();
 		}
 		
-		durationCurves[containerId][parameterName] = new Dygraph(
+		durationCurves[containerId][logScale][parameterName] = new Dygraph(
 				div,
 				data,
 				opts
@@ -630,7 +643,10 @@ GCMRC.Graphing = function(hoursOffset) {
 							}).map(function(n) {
 								return n.description.groupId;
 							}).forEach(function(el) {
-								var plotDiv = $('<div class="plot-container"><div class="timeseries-plot-' + el + '"></div><div class="duration-plot-' + el + '"></div></div>');
+								var plotDiv = $('<div class="plot-container"><div class="timeseries-plot-' + el + 
+										'"></div><div id="log" class="duration-plot-' + el + 
+										' selected-duration-scale"></div><div id="lin" class="duration-plot-' + el + 
+										'"></div></div>');
 								plotDiv.appendTo(containerDiv);
 								plotDivs.push({"div": plotDiv, "groupId": el});
 								labelDiv.append($('<div class="timeseries-plot-' + el +'"></div><div class="duration-plot-' + el +'"></div>'));

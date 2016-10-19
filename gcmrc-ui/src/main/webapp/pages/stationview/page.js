@@ -470,11 +470,11 @@ GCMRC.Page = {
 		switch(event.target.value){
 			case "log":
 				$(event.target).parent().siblings("div[class*=duration-plot-][id=lin]").removeClass("selected-duration-scale");
-				$(event.target).parent().siblings("div[class*=duration-plot-][id=log]").addClass("selected-duratoin-scale");
+				$(event.target).parent().siblings("div[class*=duration-plot-][id=log]").addClass("selected-duration-scale");
 				break;
 			case "lin":
 				$(event.target).parent().siblings("div[class*=duration-plot-][id=lin]").addClass("selected-duration-scale");
-				$(event.target).parent().siblings("div[class*=duration-plot-][id=log]").removeClass("selected-duratoin-scale");
+				$(event.target).parent().siblings("div[class*=duration-plot-][id=log]").removeClass("selected-duration-scale");
 				break;
 		}
 	},

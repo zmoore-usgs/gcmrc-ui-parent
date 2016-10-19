@@ -548,6 +548,15 @@ GCMRC.Graphing = function(hoursOffset) {
 					'<label for="curve-view-input-' + chartId + '" class="curve-view-label">Duration Curve Plot</label>' +
 				'</div>';
 	};
+	
+	var createDurationCurveScaleToggle = function(chartId) {
+		return '<div onselectstart="return false" class="scaleSelectButton toggle-switch-' + chartId + '" style="display: inline-block;">' +
+					'<input class="scale-select" type="radio" id="log-view-input-' + chartId + '" name="toggle-scale-' + chartId + '" checked="checked" value="log">' +
+					'<label for="log-view-input-' + chartId + '" class="log-scale-label">Logarithmic</label>' +
+					'<input class="scale-select" type="radio" id="lin-view-input-' + chartId + '" name="toggle-scale-' + chartId + '" value="lin">' +
+					'<label for="lin-view-input-' + chartId + '" class="lin-scale-label">Linear</label>' +
+				'</div>';
+	};
 
 	return {
 		graphs: graphs,
@@ -637,9 +646,10 @@ GCMRC.Graphing = function(hoursOffset) {
 									return obj.groupId === graphToMake.groupId;
 								})[0];
 								
-								//Add Duration Curve Toggle
+								//Add Duration Curve and Duration Curve Scale Toggles
 								if(div){
 									$(createDurationCurveToggle(graphToMake.groupId)).prependTo(div.div);
+									$(createDurationCurveScaleToggle(graphToMake.groupId)).prependTo(div.div);
 								}
 								
 								//Build Plot
@@ -652,7 +662,7 @@ GCMRC.Graphing = function(hoursOffset) {
 							
 							//Hide TS plots and toggle switches after they've built until the duration curve plots are finished building.
 							$('div[class^="timeseries-plot"]').hide();
-							$('.curveSelectButton').hide();
+							$('div[class*="toggle-switch"]').hide();
 							
 							//Build List of Graphs that Populated and thus should have duration curves
 							var durationCurveIds = graphs[config.divId].keys();

@@ -455,12 +455,26 @@ GCMRC.Page = {
 	toggleDurationCurve : function(event) {
 		switch(event.target.value){
 			case "chart":
-				$(event.target).parent().siblings("div[class^=duration-plot-]").hide();
+				$(event.target).parent().siblings('.scaleSelectButton').hide();
+				$(event.target).parent().siblings("div[class*=duration-plot-][class*=selected-duration-scale]").hide();
 				$(event.target).parent().siblings("div[class^=timeseries-plot-]").show();
 				break;
 			case "curve":
-				$(event.target).parent().siblings("div[class^=duration-plot-]").show();
+				$(event.target).parent().siblings('.scaleSelectButton').show();
+				$(event.target).parent().siblings("div[class*=duration-plot-][class*=selected-duration-scale]").show();
 				$(event.target).parent().siblings("div[class^=timeseries-plot-]").hide();
+				break;
+		}
+	},
+	toggleDurationCurveScale : function(event) {
+		switch(event.target.value){
+			case "log":
+				$(event.target).parent().siblings("div[class*=duration-plot-][id=lin]").removeClass("selected-duration-scale");
+				$(event.target).parent().siblings("div[class*=duration-plot-][id=log]").addClass("selected-duratoin-scale");
+				break;
+			case "lin":
+				$(event.target).parent().siblings("div[class*=duration-plot-][id=lin]").addClass("selected-duration-scale");
+				$(event.target).parent().siblings("div[class*=duration-plot-][id=log]").removeClass("selected-duratoin-scale");
 				break;
 		}
 	},

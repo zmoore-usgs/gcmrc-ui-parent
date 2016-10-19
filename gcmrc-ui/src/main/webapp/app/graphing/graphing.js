@@ -66,7 +66,7 @@ GCMRC.Graphing = function(hoursOffset) {
 			
 			displayData.reverse();
 
-			conf.labels = ["Percentage", "Bin Value"];
+			conf.labels = ["Percentage", "Daily Range Value"];
 
 			conf['yAxisLabel'] = graphToMake.yAxisLabel || graphName;
 			conf['dataformatter'] = GCMRC.Dygraphs.DataFormatter(parameterMetadata['decimalPlaces']);
@@ -363,7 +363,7 @@ GCMRC.Graphing = function(hoursOffset) {
 
 		var title = config['graphTitle'] || '';
 
-		var yAxisLabel = config['yAxisLabel'] || 'Data';
+		var yAxisLabel = "Daily Range in " + (config['yAxisLabel'] || 'Data') + ", in CFS";
 
 		var dataformatter = config['dataformatter'] || GCMRC.Dygraphs.DataFormatter(0);
 		var decimalPlaces = config['decimalPlaces'] || 0;
@@ -406,7 +406,7 @@ GCMRC.Graphing = function(hoursOffset) {
 			//width: graphWidth,
 			logscale: logScale,
 			height: 420,
-			xlabel: 'Percentage',
+			xlabel: 'Percentage of Time Equaled or Exceeded',
 			ylabel: yAxisLabel,
 			axisLabelWidth: 85,
 			yAxisLabelWidth: 85,

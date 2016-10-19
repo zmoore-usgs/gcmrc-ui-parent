@@ -493,19 +493,17 @@ GCMRC.Page = {
 	redrawGraphs : function(id) {
 		var graphs = new Array();
 		
-		graphs.push(GCMRC.Graphing.graphs.filter(function(obj){
-			return obj.groupId == id;
-		}));
-		
-		graphs.push(GCMRC.Graphing.durationCurves.filter(function(obj){
-			return obj.groupId == id;
-		}));
+		graphs.push(GCMRC.Graphing.graphs['data-dygraph'][id]);
+		graphs.push(GCMRC.Graphing.durationCurves['data-dygraph']['log'][id]);
+		graphs.push(GCMRC.Graphing.durationCurves['data-dygraph']['lin'][id]);
 				
 		graphs.forEach(function(graph){
-			graphs.updateOptions({
-				width: $('#data-dygraph').width() - 15
-			});
-			graph.resize();
+			if(graph){
+				graph.updateOptions({
+					//width: $('#data-dygraph').width() - 15
+				});
+				graph.resize();
+			}
 		});
 		
 		var evt = document.createEvent('UIEvents');

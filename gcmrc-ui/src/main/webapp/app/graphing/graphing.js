@@ -248,7 +248,7 @@ GCMRC.Graphing = function(hoursOffset) {
 			labelsDivStyles: {
 				'textAlign': 'right'
 			},
-			width: graphWidth,
+			//width: graphWidth,
 			height: 420,
 			xlabel: 'Time',
 			ylabel: yAxisLabel,
@@ -403,7 +403,7 @@ GCMRC.Graphing = function(hoursOffset) {
 			labelsDivStyles: {
 				'textAlign': 'right'
 			},
-			width: graphWidth,
+			//width: graphWidth,
 			logscale: logScale,
 			height: 420,
 			xlabel: 'Percentage',

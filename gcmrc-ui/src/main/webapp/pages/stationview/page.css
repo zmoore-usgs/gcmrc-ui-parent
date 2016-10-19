@@ -180,6 +180,14 @@ img { max-width: none; }
 	margin-left: -2px;
 }
 
+.plot-container {
+	width: 100%;
+}
+
+div[class^="timeseries-plot-"], div[class^="duration-plot-"] {
+	width: 100%;
+}
+
 a .disabled {
    pointer-events: none;
    cursor: default;

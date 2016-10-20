@@ -632,8 +632,9 @@ GCMRC.Graphing = function(hoursOffset) {
 
 			if (durationCurves[config.divId]) {
 				durationCurves[config.divId] = {};
+				durationCurveConfiguration = {};
 			}
-
+			
 			/*
 			 * Clean out and repopulated the container/graph divs
 			 * for the correct display order
@@ -683,7 +684,6 @@ GCMRC.Graphing = function(hoursOffset) {
 							
 							graphs[config.divId] = {};
 							durationCurves[config.divId] = {};
-							durationCurveConfiguration[config.divId] = {};
 														
 							config.graphsToMake.forEach(function(graphToMake) {
 								//Find the div for the current chart

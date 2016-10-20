@@ -58,9 +58,18 @@ GCMRC.Graphing = function(hoursOffset) {
 		}
 		
 		if (hasData) {
+			var minY = parseFloat(relevantData.points[0].binValue);
+			var maxY = parseFloat(relevantData.points[0].binValue);
 			relevantData.points.forEach(function(point){
 				var xVal = parseFloat(point.cumulativeBinPerc);
 				var yVal = parseFloat(point.binValue);
+				
+				if(yVal > maxY){
+					maxY = yVal;
+				} else if(yVal < minY){
+					minY = yVal;
+				}
+				
 				displayData.push([xVal, [yVal, yVal, yVal]]);
 			});
 			
@@ -73,9 +82,11 @@ GCMRC.Graphing = function(hoursOffset) {
 			conf['decimalPlaces'] = parameterMetadata['decimalPlaces'];
 			conf["parameterName"] = identifier;
 			conf["labelDiv"] = $('#' + conf.labelDivId + ' div.duration-plot-' + identifier).get(0);
-			conf["colors"] = durationCurveConfiguration.identifier.colors;
-			conf["highlightColor"] = durationCurveConfiguration.identifier.highlightColor.values()[0];
+			conf["colors"] = durationCurveConfiguration[identifier].colors;
+			conf["highlightColor"] = durationCurveConfiguration[identifier].highlightColor.values()[0];
 			conf["data"] = displayData;
+			conf["minY"] = minY;
+			conf["maxY"] = maxY;
 			
 			//Logarithmic vs Linear Plots
 			if(relevantData.binType.toUpperCase() === "LOG_BINS"){
@@ -182,7 +193,7 @@ GCMRC.Graphing = function(hoursOffset) {
 			}, conf["series"]);
 			
 			//Save Configuration so Duration Curve Plots can access it
-			durationCurveConfiguration.identifier = conf;
+			durationCurveConfiguration[identifier] = conf;
 
 			buildGraph(conf);
 		} else {
@@ -240,9 +251,7 @@ GCMRC.Graphing = function(hoursOffset) {
 			ctx.arc(canvasx, canvasy, radius, 0, 2 * Math.PI, false);
 			ctx.fill();
 		};
-		
-		var graphWidth = $('#' + containerId).width() - 15;//TODO add $(window).resize() listener
-		
+				
 		var opts = {
 			title: title,
 			labelsDivStyles: {
@@ -349,11 +358,19 @@ GCMRC.Graphing = function(hoursOffset) {
 //		var labelDiv = config.labelDiv;
 		
 		var labels = config['labels'];
+		var minY = config['minY'];
+		var maxY = config['maxY'];
 		
 		var logScaleParam = logScale ? "log" : "lin";
 		
 		if(!durationCurves[containerId][logScaleParam]){
 			durationCurves[containerId][logScaleParam] = {};
+		}
+		
+		//Determine if data should actually be shown on a logarithmic plot
+		//Needed because Dygraphs has issues zooming on log graphs that don't have large enough data ranges
+		if((Math.abs(Math.floor(Math.log10(maxY)) - Math.floor(Math.log10(minY))) < 1) || (Math.abs(maxY - minY) < 10)){
+			logScale = false;
 		}
 		
 		div.style.display = "inline-block";
@@ -391,13 +408,7 @@ GCMRC.Graphing = function(hoursOffset) {
 			ctx.arc(canvasx, canvasy, radius, 0, 2 * Math.PI, false);
 			ctx.fill();
 		};
-		
-		var graphWidth = $('#' + containerId).width() - 15;
-		
-		//TODO add $(window).resize() listener
-		//Note: This listener will also need to temporarily show and then hide 
-		//the divs for all plots for resizing to work correctly
-		
+				
 		var opts = {
 			title: title,
 			labelsDivStyles: {
@@ -611,6 +622,24 @@ GCMRC.Graphing = function(hoursOffset) {
 				clearWarningMessage();
 				showWarningMessage('Due to the length of your request, some timesteps may be filtered from the graph. You may still download the unfiltered dataset, or shorten the date range of your request.');
 			}
+			
+			var containerDiv = $("#" + config.divId);
+			var labelDiv = $("#" + config.labelDivId);
+
+			if (graphs[config.divId]) {
+				graphs[config.divId] = {};
+			}
+
+			if (durationCurves[config.divId]) {
+				durationCurves[config.divId] = {};
+			}
+
+			/*
+			 * Clean out and repopulated the container/graph divs
+			 * for the correct display order
+			 */
+			containerDiv.empty();
+			labelDiv.empty();		
 
 			urlParams["output"] = "json";
 			$.ajax({
@@ -636,28 +665,6 @@ GCMRC.Graphing = function(hoursOffset) {
 						}
 						//success
 						if (data.success && data.success.data && $.isArray(data.success.data)) {
-							var containerDiv = $("#" + config.divId);
-							var labelDiv = $("#" + config.labelDivId);
-							
-							if (graphs[config.divId]) {
-								graphs[config.divId].values(function(el) {
-									el.destroy();
-								});
-							}
-							
-							if (durationCurves[config.divId]) {
-								durationCurves[config.divId].values(function(el) {
-									el.destroy();
-								});
-							}
-														
-							/*
-							 * Clean out and repopulated the container/graph divs
-							 * for the correct display order
-							 */
-							containerDiv.empty();
-							labelDiv.empty();							
-							
 							//Store individual chart divs for later populating with duration curve toggle
 							var plotDivs = new Array();
 							GCMRC.Page.params.values().sortBy(function(n) {

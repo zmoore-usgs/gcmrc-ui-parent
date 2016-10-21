@@ -892,7 +892,7 @@ GCMRC.Page = {
 gcmrcModule.controller('downloadPopupController', function($scope) {
 	$scope.columnOrdering = GCMRC.Page.colOrder;
 	$scope.downloadTypes = GCMRC.Page.angularDownloadTypes;
-	$scope.columnSelected = null;	
+	$scope.columnSelected = null;
 	$scope.removeColumn = function() {
 		this.columnOrdering.remove(this.el);
 	};

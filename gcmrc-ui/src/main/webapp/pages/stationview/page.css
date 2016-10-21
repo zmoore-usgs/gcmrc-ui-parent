@@ -193,4 +193,17 @@ div[class^="timeseries-plot-"], div[class^="duration-plot-"] {
 	width: inherit;
 }
 
+.datatype-select {
+	margin-bottom: 15px;
+}
+
+.datatype-select label {
+	margin-left: 8px;
+	font-size: 120%;
+	font-weight: bold;
+}
+.datatype-select input {
+	margin-left: 8px !important;
+}
+
 

@@ -694,7 +694,7 @@ GCMRC.Page = {
 			endTime : endClean,
 			siteId : CONFIG.stationName,
 			binCount: "200",
-			binType: "both",
+			binType: $('input[name=bintype]:checked').val(),
 			groupId: ids,
 			groupName: names
 		};

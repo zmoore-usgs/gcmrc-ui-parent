@@ -101,7 +101,7 @@ public class DurationCurveEndpoint {
 		
 		//Format Output as TSV
 		//1. Build Headers
-		resultBuilder.append("BIN_NUMBER");
+		resultBuilder.append("Bin Number");
 		
 		for(int groupId : groupIds){
 			for(String selectedBinType : binTypes){
@@ -110,12 +110,9 @@ public class DurationCurveEndpoint {
 					
 					//Add Duration Curve Name to Header
 					String name = groupNames.get(groupIds.indexOf(groupId));
-					resultBuilder.append("\t");
-					resultBuilder.append(name);
-					resultBuilder.append("-");
-					resultBuilder.append(siteId);
-					resultBuilder.append("-");
-					resultBuilder.append(durationCurves.get(durationCurves.size()-1).getBinType());
+					String binString = durationCurves.get(durationCurves.size()-1).getBinType();
+					resultBuilder.append("\t" + siteId + " " + name + " (" + binString + ") " + "Percentage of Time Equaled or Exceeded");
+					resultBuilder.append("\t" + siteId + " " + name + " (" + binString + ") " + "Daily Range in CFS");
 				} catch (Exception e) {
 					log.error("Could not get duration curve for groupId: " + groupId + " with binType: " + selectedBinType, e);
 					throw new WebApplicationException(Response.status(Status.INTERNAL_SERVER_ERROR).type("text/plain").entity("Unable to get duration curve for the specified parameters (failure on groupId: " + groupId + " with binType: " + selectedBinType + ".\n\nError: " + e.getMessage()).build());
@@ -128,6 +125,7 @@ public class DurationCurveEndpoint {
 			outputDataRows.add(new ArrayList<Double>());
 			
 			for(int j = 0; j < durationCurves.size(); j++){
+				outputDataRows.get(i).add(durationCurves.get(j).getPoints().get(i).getCumulativeBinPerc());
 				outputDataRows.get(i).add(durationCurves.get(j).getPoints().get(i).getBinValue());
 			}
 		}

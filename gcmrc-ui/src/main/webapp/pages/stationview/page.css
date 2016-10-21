@@ -189,10 +189,8 @@ div[class^="timeseries-plot-"], div[class^="duration-plot-"] {
 	width: 100%;
 }
 
-a .disabled {
-   pointer-events: none;
-   cursor: default;
-   color: graytext;
+#downloadPopup {
+	width: inherit;
 }
 
 

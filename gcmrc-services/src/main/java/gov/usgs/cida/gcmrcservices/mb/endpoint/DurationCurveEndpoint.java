@@ -103,8 +103,8 @@ public class DurationCurveEndpoint {
 		//1. Build Headers
 		resultBuilder.append("BIN_NUMBER");
 		
-		for(String selectedBinType : binTypes){
-			for(int groupId : groupIds){
+		for(int groupId : groupIds){
+			for(String selectedBinType : binTypes){
 				try {
 					durationCurves.add(new DurationCurve(new DurationCurveDAO().getDurationCurve(siteId, startTime, endTime, groupId, binCount, selectedBinType), groupId, selectedBinType));
 					

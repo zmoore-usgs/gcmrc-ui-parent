@@ -302,6 +302,19 @@ GCMRC.Page = {
 		});
 		return result;
 	},
+	getExpectedDurationCurveDownloadColumns : function() {
+		var result = [];
+		var chosenParameters = $('.parameterListing input:checkbox:checked');
+		result = $.map(chosenParameters, function(el, i) {
+			var result = [];
+
+			result.push({
+				groupId: el.name
+			});
+			return result;
+		});
+		return result;
+	},
 	hasData : function(params, reqBegin, reqEnd) {
 		var result = false;
 		
@@ -658,6 +671,26 @@ GCMRC.Page = {
 		
 		document.location = document.location.href.first(document.location.href.lastIndexOf('/') + 1) + CONFIG.relativePath + 'services/service/download/tab/' + CONFIG.networkName + "bedSediment?" + $.param(serviceOptions);
 	},
+	downloadDurationCurvesClicked : function() {
+		//TODO refactor copy paste code
+		var begin = $("input[name='beginPosition']").val();
+		var end = $("input[name='endPosition']").val();
+		
+		//Make absolutely sure they're formatted correctly for the services.
+		var beginClean = Date.create(begin).format('{yyyy}-{MM}-{dd}') + 'T00:00:00';
+		var endClean = Date.create(end).format('{yyyy}-{MM}-{dd}') + 'T23:59:59';
+		
+		var serviceOptions = {
+			startTime : beginClean,
+			endTime : endClean,
+			stationId : CONFIG.stationName,
+			binCount: "200",
+			binType: "both",
+			groupId: GCMRC.Page.getExpectedDurationCurveDownloadColumns()
+		};
+		
+		document.location = document.location.href.first(document.location.href.lastIndexOf('/') + 1) + CONFIG.relativePath + 'services/rest/durationcurve/download/?' + $.param(serviceOptions);
+	},
 	colOrder: [],
 	earliestPosition : null,
 	latestPosition : null,
@@ -849,7 +882,7 @@ GCMRC.Page = {
 gcmrcModule.controller('downloadPopupController', function($scope) {
 	$scope.columnOrdering = GCMRC.Page.colOrder;
 	$scope.downloadTypes = GCMRC.Page.angularDownloadTypes;
-	$scope.columnSelected = null;
+	$scope.columnSelected = null;	
 	$scope.removeColumn = function() {
 		this.columnOrdering.remove(this.el);
 	};

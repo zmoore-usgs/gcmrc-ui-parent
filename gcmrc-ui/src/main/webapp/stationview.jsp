@@ -308,6 +308,12 @@
 									<a href="#" id="bedSedimentDownloadButton" class='buildButton'>Download Data</a>
 								</div>
 							</tab>
+							<tab>
+								<tab-heading>Duration Curves</tab-heading>
+								<div class="row-fluid">
+									<a href="#" id="durationCurveDownloadButton" class='buildButton'>Download Data</a>
+								</div>
+							</tab>
 						</tabset>
 					</div>
 				</div>

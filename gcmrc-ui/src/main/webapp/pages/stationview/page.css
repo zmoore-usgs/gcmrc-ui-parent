@@ -55,7 +55,8 @@
 }
 
 #downloadColumnOrdering li span {
-	position: absolute;
+	position: relative;
+	display: inline-block;
 	margin-left: -1.3em;
 }
 

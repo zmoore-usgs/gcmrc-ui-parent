@@ -99,10 +99,6 @@ public class DurationCurveEndpoint {
 			throw new WebApplicationException(Response.status(Status.BAD_REQUEST).type("text/plain").entity("Invalid bin type: '" + binType + "' (Valid: 'lin' or 'log' or 'both')").build());
 		}
 		
-		//Format Output as TSV
-		//1. Build Headers
-		resultBuilder.append("Bin Number");
-		
 		for(int groupId : groupIds){
 			for(String selectedBinType : binTypes){
 				try {
@@ -111,8 +107,8 @@ public class DurationCurveEndpoint {
 					//Add Duration Curve Name to Header
 					String name = groupNames.get(groupIds.indexOf(groupId));
 					String binString = durationCurves.get(durationCurves.size()-1).getBinType();
-					resultBuilder.append("\t" + siteId + " " + name + " (" + binString + ") " + "Percentage of Time Equaled or Exceeded");
-					resultBuilder.append("\t" + siteId + " " + name + " (" + binString + ") " + "Daily Range in CFS");
+					resultBuilder.append(siteId + " " + name + " (" + binString + ") " + "Percentage of Time Equaled or Exceeded\t");
+					resultBuilder.append(siteId + " " + name + " (" + binString + ") " + "Daily Range in CFS\t");
 				} catch (Exception e) {
 					log.error("Could not get duration curve for groupId: " + groupId + " with binType: " + selectedBinType, e);
 					throw new WebApplicationException(Response.status(Status.INTERNAL_SERVER_ERROR).type("text/plain").entity("Unable to get duration curve for the specified parameters (failure on groupId: " + groupId + " with binType: " + selectedBinType + ".\n\nError: " + e.getMessage()).build());
@@ -133,12 +129,11 @@ public class DurationCurveEndpoint {
 		//3. Output Data Rows
 		for(int i = 0; i < outputDataRows.size(); i++){
 			resultBuilder.append("\n");
-			resultBuilder.append(i+1);
 			ArrayList<Double> row = outputDataRows.get(i);
 			
 			for(int j = 0; j < row.size(); j++){
-				resultBuilder.append("\t");
 				resultBuilder.append(row.get(j));
+				resultBuilder.append("\t");
 			}
 		}
 		

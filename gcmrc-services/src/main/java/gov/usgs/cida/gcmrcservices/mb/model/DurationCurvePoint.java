@@ -6,18 +6,18 @@ package gov.usgs.cida.gcmrcservices.mb.model;
  */
 public class DurationCurvePoint {
 	
-	private String binNumber;
-	private String cumulativeBinPerc;
-	private String binValue;
-	private String inBinMinutes;
-	private String cumulativeInBinMinutes;
-	private String lowBound;
-	private String highBound;
+	private int binNumber;
+	private Double cumulativeBinPerc;
+	private Double binValue;
+	private Double inBinMinutes;
+	private Double cumulativeInBinMinutes;
+	private Double lowBound;
+	private Double highBound;
 
 	public DurationCurvePoint() {
 	}
 
-	public DurationCurvePoint(String binNumber, String cumulativeBinPerc, String binValue, String inBinMinutes, String cumulativeInBinMinutes, String lowBound, String highBound) {
+	public DurationCurvePoint(int binNumber, Double cumulativeBinPerc, Double binValue, Double inBinMinutes, Double cumulativeInBinMinutes, Double lowBound, Double highBound) {
 		this.binNumber = binNumber;
 		this.cumulativeBinPerc = cumulativeBinPerc;
 		this.binValue = binValue;
@@ -27,31 +27,31 @@ public class DurationCurvePoint {
 		this.highBound = highBound;
 	}
 
-	public String getBinNumber() {
+	public int getBinNumber() {
 		return binNumber;
 	}
 	
-	public String getCumulativeBinPerc() {
+	public Double getCumulativeBinPerc() {
 		return cumulativeBinPerc;
 	}
 	
-	public String getBinValue() {
+	public Double getBinValue() {
 		return binValue;
 	}
 	
-	public String getInBinMinutes() {
+	public Double getInBinMinutes() {
 		return inBinMinutes;
 	}
 	
-	public String getCumulativeInBinMinutes() {
+	public Double getCumulativeInBinMinutes() {
 		return cumulativeInBinMinutes;
 	}
 	
-	public String getLowBound() {
+	public Double getLowBound() {
 		return lowBound;
 	}
 	
-	public String getHighBound() {
+	public Double getHighBound() {
 		return highBound;
 	}
 }

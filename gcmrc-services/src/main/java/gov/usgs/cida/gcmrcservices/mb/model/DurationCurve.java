@@ -14,7 +14,7 @@ public class DurationCurve {
 	public DurationCurve(List<DurationCurvePoint> pts, int id, String bin) {
 		points = pts;
 		groupId = id;
-		binType = bin;
+		binType = bin.equalsIgnoreCase("LOG_BINS") ? "log" : "lin";
 	}
 	
 	public List<DurationCurvePoint> getPoints() {

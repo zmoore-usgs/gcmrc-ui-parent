@@ -6,6 +6,7 @@ import gov.usgs.cida.gcmrcservices.mb.model.DurationCurve;
 import gov.usgs.cida.gcmrcservices.mb.service.DurationCurveService;
 import java.io.OutputStream;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.GET;
@@ -33,8 +34,13 @@ public class DurationCurveEndpoint {
 	@Produces("application/javascript")
 	public SuccessResponse<DurationCurve> getDurationCurve(@QueryParam("siteId") int siteId, @QueryParam("startTime") String startTime, @QueryParam("endTime") String endTime, @QueryParam("binCount") int binCount, @QueryParam("binType") String binType, @QueryParam(value = "groupId[]") final List<Integer> groupIds) {
 		SuccessResponse<DurationCurve> result = null;
+		List<DurationCurve> durationCurves = new ArrayList<>();
 		
-		List<DurationCurve> durationCurves = DurationCurveService.getDurationCurves(siteId, startTime, endTime, binCount, binType, groupIds);
+		try {
+			durationCurves = DurationCurveService.getDurationCurves(siteId, startTime, endTime, binCount, binType, groupIds);
+		} catch (Exception e) {
+			throw new WebApplicationException(Response.status(Status.INTERNAL_SERVER_ERROR).type("text/plain").entity("Could not output file response. Error: " + e.getMessage()).build());
+		}
 		
 		result = new SuccessResponse<>(new ResponseEnvelope<>(durationCurves));
 		
@@ -44,46 +50,26 @@ public class DurationCurveEndpoint {
 	@Path("download")
 	@GET
 	@Produces("application/tsv")
-	public void getDurationCurveDownload(@QueryParam("siteId") int siteId, @QueryParam("startTime") String startTime, @QueryParam("endTime") String endTime, @QueryParam("binCount") int binCount, @QueryParam("binType") String binType, @QueryParam(value = "groupId[]") final List<Integer> groupIds, @QueryParam(value = "groupName[]") final List<String> groupNames, @Context HttpServletResponse response) {
-		StringBuilder resultBuilder = new StringBuilder();
-		ArrayList<ArrayList<Double> > outputDataRows = new ArrayList<>();
-		
-		response.addHeader("Content-Disposition", "attachment; filename=GCMRC.tsv");
-		response.addHeader("Pragma", "public");
-		response.addHeader("Cache-Control", "max-age=0");
-		response.setContentType("application/ms-excel"); 
-				
-		List<DurationCurve> durationCurves = DurationCurveService.getDurationCurves(siteId, startTime, endTime, binCount, binType, groupIds);
-		
-		//Build output Data Rows		
-		for(int i = 0; i < binCount; i++){
-			outputDataRows.add(new ArrayList<Double>());
-			
-			for(int j = 0; j < durationCurves.size(); j++){
-				outputDataRows.get(i).add(durationCurves.get(j).getPoints().get(i).getCumulativeBinPerc());
-				outputDataRows.get(i).add(durationCurves.get(j).getPoints().get(i).getBinValue());
-			}
-		}
-				
-		//Output Data Rows
-		for(int i = 0; i < outputDataRows.size(); i++){
-			resultBuilder.append("\n");
-			ArrayList<Double> row = outputDataRows.get(i);
-			
-			for(int j = 0; j < row.size(); j++){
-				resultBuilder.append(row.get(j));
-				resultBuilder.append("\t");
-			}
-		}
-		
+	public void getDurationCurveDownload(@QueryParam("siteId") int siteId, @QueryParam("startTime") String startTime, @QueryParam("endTime") String endTime, @QueryParam("binCount") int binCount, @QueryParam("binType") String binType, @QueryParam(value = "groupId[]") final List<Integer> groupIds, @QueryParam(value = "groupName[]") final List<String> groupNames, @Context HttpServletResponse response) {										
 		try {
+			//Get Duration Cruve Data
+			List<DurationCurve> durationCurves = DurationCurveService.getDurationCurves(siteId, startTime, endTime, binCount, binType, groupIds);
+			
+			//Create output file
+			List<DurationCurveService.COLUMNS> outputColumns = Arrays.asList(DurationCurveService.COLUMNS.CUMULATIVE_BIN_PERC, DurationCurveService.COLUMNS.BIN_VALUE);
+			String result = DurationCurveService.getTSVForDurationCurves(durationCurves, outputColumns, groupIds, groupNames, binCount);
+			log.error("BUILT TSV FILE");
+			
 			// Write the header line
+			response.addHeader("Content-Disposition", "attachment; filename=GCMRC.tsv");
+			response.addHeader("Pragma", "public");
+			response.addHeader("Cache-Control", "max-age=0");
+			response.setContentType("application/ms-excel"); 
 			OutputStream out = response.getOutputStream();
-			out.write(resultBuilder.toString().getBytes());
+			out.write(result.getBytes());
 			out.flush();
 		} catch (Exception e) {
-		   	log.error("Could not output file response. Error:", e);
-			throw new WebApplicationException(Response.status(Status.INTERNAL_SERVER_ERROR).type("text/plain").entity("Could not output file response. Error: " + e.getMessage()).build());
+			throw new WebApplicationException(Response.status(Status.INTERNAL_SERVER_ERROR).type("text/plain").entity("Could not download duration curve data. Error: " + e.getMessage()).build());
 		}
 	}
 }

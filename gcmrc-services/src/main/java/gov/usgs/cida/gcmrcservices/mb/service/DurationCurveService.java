@@ -5,9 +5,11 @@
  */
 package gov.usgs.cida.gcmrcservices.mb.service;
 
+import gov.usgs.cida.gcmrcservices.TSVUtil;
 import gov.usgs.cida.gcmrcservices.mb.dao.DurationCurveDAO;
 import gov.usgs.cida.gcmrcservices.mb.model.DurationCurve;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Response;
@@ -20,11 +22,13 @@ import org.slf4j.LoggerFactory;
  */
 public class DurationCurveService {
 	private static final Logger log = LoggerFactory.getLogger(DurationCurveService.class);
-	private static final int MAX_BINS = 2000;
+	public static final int MAX_BINS = 2000;
+	public static enum COLUMNS {BIN_NUMBER, BIN_VALUE, CUMULATIVE_BIN_PERC, IN_BIN_MINUTES, CUMULATIVE_IN_BIN_MINUTES, LOW_BOUND, HIGH_BOUND};
+	public static final String[] COLUMN_HEADERS = {"Bin Number", "Bin Value", "Percentage of Time Equaled or Exceeded", "In Bin Minutes", "Cumulative In Bin Minutes", "Low Bound", "High Bound"};
 	
-	public static List<DurationCurve> getDurationCurves(int siteId, String startTime, String endTime, int binCount, String binType, final List<Integer> groupIds) {
-		List<DurationCurve> durationCurves = new ArrayList<>();
-		ArrayList<String> binTypes = new ArrayList<>();
+	public static DurationCurve getDurationCurve(int siteId, String startTime, String endTime, int binCount, String binType, final Integer groupId){
+		String binSQL;
+		DurationCurve result;
 		
 		if(binCount > MAX_BINS){
 			log.error("Too many bins: " + binCount + " (Max: " + MAX_BINS + ")");
@@ -32,12 +36,35 @@ public class DurationCurveService {
 		}
 		
 		if(binType!= null && binType.equalsIgnoreCase("log")){
-			binTypes.add("LOG_BINS");
+			binSQL = "LOG_BINS";
 		} else if(binType!= null && binType.equalsIgnoreCase("lin")){
-			binTypes.add("LIN_BINS");
+			binSQL = "LIN_BINS";
+		} else {
+			log.error("Invalid bin type in final request: '" + binType + "' (Valid: 'lin' or 'log')");
+			throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).type("text/plain").entity("Invalid bin type in final request: '" + binType + "' (Valid: 'lin' or 'log')").build());
+		}
+		
+		try {
+			result = new DurationCurveDAO().getDurationCurve(siteId, startTime, endTime, groupId, binCount, binSQL);
+		} catch (Exception e) {
+			log.error("Could not get duration curve for groupId: " + groupId + " with binType: " + binType, e);
+			throw new WebApplicationException(Response.status(Response.Status.INTERNAL_SERVER_ERROR).type("text/plain").entity("Unable to get duration curve for the specified parameters (failure on groupId: " + groupId + " with binType: " + binType + ".\n\nError: " + e.getMessage()).build());
+		}
+		
+		return result;
+	}
+	
+	public static List<DurationCurve> getDurationCurves(int siteId, String startTime, String endTime, int binCount, String binType, final List<Integer> groupIds) {
+		List<DurationCurve> durationCurves = new ArrayList<>();
+		ArrayList<String> binTypes = new ArrayList<>();
+				
+		if(binType!= null && binType.equalsIgnoreCase("log")){
+			binTypes.add("log");
+		} else if(binType!= null && binType.equalsIgnoreCase("lin")){
+			binTypes.add("lin");
 		} else if(binType != null && binType.equalsIgnoreCase("both")){
-			binTypes.add("LOG_BINS");
-			binTypes.add("LIN_BINS");
+			binTypes.add("log");
+			binTypes.add("lin");
 		} else {
 			log.error("Invalid bin type: '" + binType + "' (Valid: 'lin' or 'log' or 'both')");
 			throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).type("text/plain").entity("Invalid bin type: '" + binType + "' (Valid: 'lin' or 'log' or 'both')").build());
@@ -46,7 +73,7 @@ public class DurationCurveService {
 		for(int groupId : groupIds){
 			for(String selectedBinType : binTypes){
 				try {
-					durationCurves.add(new DurationCurve(new DurationCurveDAO().getDurationCurve(siteId, startTime, endTime, groupId, binCount, selectedBinType), groupId, selectedBinType));
+					durationCurves.add(getDurationCurve(siteId, startTime, endTime, binCount, selectedBinType, groupId));
 				} catch (Exception e) {
 					log.error("Could not get duration curve for groupId: " + groupId + " with binType: " + selectedBinType, e);
 					throw new WebApplicationException(Response.status(Response.Status.INTERNAL_SERVER_ERROR).type("text/plain").entity("Unable to get duration curve for the specified parameters (failure on groupId: " + groupId + " with binType: " + selectedBinType + ".\n\nError: " + e.getMessage()).build());
@@ -55,5 +82,74 @@ public class DurationCurveService {
 		}
 		
 		return durationCurves;
+	}
+	
+	private static HashMap getDurationCurveDownloadData(DurationCurve data, List<COLUMNS> outputColumns, String groupName){
+		List<List<Double> > columns = new ArrayList<>();
+		List<String> headers = new ArrayList<>();
+		HashMap result = new HashMap<>();
+				
+		//Build headers and extract relevant data
+		for(int i = 0; i < outputColumns.size(); i++){
+			headers.add(data.getSiteId() + " " + groupName + " (" + data.getBinType() + ") " + COLUMN_HEADERS[outputColumns.get(i).ordinal()]);
+			
+			switch(outputColumns.get(i)){
+				case BIN_VALUE:
+					columns.add(data.extractBinValues());
+					break;
+				case CUMULATIVE_BIN_PERC:
+					columns.add(data.extractCumulativeBinPercs());
+					break;
+				case IN_BIN_MINUTES:
+					columns.add(data.extractInBinMinutes());
+					break;
+				case CUMULATIVE_IN_BIN_MINUTES:
+					columns.add(data.extractCumulativeInBinMinutes());
+					break;
+				case LOW_BOUND: 
+					columns.add(data.extractLowBounds());
+					break;
+				case HIGH_BOUND:
+					columns.add(data.extractHighBounds());
+					break;
+			}
+		}
+		
+		//Build output
+		result.put("headers", headers);
+		result.put("columns", columns);
+						
+		return result;
+	}
+	
+	public static String getTSVForDurationCurves(List<DurationCurve> data, List<COLUMNS> outputColumns, List<Integer> groupIds, List<String> groupNames, int binCount) {		
+		List<List<Object> > columns = new ArrayList<>();
+		List<String> headers = new ArrayList<>();
+		String output;
+		
+		//Get all necessary data
+		for(int i = 0; i < data.size(); i++){
+			String groupName = groupNames.get(groupIds.indexOf(data.get(i).getGroupId()));
+			HashMap<String, List> result = getDurationCurveDownloadData(data.get(i), outputColumns, groupName);
+			
+			for(int j = 0; j < result.get("columns").size(); j++){
+				log.error("" + ((List)result.get("columns").get(j)).size());
+			}
+			
+			columns.addAll(result.get("columns"));			
+			headers.addAll(result.get("headers"));
+		}
+		
+		log.error(columns.size() + " | " + headers.size());
+				
+		//Verify Data
+		if(columns.size() > 0 && headers.size() > 0){
+			output = TSVUtil.createTSV(headers, columns, binCount, false, true);
+		} else {
+			output = "NO DURATION CURVE DATA RETURNED FOR SPECIFIED PARAMETERS";
+		}
+				
+		//Create TSV File
+		return output;
 	}
 }

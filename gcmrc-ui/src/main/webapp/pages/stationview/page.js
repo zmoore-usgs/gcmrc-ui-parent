@@ -310,7 +310,7 @@ GCMRC.Page = {
 
 			result.push({
 				groupId: el.name,
-				name: GCMRC.Page.params[el.name].description.groupName
+				name: GCMRC.Page.params[el.name].description.displayName
 			});
 			return result;
 		});

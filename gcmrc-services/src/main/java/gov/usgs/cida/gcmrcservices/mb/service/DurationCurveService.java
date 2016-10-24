@@ -137,7 +137,7 @@ public class DurationCurveService {
 						
 		//Verify Data
 		if(columns.size() > 0 && headers.size() > 0){
-			output = TSVUtil.createTSV(headers, columns, binCount, true, true);
+			output = TSVUtil.createTSV(headers, columns, binCount, false, true);
 		} else {
 			output = "NO DURATION CURVE DATA RETURNED FOR SPECIFIED PARAMETERS";
 		}

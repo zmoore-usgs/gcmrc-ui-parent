@@ -1,5 +1,6 @@
 package gov.usgs.cida.gcmrcservices.mb.model;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -9,12 +10,14 @@ import java.util.List;
 public class DurationCurve {	
 	private List<DurationCurvePoint> points;
 	private int groupId;
+	private int siteId;
 	private String binType;
 
-	public DurationCurve(List<DurationCurvePoint> pts, int id, String bin) {
+	public DurationCurve(List<DurationCurvePoint> pts, int site, int group, String bin) {
 		points = pts;
-		groupId = id;
-		binType = bin;
+		groupId = group;
+		siteId = site;
+		binType = bin.equalsIgnoreCase("LOG_BINS") ? "log" : "lin";
 	}
 	
 	public List<DurationCurvePoint> getPoints() {
@@ -28,5 +31,68 @@ public class DurationCurve {
 	public String getBinType() {
 		return binType;
 	}
-
+	
+	public int getSiteId() {
+		return siteId;
+	}
+	
+	public List<Double> extractBinValues() {
+		List<Double> toReturn = new ArrayList<>();
+		
+		for(DurationCurvePoint point : points){
+			toReturn.add(point.getBinValue());
+		}
+		
+		return toReturn;
+	}
+	
+	public List<Double> extractCumulativeBinPercs() {
+		List<Double> toReturn = new ArrayList<>();
+		
+		for(DurationCurvePoint point : points){
+			toReturn.add(point.getCumulativeBinPerc());
+		}
+		
+		return toReturn;
+	}
+	
+	public List<Double> extractInBinMinutes() {
+		List<Double> toReturn = new ArrayList<>();
+		
+		for(DurationCurvePoint point : points){
+			toReturn.add(point.getInBinMinutes());
+		}
+		
+		return toReturn;
+	}
+	
+	public List<Double> extractCumulativeInBinMinutes() {
+		List<Double> toReturn = new ArrayList<>();
+		
+		for(DurationCurvePoint point : points){
+			toReturn.add(point.getCumulativeInBinMinutes());
+		}
+		
+		return toReturn;
+	}
+	
+	public List<Double> extractLowBounds() {
+		List<Double> toReturn = new ArrayList<>();
+		
+		for(DurationCurvePoint point : points){
+			toReturn.add(point.getLowBound());
+		}
+		
+		return toReturn;
+	}
+	
+	public List<Double> extractHighBounds() {
+		List<Double> toReturn = new ArrayList<>();
+		
+		for(DurationCurvePoint point : points){
+			toReturn.add(point.getHighBound());
+		}
+		
+		return toReturn;
+	}
 }

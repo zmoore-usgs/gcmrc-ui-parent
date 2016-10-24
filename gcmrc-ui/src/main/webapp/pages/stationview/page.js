@@ -302,6 +302,20 @@ GCMRC.Page = {
 		});
 		return result;
 	},
+	getExpectedDurationCurveDownloadColumns : function() {
+		var result = [];
+		var chosenParameters = $('.parameterListing input:checkbox:checked');
+		result = $.map(chosenParameters, function(el, i) {
+			var result = [];
+
+			result.push({
+				groupId: el.name,
+				name: GCMRC.Page.params[el.name].description.displayName
+			});
+			return result;
+		});
+		return result;
+	},
 	hasData : function(params, reqBegin, reqEnd) {
 		var result = false;
 		
@@ -657,6 +671,35 @@ GCMRC.Page = {
 		};
 		
 		document.location = document.location.href.first(document.location.href.lastIndexOf('/') + 1) + CONFIG.relativePath + 'services/service/download/tab/' + CONFIG.networkName + "bedSediment?" + $.param(serviceOptions);
+	},
+	downloadDurationCurvesClicked : function() {
+		//TODO refactor copy paste code
+		var begin = $("input[name='beginPosition']").val();
+		var end = $("input[name='endPosition']").val();
+		
+		//Make absolutely sure they're formatted correctly for the services.
+		var beginClean = Date.create(begin).format('{yyyy}-{MM}-{dd}') + 'T00:00:00';
+		var endClean = Date.create(end).format('{yyyy}-{MM}-{dd}') + 'T23:59:59';
+		
+		var ids = new Array();
+		var names = new Array();
+		
+		GCMRC.Page.getExpectedDurationCurveDownloadColumns().forEach(function(col){
+			ids.push(col.groupId);
+			names.push(col.name);
+		});
+				
+		var serviceOptions = {
+			startTime : beginClean,
+			endTime : endClean,
+			siteId : CONFIG.stationName,
+			binCount: "200",
+			binType: $('input[name=bintype]:checked').val(),
+			groupId: ids,
+			groupName: names
+		};
+		
+		document.location = document.location.href.first(document.location.href.lastIndexOf('/') + 1) + CONFIG.relativePath + 'services/rest/durationcurve/download/?' + $.param(serviceOptions);
 	},
 	colOrder: [],
 	earliestPosition : null,

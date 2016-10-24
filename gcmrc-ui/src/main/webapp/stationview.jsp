@@ -308,6 +308,18 @@
 									<a href="#" id="bedSedimentDownloadButton" class='buildButton'>Download Data</a>
 								</div>
 							</tab>
+							<tab>
+								<tab-heading>Duration Curves</tab-heading>
+								<div class="row-fluid">
+									<div class="datatype-select">
+										<label for="bintype">Data Type</label>
+										<input type="radio" name="bintype" value="log" checked="checked">Logarithmic</input>
+										<input type="radio" name="bintype" value="lin">Linear</input>
+										<input type="radio" name="bintype" value="both">Both</input>
+									</div>
+									<a href="#" id="durationCurveDownloadButton" class='buildButton'>Download Data</a>
+								</div>
+							</tab>
 						</tabset>
 					</div>
 				</div>

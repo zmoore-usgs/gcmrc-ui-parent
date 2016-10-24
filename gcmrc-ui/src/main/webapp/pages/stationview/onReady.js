@@ -31,6 +31,7 @@ $(document).ready(function() {
 	$('#bedSedimentDownloadButton').click(GCMRC.Page.downloadBedSedimentClicked);
 	$('#physicalDownloadButton').click(GCMRC.Page.downloadSamplesClicked);
 	$('#stupidlyBigDownloadButton').click(GCMRC.Page.downloadDataClicked);
+	$('#durationCurveDownloadButton').click(GCMRC.Page.downloadDurationCurvesClicked);
 	$('#downloadData').click(GCMRC.Page.downloadPopupClicked);
 	
 	if (!GCMRC.Page.earliestPosition) GCMRC.Page.earliestPosition = new Date().addMonths(-1).getTime();

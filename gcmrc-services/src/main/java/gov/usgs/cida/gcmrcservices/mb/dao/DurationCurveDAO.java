@@ -1,9 +1,8 @@
 package gov.usgs.cida.gcmrcservices.mb.dao;
 
 import gov.usgs.cida.gcmrcservices.mb.MyBatisConnectionFactory;
-import gov.usgs.cida.gcmrcservices.mb.model.DurationCurvePoint;
+import gov.usgs.cida.gcmrcservices.mb.model.DurationCurve;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
@@ -29,8 +28,8 @@ public class DurationCurveDAO {
 	
 	public static final String queryPackage = "gov.usgs.cida.gcmrcservices.mb.mappers";
 	
-	public List<DurationCurvePoint> getDurationCurve(int siteId, String startTime, String endTime, int groupId, int binCount, String binType) {		
-		List<DurationCurvePoint> result = null;
+	public DurationCurve getDurationCurve(int siteId, String startTime, String endTime, int groupId, int binCount, String binType) {		
+		DurationCurve result = null;
 		
 		Map<String, Object> params = new HashMap<String, Object>();
 		params.put("siteId", siteId);
@@ -41,7 +40,7 @@ public class DurationCurveDAO {
 		params.put("binType", binType);
 		
 		try (SqlSession session = sqlSessionFactory.openSession()) {
-			result = session.selectList( queryPackage + ".DurationCurveMapper.getDurationCurve", params);
+			result = new DurationCurve(session.selectList( queryPackage + ".DurationCurveMapper.getDurationCurve", params), siteId, groupId, binType);
 		}
 				
 		return result;

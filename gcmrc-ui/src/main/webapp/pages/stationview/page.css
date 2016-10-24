@@ -55,7 +55,8 @@
 }
 
 #downloadColumnOrdering li span {
-	position: absolute;
+	position: relative;
+	display: inline-block;
 	margin-left: -1.3em;
 }
 
@@ -188,10 +189,21 @@ div[class^="timeseries-plot-"], div[class^="duration-plot-"] {
 	width: 100%;
 }
 
-a .disabled {
-   pointer-events: none;
-   cursor: default;
-   color: graytext;
+#downloadPopup {
+	width: inherit;
+}
+
+.datatype-select {
+	margin-bottom: 15px;
+}
+
+.datatype-select label {
+	margin-left: 8px;
+	font-size: 120%;
+	font-weight: bold;
+}
+.datatype-select input {
+	margin-left: 8px !important;
 }
 
 

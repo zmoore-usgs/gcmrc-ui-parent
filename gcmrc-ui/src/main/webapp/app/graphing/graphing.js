@@ -89,7 +89,7 @@ GCMRC.Graphing = function(hoursOffset) {
 			conf["maxY"] = maxY;
 			
 			//Logarithmic vs Linear Plots
-			if(relevantData.binType.toUpperCase() === "LOG_BINS"){
+			if(relevantData.binType.toLowerCase() === "log"){
 				conf["div"] = $('#' + conf.divId + ' div.duration-plot-' + identifier + '[id=log]').get(0);
 				buildGraph(conf, true);
 			} else {

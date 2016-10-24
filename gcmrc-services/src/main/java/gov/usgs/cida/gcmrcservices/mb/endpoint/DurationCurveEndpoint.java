@@ -58,7 +58,6 @@ public class DurationCurveEndpoint {
 			//Create output file
 			List<DurationCurveService.COLUMNS> outputColumns = Arrays.asList(DurationCurveService.COLUMNS.CUMULATIVE_BIN_PERC, DurationCurveService.COLUMNS.BIN_VALUE);
 			String result = DurationCurveService.getTSVForDurationCurves(durationCurves, outputColumns, groupIds, groupNames, binCount);
-			log.error("BUILT TSV FILE");
 			
 			// Write the header line
 			response.addHeader("Content-Disposition", "attachment; filename=GCMRC.tsv");

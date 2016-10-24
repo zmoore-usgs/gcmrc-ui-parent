@@ -130,18 +130,11 @@ public class DurationCurveService {
 		//Get all necessary data
 		for(int i = 0; i < data.size(); i++){
 			String groupName = groupNames.get(groupIds.indexOf(data.get(i).getGroupId()));
-			HashMap<String, List> result = getDurationCurveDownloadData(data.get(i), outputColumns, groupName);
-			
-			for(int j = 0; j < result.get("columns").size(); j++){
-				log.error("" + ((List)result.get("columns").get(j)).size());
-			}
-			
+			HashMap<String, List> result = getDurationCurveDownloadData(data.get(i), outputColumns, groupName);			
 			columns.addAll(result.get("columns"));			
 			headers.addAll(result.get("headers"));
 		}
-		
-		log.error(columns.size() + " | " + headers.size());
-				
+						
 		//Verify Data
 		if(columns.size() > 0 && headers.size() > 0){
 			output = TSVUtil.createTSV(headers, columns, binCount, true, true);

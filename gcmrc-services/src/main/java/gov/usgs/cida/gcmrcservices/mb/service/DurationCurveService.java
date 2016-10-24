@@ -26,7 +26,7 @@ public class DurationCurveService {
 	public static enum COLUMNS {BIN_NUMBER, BIN_VALUE, CUMULATIVE_BIN_PERC, IN_BIN_MINUTES, CUMULATIVE_IN_BIN_MINUTES, LOW_BOUND, HIGH_BOUND};
 	public static final String[] COLUMN_HEADERS = {"Bin Number", "Bin Value", "Percentage of Time Equaled or Exceeded", "In Bin Minutes", "Cumulative In Bin Minutes", "Low Bound", "High Bound"};
 	
-	public static DurationCurve getDurationCurve(String siteId, String startTime, String endTime, int binCount, String binType, final Integer groupId){
+	public static DurationCurve getDurationCurve(String siteName, String startTime, String endTime, int binCount, String binType, final Integer groupId){
 		String binSQL;
 		DurationCurve result;
 		
@@ -45,7 +45,7 @@ public class DurationCurveService {
 		}
 		
 		try {
-			result = new DurationCurveDAO().getDurationCurve(siteId, startTime, endTime, groupId, binCount, binSQL);
+			result = new DurationCurveDAO().getDurationCurve(siteName, startTime, endTime, groupId, binCount, binSQL);
 		} catch (Exception e) {
 			log.error("Could not get duration curve for groupId: " + groupId + " with binType: " + binType, e);
 			throw new WebApplicationException(Response.status(Response.Status.INTERNAL_SERVER_ERROR).type("text/plain").entity("Unable to get duration curve for the specified parameters (failure on groupId: " + groupId + " with binType: " + binType + ".\n\nError: " + e.getMessage()).build());
@@ -54,7 +54,7 @@ public class DurationCurveService {
 		return result;
 	}
 	
-	public static List<DurationCurve> getDurationCurves(String siteId, String startTime, String endTime, int binCount, String binType, final List<Integer> groupIds) {
+	public static List<DurationCurve> getDurationCurves(String siteName, String startTime, String endTime, int binCount, String binType, final List<Integer> groupIds) {
 		List<DurationCurve> durationCurves = new ArrayList<>();
 		ArrayList<String> binTypes = new ArrayList<>();
 				
@@ -73,7 +73,7 @@ public class DurationCurveService {
 		for(int groupId : groupIds){
 			for(String selectedBinType : binTypes){
 				try {
-					durationCurves.add(getDurationCurve(siteId, startTime, endTime, binCount, selectedBinType, groupId));
+					durationCurves.add(getDurationCurve(siteName, startTime, endTime, binCount, selectedBinType, groupId));
 				} catch (Exception e) {
 					log.error("Could not get duration curve for groupId: " + groupId + " with binType: " + selectedBinType, e);
 					throw new WebApplicationException(Response.status(Response.Status.INTERNAL_SERVER_ERROR).type("text/plain").entity("Unable to get duration curve for the specified parameters (failure on groupId: " + groupId + " with binType: " + selectedBinType + ".\n\nError: " + e.getMessage()).build());
@@ -91,7 +91,7 @@ public class DurationCurveService {
 				
 		//Build headers and extract relevant data
 		for(int i = 0; i < outputColumns.size(); i++){
-			headers.add(data.getSiteId() + " " + groupName + " (" + data.getBinType() + ") " + COLUMN_HEADERS[outputColumns.get(i).ordinal()]);
+			headers.add(data.getSiteName() + " " + groupName + " (" + data.getBinType() + ") " + COLUMN_HEADERS[outputColumns.get(i).ordinal()]);
 			
 			switch(outputColumns.get(i)){
 				case BIN_VALUE:

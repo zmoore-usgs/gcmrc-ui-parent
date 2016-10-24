@@ -32,12 +32,12 @@ public class DurationCurveEndpoint {
 	@GET
 	@JSONP(queryParam="jsonp_callback")
 	@Produces("application/javascript")
-	public SuccessResponse<DurationCurve> getDurationCurve(@QueryParam("siteId") String siteId, @QueryParam("startTime") String startTime, @QueryParam("endTime") String endTime, @QueryParam("binCount") int binCount, @QueryParam("binType") String binType, @QueryParam(value = "groupId[]") final List<Integer> groupIds) {
+	public SuccessResponse<DurationCurve> getDurationCurve(@QueryParam("siteName") String siteName, @QueryParam("startTime") String startTime, @QueryParam("endTime") String endTime, @QueryParam("binCount") int binCount, @QueryParam("binType") String binType, @QueryParam(value = "groupId[]") final List<Integer> groupIds) {
 		SuccessResponse<DurationCurve> result = null;
 		List<DurationCurve> durationCurves = new ArrayList<>();
 		
 		try {
-			durationCurves = DurationCurveService.getDurationCurves(siteId, startTime, endTime, binCount, binType, groupIds);
+			durationCurves = DurationCurveService.getDurationCurves(siteName, startTime, endTime, binCount, binType, groupIds);
 		} catch (Exception e) {
 			throw new WebApplicationException(Response.status(Status.INTERNAL_SERVER_ERROR).type("text/plain").entity("Could not output file response. Error: " + e.getMessage()).build());
 		}
@@ -50,10 +50,10 @@ public class DurationCurveEndpoint {
 	@Path("download")
 	@GET
 	@Produces("application/tsv")
-	public void getDurationCurveDownload(@QueryParam("siteId") String siteId, @QueryParam("startTime") String startTime, @QueryParam("endTime") String endTime, @QueryParam("binCount") int binCount, @QueryParam("binType") String binType, @QueryParam(value = "groupId[]") final List<Integer> groupIds, @QueryParam(value = "groupName[]") final List<String> groupNames, @Context HttpServletResponse response) {										
+	public void getDurationCurveDownload(@QueryParam("siteName") String siteName, @QueryParam("startTime") String startTime, @QueryParam("endTime") String endTime, @QueryParam("binCount") int binCount, @QueryParam("binType") String binType, @QueryParam(value = "groupId[]") final List<Integer> groupIds, @QueryParam(value = "groupName[]") final List<String> groupNames, @Context HttpServletResponse response) {										
 		try {
 			//Get Duration Cruve Data
-			List<DurationCurve> durationCurves = DurationCurveService.getDurationCurves(siteId, startTime, endTime, binCount, binType, groupIds);
+			List<DurationCurve> durationCurves = DurationCurveService.getDurationCurves(siteName, startTime, endTime, binCount, binType, groupIds);
 			
 			//Create output file
 			List<DurationCurveService.COLUMNS> outputColumns = Arrays.asList(DurationCurveService.COLUMNS.CUMULATIVE_BIN_PERC, DurationCurveService.COLUMNS.BIN_VALUE);

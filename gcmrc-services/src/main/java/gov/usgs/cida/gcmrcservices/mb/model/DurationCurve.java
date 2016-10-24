@@ -10,13 +10,13 @@ import java.util.List;
 public class DurationCurve {	
 	private List<DurationCurvePoint> points;
 	private int groupId;
-	private String siteId;
+	private String siteName;
 	private String binType;
 
 	public DurationCurve(List<DurationCurvePoint> pts, String site, int group, String bin) {
 		points = pts;
 		groupId = group;
-		siteId = site;
+		siteName = site;
 		binType = bin.equalsIgnoreCase("LOG_BINS") ? "log" : "lin";
 	}
 	
@@ -32,8 +32,8 @@ public class DurationCurve {
 		return binType;
 	}
 	
-	public String getSiteId() {
-		return siteId;
+	public String getSiteName() {
+		return siteName;
 	}
 	
 	public List<Double> extractBinValues() {

@@ -10,10 +10,10 @@ import java.util.List;
 public class DurationCurve {	
 	private List<DurationCurvePoint> points;
 	private int groupId;
-	private int siteId;
+	private String siteId;
 	private String binType;
 
-	public DurationCurve(List<DurationCurvePoint> pts, int site, int group, String bin) {
+	public DurationCurve(List<DurationCurvePoint> pts, String site, int group, String bin) {
 		points = pts;
 		groupId = group;
 		siteId = site;
@@ -32,7 +32,7 @@ public class DurationCurve {
 		return binType;
 	}
 	
-	public int getSiteId() {
+	public String getSiteId() {
 		return siteId;
 	}
 	

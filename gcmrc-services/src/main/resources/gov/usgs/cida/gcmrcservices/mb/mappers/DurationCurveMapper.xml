@@ -114,7 +114,7 @@
 							 LEAD(MEASUREMENT_DATE) OVER (ORDER BY MEASUREMENT_DATE) AS END_TIME
 						   From TIME_SERIES_STAR
 						   Where 
-							 SITE_ID=#{siteId, jdbcType=NUMERIC} <!-- Only this site -->
+							 SITE_ID=#{siteId, jdbcType=CHAR} <!-- Only this site -->
 							 And GROUP_ID= #{groupId, jdbcType=NUMERIC} <!-- Only measurements from selected parameter -->
 							 <!-- Filter the time window to the specified range + the max interpolation time period -->
 							 AND MEASUREMENT_DATE > (to_timestamp(#{startTime, jdbcType=CHAR}, 'YYYY-MM-DD"T"HH24:MI:SS') - (SELECT MAX_INTERPOLATION_DAYS FROM CONST))

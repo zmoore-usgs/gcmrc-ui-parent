@@ -32,7 +32,7 @@ public class DurationCurveEndpoint {
 	@GET
 	@JSONP(queryParam="jsonp_callback")
 	@Produces("application/javascript")
-	public SuccessResponse<DurationCurve> getDurationCurve(@QueryParam("siteId") int siteId, @QueryParam("startTime") String startTime, @QueryParam("endTime") String endTime, @QueryParam("binCount") int binCount, @QueryParam("binType") String binType, @QueryParam(value = "groupId[]") final List<Integer> groupIds) {
+	public SuccessResponse<DurationCurve> getDurationCurve(@QueryParam("siteId") String siteId, @QueryParam("startTime") String startTime, @QueryParam("endTime") String endTime, @QueryParam("binCount") int binCount, @QueryParam("binType") String binType, @QueryParam(value = "groupId[]") final List<Integer> groupIds) {
 		SuccessResponse<DurationCurve> result = null;
 		List<DurationCurve> durationCurves = new ArrayList<>();
 		
@@ -50,7 +50,7 @@ public class DurationCurveEndpoint {
 	@Path("download")
 	@GET
 	@Produces("application/tsv")
-	public void getDurationCurveDownload(@QueryParam("siteId") int siteId, @QueryParam("startTime") String startTime, @QueryParam("endTime") String endTime, @QueryParam("binCount") int binCount, @QueryParam("binType") String binType, @QueryParam(value = "groupId[]") final List<Integer> groupIds, @QueryParam(value = "groupName[]") final List<String> groupNames, @Context HttpServletResponse response) {										
+	public void getDurationCurveDownload(@QueryParam("siteId") String siteId, @QueryParam("startTime") String startTime, @QueryParam("endTime") String endTime, @QueryParam("binCount") int binCount, @QueryParam("binType") String binType, @QueryParam(value = "groupId[]") final List<Integer> groupIds, @QueryParam(value = "groupName[]") final List<String> groupNames, @Context HttpServletResponse response) {										
 		try {
 			//Get Duration Cruve Data
 			List<DurationCurve> durationCurves = DurationCurveService.getDurationCurves(siteId, startTime, endTime, binCount, binType, groupIds);

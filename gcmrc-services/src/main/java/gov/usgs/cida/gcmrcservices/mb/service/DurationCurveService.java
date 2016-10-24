@@ -26,7 +26,7 @@ public class DurationCurveService {
 	public static enum COLUMNS {BIN_NUMBER, BIN_VALUE, CUMULATIVE_BIN_PERC, IN_BIN_MINUTES, CUMULATIVE_IN_BIN_MINUTES, LOW_BOUND, HIGH_BOUND};
 	public static final String[] COLUMN_HEADERS = {"Bin Number", "Bin Value", "Percentage of Time Equaled or Exceeded", "In Bin Minutes", "Cumulative In Bin Minutes", "Low Bound", "High Bound"};
 	
-	public static DurationCurve getDurationCurve(int siteId, String startTime, String endTime, int binCount, String binType, final Integer groupId){
+	public static DurationCurve getDurationCurve(String siteId, String startTime, String endTime, int binCount, String binType, final Integer groupId){
 		String binSQL;
 		DurationCurve result;
 		
@@ -54,7 +54,7 @@ public class DurationCurveService {
 		return result;
 	}
 	
-	public static List<DurationCurve> getDurationCurves(int siteId, String startTime, String endTime, int binCount, String binType, final List<Integer> groupIds) {
+	public static List<DurationCurve> getDurationCurves(String siteId, String startTime, String endTime, int binCount, String binType, final List<Integer> groupIds) {
 		List<DurationCurve> durationCurves = new ArrayList<>();
 		ArrayList<String> binTypes = new ArrayList<>();
 				

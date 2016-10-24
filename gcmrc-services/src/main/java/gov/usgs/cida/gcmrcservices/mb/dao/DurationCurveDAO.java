@@ -28,7 +28,7 @@ public class DurationCurveDAO {
 	
 	public static final String queryPackage = "gov.usgs.cida.gcmrcservices.mb.mappers";
 	
-	public DurationCurve getDurationCurve(int siteId, String startTime, String endTime, int groupId, int binCount, String binType) {		
+	public DurationCurve getDurationCurve(String siteId, String startTime, String endTime, int groupId, int binCount, String binType) {		
 		DurationCurve result = null;
 		
 		Map<String, Object> params = new HashMap<String, Object>();

@@ -189,6 +189,14 @@ div[class^="plot-container-"] {
 	width: 100%;
 }
 
+.dygraph-label.dygraph-xlabel {
+	margin-left: 62px;
+}
+
+.dygraph-label.dygraph-xlabel {
+	margin-left: 90px;
+}
+
 div[class^="timeseries-plot-"], div[class^="duration-plot-"] {
 	width: 100%;
 }

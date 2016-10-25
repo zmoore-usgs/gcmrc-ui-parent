@@ -76,7 +76,7 @@ GCMRC.Graphing = function(hoursOffset) {
 			
 			displayData.reverse();
 
-			conf.labels = ["Percentage", "Daily Range Value"];
+			conf.labels = ["Percentage", "Value"];
 
 			conf['yAxisLabel'] = graphToMake.yAxisLabel || graphName;
 			conf['dataformatter'] = GCMRC.Dygraphs.DataFormatter(parameterMetadata['decimalPlaces']);
@@ -257,9 +257,7 @@ GCMRC.Graphing = function(hoursOffset) {
 			height: 420,
 			xlabel: 'Time',
 			ylabel: yAxisLabel,
-			axisLabelWidth: 85,
-			yAxisLabelWidth: 85,
-			xAxisLabelWidth: 85,
+			yAxisLabelWidth: 56,
 			xAxisHeight: 50,
 			axes: axes,
 			yRangePad: 5,
@@ -271,6 +269,7 @@ GCMRC.Graphing = function(hoursOffset) {
 //			labelsDiv: labelDiv,
 //			labelsSeparateLines: true,
 //			legend: 'always',
+			labelsDivWidth: 300,
 			showRangeSelector: true,
 			connectSeparatedPoints: false,
 			highlightCircleSize: 4,
@@ -376,7 +375,7 @@ GCMRC.Graphing = function(hoursOffset) {
 
 		var title = config['graphTitle'] || '';
 
-		var yAxisLabel = "Daily Range in " + (config['yAxisLabel'] || 'Data') + ", in CFS";
+		var yAxisLabel = config['yAxisLabel'] || 'Data';
 
 		var dataformatter = config['dataformatter'] || GCMRC.Dygraphs.DataFormatter(0);
 		var decimalPlaces = config['decimalPlaces'] || 0;
@@ -387,7 +386,8 @@ GCMRC.Graphing = function(hoursOffset) {
 		var axes = {
 			y: {
 				axisLabelFormatter: dataformatter,
-				valueFormatter: dataformatter
+				valueFormatter: dataformatter,
+				includeZero: false
 			},
 			x: {
 				axisLabelFormatter: GCMRC.Dygraphs.DataFormatter(0),
@@ -415,19 +415,19 @@ GCMRC.Graphing = function(hoursOffset) {
 			height: 420,
 			xlabel: 'Percentage of Time Equaled or Exceeded',
 			ylabel: yAxisLabel,
-			axisLabelWidth: 85,
-			yAxisLabelWidth: 85,
-			xAxisLabelWidth: 85,
+			yAxisLabelWidth: 56,
 			xAxisHeight: 50,
 			axes: axes,
 			yRangePad: 5,
 			pointSize: 2,
-//			includeZero: true,
+			xRangePad: 2,
+			includeZero: true,
 			labels: labels,
 			//To be used in "fixed" legend
 //			labelsDiv: labelDiv,
 //			labelsSeparateLines: true,
 //			legend: 'always',
+			labelsDivWidth: 300,
 			originalDateWindow: null,
 			showRangeSelector: true,
 			connectSeparatedPoints: false,

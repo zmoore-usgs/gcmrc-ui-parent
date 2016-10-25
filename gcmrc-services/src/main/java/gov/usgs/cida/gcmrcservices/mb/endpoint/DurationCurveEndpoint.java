@@ -51,7 +51,7 @@ public class DurationCurveEndpoint {
 			}
 			
 			if(mixed){
-				result = new GCMRCResponse(new SuccessEnvelope<>(durationCurves), new FailureEnvelope("Duration curves could not be calculated for some of the selected parameters.", 500));
+				result = new GCMRCResponse(new SuccessEnvelope<>(durationCurves), new FailureEnvelope("mixed", 500));
 			} else {
 				result = new GCMRCResponse(new SuccessEnvelope<>(durationCurves));
 			}

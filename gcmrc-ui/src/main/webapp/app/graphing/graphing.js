@@ -6,7 +6,8 @@ GCMRC.Graphing = function(hoursOffset) {
 
 	var graphs = {};
 	
-	var durationCurves = {};
+	var durationCurves = {
+	};
 	
 	var durationCurveConfiguration = {};
 
@@ -96,11 +97,6 @@ GCMRC.Graphing = function(hoursOffset) {
 				conf["div"] = $('#' + conf.divId + ' div.duration-plot-' + identifier + '[id=lin]').get(0);
 				buildGraph(conf, false);
 			}
-			
-			//Show relevant duration curve toggle switch
-			$('.curveSelectButton.toggle-switch-'+identifier).show();
-		} else {
-			showInfoMessage("#" + conf.divId + ' div.duration-plot-' + identifier, "There were no duration curve data during this period for " + graphName);
 		}
 	};
 	
@@ -543,16 +539,36 @@ GCMRC.Graphing = function(hoursOffset) {
 						};
 					}	
 					//has valid data
-					if (data.success && data.success.data && $.isArray(data.success.data)) {
-						//If we recieved mixed status data alert the user
-						if(data.status.toLowerCase() === "mixed" && data.failure.error){
-							clearErrorMessage();
-							showErrorMessage(data.failure.error);
-						}
-						
+					if (data.success && data.success.data && $.isArray(data.success.data)) {						
+						//Build plots
 						data.success.data.forEach(function(graph) {
-							//Build Plot
 							dealWithDurationCurveResponse(graph.groupId, graph, config, buildDurationCurve);
+						});
+						
+						//Add proper UI elements based on which duration curves were built
+						urlParams.groupId.forEach(function(id) {
+							var hasLin = false, hasLog = false;
+							var div = $(".plot-container-"+id);
+							
+							if(div){
+								if(GCMRC.Graphing.durationCurves[config.divId].lin[id]){
+									hasLin = true;
+									div.children('#lin').addClass("selected-duration-scale");
+								}
+
+								if(GCMRC.Graphing.durationCurves[config.divId].log[id]){
+									hasLog = true;
+									div.children('#log').addClass("selected-duration-scale");
+									div.children('#lin').removeClass("selected-duration-scale");
+								}
+								
+								if(hasLin || hasLog){
+									$(createDurationCurveToggles(id, hasLin, hasLog)).prependTo(div);
+								} else {
+									clearErrorMessage();
+									showErrorMessage("Duration curves could not be calculated for some of the selected parameters for the selected time period.");
+								}
+							}
 						});
 						
 						//Hide Duration Curve Plots after building because TS Plots are the default
@@ -562,7 +578,7 @@ GCMRC.Graphing = function(hoursOffset) {
 						$('div[class^="timeseries-plot"]').show();
 					} else {
 						clearErrorMessage();
-						showErrorMessage("An error occured while fetching duration curve data.");
+						showErrorMessage("An error occured while fetching duration curve data. Error: " + data.failure.error);
 						//Show the time series plots
 						$('div[class^="timeseries-plot"]').show();
 					}
@@ -600,13 +616,33 @@ GCMRC.Graphing = function(hoursOffset) {
 				'</div>';
 	};
 	
-	var createDurationCurveScaleToggle = function(chartId) {
-		return '<div onselectstart="return false" class="scaleSelectButton toggle-switch-' + chartId + '" style="display: inline-block;">' +
-					'<input class="scale-select" type="radio" id="log-view-input-' + chartId + '" name="toggle-scale-' + chartId + '" checked="checked" value="log">' +
-					'<label for="log-view-input-' + chartId + '" class="log-scale-label">Logarithmic</label>' +
-					'<input class="scale-select" type="radio" id="lin-view-input-' + chartId + '" name="toggle-scale-' + chartId + '" value="lin">' +
-					'<label for="lin-view-input-' + chartId + '" class="lin-scale-label">Linear</label>' +
-				'</div>';
+	var createDurationCurveScaleToggle = function(chartId, hasLin, hasLog) {
+		var toReturn = "";
+		
+		if(hasLin && hasLog) {
+			toReturn = '<div onselectstart="return false" class="scaleSelectButton toggle-switch-' + chartId + '" style="display: none;">' +
+							'<input class="scale-select" type="radio" id="log-view-input-' + chartId + '" name="toggle-scale-' + chartId + '" checked="checked" value="log">' +
+							'<label for="log-view-input-' + chartId + '" class="log-scale-label">Logarithmic</label>' +
+							'<input class="scale-select" type="radio" id="lin-view-input-' + chartId + '" name="toggle-scale-' + chartId + '" value="lin">' +
+							'<label for="lin-view-input-' + chartId + '" class="lin-scale-label">Linear</label>' +
+						'</div>';
+		} else if(hasLin) {
+			toReturn = '<div onselectstart="return false" class="scaleSelectButton toggle-switch-' + chartId + '" style="display: none;">' +
+							'<input class="scale-select" type="radio" id="lin-view-input-' + chartId + '" name="toggle-scale-' + chartId + '" checked="checked" value="lin">' +
+							'<label for="lin-view-input-' + chartId + '" class="one-scale-only-label">Linear</label>' +
+						'</div>';
+		} else if(hasLog) {
+			toReturn = '<div onselectstart="return false" class="scaleSelectButton toggle-switch-' + chartId + '" style="display: none;">' +
+							'<input class="scale-select" type="radio" id="log-view-input-' + chartId + '" name="toggle-scale-' + chartId + '" checked="checked" value="log">' +
+							'<label for="log-view-input-' + chartId + '" class="one-scale-label">Logarithmic</label>' +
+						'</div>';
+		}
+		
+		return toReturn;
+	};
+	
+	var createDurationCurveToggles = function(chartId, hasLin, hasLog){
+		return createDurationCurveToggle(chartId) + createDurationCurveScaleToggle(chartId, hasLin, hasLog);
 	};
 
 	return {
@@ -631,15 +667,13 @@ GCMRC.Graphing = function(hoursOffset) {
 			var containerDiv = $("#" + config.divId);
 			var labelDiv = $("#" + config.labelDivId);
 
-			if (graphs[config.divId]) {
-				graphs[config.divId] = {};
-			}
-
-			if (durationCurves[config.divId]) {
-				durationCurves[config.divId] = {};
-				durationCurveConfiguration = {};
-			}
-			
+			graphs[config.divId] = {};
+			durationCurves[config.divId] = {
+				log: {},
+				lin: {}
+			};
+			durationCurveConfiguration = {};
+						
 			/*
 			 * Clean out and repopulated the container/graph divs
 			 * for the correct display order
@@ -678,30 +712,16 @@ GCMRC.Graphing = function(hoursOffset) {
 							}).map(function(n) {
 								return n.description.groupId;
 							}).forEach(function(el) {
-								var plotDiv = $('<div class="plot-container"><div class="timeseries-plot-' + el + 
+								var plotDiv = $('<div class="plot-container-' + el + '"><div class="timeseries-plot-' + el + 
 										'"></div><div id="log" class="duration-plot-' + el + 
-										' selected-duration-scale"></div><div id="lin" class="duration-plot-' + el + 
+										'"></div><div id="lin" class="duration-plot-' + el + 
 										'"></div></div>');
 								plotDiv.appendTo(containerDiv);
 								plotDivs.push({"div": plotDiv, "groupId": el});
 								labelDiv.append($('<div class="timeseries-plot-' + el +'"></div><div class="duration-plot-' + el +'"></div>'));
 							});
-							
-							graphs[config.divId] = {};
-							durationCurves[config.divId] = {};
 														
-							config.graphsToMake.forEach(function(graphToMake) {
-								//Find the div for the current chart
-								var div = plotDivs.filter(function(obj){
-									return obj.groupId === graphToMake.groupId;
-								})[0];
-								
-								//Add Duration Curve and Duration Curve Scale Toggles
-								if(div){
-									$(createDurationCurveToggle(graphToMake.groupId)).prependTo(div.div);
-									$(createDurationCurveScaleToggle(graphToMake.groupId)).prependTo(div.div);
-								}
-								
+							config.graphsToMake.forEach(function(graphToMake) {							
 								//Build Plot
 								if (graphToMake.dealWithResponse) {
 									graphToMake.dealWithResponse(graphToMake, data, config, buildGraph);
@@ -710,14 +730,14 @@ GCMRC.Graphing = function(hoursOffset) {
 								}
 							});
 							
-							//Hide TS plots and toggle switches after they've built until the duration curve plots are finished building.
+							//Hide TS plots after they've built until the duration curve plots are finished building.
 							$('div[class^="timeseries-plot"]').hide();
-							$('div[class*="toggle-switch"]').hide();
 							
 							//Build List of Graphs that Populated and thus should have duration curves
 							var durationCurveIds = graphs[config.divId].keys();
 							
 							config.durationCurveConf.graphsToMake = durationCurveIds;
+							config.durationCurveConf.divId = config.divId;
 							
 							//Build Duration Curve Plots. Note: Non-blocking function because of AJAX call.
 							createDurationCurvePlot('durationCurve', config.durationCurveConf, config.durationCurveParams);

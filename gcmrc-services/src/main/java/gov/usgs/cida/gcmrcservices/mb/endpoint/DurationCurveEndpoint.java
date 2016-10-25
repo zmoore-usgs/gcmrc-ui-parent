@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import javax.servlet.http.HttpServletResponse;
+import javax.ws.rs.BadRequestException;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
@@ -34,12 +35,26 @@ public class DurationCurveEndpoint {
 	@JSONP(queryParam="jsonp_callback")
 	@Produces("application/javascript")
 	public GCMRCResponse getDurationCurve(@QueryParam("siteName") String siteName, @QueryParam("startTime") String startTime, @QueryParam("endTime") String endTime, @QueryParam("binCount") int binCount, @QueryParam("binType") String binType, @QueryParam(value = "groupId[]") final List<Integer> groupIds) {
-		GCMRCResponse result = null;
+		GCMRCResponse result;
+		boolean mixed = false;
 		List<DurationCurve> durationCurves = new ArrayList<>();
 		
 		try {
 			durationCurves = DurationCurveService.getDurationCurves(siteName, startTime, endTime, binCount, binType, groupIds);
-			result = new GCMRCResponse(new SuccessEnvelope<>(durationCurves));
+			
+			//Check for any empty duration curves
+			for(DurationCurve curve : durationCurves){
+				if(curve.getPoints().isEmpty()){
+					mixed = true;
+					break;
+				}
+			}
+			
+			if(mixed){
+				result = new GCMRCResponse(new SuccessEnvelope<>(durationCurves), new FailureEnvelope("Duration curves could not be calculated for some of the selected parameters.", 500));
+			} else {
+				result = new GCMRCResponse(new SuccessEnvelope<>(durationCurves));
+			}
 		} catch (Exception e) {
 			result = new GCMRCResponse(new FailureEnvelope(e.getMessage(), 500));
 		}
@@ -54,7 +69,7 @@ public class DurationCurveEndpoint {
 		try {
 			//Get Duration Cruve Data
 			List<DurationCurve> durationCurves = DurationCurveService.getDurationCurves(siteName, startTime, endTime, binCount, binType, groupIds);
-			
+						
 			//Create output file
 			List<DurationCurveService.COLUMNS> outputColumns = Arrays.asList(DurationCurveService.COLUMNS.CUMULATIVE_BIN_PERC, DurationCurveService.COLUMNS.BIN_VALUE);
 			String result = DurationCurveService.getTSVForDurationCurves(durationCurves, outputColumns, groupIds, groupNames, binCount);

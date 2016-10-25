@@ -6,19 +6,19 @@ import java.util.List;
  *
  * @author dmsibley, zmoore
  */
-public class SuccessEnvelope<T> extends ResponseEnvelope {	
+public class SuccessEnvelope<T> {	
 	private final int rowCount;
+	private final List<T> data;
 	
 	public SuccessEnvelope(List<T> data) {
-		super(data, true);
 		Integer count = -1;
 		if (null != data) {
 			count = data.size();
 		}
 		this.rowCount = count;
+		this.data = data;
 	}
 	
-	@Override
 	public List<T> getData() {
 		return (List)data;
 	}

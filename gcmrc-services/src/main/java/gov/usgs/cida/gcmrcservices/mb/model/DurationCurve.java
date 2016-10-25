@@ -8,13 +8,17 @@ import java.util.List;
  * @author zmoore
  */
 public class DurationCurve {	
-	private List<DurationCurvePoint> points;
-	private int groupId;
-	private String siteName;
-	private String binType;
+	private final List<DurationCurvePoint> points;
+	private final int groupId;
+	private final String siteName;
+	private final String binType;
 
 	public DurationCurve(List<DurationCurvePoint> pts, String site, int group, String bin) {
-		points = pts;
+		if(pts == null) {
+			points = new ArrayList<>();
+		} else {
+			points = pts;
+		}
 		groupId = group;
 		siteName = site;
 		binType = bin.equalsIgnoreCase("LOG_BINS") ? "log" : "lin";

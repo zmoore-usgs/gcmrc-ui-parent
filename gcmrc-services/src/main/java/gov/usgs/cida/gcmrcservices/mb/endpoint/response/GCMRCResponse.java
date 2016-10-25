@@ -10,24 +10,37 @@ import org.slf4j.LoggerFactory;
 public class GCMRCResponse {
 	private static final Logger log = LoggerFactory.getLogger(GCMRCResponse.class);
 	
-	private final ResponseEnvelope success;
-	private final ResponseEnvelope failure;
+	private final SuccessEnvelope success;
+	private final FailureEnvelope failure;
+	private final String status;
 
-	public GCMRCResponse(ResponseEnvelope response) {
-		if(response.successful){
-			this.success = response;
-			this.failure = null;
-		} else {
-			this.failure = response;
-			this.success = null;
-		}
+	public GCMRCResponse(SuccessEnvelope success) {
+		this.success = success;
+		this.failure = null;
+		this.status = "success";
+	}
+	
+	public GCMRCResponse(FailureEnvelope failure) {
+		this.failure = failure;
+		this.success = null;
+		this.status = "failure";
+	}
+	
+	public GCMRCResponse(SuccessEnvelope success, FailureEnvelope faliure) {
+		this.success = success;
+		this.failure = faliure;
+		this.status = "mixed";
 	}
 
-	public ResponseEnvelope getSuccess() {
+	public SuccessEnvelope getSuccess() {
 		return this.success;
 	}
 	
-	public ResponseEnvelope getFailure() {
+	public FailureEnvelope getFailure() {
 		return this.failure;
+	}
+	
+	public String getStatus() {
+		return this.status;
 	}
 }

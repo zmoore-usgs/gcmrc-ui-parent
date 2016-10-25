@@ -541,9 +541,15 @@ GCMRC.Graphing = function(hoursOffset) {
 								]
 							}
 						};
-					}
-					//success
+					}	
+					//has valid data
 					if (data.success && data.success.data && $.isArray(data.success.data)) {
+						//If we recieved mixed status data alert the user
+						if(data.status.toLowerCase() === "mixed" && data.failure.error){
+							clearErrorMessage();
+							showErrorMessage(data.failure.error);
+						}
+						
 						data.success.data.forEach(function(graph) {
 							//Build Plot
 							dealWithDurationCurveResponse(graph.groupId, graph, config, buildDurationCurve);

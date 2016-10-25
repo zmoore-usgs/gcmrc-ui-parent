@@ -4,20 +4,20 @@ package gov.usgs.cida.gcmrcservices.mb.endpoint.response;
  *
  * @author zmoore
  */
-public class FailureEnvelope extends ResponseEnvelope {	
-	public int error;
+public class FailureEnvelope {	
+	public int errorCode;
+	public String error;
 	
 	public FailureEnvelope(String error, int code) {
-		super(error, false);
-		this.error = code;
+		this.error = error;
+		this.errorCode = code;
 	}
-	
-	@Override
-	public String getData() {
-		return (String)data;
-	}
-	
-	public int getError() {
+		
+	public String getError() {
 		return this.error;
+	}
+	
+	public int getErrorCode() {
+		return this.errorCode;
 	}
 }

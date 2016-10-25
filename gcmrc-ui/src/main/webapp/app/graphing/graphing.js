@@ -78,7 +78,7 @@ GCMRC.Graphing = function(hoursOffset) {
 
 			conf.labels = ["Percentage", "Value"];
 
-			conf['yAxisLabel'] = graphToMake.yAxisLabel || graphName;
+			conf['yAxisLabel'] = graphToMake.yAxisLabel || graphName + " (" + parameterMetadata['unitsShort'] + ")";
 			conf['dataformatter'] = GCMRC.Dygraphs.DataFormatter(parameterMetadata['decimalPlaces']);
 			conf['decimalPlaces'] = parameterMetadata['decimalPlaces'];
 			conf["parameterName"] = identifier;

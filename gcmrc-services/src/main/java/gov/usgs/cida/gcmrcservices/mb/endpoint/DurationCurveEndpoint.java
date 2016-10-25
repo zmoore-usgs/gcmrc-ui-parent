@@ -1,7 +1,8 @@
 package gov.usgs.cida.gcmrcservices.mb.endpoint;
 
-import gov.usgs.cida.gcmrcservices.mb.endpoint.response.ResponseEnvelope;
-import gov.usgs.cida.gcmrcservices.mb.endpoint.response.SuccessResponse;
+import gov.usgs.cida.gcmrcservices.mb.endpoint.response.FailureEnvelope;
+import gov.usgs.cida.gcmrcservices.mb.endpoint.response.SuccessEnvelope;
+import gov.usgs.cida.gcmrcservices.mb.endpoint.response.GCMRCResponse;
 import gov.usgs.cida.gcmrcservices.mb.model.DurationCurve;
 import gov.usgs.cida.gcmrcservices.mb.service.DurationCurveService;
 import java.io.OutputStream;
@@ -32,17 +33,16 @@ public class DurationCurveEndpoint {
 	@GET
 	@JSONP(queryParam="jsonp_callback")
 	@Produces("application/javascript")
-	public SuccessResponse<DurationCurve> getDurationCurve(@QueryParam("siteName") String siteName, @QueryParam("startTime") String startTime, @QueryParam("endTime") String endTime, @QueryParam("binCount") int binCount, @QueryParam("binType") String binType, @QueryParam(value = "groupId[]") final List<Integer> groupIds) {
-		SuccessResponse<DurationCurve> result = null;
+	public GCMRCResponse getDurationCurve(@QueryParam("siteName") String siteName, @QueryParam("startTime") String startTime, @QueryParam("endTime") String endTime, @QueryParam("binCount") int binCount, @QueryParam("binType") String binType, @QueryParam(value = "groupId[]") final List<Integer> groupIds) {
+		GCMRCResponse result = null;
 		List<DurationCurve> durationCurves = new ArrayList<>();
 		
 		try {
 			durationCurves = DurationCurveService.getDurationCurves(siteName, startTime, endTime, binCount, binType, groupIds);
+			result = new GCMRCResponse(new SuccessEnvelope<>(durationCurves));
 		} catch (Exception e) {
-			throw new WebApplicationException(Response.status(Status.INTERNAL_SERVER_ERROR).type("text/plain").entity("Could not output file response. Error: " + e.getMessage()).build());
+			result = new GCMRCResponse(new FailureEnvelope(e.getMessage(), 500));
 		}
-		
-		result = new SuccessResponse<>(new ResponseEnvelope<>(durationCurves));
 		
 		return result;
 	}

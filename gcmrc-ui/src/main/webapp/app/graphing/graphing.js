@@ -552,13 +552,13 @@ GCMRC.Graphing = function(hoursOffset) {
 						//Hide Duration Curve Plots after building because TS Plots are the default
 						$('div[class^="duration-plot"]').hide();
 
-						//Show the Time Series Plots and toggle switches after everything is done building because they're default
+						//Show the Time Series Plots after everything is done building because they're on by default
 						$('div[class^="timeseries-plot"]').show();
-					} else if (data.data && data.data.ERROR) {
-						clearErrorMessage();
-						showErrorMessage("Please select a parameter to graph!");
 					} else {
-						LOG.error("what the heck just happened?");
+						clearErrorMessage();
+						showErrorMessage("An error occured while fetching duration curve data.");
+						//Show the time series plots
+						$('div[class^="timeseries-plot"]').show();
 					}
 				}
 			},
@@ -719,7 +719,9 @@ GCMRC.Graphing = function(hoursOffset) {
 							clearErrorMessage();
 							showErrorMessage("Please select a parameter to graph!");
 						} else {
-							LOG.error("what the heck just happened?");
+							LOG.error("An unknown error occured when fetching the data.");
+							clearErrorMessage();
+							showErrorMessage("An unknown error occured when fetching the data.");
 						}
 					}
 				},

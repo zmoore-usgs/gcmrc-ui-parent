@@ -190,10 +190,10 @@ div[class^="plot-container-"] {
 }
 
 .dygraph-label.dygraph-xlabel {
-	margin-left: 62px;
+	margin-left: 81px;
 }
 
-.dygraph-label.dygraph-xlabel {
+.dygraph-label.dygraph-ylabel {
 	margin-left: 90px;
 }
 

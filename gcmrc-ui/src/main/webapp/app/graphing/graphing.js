@@ -257,7 +257,7 @@ GCMRC.Graphing = function(hoursOffset) {
 			height: 420,
 			xlabel: 'Time',
 			ylabel: yAxisLabel,
-			yAxisLabelWidth: 75,
+			yAxisLabelWidth: 85,
 			xAxisHeight: 50,
 			axes: axes,
 			yRangePad: 5,
@@ -415,7 +415,7 @@ GCMRC.Graphing = function(hoursOffset) {
 			height: 420,
 			xlabel: 'Percentage of Time Equaled or Exceeded',
 			ylabel: yAxisLabel,
-			yAxisLabelWidth: 75,
+			yAxisLabelWidth: 85,
 			xAxisHeight: 50,
 			axes: axes,
 			yRangePad: 5,
@@ -428,7 +428,8 @@ GCMRC.Graphing = function(hoursOffset) {
 //			labelsSeparateLines: true,
 //			legend: 'always',
 			labelsDivWidth: 125,
-			originalDateWindow: null,
+			dateWindow: [0, 100],
+			originalDateWindow: [0, 100],
 			showRangeSelector: true,
 			connectSeparatedPoints: false,
 			highlightCircleSize: 4,
@@ -570,12 +571,18 @@ GCMRC.Graphing = function(hoursOffset) {
 								}
 							}
 						});
-						
+												
 						//Hide Duration Curve Plots after building because TS Plots are the default
 						$('div[class^="duration-plot"]').hide();
 
 						//Show the Time Series Plots after everything is done building because they're on by default
 						$('div[class^="timeseries-plot"]').show();
+						
+						//Force-Redraw Time Series Plots just in case the window was resized while they were hidden
+						graphs[config.divId].values().forEach(function(graph){
+							graph.updateOptions({});
+							graph.resize();
+						});
 					} else {
 						clearErrorMessage();
 						showErrorMessage("An error occured while fetching duration curve data. Error: " + data.failure.error);

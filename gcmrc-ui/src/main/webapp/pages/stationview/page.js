@@ -480,9 +480,9 @@ GCMRC.Page = {
 				break;
 		}
 		
-		var id = parseInt(event.target.id.substring(event.target.id.length-1));
+		var id = parseInt(event.target.id.substring(event.target.id.lastIndexOf("-")+1));
 		
-		if(id){
+		if(id !== undefined){
 			GCMRC.Page.redrawGraphs(id);
 		}
 	},
@@ -498,9 +498,9 @@ GCMRC.Page = {
 				break;
 		}
 		
-		var id = parseInt(event.target.id.substring(event.target.id.length-1));
+		var id = parseInt(event.target.id.substring(event.target.id.lastIndexOf("-")+1));
 		
-		if(id){
+		if(id !== undefined){
 			GCMRC.Page.redrawGraphs(id);
 		}
 	},
@@ -513,16 +513,24 @@ GCMRC.Page = {
 				
 		graphs.forEach(function(graph){
 			if(graph){
-				graph.updateOptions({
-					//width: $('#data-dygraph').width() - 15
-				});
+				graph.updateOptions({});
 				graph.resize();
 			}
 		});
+	},
+	redrawAllGraphs : function() {
+		var graphs = new Array();
 		
-		var evt = document.createEvent('UIEvents');
-		evt.initUIEvent('resize', true, false,window,0);
-		window.dispatchEvent(evt);
+		graphs.pushAll(GCMRC.Graphing.graphs['data-dygraph']);
+		graphs.pushAll(GCMRC.Graphing.durationCurves['data-dygraph']['log']);
+		graphs.pushAll(GCMRC.Graphing.durationCurves['data-dygraph']['lin']);
+				
+		graphs.forEach(function(graph){
+			if(graph){
+				graph.updateOptions({});
+				graph.resize();
+			}
+		});
 	},
 	downloadPopupClicked : function() {
 		var begin = $("input[name='beginPosition']").val();

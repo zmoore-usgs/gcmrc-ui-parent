@@ -76,9 +76,9 @@ GCMRC.Graphing = function(hoursOffset) {
 			
 			displayData.reverse();
 
-			conf.labels = ["Percentage", "Daily Range Value"];
+			conf.labels = ["Percentage", "Value"];
 
-			conf['yAxisLabel'] = graphToMake.yAxisLabel || graphName;
+			conf['yAxisLabel'] = graphToMake.yAxisLabel || graphName + " (" + parameterMetadata['unitsShort'] + ")";
 			conf['dataformatter'] = GCMRC.Dygraphs.DataFormatter(parameterMetadata['decimalPlaces']);
 			conf['decimalPlaces'] = parameterMetadata['decimalPlaces'];
 			conf["parameterName"] = identifier;
@@ -257,9 +257,7 @@ GCMRC.Graphing = function(hoursOffset) {
 			height: 420,
 			xlabel: 'Time',
 			ylabel: yAxisLabel,
-			axisLabelWidth: 85,
 			yAxisLabelWidth: 85,
-			xAxisLabelWidth: 85,
 			xAxisHeight: 50,
 			axes: axes,
 			yRangePad: 5,
@@ -271,6 +269,7 @@ GCMRC.Graphing = function(hoursOffset) {
 //			labelsDiv: labelDiv,
 //			labelsSeparateLines: true,
 //			legend: 'always',
+			labelsDivWidth: 300,
 			showRangeSelector: true,
 			connectSeparatedPoints: false,
 			highlightCircleSize: 4,
@@ -376,7 +375,7 @@ GCMRC.Graphing = function(hoursOffset) {
 
 		var title = config['graphTitle'] || '';
 
-		var yAxisLabel = "Daily Range in " + (config['yAxisLabel'] || 'Data') + ", in CFS";
+		var yAxisLabel = config['yAxisLabel'] || 'Data';
 
 		var dataformatter = config['dataformatter'] || GCMRC.Dygraphs.DataFormatter(0);
 		var decimalPlaces = config['decimalPlaces'] || 0;
@@ -387,7 +386,8 @@ GCMRC.Graphing = function(hoursOffset) {
 		var axes = {
 			y: {
 				axisLabelFormatter: dataformatter,
-				valueFormatter: dataformatter
+				valueFormatter: dataformatter,
+				includeZero: false
 			},
 			x: {
 				axisLabelFormatter: GCMRC.Dygraphs.DataFormatter(0),
@@ -415,20 +415,21 @@ GCMRC.Graphing = function(hoursOffset) {
 			height: 420,
 			xlabel: 'Percentage of Time Equaled or Exceeded',
 			ylabel: yAxisLabel,
-			axisLabelWidth: 85,
 			yAxisLabelWidth: 85,
-			xAxisLabelWidth: 85,
 			xAxisHeight: 50,
 			axes: axes,
 			yRangePad: 5,
 			pointSize: 2,
-//			includeZero: true,
+			xRangePad: 2,
+			includeZero: true,
 			labels: labels,
 			//To be used in "fixed" legend
 //			labelsDiv: labelDiv,
 //			labelsSeparateLines: true,
 //			legend: 'always',
-			originalDateWindow: null,
+			labelsDivWidth: 125,
+			dateWindow: [0, 100.25],
+			originalDateWindow: [0, 100.25],
 			showRangeSelector: true,
 			connectSeparatedPoints: false,
 			highlightCircleSize: 4,
@@ -576,6 +577,12 @@ GCMRC.Graphing = function(hoursOffset) {
 
 						//Show the Time Series Plots after everything is done building because they're on by default
 						$('div[class^="timeseries-plot"]').show();
+						
+						//Force-Redraw Time Series Plots just in case the window was resized while they were hidden
+						graphs[config.divId].values().forEach(function(graph){
+							graph.updateOptions({});
+							graph.resize();
+						});
 					} else {
 						clearErrorMessage();
 						showErrorMessage("An error occured while fetching duration curve data. Error: " + data.failure.error);

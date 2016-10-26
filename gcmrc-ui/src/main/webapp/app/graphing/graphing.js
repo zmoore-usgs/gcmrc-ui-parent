@@ -571,7 +571,7 @@ GCMRC.Graphing = function(hoursOffset) {
 								}
 							}
 						});
-												
+						
 						//Hide Duration Curve Plots after building because TS Plots are the default
 						$('div[class^="duration-plot"]').hide();
 

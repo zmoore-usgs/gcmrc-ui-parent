@@ -388,7 +388,7 @@ GCMRC.Page = {
 					endTime: end,
 					binCount: 200,
 					binType: "both",
-					siteId: CONFIG.stationName
+					siteName: CONFIG.stationName
 				};
 
 				var aggTime = GCMRC.Page.checkIfAgg(serviceOptions);
@@ -692,7 +692,7 @@ GCMRC.Page = {
 		var serviceOptions = {
 			startTime : beginClean,
 			endTime : endClean,
-			siteId : CONFIG.stationName,
+			siteName : CONFIG.stationName,
 			binCount: "200",
 			binType: $('input[name=bintype]:checked').val(),
 			groupId: ids,

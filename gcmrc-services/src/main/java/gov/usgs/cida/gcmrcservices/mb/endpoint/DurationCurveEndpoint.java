@@ -1,7 +1,8 @@
 package gov.usgs.cida.gcmrcservices.mb.endpoint;
 
-import gov.usgs.cida.gcmrcservices.mb.endpoint.response.ResponseEnvelope;
-import gov.usgs.cida.gcmrcservices.mb.endpoint.response.SuccessResponse;
+import gov.usgs.cida.gcmrcservices.mb.endpoint.response.FailureEnvelope;
+import gov.usgs.cida.gcmrcservices.mb.endpoint.response.SuccessEnvelope;
+import gov.usgs.cida.gcmrcservices.mb.endpoint.response.GCMRCResponse;
 import gov.usgs.cida.gcmrcservices.mb.model.DurationCurve;
 import gov.usgs.cida.gcmrcservices.mb.service.DurationCurveService;
 import java.io.OutputStream;
@@ -9,6 +10,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import javax.servlet.http.HttpServletResponse;
+import javax.ws.rs.BadRequestException;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
@@ -32,17 +34,30 @@ public class DurationCurveEndpoint {
 	@GET
 	@JSONP(queryParam="jsonp_callback")
 	@Produces("application/javascript")
-	public SuccessResponse<DurationCurve> getDurationCurve(@QueryParam("siteId") int siteId, @QueryParam("startTime") String startTime, @QueryParam("endTime") String endTime, @QueryParam("binCount") int binCount, @QueryParam("binType") String binType, @QueryParam(value = "groupId[]") final List<Integer> groupIds) {
-		SuccessResponse<DurationCurve> result = null;
+	public GCMRCResponse getDurationCurve(@QueryParam("siteName") String siteName, @QueryParam("startTime") String startTime, @QueryParam("endTime") String endTime, @QueryParam("binCount") int binCount, @QueryParam("binType") String binType, @QueryParam(value = "groupId[]") final List<Integer> groupIds) {
+		GCMRCResponse result;
+		boolean mixed = false;
 		List<DurationCurve> durationCurves = new ArrayList<>();
 		
 		try {
-			durationCurves = DurationCurveService.getDurationCurves(siteId, startTime, endTime, binCount, binType, groupIds);
+			durationCurves = DurationCurveService.getDurationCurves(siteName, startTime, endTime, binCount, binType, groupIds);
+			
+			//Check for any empty duration curves
+			for(DurationCurve curve : durationCurves){
+				if(curve.getPoints().isEmpty()){
+					mixed = true;
+					break;
+				}
+			}
+			
+			if(mixed){
+				result = new GCMRCResponse(new SuccessEnvelope<>(durationCurves), new FailureEnvelope("mixed", 500));
+			} else {
+				result = new GCMRCResponse(new SuccessEnvelope<>(durationCurves));
+			}
 		} catch (Exception e) {
-			throw new WebApplicationException(Response.status(Status.INTERNAL_SERVER_ERROR).type("text/plain").entity("Could not output file response. Error: " + e.getMessage()).build());
+			result = new GCMRCResponse(new FailureEnvelope(e.getMessage(), 500));
 		}
-		
-		result = new SuccessResponse<>(new ResponseEnvelope<>(durationCurves));
 		
 		return result;
 	}
@@ -50,11 +65,11 @@ public class DurationCurveEndpoint {
 	@Path("download")
 	@GET
 	@Produces("application/tsv")
-	public void getDurationCurveDownload(@QueryParam("siteId") int siteId, @QueryParam("startTime") String startTime, @QueryParam("endTime") String endTime, @QueryParam("binCount") int binCount, @QueryParam("binType") String binType, @QueryParam(value = "groupId[]") final List<Integer> groupIds, @QueryParam(value = "groupName[]") final List<String> groupNames, @Context HttpServletResponse response) {										
+	public void getDurationCurveDownload(@QueryParam("siteName") String siteName, @QueryParam("startTime") String startTime, @QueryParam("endTime") String endTime, @QueryParam("binCount") int binCount, @QueryParam("binType") String binType, @QueryParam(value = "groupId[]") final List<Integer> groupIds, @QueryParam(value = "groupName[]") final List<String> groupNames, @Context HttpServletResponse response) {										
 		try {
 			//Get Duration Cruve Data
-			List<DurationCurve> durationCurves = DurationCurveService.getDurationCurves(siteId, startTime, endTime, binCount, binType, groupIds);
-			
+			List<DurationCurve> durationCurves = DurationCurveService.getDurationCurves(siteName, startTime, endTime, binCount, binType, groupIds);
+						
 			//Create output file
 			List<DurationCurveService.COLUMNS> outputColumns = Arrays.asList(DurationCurveService.COLUMNS.CUMULATIVE_BIN_PERC, DurationCurveService.COLUMNS.BIN_VALUE);
 			String result = DurationCurveService.getTSVForDurationCurves(durationCurves, outputColumns, groupIds, groupNames, binCount);

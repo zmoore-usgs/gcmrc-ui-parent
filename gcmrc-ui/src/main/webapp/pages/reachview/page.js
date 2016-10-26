@@ -417,6 +417,10 @@ GCMRC.Page = {
 					}
 					return result;
 				};
+				
+				if(data.status.toLowerCase() === "failure"){
+					return;
+				}
 
 				// add additional sediment station value for both DINO networks
 				data.success.data.each(function(el) {

@@ -1,8 +1,8 @@
 package gov.usgs.cida.gcmrcservices.mb.endpoint;
 
 import gov.usgs.cida.gcmrcservices.mb.dao.ReachDAO;
-import gov.usgs.cida.gcmrcservices.mb.endpoint.response.ResponseEnvelope;
-import gov.usgs.cida.gcmrcservices.mb.endpoint.response.SuccessResponse;
+import gov.usgs.cida.gcmrcservices.mb.endpoint.response.SuccessEnvelope;
+import gov.usgs.cida.gcmrcservices.mb.endpoint.response.GCMRCResponse;
 import gov.usgs.cida.gcmrcservices.mb.model.Reach;
 import gov.usgs.cida.gcmrcservices.mb.model.ReachDetail;
 import java.util.ArrayList;
@@ -27,8 +27,8 @@ public class ReachEndpoint {
 	@JSONP(queryParam="jsonp_callback")
 	@Path("{network}")
 	@Produces("application/javascript")
-	public SuccessResponse<Reach> getReaches(@PathParam("network") String network) {
-		SuccessResponse<Reach> result = null;
+	public GCMRCResponse getReaches(@PathParam("network") String network) {
+		GCMRCResponse result = null;
 		List<Reach> reaches = new ArrayList<Reach>();
 		
 		try {
@@ -37,7 +37,7 @@ public class ReachEndpoint {
 			log.error("Could not get reaches!", e);
 		}
 		
-		result = new SuccessResponse<>(new ResponseEnvelope<>(reaches));
+		result = new GCMRCResponse(new SuccessEnvelope<>(reaches));
 		
 		return result;
 	}
@@ -46,8 +46,8 @@ public class ReachEndpoint {
 	@JSONP(queryParam="jsonp_callback")
 	@Path("{network}/{upstream}/{downstream}")
 	@Produces("application/javascript")
-	public SuccessResponse<Reach> getReach(@PathParam("network") String network, @PathParam("upstream") String upstreamStation, @PathParam("downstream") String downstreamStation) {
-		SuccessResponse<Reach> result = null;
+	public GCMRCResponse getReach(@PathParam("network") String network, @PathParam("upstream") String upstreamStation, @PathParam("downstream") String downstreamStation) {
+		GCMRCResponse result = null;
 		List<Reach> reaches = new ArrayList<Reach>();
 		
 		try {
@@ -56,7 +56,7 @@ public class ReachEndpoint {
 			log.error("Could not get reaches!", e);
 		}
 		
-		result = new SuccessResponse<>(new ResponseEnvelope<>(reaches));
+		result = new GCMRCResponse(new SuccessEnvelope<>(reaches));
 		
 		return result;
 	}
@@ -65,8 +65,8 @@ public class ReachEndpoint {
 	@JSONP(queryParam="jsonp_callback")
 	@Path("detail/{network}/{upstream}/{downstream}")
 	@Produces("application/javascript")
-	public SuccessResponse<ReachDetail> getReachDetails(@PathParam("network") String network, @PathParam("upstream") String upstreamStation, @PathParam("downstream") String downstreamStation) {
-		SuccessResponse<ReachDetail> result = null;
+	public GCMRCResponse getReachDetails(@PathParam("network") String network, @PathParam("upstream") String upstreamStation, @PathParam("downstream") String downstreamStation) {
+		GCMRCResponse result = null;
 		List<ReachDetail> reachDetails = new ArrayList<>();
 		
 		try {
@@ -75,7 +75,7 @@ public class ReachEndpoint {
 			log.error("Could not get reach for network '" + network + "' upstream '" + upstreamStation + "' and downstream '" + downstreamStation, e);
 		}
 		
-		result = new SuccessResponse<>(new ResponseEnvelope<>(reachDetails));
+		result = new GCMRCResponse(new SuccessEnvelope<>(reachDetails));
 		
 		return result;
 	}

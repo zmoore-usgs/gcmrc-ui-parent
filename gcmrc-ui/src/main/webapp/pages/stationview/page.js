@@ -307,11 +307,14 @@ GCMRC.Page = {
 		var chosenParameters = $('.parameterListing input:checkbox:checked');
 		result = $.map(chosenParameters, function(el, i) {
 			var result = [];
-
-			result.push({
-				groupId: el.name,
-				name: GCMRC.Page.params[el.name].description.displayName
-			});
+			//Filter out groupIds that will never have valid duration curve data
+			if(GCMRC.Graphing.NO_DURATION_CURVE_IDS.indexOf(el.name) === -1){
+				result.push({
+					groupId: el.name,
+					name: GCMRC.Page.params[el.name].description.displayName
+				});
+			}
+			
 			return result;
 		});
 		return result;
@@ -577,7 +580,7 @@ GCMRC.Page = {
 				$('#downloadPopup').modal();
 			} else {
 				GCMRC.Graphing.clearErrorMsg();
-				GCMRC.Graphing.showErrorMsg("No data selected!");
+				GCMRC.Graphing.showErrorMsg("No parameters selected or no data avilable for the selected parameters in the selected date range.");
 			}
 		} else {
 			GCMRC.Graphing.clearErrorMsg();

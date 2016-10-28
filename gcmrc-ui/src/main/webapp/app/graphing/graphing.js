@@ -17,6 +17,8 @@ GCMRC.Graphing = function(hoursOffset) {
 		agg: 'services/agg/',
 		durationCurve: 'services/rest/durationcurve/'
 	};
+	
+	var NO_DURATION_CURVE_IDS = ["14", "15", "16", "17", "18", "19", "20", "21", "22", "23", "24", "25", "26", "27", "28", "29", "30", "31", "32", "33", "34", "35", "36", "37", "38", "39", "40", "41", "42", "43", "44", "45", "46", "47", "48", "49", "50", "51", "52"];
 
 	var showInfoMessage = function(locator, msg) {
 		$(locator).append('<div class="alert alert-info"><button type="button" class="close" data-dismiss="alert">×</button>' + msg + '</div>');
@@ -516,7 +518,17 @@ GCMRC.Graphing = function(hoursOffset) {
 	};
 	
 	var createDurationCurvePlot = function(param, config, urlParams) {
-		urlParams.groupId = config.graphsToMake;
+		
+		//Filter out requested groupids that will never have duration curves (bed sediment params)
+		var validIds = new Array();
+		
+		config.graphsToMake.forEach(function(elem) {
+			if(NO_DURATION_CURVE_IDS.indexOf(elem) === -1){
+				validIds.add(elem);
+			}
+		});
+		
+		urlParams.groupId = validIds;
 		
 		$.ajax({
 			jsonp: "jsonp_callback",
@@ -662,6 +674,7 @@ GCMRC.Graphing = function(hoursOffset) {
 		clearWarningMsg : clearWarningMessage,
 		showErrorMsg : showErrorMessage,
 		clearErrorMsg : clearErrorMessage,
+		NO_DURATION_CURVE_IDS : NO_DURATION_CURVE_IDS,
 		createDataGraph: function(param, config, urlParams) {
 			$('#infoMsg').empty();
 			$("#errorMsg").empty();

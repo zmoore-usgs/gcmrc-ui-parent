@@ -674,6 +674,7 @@ GCMRC.Graphing = function(hoursOffset) {
 		clearWarningMsg : clearWarningMessage,
 		showErrorMsg : showErrorMessage,
 		clearErrorMsg : clearErrorMessage,
+		NO_DURATION_CURVE_IDS : NO_DURATION_CURVE_IDS,
 		createDataGraph: function(param, config, urlParams) {
 			$('#infoMsg').empty();
 			$("#errorMsg").empty();

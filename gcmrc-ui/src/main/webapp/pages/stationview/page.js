@@ -580,7 +580,7 @@ GCMRC.Page = {
 				$('#downloadPopup').modal();
 			} else {
 				GCMRC.Graphing.clearErrorMsg();
-				GCMRC.Graphing.showErrorMsg("No parameters selected or no data avilable for the selected parameters in the selected date range.");
+				GCMRC.Graphing.showErrorMsg("No parameters selected or no data available for the selected parameters in the selected date range.");
 			}
 		} else {
 			GCMRC.Graphing.clearErrorMsg();

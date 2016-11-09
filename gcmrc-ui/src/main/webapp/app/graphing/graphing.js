@@ -437,7 +437,7 @@ GCMRC.Graphing = function(hoursOffset) {
 			highlightCircleSize: 4,
 			strokeWidth: 2,
 			pixelsPerTimeLabel : 95,
-			ticker: GCMRC.Dygraphs.ScaledTicker(0),
+			ticker: GCMRC.Dygraphs.ScaledTicker(decimalPlaces),
 			drawHighlightPointCallback: lighterColorHighlightPoint,
 			customBars: true,
 			drawPoints: false,

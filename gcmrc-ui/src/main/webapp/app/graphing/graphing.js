@@ -393,7 +393,7 @@ GCMRC.Graphing = function(hoursOffset) {
 			},
 			x: {
 				axisLabelFormatter: GCMRC.Dygraphs.DataFormatter(0),
-				valueFormatter: GCMRC.Dygraphs.DataFormatter(0),
+				valueFormatter: GCMRC.Dygraphs.DataFormatter(2),
 				pixelsPerLabel: 50,
 				logscale: false
 			}
@@ -429,7 +429,7 @@ GCMRC.Graphing = function(hoursOffset) {
 //			labelsDiv: labelDiv,
 //			labelsSeparateLines: true,
 //			legend: 'always',
-			labelsDivWidth: 125,
+			labelsDivWidth: 200,
 			dateWindow: [0, 100.25],
 			originalDateWindow: [0, 100.25],
 			showRangeSelector: true,
@@ -437,7 +437,7 @@ GCMRC.Graphing = function(hoursOffset) {
 			highlightCircleSize: 4,
 			strokeWidth: 2,
 			pixelsPerTimeLabel : 95,
-			ticker: GCMRC.Dygraphs.ScaledTicker(decimalPlaces),
+			ticker: GCMRC.Dygraphs.ScaledTicker(0),
 			drawHighlightPointCallback: lighterColorHighlightPoint,
 			customBars: true,
 			drawPoints: false,

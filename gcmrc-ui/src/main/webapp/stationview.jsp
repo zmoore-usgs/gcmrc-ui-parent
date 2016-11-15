@@ -224,9 +224,11 @@
 								<div id="infoMsg">
 									To visualize data in a graph, please select parameters from the left as well as a date range from above.
 								</div>
-								<div id="loading" class="ajaxLoading"><div class="alert alert-info">Your graph is being constructed...</div><div style="margin-bottom: 20px;"><img src="${relativePath}app/ajax-loader-trsp.gif" alt="Loading..." height="32px" width="32px"></div></div>
+								<div id="loading" class="ajaxLoading"><div class="alert alert-info">Your graphs are being constructed...</div><div style="margin-bottom: 20px;"><img src="${relativePath}app/ajax-loader-trsp.gif" alt="Loading..." height="32px" width="32px"></div></div>
 								<div id="legend-dygraph"></div>
 								<div id="data-dygraph"></div>
+								<div id="legend-duration-curve"></div>
+								<div id="data-duration-curve"></div>
 							</div>
 						</div>
 					</div>
@@ -304,6 +306,18 @@
 								<tab-heading>Bed Sediment</tab-heading>
 								<div class="row-fluid">
 									<a href="#" id="bedSedimentDownloadButton" class='buildButton'>Download Data</a>
+								</div>
+							</tab>
+							<tab>
+								<tab-heading>Duration Curves</tab-heading>
+								<div class="row-fluid">
+									<div class="datatype-select">
+										<label for="bintype">Data Type</label>
+										<input type="radio" name="bintype" value="log" checked="checked">Logarithmic</input>
+										<input type="radio" name="bintype" value="lin">Linear</input>
+										<input type="radio" name="bintype" value="both">Both</input>
+									</div>
+									<a href="#" id="durationCurveDownloadButton" class='buildButton'>Download Data</a>
 								</div>
 							</tab>
 						</tabset>

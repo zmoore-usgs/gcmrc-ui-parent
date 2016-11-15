@@ -73,7 +73,7 @@ GCMRC.Page = {
 	buildSliderInfo : function(div, dateStr, multiplier, loadDivKey, dataType) {
 		div.append('<div>Uncertainty for ' + (("BIBE" === CONFIG.networkName)?"Tornillo Creek":"Major Tributary") + ' ' + dataType + ' Loads <span class="' + loadDivKey + '_qual' + multiplier + '"></span>% after ' + dateStr + '</div>');
 	},
-        buildRadioInfo : function(div) {
+	buildRadioInfo : function(div) {
 		div.append('<div class="form-inline"><label class="radio bedRadio"><input type="radio" name="bedLoadToggle" value="yes">Yes</label><label class="radio bedRadio"><input type="radio" name="bedLoadToggle" value="no">No</label></div>');
 	},
 	buildGraphClicked: function() {
@@ -420,6 +420,10 @@ GCMRC.Page = {
 					}
 					return result;
 				};
+				
+				if(data.status.toLowerCase() === "failure"){
+					return;
+				}
 
 				// add additional sediment station value for both DINO networks
 				data.success.data.each(function(el) {

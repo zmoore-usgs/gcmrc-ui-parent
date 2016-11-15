@@ -24,10 +24,14 @@ $(document).ready(function() {
 	GCMRC.Page.createMiniMap({stationName: CONFIG.stationName});
 
 	$('#buildGraph').click(GCMRC.Page.buildGraphClicked);
+	
+	$('input[name^="toggle-curve-"]').live('change', GCMRC.Page.toggleDurationCurve);
+	$('input[name^="toggle-scale-"]').live('change', GCMRC.Page.toggleDurationCurveScale);
 
 	$('#bedSedimentDownloadButton').click(GCMRC.Page.downloadBedSedimentClicked);
 	$('#physicalDownloadButton').click(GCMRC.Page.downloadSamplesClicked);
 	$('#stupidlyBigDownloadButton').click(GCMRC.Page.downloadDataClicked);
+	$('#durationCurveDownloadButton').click(GCMRC.Page.downloadDurationCurvesClicked);
 	$('#downloadData').click(GCMRC.Page.downloadPopupClicked);
 	
 	if (!GCMRC.Page.earliestPosition) GCMRC.Page.earliestPosition = new Date().addMonths(-1).getTime();
@@ -52,7 +56,9 @@ $(document).ready(function() {
 
 	$('#loading').ajaxStart(function() {
 		$(this).show();
+		$('.buildButton').hide();
 	}).ajaxStop(function() {
 		$(this).hide();
+		$('.buildButton').show();
 	});
 });

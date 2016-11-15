@@ -5,12 +5,20 @@ GCMRC.Graphing = function(hoursOffset) {
 	var blockHighlight = false;
 
 	var graphs = {};
+	
+	var durationCurves = {
+	};
+	
+	var durationCurveConfiguration = {};
 
 	var isResizeListenerAttached = false;
 
 	var urls = {
-		agg: 'services/agg/'
+		agg: 'services/agg/',
+		durationCurve: 'services/rest/durationcurve/'
 	};
+	
+	var NO_DURATION_CURVE_IDS = ["14", "15", "16", "17", "18", "19", "20", "21", "22", "23", "24", "25", "26", "27", "28", "29", "30", "31", "32", "33", "34", "35", "36", "37", "38", "39", "40", "41", "42", "43", "44", "45", "46", "47", "48", "49", "50", "51", "52"];
 
 	var showInfoMessage = function(locator, msg) {
 		$(locator).append('<div class="alert alert-info"><button type="button" class="close" data-dismiss="alert">×</button>' + msg + '</div>');
@@ -38,6 +46,60 @@ GCMRC.Graphing = function(hoursOffset) {
 		return (x === null ||
 				x === undefined ||
 				isNaN(x));
+	};
+	
+	var dealWithDurationCurveResponse = function(graphToMake, relevantData, config, buildGraph) {
+		var conf = $.extend({}, config);		
+		var identifier = graphToMake;
+		var parameterMetadata = GCMRC.Page.params[identifier].description;
+		var graphName = parameterMetadata['displayName'];
+		var hasData = false;
+		var displayData = new Array();
+		
+		if(Array.isArray(relevantData.points) && relevantData.points.length > 0){
+			hasData = true;
+		}
+		
+		if (hasData) {
+			var minY = parseFloat(relevantData.points[0].binValue);
+			var maxY = parseFloat(relevantData.points[0].binValue);
+			relevantData.points.forEach(function(point){
+				var xVal = parseFloat(point.cumulativeBinPerc);
+				var yVal = parseFloat(point.binValue);
+				
+				if(yVal > maxY){
+					maxY = yVal;
+				} else if(yVal < minY){
+					minY = yVal;
+				}
+				
+				displayData.push([xVal, [yVal, yVal, yVal]]);
+			});
+			
+			displayData.reverse();
+
+			conf.labels = ["Percentage", "Value"];
+
+			conf['yAxisLabel'] = graphToMake.yAxisLabel || graphName + " (" + parameterMetadata['unitsShort'] + ")";
+			conf['dataformatter'] = GCMRC.Dygraphs.DataFormatter(parameterMetadata['decimalPlaces']);
+			conf['decimalPlaces'] = parameterMetadata['decimalPlaces'];
+			conf["parameterName"] = identifier;
+			conf["labelDiv"] = $('#' + conf.labelDivId + ' div.duration-plot-' + identifier).get(0);
+			conf["colors"] = durationCurveConfiguration[identifier].colors;
+			conf["highlightColor"] = durationCurveConfiguration[identifier].highlightColor.values()[0];
+			conf["data"] = displayData;
+			conf["minY"] = minY;
+			conf["maxY"] = maxY;
+			
+			//Logarithmic vs Linear Plots
+			if(relevantData.binType.toLowerCase() === "log"){
+				conf["div"] = $('#' + conf.divId + ' div.duration-plot-' + identifier + '[id=log]').get(0);
+				buildGraph(conf, true);
+			} else {
+				conf["div"] = $('#' + conf.divId + ' div.duration-plot-' + identifier + '[id=lin]').get(0);
+				buildGraph(conf, false);
+			}
+		}
 	};
 	
 	var dealWithResponse = function(graphToMake, data, config, buildGraph) {
@@ -110,8 +172,8 @@ GCMRC.Graphing = function(hoursOffset) {
 			conf['dataformatter'] = GCMRC.Dygraphs.DataFormatter(parameterMetadata['decimalPlaces']);
 			conf['decimalPlaces'] = parameterMetadata['decimalPlaces'];
 			conf["parameterName"] = identifier;
-			conf["div"] = $('#' + conf.divId + ' div.p' + identifier).get(0);
-			conf["labelDiv"] = $('#' + conf.labelDivId + ' div.p' + identifier).get(0);
+			conf["div"] = $('#' + conf.divId + ' div.timeseries-plot-' + identifier).get(0);
+			conf["labelDiv"] = $('#' + conf.labelDivId + ' div.timeseries-plot-' + identifier).get(0);
 			conf["colors"] = [];
 			conf["highlightColor"] = {};
 			[].push.apply(conf.colors, graphToMake.columns.filter(function(n){return !n.startsWith(timeColumn)}).map(function(el) {
@@ -127,14 +189,17 @@ GCMRC.Graphing = function(hoursOffset) {
 				var idiot = ("inst" === param.sampleMethod) ? param.displayName : param.sampleMethod;
 				this[idiot] = param.series;
 			}, conf["series"]);
+			
+			//Save Configuration so Duration Curve Plots can access it
+			durationCurveConfiguration[identifier] = conf;
 
 			buildGraph(conf);
 		} else {
-			showInfoMessage("#" + conf.divId + ' div.p' + identifier, "There were no data during this period for " + graphName);
+			showInfoMessage("#" + conf.divId + ' div.timeseries-plot-' + identifier, "There were no data during this period for " + graphName);
 		}
 
 	};
-
+	
 	var buildGraph = function(config) {
 		if (!config)
 			config = {};
@@ -184,21 +249,17 @@ GCMRC.Graphing = function(hoursOffset) {
 			ctx.arc(canvasx, canvasy, radius, 0, 2 * Math.PI, false);
 			ctx.fill();
 		};
-		
-		var graphWidth = $('#' + containerId).width() - 15;//TODO add $(window).resize() listener
-		
+				
 		var opts = {
 			title: title,
 			labelsDivStyles: {
 				'textAlign': 'right'
 			},
-			width: graphWidth,
+			//width: graphWidth,
 			height: 420,
 			xlabel: 'Time',
 			ylabel: yAxisLabel,
-			axisLabelWidth: 85,
 			yAxisLabelWidth: 85,
-			xAxisLabelWidth: 85,
 			xAxisHeight: 50,
 			axes: axes,
 			yRangePad: 5,
@@ -210,6 +271,7 @@ GCMRC.Graphing = function(hoursOffset) {
 //			labelsDiv: labelDiv,
 //			labelsSeparateLines: true,
 //			legend: 'always',
+			labelsDivWidth: 300,
 			showRangeSelector: true,
 			connectSeparatedPoints: false,
 			highlightCircleSize: 4,
@@ -283,8 +345,328 @@ GCMRC.Graphing = function(hoursOffset) {
 				);
 	};
 
+	var buildDurationCurve = function(config, logScale) {
+		if (!config)
+			config = {};
+
+		var containerId = config.divId || "unknown";
+		var parameterName = config.parameterName || "unknown";
+		var div = config.div;
+//		var labelDiv = config.labelDiv;
+		
+		var labels = config['labels'];
+		var minY = config['minY'];
+		var maxY = config['maxY'];
+		
+		var logScaleParam = logScale ? "log" : "lin";
+		
+		if(!durationCurves[containerId][logScaleParam]){
+			durationCurves[containerId][logScaleParam] = {};
+		}
+		
+		//Determine if data should actually be shown on a logarithmic plot
+		//Needed because Dygraphs has issues zooming on log graphs that don't have large enough data ranges
+		if((Math.abs(Math.floor(Math.log10(maxY)) - Math.floor(Math.log10(minY))) < 1) || (Math.abs(maxY - minY) < 10)){
+			logScale = false;
+		}
+		
+		div.style.display = "inline-block";
+		div.style.margin = "4px";
+
+		var data = config['data'];
+
+		var title = config['graphTitle'] || '';
+
+		var yAxisLabel = config['yAxisLabel'] || 'Data';
+
+		var dataformatter = config['dataformatter'] || GCMRC.Dygraphs.DataFormatter(0);
+		var decimalPlaces = config['decimalPlaces'] || 0;
+		
+		var confColors = config['colors'] || [CONFIG.instColor, CONFIG.pumpColor, CONFIG.sampColor, CONFIG.sampColor];
+		var highlightColor = config['highlightColor'];
+
+		var axes = {
+			y: {
+				axisLabelFormatter: dataformatter,
+				valueFormatter: dataformatter,
+				includeZero: false
+			},
+			x: {
+				axisLabelFormatter: GCMRC.Dygraphs.DataFormatter(0),
+				valueFormatter: GCMRC.Dygraphs.DataFormatter(2),
+				pixelsPerLabel: 50,
+				logscale: false
+			}
+		};
+
+		var lighterColorHighlightPoint = function(g, name, ctx, canvasx, canvasy, color, radius) {
+			var lighterColor = highlightColor;
+			ctx.beginPath();
+			ctx.fillStyle = lighterColor;
+			ctx.arc(canvasx, canvasy, radius, 0, 2 * Math.PI, false);
+			ctx.fill();
+		};
+				
+		var opts = {
+			title: title,
+			labelsDivStyles: {
+				'textAlign': 'right'
+			},
+			//width: graphWidth,
+			logscale: logScale,
+			height: 420,
+			xlabel: 'Percentage of Time Equaled or Exceeded',
+			ylabel: yAxisLabel,
+			yAxisLabelWidth: 85,
+			xAxisHeight: 50,
+			axes: axes,
+			yRangePad: 5,
+			pointSize: 2,
+			xRangePad: 2,
+			includeZero: true,
+			labels: labels,
+			//To be used in "fixed" legend
+//			labelsDiv: labelDiv,
+//			labelsSeparateLines: true,
+//			legend: 'always',
+			labelsDivWidth: 200,
+			dateWindow: [0, 100.25],
+			originalDateWindow: [0, 100.25],
+			showRangeSelector: true,
+			connectSeparatedPoints: false,
+			highlightCircleSize: 4,
+			strokeWidth: 2,
+			pixelsPerTimeLabel : 95,
+			ticker: GCMRC.Dygraphs.ScaledTicker(decimalPlaces),
+			drawHighlightPointCallback: lighterColorHighlightPoint,
+			customBars: true,
+			drawPoints: false,
+			stackedGraph: false,
+			colors: confColors,
+			drawCallback: function(me, initial) {
+				if (blockRedraw || initial)
+					return;
+				blockRedraw = true;
+				var range = me.xAxisRange();
+				$.each(durationCurves[containerId]["lin"], function(key, val) {
+					if (val !== me) {
+						val.updateOptions({
+							dateWindow: range
+						});
+					}
+				});
+				$.each(durationCurves[containerId]["log"], function(key, val) {
+					if (val !== me) {
+						val.updateOptions({
+							dateWindow: range
+						});
+					}
+				});
+				blockRedraw = false;
+			},
+			highlightCallback: function(event, x, points, row, seriesName) {
+				if (blockHighlight) {
+					return;
+				}
+								
+				blockHighlight = true;
+				var graph = durationCurves[containerId][logScaleParam][parameterName];
+				
+				if(!graph){
+					return;
+				}
+										
+				graph.setSelection(row);
+				var canvasx;
+				if (graph && graph.selPoints_.length > 0 && graph.selPoints_[0]) {
+					canvasx = graph.selPoints_[0].canvasx;
+					var ctx = graph.canvas_ctx_;
+					ctx.fillStyle = '#FF0000';
+					ctx.fillRect(canvasx - 0.5, 0, 1, graph.height_);
+				} else {
+					//if no selected point?  TODO, is this needed now that we interpolate?
+					if (points && points.length > 0 && points[0]) { 
+						canvasx = points[0].canvasx;
+					} else {
+						var canvasCoords = graph.eventToDomCoords(event);
+						canvasx = canvasCoords[0];
+					}
+				}
+				
+				blockHighlight = false;
+			},
+			unhighlightCallback: function(event, x, points, row, seriesName) {
+				if (blockHighlight) {
+					return;
+				}
+				blockHighlight = true;
+				var graph = durationCurves[containerId][logScaleParam][parameterName];
+				graph.clearSelection();
+				blockHighlight = false;
+			}
+		};
+		
+		if (config.series) {
+			opts.series = config.series.clone();
+		}
+		
+		durationCurves[containerId][logScaleParam][parameterName] = new Dygraph(
+				div,
+				data,
+				opts
+				);
+	};
+	
+	var createDurationCurvePlot = function(param, config, urlParams) {
+		
+		//Filter out requested groupids that will never have duration curves (bed sediment params)
+		var validIds = new Array();
+		
+		config.graphsToMake.forEach(function(elem) {
+			if(NO_DURATION_CURVE_IDS.indexOf(elem) === -1){
+				validIds.add(elem);
+			}
+		});
+		
+		urlParams.groupId = validIds;
+		
+		$.ajax({
+			jsonp: "jsonp_callback",
+			dataType: 'jsonp',
+			url: CONFIG.relativePath + urls[param],
+			data: urlParams,
+			timeout: 1200000, /* 20 minutes allowed, from start to data complete */
+			success: function(data, textStatus, jqXHR) {
+				if (!data || (!data.contentType && data.contentType === "text/xml")) {
+					clearErrorMessage();
+					showErrorMessage("An error has occurred.  Please contact <a href='mailto:" + GCMRC.administrator + "@usgs.gov'>" + GCMRC.administrator + "@usgs.gov</a>");
+				} else {
+					if (data.data && !data.data.ERROR && data.data.points && data.data.groupId) {
+						data = {
+							success : {
+								"@rowCount" : "-1",
+								data : [
+									data.data
+								]
+							}
+						};
+					}	
+					//has valid data
+					if (data.success && data.success.data && $.isArray(data.success.data)) {						
+						//Build plots
+						data.success.data.forEach(function(graph) {
+							dealWithDurationCurveResponse(graph.groupId, graph, config, buildDurationCurve);
+						});
+						
+						//Add proper UI elements based on which duration curves were built
+						urlParams.groupId.forEach(function(id) {
+							var hasLin = false, hasLog = false;
+							var div = $(".plot-container-"+id);
+							
+							if(div){
+								if(GCMRC.Graphing.durationCurves[config.divId].lin[id]){
+									hasLin = true;
+									div.children('#lin').addClass("selected-duration-scale");
+								}
+
+								if(GCMRC.Graphing.durationCurves[config.divId].log[id]){
+									hasLog = true;
+									div.children('#log').addClass("selected-duration-scale");
+									div.children('#lin').removeClass("selected-duration-scale");
+								}
+								
+								if(hasLin || hasLog){
+									$(createDurationCurveToggles(id, hasLin, hasLog)).prependTo(div);
+								} else {
+									clearErrorMessage();
+									showErrorMessage("Duration curves could not be calculated for some of the selected parameters for the selected time period.");
+								}
+							}
+						});
+						
+						//Hide Duration Curve Plots after building because TS Plots are the default
+						$('div[class^="duration-plot"]').hide();
+
+						//Show the Time Series Plots after everything is done building because they're on by default
+						$('div[class^="timeseries-plot"]').show();
+						
+						//Force-Redraw Time Series Plots just in case the window was resized while they were hidden
+						graphs[config.divId].values().forEach(function(graph){
+							graph.updateOptions({});
+							graph.resize();
+						});
+					} else {
+						clearErrorMessage();
+						showErrorMessage("An error occured while fetching duration curve data. Error: " + data.failure.error);
+						//Show the time series plots
+						$('div[class^="timeseries-plot"]').show();
+					}
+				}
+			},
+			error: function(jqXHR, textStatus, errorThrown) {
+				clearErrorMessage();
+				var msg = "";
+				switch(textStatus) {
+					case 'timeout':
+						msg = "The browser timed out waiting for a response from the server.";
+					break;
+					case 'abort':
+						msg = "The request was aborted.";
+					break;
+					case 'parsererror':
+						msg = "A response was received, but it was unreadable.";
+					break;
+					case 'error':
+					//break; fall thru
+				default:
+					msg = "Some type of server or network error occured.";
+				}
+				showErrorMessage("Your request could not be completed.  Reason: '" + msg + "'  If you repeatedly receive this message, contact <a href='mailto:" + GCMRC.administrator + "@usgs.gov'>" + GCMRC.administrator + "@usgs.gov</a>");
+			}
+		});
+	};
+	
+	var createDurationCurveToggle = function(chartId) {
+		return '<div onselectstart="return false" class="curveSelectButton toggle-switch-' + chartId + '" style="display: inline-block;">' +
+					'<input class="curve-select" type="radio" id="chart-view-input-' + chartId + '" name="toggle-curve-' + chartId + '" checked="checked" value="chart">' +
+					'<label for="chart-view-input-' + chartId + '" class="chart-view-label">Time Series Plot</label>' +
+					'<input class="curve-select" type="radio" id="curve-view-input-' + chartId + '" name="toggle-curve-' + chartId + '" value="curve">' +
+					'<label for="curve-view-input-' + chartId + '" class="curve-view-label">Duration Curve Plot</label>' +
+				'</div>';
+	};
+	
+	var createDurationCurveScaleToggle = function(chartId, hasLin, hasLog) {
+		var toReturn = "";
+		
+		if(hasLin && hasLog) {
+			toReturn = '<div onselectstart="return false" class="scaleSelectButton toggle-switch-' + chartId + '" style="display: none;">' +
+							'<input class="scale-select" type="radio" id="log-view-input-' + chartId + '" name="toggle-scale-' + chartId + '" checked="checked" value="log">' +
+							'<label for="log-view-input-' + chartId + '" class="log-scale-label">Logarithmic</label>' +
+							'<input class="scale-select" type="radio" id="lin-view-input-' + chartId + '" name="toggle-scale-' + chartId + '" value="lin">' +
+							'<label for="lin-view-input-' + chartId + '" class="lin-scale-label">Linear</label>' +
+						'</div>';
+		} else if(hasLin) {
+			toReturn = '<div onselectstart="return false" class="scaleSelectButton toggle-switch-' + chartId + '" style="display: none;">' +
+							'<input class="scale-select" type="radio" id="lin-view-input-' + chartId + '" name="toggle-scale-' + chartId + '" checked="checked" value="lin">' +
+							'<label for="lin-view-input-' + chartId + '" class="one-scale-only-label">Linear</label>' +
+						'</div>';
+		} else if(hasLog) {
+			toReturn = '<div onselectstart="return false" class="scaleSelectButton toggle-switch-' + chartId + '" style="display: none;">' +
+							'<input class="scale-select" type="radio" id="log-view-input-' + chartId + '" name="toggle-scale-' + chartId + '" checked="checked" value="log">' +
+							'<label for="log-view-input-' + chartId + '" class="one-scale-label">Logarithmic</label>' +
+						'</div>';
+		}
+		
+		return toReturn;
+	};
+	
+	var createDurationCurveToggles = function(chartId, hasLin, hasLog){
+		return createDurationCurveToggle(chartId) + createDurationCurveScaleToggle(chartId, hasLin, hasLog);
+	};
+
 	return {
 		graphs: graphs,
+		durationCurves: durationCurves,
 		urls: urls,
 		isResizeListenerAttached : isResizeListenerAttached,
 		showInfoMsg : showInfoMessage,
@@ -292,6 +674,7 @@ GCMRC.Graphing = function(hoursOffset) {
 		clearWarningMsg : clearWarningMessage,
 		showErrorMsg : showErrorMessage,
 		clearErrorMsg : clearErrorMessage,
+		NO_DURATION_CURVE_IDS : NO_DURATION_CURVE_IDS,
 		createDataGraph: function(param, config, urlParams) {
 			$('#infoMsg').empty();
 			$("#errorMsg").empty();
@@ -300,6 +683,23 @@ GCMRC.Graphing = function(hoursOffset) {
 				clearWarningMessage();
 				showWarningMessage('Due to the length of your request, some timesteps may be filtered from the graph. You may still download the unfiltered dataset, or shorten the date range of your request.');
 			}
+			
+			var containerDiv = $("#" + config.divId);
+			var labelDiv = $("#" + config.labelDivId);
+
+			graphs[config.divId] = {};
+			durationCurves[config.divId] = {
+				log: {},
+				lin: {}
+			};
+			durationCurveConfiguration = {};
+						
+			/*
+			 * Clean out and repopulated the container/graph divs
+			 * for the correct display order
+			 */
+			containerDiv.empty();
+			labelDiv.empty();		
 
 			urlParams["output"] = "json";
 			$.ajax({
@@ -325,44 +725,49 @@ GCMRC.Graphing = function(hoursOffset) {
 						}
 						//success
 						if (data.success && data.success.data && $.isArray(data.success.data)) {
-							var containerDiv = $("#" + config.divId);
-							var labelDiv = $("#" + config.labelDivId);
-							
-							if (graphs[config.divId]) {
-								graphs[config.divId].values(function(el) {
-									el.destroy();
-								});
-							}
-							
-							/*
-							 * Clean out and repopulated the container/graph divs
-							 * for the correct display order
-							 */
-							containerDiv.empty();
-							labelDiv.empty();
+							//Store individual chart divs for later populating with duration curve toggle
+							var plotDivs = new Array();
 							GCMRC.Page.params.values().sortBy(function(n) {
 								return parseInt(n.description.displayOrder || 9999999);
 							}).map(function(n) {
 								return n.description.groupId;
 							}).forEach(function(el) {
-								containerDiv.append($('<div class="p' + el + '"></div>'));
-								labelDiv.append($('<div class="p' + el +'"></div>'));
+								var plotDiv = $('<div class="plot-container-' + el + '"><div class="timeseries-plot-' + el + 
+										'"></div><div id="log" class="duration-plot-' + el + 
+										'"></div><div id="lin" class="duration-plot-' + el + 
+										'"></div></div>');
+								plotDiv.appendTo(containerDiv);
+								plotDivs.push({"div": plotDiv, "groupId": el});
+								labelDiv.append($('<div class="timeseries-plot-' + el +'"></div><div class="duration-plot-' + el +'"></div>'));
 							});
-							
-							graphs[config.divId] = {};
-							
-							config.graphsToMake.forEach(function(graphToMake) {
+														
+							config.graphsToMake.forEach(function(graphToMake) {							
+								//Build Plot
 								if (graphToMake.dealWithResponse) {
 									graphToMake.dealWithResponse(graphToMake, data, config, buildGraph);
 								} else {
 									dealWithResponse(graphToMake, data, config, buildGraph);
 								}
 							});
+							
+							//Hide TS plots after they've built until the duration curve plots are finished building.
+							$('div[class^="timeseries-plot"]').hide();
+							
+							//Build List of Graphs that Populated and thus should have duration curves
+							var durationCurveIds = graphs[config.divId].keys();
+							
+							config.durationCurveConf.graphsToMake = durationCurveIds;
+							config.durationCurveConf.divId = config.divId;
+							
+							//Build Duration Curve Plots. Note: Non-blocking function because of AJAX call.
+							createDurationCurvePlot('durationCurve', config.durationCurveConf, config.durationCurveParams);
 						} else if (data.data && data.data.ERROR) {
 							clearErrorMessage();
 							showErrorMessage("Please select a parameter to graph!");
 						} else {
-							LOG.error("what the heck just happened?");
+							LOG.error("An unknown error occured when fetching the data.");
+							clearErrorMessage();
+							showErrorMessage("An unknown error occured when fetching the data.");
 						}
 					}
 				},

@@ -302,6 +302,23 @@ GCMRC.Page = {
 		});
 		return result;
 	},
+	getExpectedDurationCurveDownloadColumns : function() {
+		var result = [];
+		var chosenParameters = $('.parameterListing input:checkbox:checked');
+		result = $.map(chosenParameters, function(el, i) {
+			var result = [];
+			//Filter out groupIds that will never have valid duration curve data
+			if(GCMRC.Graphing.NO_DURATION_CURVE_IDS.indexOf(el.name) === -1){
+				result.push({
+					groupId: el.name,
+					name: GCMRC.Page.params[el.name].description.displayName
+				});
+			}
+			
+			return result;
+		});
+		return result;
+	},
 	hasData : function(params, reqBegin, reqEnd) {
 		var result = false;
 		
@@ -317,7 +334,7 @@ GCMRC.Page = {
 					var elEnd = param.endPosition;
 					
 					if (new Date(reqBegin) <= new Date(elEnd) &&
-						new Date(reqEnd) > new Date(elBegin)) {
+						new Date(reqEnd) >= new Date(elBegin)) {
 						thisDataPresent = true;
 					}
 				    }
@@ -368,6 +385,14 @@ GCMRC.Page = {
 					noDataFilter: 'true',
 					useLagged: 'true'
 				};
+				
+				var durationCurveOptions = {
+					startTime: begin,
+					endTime: end,
+					binCount: 200,
+					binType: "both",
+					siteName: CONFIG.stationName
+				};
 
 				var aggTime = GCMRC.Page.checkIfAgg(serviceOptions);
 
@@ -381,6 +406,12 @@ GCMRC.Page = {
 							divId: 'data-dygraph',
 							labelDivId: 'legend-dygraph',
 							graphsToMake : expectedGraphColumns,
+							durationCurveParams: durationCurveOptions,
+							durationCurveConf: {
+								divId: 'data-dygraph',
+								labelDivId: 'legend-duration-curve',
+								dateWindow : [beginMillis, endMillis]
+							},
 							dateWindow : [beginMillis, endMillis]
 						},
 				serviceOptions);
@@ -438,6 +469,72 @@ GCMRC.Page = {
 
 		container.append(result.join(""));
 	},
+	toggleDurationCurve : function(event) {
+		switch(event.target.value){
+			case "chart":
+				$(event.target).parent().siblings('.scaleSelectButton').hide();
+				$(event.target).parent().siblings("div[class*=duration-plot-][class*=selected-duration-scale]").hide();
+				$(event.target).parent().siblings("div[class^=timeseries-plot-]").show();
+				break;
+			case "curve":
+				$(event.target).parent().siblings('.scaleSelectButton').show();
+				$(event.target).parent().siblings("div[class*=duration-plot-][class*=selected-duration-scale]").show();
+				$(event.target).parent().siblings("div[class^=timeseries-plot-]").hide();
+				break;
+		}
+		
+		var id = parseInt(event.target.id.substring(event.target.id.lastIndexOf("-")+1));
+		
+		if(id !== undefined){
+			GCMRC.Page.redrawGraphs(id);
+		}
+	},
+	toggleDurationCurveScale : function(event) {
+		switch(event.target.value){
+			case "log":
+				$(event.target).parent().siblings("div[class*=duration-plot-][id=lin]").removeClass("selected-duration-scale").hide();
+				$(event.target).parent().siblings("div[class*=duration-plot-][id=log]").addClass("selected-duration-scale").show();
+				break;
+			case "lin":
+				$(event.target).parent().siblings("div[class*=duration-plot-][id=lin]").addClass("selected-duration-scale").show();
+				$(event.target).parent().siblings("div[class*=duration-plot-][id=log]").removeClass("selected-duration-scale").hide();
+				break;
+		}
+		
+		var id = parseInt(event.target.id.substring(event.target.id.lastIndexOf("-")+1));
+		
+		if(id !== undefined){
+			GCMRC.Page.redrawGraphs(id);
+		}
+	},
+	redrawGraphs : function(id) {
+		var graphs = new Array();
+		
+		graphs.push(GCMRC.Graphing.graphs['data-dygraph'][id]);
+		graphs.push(GCMRC.Graphing.durationCurves['data-dygraph']['log'][id]);
+		graphs.push(GCMRC.Graphing.durationCurves['data-dygraph']['lin'][id]);
+				
+		graphs.forEach(function(graph){
+			if(graph){
+				graph.updateOptions({});
+				graph.resize();
+			}
+		});
+	},
+	redrawAllGraphs : function() {
+		var graphs = new Array();
+		
+		graphs.pushAll(GCMRC.Graphing.graphs['data-dygraph']);
+		graphs.pushAll(GCMRC.Graphing.durationCurves['data-dygraph']['log']);
+		graphs.pushAll(GCMRC.Graphing.durationCurves['data-dygraph']['lin']);
+				
+		graphs.forEach(function(graph){
+			if(graph){
+				graph.updateOptions({});
+				graph.resize();
+			}
+		});
+	},
 	downloadPopupClicked : function() {
 		var begin = $("input[name='beginPosition']").val();
 		var end = $("input[name='endPosition']").val();
@@ -483,7 +580,7 @@ GCMRC.Page = {
 				$('#downloadPopup').modal();
 			} else {
 				GCMRC.Graphing.clearErrorMsg();
-				GCMRC.Graphing.showErrorMsg("No data selected!");
+				GCMRC.Graphing.showErrorMsg("No parameters selected or no data available for the selected parameters in the selected date range.");
 			}
 		} else {
 			GCMRC.Graphing.clearErrorMsg();
@@ -585,6 +682,35 @@ GCMRC.Page = {
 		};
 		
 		document.location = document.location.href.first(document.location.href.lastIndexOf('/') + 1) + CONFIG.relativePath + 'services/service/download/tab/' + CONFIG.networkName + "bedSediment?" + $.param(serviceOptions);
+	},
+	downloadDurationCurvesClicked : function() {
+		//TODO refactor copy paste code
+		var begin = $("input[name='beginPosition']").val();
+		var end = $("input[name='endPosition']").val();
+		
+		//Make absolutely sure they're formatted correctly for the services.
+		var beginClean = Date.create(begin).format('{yyyy}-{MM}-{dd}') + 'T00:00:00';
+		var endClean = Date.create(end).format('{yyyy}-{MM}-{dd}') + 'T23:59:59';
+		
+		var ids = new Array();
+		var names = new Array();
+		
+		GCMRC.Page.getExpectedDurationCurveDownloadColumns().forEach(function(col){
+			ids.push(col.groupId);
+			names.push(col.name);
+		});
+				
+		var serviceOptions = {
+			startTime : beginClean,
+			endTime : endClean,
+			siteName : CONFIG.stationName,
+			binCount: "200",
+			binType: $('input[name=bintype]:checked').val(),
+			groupId: ids,
+			groupName: names
+		};
+		
+		document.location = document.location.href.first(document.location.href.lastIndexOf('/') + 1) + CONFIG.relativePath + 'services/rest/durationcurve/download/?' + $.param(serviceOptions);
 	},
 	colOrder: [],
 	earliestPosition : null,

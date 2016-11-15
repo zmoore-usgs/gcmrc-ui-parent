@@ -29,5 +29,4 @@ public abstract class GCMRCSpec extends Spec {
 	protected String getSelectHint() {
 		return "/*+ OPT_PARAM('optimizer_features_enable' '11.2.0.3') */";
 	}
-
 }

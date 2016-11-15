@@ -55,7 +55,8 @@
 }
 
 #downloadColumnOrdering li span {
-	position: absolute;
+	position: relative;
+	display: inline-block;
 	margin-left: -1.3em;
 }
 
@@ -85,3 +86,136 @@ img { max-width: none; }
 .removeColumn, .removeColumn:hover {
 	color : #CC0000;
 }
+
+.curveSelectButton {
+	display:none;
+	cursor: pointer;
+	margin: 2px;
+	border: 3px solid #c9c9c9;
+	border-radius: 6px;
+	background-color: #c9c9c9;
+}
+
+.curveSelectButton input[type=radio] {
+	display:none;
+}
+
+.curveSelectButton input[type=radio] + label {
+	display:inline-block;
+	padding: 4px 12px;
+	margin-bottom: 0;
+	font-size: 10px;
+	font-weight: 600;
+	line-height: 16px;
+	color: #333333;
+	text-align: center;
+	text-shadow: 0 1px 1px rgba(255,255,255,0.75);
+	vertical-align: top;
+	background-color: #c9c9c9;
+	cursor: pointer;
+}
+
+.curveSelectButton input[type=radio]:checked + label {
+	background-image: none;
+	outline: 0;
+	background-color: #f8f8f8;
+	cursor: pointer;
+	color: #0000FF;
+}
+
+.chart-view-label {
+	border-radius: 6px 0px 0px 6px;
+	margin-right: -2px;
+}
+
+.curve-view-label {
+	border-radius: 0px 6px 6px 0px;
+	margin-left: -2px;
+}
+
+.scaleSelectButton {
+	display:none;
+	float: right;
+	cursor: pointer;
+	margin: 10px 2px 2px 2px;
+	line-height: 10px;
+	border: 3px solid #c9c9c9;
+	border-radius: 6px;
+	background-color: #c9c9c9;
+}
+
+.scaleSelectButton input[type=radio] {
+	display:none;
+}
+
+.scaleSelectButton input[type=radio] + label {
+	display:inline-block;
+	padding: 2px 6px;
+	margin-bottom: 0;
+	font-size: 9px;
+	font-weight: 600;
+	line-height: 10px;
+	color: #333333;
+	text-align: center;
+	text-shadow: 0 1px 1px rgba(255,255,255,0.75);
+	vertical-align: top;
+	background-color: #c9c9c9;
+	cursor: pointer;
+}
+
+.scaleSelectButton input[type=radio]:checked + label {
+	background-image: none;
+	outline: 0;
+	background-color: #f8f8f8;
+	cursor: pointer;
+	color: #0000FF;
+}
+
+.log-scale-label {
+	border-radius: 6px 0px 0px 6px;
+	margin-right: -2px;
+}
+
+.lin-scale-label {
+	border-radius: 0px 6px 6px 0px;
+	margin-left: -2px;
+}
+
+.one-scale-only-label {
+	border-radius: 6px 6px 6px 6px;
+}
+
+div[class^="plot-container-"] {
+	width: 100%;
+}
+
+.dygraph-label.dygraph-xlabel {
+	margin-left: 91px;
+}
+
+.dygraph-label.dygraph-ylabel {
+	margin-left: 90px;
+}
+
+div[class^="timeseries-plot-"], div[class^="duration-plot-"] {
+	width: 100%;
+}
+
+#downloadPopup {
+	width: inherit;
+}
+
+.datatype-select {
+	margin-bottom: 15px;
+}
+
+.datatype-select label {
+	margin-left: 8px;
+	font-size: 120%;
+	font-weight: bold;
+}
+.datatype-select input {
+	margin-left: 8px !important;
+}
+
+

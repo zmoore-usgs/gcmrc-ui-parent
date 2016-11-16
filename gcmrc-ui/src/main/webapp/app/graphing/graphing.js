@@ -686,7 +686,7 @@ GCMRC.Graphing = function(hoursOffset) {
 			
 			var containerDiv = $("#" + config.divId);
 			var labelDiv = $("#" + config.labelDivId);
-			
+
 			graphs[config.divId] = {};
 			durationCurves[config.divId] = {
 				log: {},

@@ -686,7 +686,7 @@ GCMRC.Graphing = function(hoursOffset) {
 			
 			var containerDiv = $("#" + config.divId);
 			var labelDiv = $("#" + config.labelDivId);
-
+			
 			graphs[config.divId] = {};
 			durationCurves[config.divId] = {
 				log: {},
@@ -726,7 +726,6 @@ GCMRC.Graphing = function(hoursOffset) {
 						//success
 						if (data.success && data.success.data && $.isArray(data.success.data)) {
 							//Store individual chart divs for later populating with duration curve toggle
-							var plotDivs = new Array();
 							GCMRC.Page.params.values().sortBy(function(n) {
 								return parseInt(n.description.displayOrder || 9999999);
 							}).map(function(n) {
@@ -737,7 +736,6 @@ GCMRC.Graphing = function(hoursOffset) {
 										'"></div><div id="lin" class="duration-plot-' + el + 
 										'"></div></div>');
 								plotDiv.appendTo(containerDiv);
-								plotDivs.push({"div": plotDiv, "groupId": el});
 								labelDiv.append($('<div class="timeseries-plot-' + el +'"></div><div class="duration-plot-' + el +'"></div>'));
 							});
 														
@@ -750,17 +748,26 @@ GCMRC.Graphing = function(hoursOffset) {
 								}
 							});
 							
-							//Hide TS plots after they've built until the duration curve plots are finished building.
-							$('div[class^="timeseries-plot"]').hide();
-							
-							//Build List of Graphs that Populated and thus should have duration curves
-							var durationCurveIds = graphs[config.divId].keys();
-							
-							config.durationCurveConf.graphsToMake = durationCurveIds;
-							config.durationCurveConf.divId = config.divId;
-							
-							//Build Duration Curve Plots. Note: Non-blocking function because of AJAX call.
-							createDurationCurvePlot('durationCurve', config.durationCurveConf, config.durationCurveParams);
+							//Only run this if duration curves should be generating
+							if(config.durationCurveConf){
+								//Hide TS plots after they've built until the duration curve plots are finished building.
+								$('div[class^="timeseries-plot"]').hide();
+
+								//Build List of Graphs that Populated and thus should have duration curves
+								var durationCurveIds = graphs[config.divId].keys();
+
+								config.durationCurveConf.graphsToMake = durationCurveIds;
+								config.durationCurveConf.divId = config.divId;
+
+								//Build Duration Curve Plots. Note: Non-blocking function because of AJAX call.
+								createDurationCurvePlot('durationCurve', config.durationCurveConf, config.durationCurveParams);
+							} else {
+								//Force-Redraw Time Series Plots just in case the window was resized while they were hidden
+								graphs[config.divId].values().forEach(function(graph){
+									graph.updateOptions({});
+									graph.resize();
+								});
+							}
 						} else if (data.data && data.data.ERROR) {
 							clearErrorMessage();
 							showErrorMessage("Please select a parameter to graph!");

@@ -451,6 +451,8 @@ GCMRC.Page = {
 				config.e = parseFloat($('span[name=e_val]').html()) / 100.0;
 				config.f = parseFloat($('span[name=f_val]').html()) / 100.0;
 				config.g = parseFloat($('span[name=g_val]').html()) / 100.0;
+				
+				var identifier = graphToMake.groupId;
 
 				var createCallback = function(response) {
 					var conf = config.clone();
@@ -459,9 +461,9 @@ GCMRC.Page = {
 					conf["labels"] = ["Time", self.config.seriesName, "High", "Low"];
 					conf['dataformatter'] = GCMRC.Dygraphs.DataFormatter(0);
 					conf['decimalPlaces'] = 0;
-					conf["parameterName"] = graphToMake.groupId;
-					conf["div"] = $('#' + conf.divId + ' div.p' + graphToMake.groupId).get(0);
-					conf["labelDiv"] = $('#' + conf.labelDivId + ' div.p' + graphToMake.groupId).get(0);
+					conf["parameterName"] = identifier;
+					conf["div"] = $('#' + conf.divId + ' div.timeseries-plot-' + identifier).get(0);
+					conf["labelDiv"] = $('#' + conf.labelDivId + ' div.timeseries-plot-' + identifier).get(0);
 					conf["colors"] = [CONFIG.instColor, CONFIG.instColor, CONFIG.instColor];
 					conf["highlightColor"] = {
 						"High": CONFIG.instHiColor,

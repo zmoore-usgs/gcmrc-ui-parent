@@ -421,7 +421,7 @@ GCMRC.Page = {
 					return result;
 				};
 				
-				if(data.status.toLowerCase() === "failure"){
+				if(!data.success){
 					return;
 				}
 

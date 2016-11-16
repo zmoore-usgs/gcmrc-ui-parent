@@ -18,7 +18,8 @@ GCMRC.Graphing = function(hoursOffset) {
 		durationCurve: 'services/rest/durationcurve/'
 	};
 	
-	var NO_DURATION_CURVE_IDS = ["14", "15", "16", "17", "18", "19", "20", "21", "22", "23", "24", "25", "26", "27", "28", "29", "30", "31", "32", "33", "34", "35", "36", "37", "38", "39", "40", "41", "42", "43", "44", "45", "46", "47", "48", "49", "50", "51", "52"];
+	// Don't show duration curve plot option for bed sediment or any cumulative timeseries
+	var NO_DURATION_CURVE_IDS = ["3", "4", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23", "24", "25", "26", "27", "28", "29", "30", "31", "32", "33", "34", "35", "36", "37", "38", "39", "40", "41", "42", "43", "44", "45", "46", "47", "48", "49", "50", "51", "52", "58", "61", "115"];
 
 	var showInfoMessage = function(locator, msg) {
 		$(locator).append('<div class="alert alert-info"><button type="button" class="close" data-dismiss="alert">×</button>' + msg + '</div>');

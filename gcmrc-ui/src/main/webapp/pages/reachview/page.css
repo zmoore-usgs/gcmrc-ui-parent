@@ -82,3 +82,19 @@ img { max-width: none; }
 #reachSummaryContainer {
 	text-align: center;
 }
+
+div[class^="plot-container-"] {
+	width: 100%;
+}
+
+.dygraph-label.dygraph-xlabel {
+	margin-left: 91px;
+}
+
+.dygraph-label.dygraph-ylabel {
+	margin-left: 90px;
+}
+
+div[class^="timeseries-plot-"], div[class^="duration-plot-"] {
+	width: 100%;
+}

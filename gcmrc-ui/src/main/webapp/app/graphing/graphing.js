@@ -18,7 +18,8 @@ GCMRC.Graphing = function(hoursOffset) {
 		durationCurve: 'services/rest/durationcurve/'
 	};
 	
-	var NO_DURATION_CURVE_IDS = ["14", "15", "16", "17", "18", "19", "20", "21", "22", "23", "24", "25", "26", "27", "28", "29", "30", "31", "32", "33", "34", "35", "36", "37", "38", "39", "40", "41", "42", "43", "44", "45", "46", "47", "48", "49", "50", "51", "52"];
+	// Don't show duration curve plot option for bed sediment or any cumulative timeseries
+	var NO_DURATION_CURVE_IDS = ["3", "4", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23", "24", "25", "26", "27", "28", "29", "30", "31", "32", "33", "34", "35", "36", "37", "38", "39", "40", "41", "42", "43", "44", "45", "46", "47", "48", "49", "50", "51", "52", "58", "61", "115"];
 
 	var showInfoMessage = function(locator, msg) {
 		$(locator).append('<div class="alert alert-info"><button type="button" class="close" data-dismiss="alert">×</button>' + msg + '</div>');
@@ -726,7 +727,6 @@ GCMRC.Graphing = function(hoursOffset) {
 						//success
 						if (data.success && data.success.data && $.isArray(data.success.data)) {
 							//Store individual chart divs for later populating with duration curve toggle
-							var plotDivs = new Array();
 							GCMRC.Page.params.values().sortBy(function(n) {
 								return parseInt(n.description.displayOrder || 9999999);
 							}).map(function(n) {
@@ -737,7 +737,6 @@ GCMRC.Graphing = function(hoursOffset) {
 										'"></div><div id="lin" class="duration-plot-' + el + 
 										'"></div></div>');
 								plotDiv.appendTo(containerDiv);
-								plotDivs.push({"div": plotDiv, "groupId": el});
 								labelDiv.append($('<div class="timeseries-plot-' + el +'"></div><div class="duration-plot-' + el +'"></div>'));
 							});
 														
@@ -750,17 +749,26 @@ GCMRC.Graphing = function(hoursOffset) {
 								}
 							});
 							
-							//Hide TS plots after they've built until the duration curve plots are finished building.
-							$('div[class^="timeseries-plot"]').hide();
-							
-							//Build List of Graphs that Populated and thus should have duration curves
-							var durationCurveIds = graphs[config.divId].keys();
-							
-							config.durationCurveConf.graphsToMake = durationCurveIds;
-							config.durationCurveConf.divId = config.divId;
-							
-							//Build Duration Curve Plots. Note: Non-blocking function because of AJAX call.
-							createDurationCurvePlot('durationCurve', config.durationCurveConf, config.durationCurveParams);
+							//Only run this if duration curves should be generating
+							if(config.durationCurveConf){
+								//Hide TS plots after they've built until the duration curve plots are finished building.
+								$('div[class^="timeseries-plot"]').hide();
+
+								//Build List of Graphs that Populated and thus should have duration curves
+								var durationCurveIds = graphs[config.divId].keys();
+
+								config.durationCurveConf.graphsToMake = durationCurveIds;
+								config.durationCurveConf.divId = config.divId;
+
+								//Build Duration Curve Plots. Note: Non-blocking function because of AJAX call.
+								createDurationCurvePlot('durationCurve', config.durationCurveConf, config.durationCurveParams);
+							} else {
+								//Force-Redraw Time Series Plots just in case the window was resized while they were hidden
+								graphs[config.divId].values().forEach(function(graph){
+									graph.updateOptions({});
+									graph.resize();
+								});
+							}
 						} else if (data.data && data.data.ERROR) {
 							clearErrorMessage();
 							showErrorMessage("Please select a parameter to graph!");

@@ -536,21 +536,15 @@ GCMRC.Page = {
 			}));
 		}
 		
-		
+		//Get special bedload coefficients for dinosaur network
 		if (CONFIG.networkName === NETWORK_DINO) {
-		    if (GCMRC.Page.reachDetail.some(function(el){return el.reachGroup === "Calc Inst Sand Bedload"})) {
-			result.push(new Budget({
-				budgetType : "bedLoadCoeff",
-				budgetColumns : budgetColumns["Calc Inst Sand Bedload"],
+			result.push({
+				groupId : "bedLoadCoeff",
+				groupName: "Discharge",
+				columns: budgetColumns["Calc Inst Sand Bedload"],
 				responseColumns : responseColumns["Calc Inst Sand Bedload"],
-				yAxisLabel : "",
-				seriesName : "",
-				reqIdName : "",
-				updateFnName : "updateBedLoad",
-				workerFedName : "isBedLoadWorkerFed",
-				workerName : "bedLoad"
-			}));
-		    }
+				yAxisLabel: ""
+			});
 		}
 		
 		return result;

@@ -365,6 +365,7 @@ GCMRC.Page = {
 		var reach = GCMRC.Page.reach;
 		var budgetColumns = {};
 		var responseColumns = {};
+		var NETWORK_DINO = "DINO";
 		//TODO Build Columns
 		GCMRC.Page.reachDetail.each(function(elContainer) {
 			var el = elContainer.reachGroup;
@@ -437,7 +438,7 @@ GCMRC.Page = {
 						getValue(el, self.config.responseColumns[3])]);
 					times.push(getValue(el, "time"));
 				});
-
+				
 				GCMRC.Page[self.config.workerName].postMessage({
 					messageType: "setDataArray",
 					divId: config.divId,
@@ -511,6 +512,7 @@ GCMRC.Page = {
 				budgetType : "sandbudget",
 				budgetColumns : budgetColumns["S Sand Cumul Load"],
 				responseColumns : responseColumns["S Sand Cumul Load"],
+				bedLoadCoeffColumns : responseColumns["Calc Inst Sand Bedload"],
 				yAxisLabel : "Change in Sand Stored in Reach (Metric Tons)",
 				seriesName : "Sand Storage Change",
 				reqIdName : "latestSandReqId",
@@ -533,7 +535,24 @@ GCMRC.Page = {
 				workerName : "finesworker"
 			}));
 		}
-
+		
+		
+		if (CONFIG.networkName === NETWORK_DINO) {
+		    if (GCMRC.Page.reachDetail.some(function(el){return el.reachGroup === "Calc Inst Sand Bedload"})) {
+			result.push(new Budget({
+				budgetType : "bedLoadCoeff",
+				budgetColumns : budgetColumns["Calc Inst Sand Bedload"],
+				responseColumns : responseColumns["Calc Inst Sand Bedload"],
+				yAxisLabel : "",
+				seriesName : "",
+				reqIdName : "",
+				updateFnName : "updateBedLoad",
+				workerFedName : "isBedLoadWorkerFed",
+				workerName : "bedLoad"
+			}));
+		    }
+		}
+		
 		return result;
 	},
 	createDateList: function(container, dates) {
@@ -753,7 +772,7 @@ GCMRC.Page = {
 				units: "Cubic feet per second",
 				unitsShort: "cfs"
 			}
-		}
+		};
 	}),
 	params: {},
 	credits: ["USGSGCMR"],

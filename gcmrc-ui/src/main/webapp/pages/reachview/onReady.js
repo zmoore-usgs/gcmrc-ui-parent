@@ -23,11 +23,12 @@ $(document).ready(function onReady() {
 	
         $('#bedLoadSlider').children().first().text('Sand Bedload Included in Sand Budget');
         GCMRC.Page.buildRadioInfo($('#bedLoadList'));
-        } 
+        } else {
   
         var bedLoadList = [GCMRC.Page.sliderConfig.bedLoad];
         
         GCMRC.Page.createParameterList($('#bedLoadList'), bedLoadList);
+	}
 	
 	GCMRC.Page.createDateList($('#lastSedDates'), GCMRC.Page.reach);
 	
@@ -42,7 +43,8 @@ $(document).ready(function onReady() {
 			sandMajor : false,
 			finesMajor : false,
 			sandMinor : false,
-			finesMinor : false
+			finesMinor : false,
+			bedLoadCoeff: false
 		}
 		
 		GCMRC.Page.reachDetail.each(function(el) {
@@ -63,6 +65,11 @@ $(document).ready(function onReady() {
 				if (el.minorStation) {
 					addToResult["finesMinor"] = true;
 				}
+			}
+			if ("DINO" === CONFIG.networkName) {
+			    if (el.reachGroup === "Calc Inst Sand Bedload") {
+				addToResult["bedLoadCoeff"] = true;
+			    }
 			}
 		});
 		

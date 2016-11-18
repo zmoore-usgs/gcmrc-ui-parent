@@ -4,20 +4,20 @@
 <div id="contactInfo"><span>Grand Canyon Monitoring &amp; Research Center | 2255 North Gemini Drive Flagstaff, AZ 86001 | Phone: 928.556.7380 Fax: 928.556.7100</span></div>
 <div id="usgsfooter">
 	<p id="usgsfooterbar">
-		<a href="http://www.usgs.gov/laws/accessibility.html" title="Accessibility Policy (Section 508)">Accessibility</a>
-		<a href="http://www.usgs.gov/foia/" title="Freedom of Information Act">FOIA</a>
-		<a href="http://www.usgs.gov/laws/privacy.html" title="Privacy policies of the U.S. Geological Survey.">Privacy</a>
-		<a href="http://www.usgs.gov/laws/policies_notices.html" title="Policies and notices that govern information posted on USGS Web sites.">Policies and Notices</a>
+		<a href="https://www.usgs.gov/laws/accessibility.html" title="Accessibility Policy (Section 508)">Accessibility</a>
+		<a href="https://www.usgs.gov/foia/" title="Freedom of Information Act">FOIA</a>
+		<a href="https://www.usgs.gov/laws/privacy.html" title="Privacy policies of the U.S. Geological Survey.">Privacy</a>
+		<a href="https://www.usgs.gov/laws/policies_notices.html" title="Policies and notices that govern information posted on USGS Web sites.">Policies and Notices</a>
 	</p>
 
 	<div id="usgsfootertext">
 
-		<a href="http://www.takepride.gov/"><img src="${param['relPath']}template/images/footer_graphic_takePride.jpg" alt="Take Pride in America logo" title="Take Pride in America Home Page" width="60" height="58" /></a>
-		<a href="http://usa.gov/"><img src="${param['relPath']}template/images/footer_graphic_usagov.jpg" alt="USA.gov logo" title="USAGov: Government Made Easy" width="90" height="26" /></a>
+		<a href="https://www.takepride.gov/"><img src="${param['relPath']}template/images/footer_graphic_takePride.jpg" alt="Take Pride in America logo" title="Take Pride in America Home Page" width="60" height="58" /></a>
+		<a href="https://usa.gov/"><img src="${param['relPath']}template/images/footer_graphic_usagov.jpg" alt="USA.gov logo" title="USAGov: Government Made Easy" width="90" height="26" /></a>
 
-		<a href="http://www.doi.gov/">U.S. Department of the Interior</a> |
-		<a href="http://www.usgs.gov/">U.S. Geological Survey</a> |
-        <a href="http://www.gcmrc.gov/gcmrc.aspx">Grand Canyon Monitoring and Research Center</a>
+		<a href="https://www.doi.gov/">U.S. Department of the Interior</a> |
+		<a href="https://www.usgs.gov/">U.S. Geological Survey</a> |
+        <a href="https://www.gcmrc.gov/gcmrc.aspx">Grand Canyon Monitoring and Research Center</a>
         <br />
 
         <div>

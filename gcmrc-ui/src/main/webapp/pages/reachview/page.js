@@ -293,6 +293,7 @@ GCMRC.Page = {
 	isFinesWorkerFed: false,
 	latestSandReqId: 1,
 	latestFinesReqId: 1,
+	bedLoadCoeffData: [],
 	updateSandSummary: function(config) {
 		if (config) {
 			var upper = config.upper;
@@ -506,13 +507,46 @@ GCMRC.Page = {
 				GCMRC.Page.drawBudget(config);
 			};
 		};
+		
+		var BedloadCoeff = function() {
+			this.groupId = "bedLoadCoeff";
+			this.columns = ["inst!" + "Calc Inst Sand Bedload" + "!" + GCMRC.Page.reach.downstreamDischargeStation];
+			this.responseColumns = ["inst!" + "Calc Inst Sand Bedload" + "-" + GCMRC.Page.reach.downstreamDischargeStation];
+			this.yAxisLabel = "";
+			this.dealWithResponse = function(graphToMake, data, config, buildGraph) {
+				var self = this;
+				var coeffData = [];
+				
+				var getValue = function(row, colName) {
+					var result = 0.0;
+					if (row[colName]) {
+						result = parseFloat(row[colName]);
+					}
+					return result;
+				};
+				
+				if(!data.success){
+					return;
+				}
+
+				//Extract and store bedloadCoeffData
+				data.success.data.each(function(el) {
+					var result = 0.0;
+					if (el[self.responseColumns[0]]) {
+						result = parseFloat(el[self.responseColumns[0]]);
+					}
+					coeffData.push(result);
+				});
+				
+				GCMRC.Page.bedLoadCoeffData = coeffData;
+			};
+		};
 
 		if (GCMRC.Page.reachDetail.some(function(el){return el.reachGroup === "S Sand Cumul Load"})) {
 			result.push(new Budget({
 				budgetType : "sandbudget",
 				budgetColumns : budgetColumns["S Sand Cumul Load"],
 				responseColumns : responseColumns["S Sand Cumul Load"],
-				bedLoadCoeffColumns : responseColumns["Calc Inst Sand Bedload"],
 				yAxisLabel : "Change in Sand Stored in Reach (Metric Tons)",
 				seriesName : "Sand Storage Change",
 				reqIdName : "latestSandReqId",
@@ -536,21 +570,9 @@ GCMRC.Page = {
 			}));
 		}
 		
-		
+		//Get special bedload coefficients for dinosaur network
 		if (CONFIG.networkName === NETWORK_DINO) {
-		    if (GCMRC.Page.reachDetail.some(function(el){return el.reachGroup === "Calc Inst Sand Bedload"})) {
-			result.push(new Budget({
-				budgetType : "bedLoadCoeff",
-				budgetColumns : budgetColumns["Calc Inst Sand Bedload"],
-				responseColumns : responseColumns["Calc Inst Sand Bedload"],
-				yAxisLabel : "",
-				seriesName : "",
-				reqIdName : "",
-				updateFnName : "updateBedLoad",
-				workerFedName : "isBedLoadWorkerFed",
-				workerName : "bedLoad"
-			}));
-		    }
+			result.push(new BedloadCoeff());
 		}
 		
 		return result;

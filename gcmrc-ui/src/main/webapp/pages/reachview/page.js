@@ -74,7 +74,7 @@ GCMRC.Page = {
 		div.append('<div>Uncertainty for ' + (("BIBE" === CONFIG.networkName)?"Tornillo Creek":"Major Tributary") + ' ' + dataType + ' Loads <span class="' + loadDivKey + '_qual' + multiplier + '"></span>% after ' + dateStr + '</div>');
 	},
 	buildRadioInfo : function(div) {
-		div.append('<div class="form-inline"><label class="radio bedRadio"><input type="radio" name="bedLoadToggle" value="yes">Yes</label><label class="radio bedRadio"><input type="radio" name="bedLoadToggle" value="no">No</label></div>');
+		div.append('<div class="form-inline"><label class="radio bedRadio"><input type="radio" name="bedLoadToggle" value="1">Yes</label><label class="radio bedRadio"><input type="radio" name="bedLoadToggle" value="0">No</label></div>');
 	},
 	buildGraphClicked: function() {
 		var NETWORK_DINO = "DINO";
@@ -637,6 +637,43 @@ GCMRC.Page = {
 
 		container.append(result.join(""));
 	},
+	toggleChange: function(useBedload){
+		var bedloadPerc = 0;
+
+		if (GCMRC.Page.isSandWorkerFed) {
+			var msg = {
+				divId: 'data-dygraph',
+				labelDivId: 'legend-dygraph'
+			};
+			msg.messageType = "addBedloadToDataArray";
+			msg.useBedload = useBedload;
+			msg.data = GCMRC.Page.bedLoadCoeffData;
+			//msg.bedloadPerc = bedloadPerc;
+			msg.reqId = ++GCMRC.Page.latestSandReqId;
+
+			GCMRC.Page.sandworker.postMessage(msg);
+			
+			var a = parseFloat($('span[name=a_val]').html()) / 100.0;
+			var b = parseFloat($('span[name=b_val]').html()) / 100.0;
+			var c = parseFloat($('span[name=c_val]').html()) / 100.0;
+			var d = parseFloat($('span[name=d_val]').html()) / 100.0;
+			var e = parseFloat($('span[name=e_val]').html()) / 100.0;
+			var f = parseFloat($('span[name=f_val]').html()) / 100.0;
+			var g = parseFloat($('span[name=g_val]').html()) / 100.0;
+				
+			GCMRC.Page.drawBudget({
+				divId: 'data-dygraph',
+				labelDivId: 'legend-dygraph',
+				a: a,
+				b: b,
+				c: c,
+				d: d,
+				e: e,
+				f: f,
+				g: g
+			});
+		}
+	},
 	createParameterList: function(container, params) {
 		var html = [];
 
@@ -682,7 +719,7 @@ GCMRC.Page = {
 				var e = parseFloat($('span[name=e_val]').html()) / 100.0;
 				var f = parseFloat($('span[name=f_val]').html()) / 100.0;
 				var g = parseFloat($('span[name=g_val]').html()) / 100.0;
-
+				
 				GCMRC.Page.drawBudget({
 					divId: 'data-dygraph',
 					labelDivId: 'legend-dygraph',
@@ -696,6 +733,7 @@ GCMRC.Page = {
 				});
 			};
 		};
+				
 		var slidequal = function(changeThis, multiplier) {
 			return function(event, ui) {
 				$(changeThis).html(ui.value * multiplier);

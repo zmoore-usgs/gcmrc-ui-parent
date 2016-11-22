@@ -20,9 +20,11 @@ $(document).ready(function onReady() {
 	GCMRC.Page.buildPORView($('#porContainer'), GCMRC.Page.earliestPositionISO, GCMRC.Page.latestPositionISO);
         
         if ("DINO" === CONFIG.networkName) {
-	
-        $('#bedLoadSlider').children().first().text('Sand Bedload Included in Sand Budget');
-        GCMRC.Page.buildRadioInfo($('#bedLoadList'));
+			$('#bedLoadSlider').children().first().text('Sand Bedload Included in Sand Budget');
+			GCMRC.Page.buildRadioInfo($('#bedLoadList'));
+			$('#bedLoadSlider').change(function(){
+				GCMRC.Page.toggleChange(Boolean(parseFloat($("input[name=bedLoadToggle]:checked").val())));
+			});
         } else {
   
         var bedLoadList = [GCMRC.Page.sliderConfig.bedLoad];

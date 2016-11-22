@@ -510,11 +510,26 @@ GCMRC.Page = {
 		
 		var BedloadCoeff = function() {
 			this.groupId = "bedLoadCoeff";
-			this.columns = ["inst!" + "Calc Inst Sand Bedload" + "!" + GCMRC.Page.reach.downstreamDischargeStation];
-			this.responseColumns = ["inst!" + "Calc Inst Sand Bedload" + "-" + GCMRC.Page.reach.downstreamDischargeStation];
+			this.columns = [];
+			this.responseColumns = []
+			this.columns.push("inst!" + "Calc Inst Sand Bedload" + "!" + GCMRC.Page.reach.upstreamStation);
+			this.columns.push("inst!" + "Calc Inst Sand Bedload" + "!" + GCMRC.Page.reach.downstreamStation);
+			if (GCMRC.Page.reach.majorStation) {
+				this.columns.push("inst!" + GCMRC.Page.reach.majorGroup + "!" + GCMRC.Page.reach.majorStation);
+			}
+			if (GCMRC.Page.reach.minorStation) {
+				this.columns.push("inst!" + GCMRC.Page.reach.minorGroup + "!" + GCMRC.Page.reach.minorStation);
+			}
+			this.columns.push("inst!" + "Calc Inst Sand Bedload" + "!" + GCMRC.Page.reach.upstreamSecondaryStation);
+			this.responseColumns.push("inst!" + "Calc Inst Sand Bedload" + "-" + GCMRC.Page.reach.upstreamStation);
+			this.responseColumns.push("inst!" + GCMRC.Page.reach.majorGroup + "-" + GCMRC.Page.reach.majorStation);
+			this.responseColumns.push("inst!" + GCMRC.Page.reach.minorGroup + "-" + GCMRC.Page.reach.minorStation);
+			this.responseColumns.push("inst!" + "Calc Inst Sand Bedload" + "-" + GCMRC.Page.reach.downstreamStation);
+			this.responseColumns.push("inst!" + "Calc Inst Sand Bedload" + "-" + GCMRC.Page.reach.upstreamSecondaryStation);
 			this.yAxisLabel = "";
 			this.dealWithResponse = function(graphToMake, data, config, buildGraph) {
 				var self = this;
+				var times = [];
 				var coeffData = [];
 				
 				var getValue = function(row, colName) {
@@ -530,14 +545,19 @@ GCMRC.Page = {
 				}
 
 				//Extract and store bedloadCoeffData
+				// add additional sediment station value for both DINO networks
 				data.success.data.each(function(el) {
-					var result = 0.0;
-					if (el[self.responseColumns[0]]) {
-						result = parseFloat(el[self.responseColumns[0]]);
-					}
-					coeffData.push(result);
+					var combinedValue = self.responseColumns.length > 4 ?
+							getValue(el, self.responseColumns[0]) + 
+							getValue(el, self.responseColumns[4]):
+							getValue(el, self.responseColumns[0]);
+					coeffData.push([combinedValue,
+						getValue(el, self.responseColumns[1]),
+						getValue(el, self.responseColumns[2]),
+						getValue(el, self.responseColumns[3])]);
+					times.push(getValue(el, "time"));
 				});
-				
+			       
 				GCMRC.Page.bedLoadCoeffData = coeffData;
 			};
 		};

@@ -134,9 +134,13 @@ GCMRC.Graphing = function(hoursOffset) {
 		var timeColumn = "time";
 		var conf = $.extend({}, config);
 		var hasData = false;
+		var bedLoadData;
+		if (graphToMake.groupId === 'sandbudget') {
+			    bedLoadData = GCMRC.Page.bedLoadCoeffData;
+			}
 		conf.data = data.success.data.map(function(el) {
 			var result;
-
+			
 			result = [parseInt(el[timeColumn])];
 			
 			var columns = graphToMake.responseColumns || graphToMake.columns;

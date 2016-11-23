@@ -773,6 +773,9 @@ GCMRC.Graphing = function(hoursOffset) {
 									graph.resize();
 								});
 							}
+							if (GCMRC.isDinoNetwork(CONFIG.networkName)) {
+							    GCMRC.Page.toggleChange(Boolean(parseFloat($("input[name=bedLoadToggle]:checked").val())));
+							}
 						} else if (data.data && data.data.ERROR) {
 							clearErrorMessage();
 							showErrorMessage("Please select a parameter to graph!");

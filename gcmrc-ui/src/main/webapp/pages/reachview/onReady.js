@@ -19,9 +19,10 @@ $(document).ready(function onReady() {
 	
 	GCMRC.Page.buildPORView($('#porContainer'), GCMRC.Page.earliestPositionISO, GCMRC.Page.latestPositionISO);
         
-        if ("DINO" === CONFIG.networkName) {
+        if (GCMRC.isDinoNetwork(CONFIG.networkName)) {
 			$('#bedLoadSlider').children().first().text('Sand Bedload Included in Sand Budget');
 			GCMRC.Page.buildRadioInfo($('#bedLoadList'));
+			$("input[name=bedLoadToggle][value=0]").prop('checked', true);
 			$('#bedLoadSlider').change(function(){
 				GCMRC.Page.toggleChange(Boolean(parseFloat($("input[name=bedLoadToggle]:checked").val())));
 			});
@@ -68,7 +69,7 @@ $(document).ready(function onReady() {
 					addToResult["finesMinor"] = true;
 				}
 			}
-			if ("DINO" === CONFIG.networkName) {
+			if (GCMRC.isDinoNetwork(CONFIG.networkName)) {
 			    if (el.reachGroup === "Calc Inst Sand Bedload") {
 				addToResult["bedLoadCoeff"] = true;
 			    }

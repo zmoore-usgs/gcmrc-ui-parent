@@ -77,10 +77,8 @@ GCMRC.Page = {
 		div.append('<div class="form-inline"><label class="radio bedRadio"><input type="radio" name="bedLoadToggle" value="1">Yes</label><label class="radio bedRadio"><input type="radio" name="bedLoadToggle" value="0">No</label></div>');
 	},
 	buildGraphClicked: function() {
-		var NETWORK_DINO = "DINO";
 		var begin = $("input[name='beginPosition']").val();
 		var end = $("input[name='endPosition']").val();
-
 		var endStaticRecMillis = new Date(GCMRC.Page.reach.endStaticRec).getTime() + (CONFIG.networkHoursOffset * 60 * 60 * 1000);
 		var newestSuspSedMillis = new Date(GCMRC.Page.reach.newestSuspSed).getTime() + (CONFIG.networkHoursOffset * 60 * 60 * 1000);
 
@@ -177,8 +175,9 @@ GCMRC.Page = {
 					},
 			serviceOptions);
 
-			if (CONFIG.networkName === NETWORK_DINO) {
+			if (GCMRC.isDinoNetwork(CONFIG.networkName)) {
 				GCMRC.Graphing.showInfoMsg("#infoMsg",'The sediment supplies from ungaged small tributaries are not included in these sediment budgets.  These tributaries transport relatively small amounts of silt and clay and negligible amounts of sand.  Not including the sediment supplied from these small tributaries therefore does not measurably affect the sand budgets, but does result in small negative step changes in the silt and clay budgets that are not the result of erosion.');
+				
 			}
 			
 		} else {
@@ -366,7 +365,6 @@ GCMRC.Page = {
 		var reach = GCMRC.Page.reach;
 		var budgetColumns = {};
 		var responseColumns = {};
-		var NETWORK_DINO = "DINO";
 		//TODO Build Columns
 		GCMRC.Page.reachDetail.each(function(elContainer) {
 			var el = elContainer.reachGroup;
@@ -591,7 +589,7 @@ GCMRC.Page = {
 		}
 		
 		//Get special bedload coefficients for dinosaur network
-		if (CONFIG.networkName === NETWORK_DINO) {
+		if (GCMRC.isDinoNetwork(CONFIG.networkName)) {
 			result.push(new BedloadCoeff());
 		}
 		
@@ -639,7 +637,7 @@ GCMRC.Page = {
 	},
 	toggleChange: function(useBedload){
 		var bedloadPerc = 0;
-
+		
 		if (GCMRC.Page.isSandWorkerFed) {
 			var msg = {
 				divId: 'data-dygraph',

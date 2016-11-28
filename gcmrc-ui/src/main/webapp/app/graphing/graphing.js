@@ -774,7 +774,7 @@ GCMRC.Graphing = function(hoursOffset) {
 								});
 							}
 							if (GCMRC.isDinoNetwork(CONFIG.networkName)) {
-							    GCMRC.Page.toggleChange(Boolean(parseFloat($("input[name=bedLoadToggle]:checked").val())));
+							    GCMRC.Page.bedLoadToggleChange(Boolean(parseFloat($("input[name=bedLoadToggle]:checked").val())));
 							}
 						} else if (data.data && data.data.ERROR) {
 							clearErrorMessage();

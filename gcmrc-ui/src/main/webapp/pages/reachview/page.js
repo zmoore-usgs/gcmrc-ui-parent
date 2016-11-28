@@ -506,7 +506,7 @@ GCMRC.Page = {
 			};
 		};
 		
-		var BedloadCoeff = function() {
+		var GetBedloadCoeff = function() {
 			this.groupId = "bedLoadCoeff";
 			this.columns = [];
 			this.responseColumns = []
@@ -590,7 +590,7 @@ GCMRC.Page = {
 		
 		//Get special bedload coefficients for dinosaur network
 		if (GCMRC.isDinoNetwork(CONFIG.networkName)) {
-			result.push(new BedloadCoeff());
+			result.push(new GetBedloadCoeff());
 		}
 		
 		return result;
@@ -635,7 +635,7 @@ GCMRC.Page = {
 
 		container.append(result.join(""));
 	},
-	toggleChange: function(useBedload){
+	bedLoadToggleChange: function(useBedload){
 		var bedloadPerc = 0;
 		
 		if (GCMRC.Page.isSandWorkerFed) {

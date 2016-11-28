@@ -24,7 +24,7 @@ $(document).ready(function onReady() {
 			GCMRC.Page.buildRadioInfo($('#bedLoadList'));
 			$("input[name=bedLoadToggle][value=0]").prop('checked', true);
 			$('#bedLoadSlider').change(function(){
-				GCMRC.Page.toggleChange(Boolean(parseFloat($("input[name=bedLoadToggle]:checked").val())));
+				GCMRC.Page.bedLoadToggleChange(Boolean(parseFloat($("input[name=bedLoadToggle]:checked").val())));
 			});
         } else {
   

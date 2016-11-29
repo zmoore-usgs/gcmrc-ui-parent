@@ -85,7 +85,7 @@
 					<h2>Discharge, Sediment, and Water Quality Monitoring</h2>
 					<div id="breadcrumbs" class="row-fluid">
 						<span>
-							<span><a href="http://www.gcmrc.gov/gcmrc.aspx">Home</a></span>
+							<span><a href="https://www.gcmrc.gov/gcmrc.aspx">Home</a></span>
 							<span> &gt; </span>
 							<span>Discharge, Sediment and Water Quality</span>
 						</span>
@@ -133,7 +133,7 @@
 									</div>
 								</div>
 								<div class="media">
-									<a class="pull-left" href="http://cida.usgs.gov/"><img class="media-object" src="./template/images/source-cida.gif"></a>
+									<a class="pull-left" href="https://cida.usgs.gov/"><img class="media-object" src="./template/images/source-cida.gif"></a>
 									<div class="media-body">
 										<h5 class="media-heading">Website Design and Programming</h5>
 										<ul class="unstyled">
@@ -152,7 +152,7 @@
 							<div class="sectionWideTitle">Cooperating Agencies and Academic Institutions</div>
 							<div class="well half">
 								<div class="media">
-									<a href="http://www.usbr.gov/">
+									<a href="https://www.usbr.gov/">
 										<div class="media-object pull-left" style="width:106px; text-align: center;"><img src="./template/images/source-usbr.gif"></div>
 										<div class="media-body">
 											<h4 class="media-heading">Bureau of Reclamation</h4>
@@ -160,7 +160,7 @@
 									</a>
 								</div>
 								<div class="media">
-									<a href="http://www.nps.gov/">
+									<a href="https://www.nps.gov/">
 										<div class="media-object pull-left" style="width:106px; text-align: center;"><img src="./template/images/source-nps.gif"></div>
 										<div class="media-body">
 											<h4 class="media-heading">National Park Service</h4>
@@ -168,7 +168,7 @@
 									</a>
 								</div>
 								<div class="media">
-									<a href="http://www.blm.gov/">
+									<a href="https://www.blm.gov/">
 										<div class="media-object pull-left" style="width:106px; text-align: center;"><img src="./template/images/source-blm.jpg"></div>
 										<div class="media-body">
 											<h4 class="media-heading">Bureau of Land Management</h4>
@@ -219,7 +219,7 @@
 									</a>
 								</div>
 								<div class="media">
-									<a href="http://tx.usgs.gov/">
+									<a href="https://tx.usgs.gov/">
 										<!--<img class="media-object pull-left" src="app/sources/source-usgs.gif">-->
 										<div class="media-body">
 											<h4 class="media-heading">Texas Water Science Center</h4>

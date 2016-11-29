@@ -1,7 +1,7 @@
 GCMRC.Organizations = {
 	"CIDA" : {
 		displayName : "USGS Center for Integrated Data Analytics",
-		url : "http://cida.usgs.gov",
+		url : "https://cida.usgs.gov",
 		logo : {
 			url : CONFIG.relativePath + "app/sources/source-cida.gif",
 			width : 80,
@@ -10,7 +10,7 @@ GCMRC.Organizations = {
 	},
 	"USGSGCMR" : {
 		displayName : "Grand Canyon Monitoring and Research Center",
-		url : "http://www.gcmrc.gov/",
+		url : "https://www.gcmrc.gov/",
 		logo : {
 			url : CONFIG.relativePath + "app/sources/source-usgs.gif",
 			width : 80,
@@ -19,7 +19,7 @@ GCMRC.Organizations = {
 	},
 	"USGSCOWC" : {
 		displayName : "Colorado Water Science Center",
-		url : "http://co.water.usgs.gov/",
+		url : "https://co.water.usgs.gov/",
 		logo : {
 			url : CONFIG.relativePath + "app/sources/source-usgs.gif",
 			width : 80,
@@ -28,7 +28,7 @@ GCMRC.Organizations = {
 	},
 	"USGSUTWC" : {
 		displayName : "Utah Water Science Center",
-		url : "http://ut.water.usgs.gov/",
+		url : "https://ut.water.usgs.gov/",
 		logo : {
 			url : CONFIG.relativePath + "app/sources/source-usgs.gif",
 			width : 80,
@@ -37,7 +37,7 @@ GCMRC.Organizations = {
 	},
 	"USGSTXWC" : {
 		displayName : "Texas Water Science Center",
-		url : "http://tx.usgs.gov",
+		url : "https://tx.usgs.gov",
 		logo : {
 			url : CONFIG.relativePath + "app/sources/source-usgs.gif",
 			width : 80,
@@ -46,7 +46,7 @@ GCMRC.Organizations = {
 	},
 	"USGSAZWC" : {
 		displayName : "Arizona Water Science Center",
-		url : "http://az.water.usgs.gov/",
+		url : "https://az.water.usgs.gov/",
 		logo : {
 			url : CONFIG.relativePath + "app/sources/source-usgs.gif",
 			width : 80,
@@ -55,7 +55,7 @@ GCMRC.Organizations = {
 	},
 	"UTSU" : {
 		displayName : "Utah State University",
-		url : "http://www.usu.edu/",
+		url : "https://www.usu.edu/",
 		logo : {
 			url : CONFIG.relativePath + "app/sources/source-usu.gif",
 			width : 106,
@@ -64,7 +64,7 @@ GCMRC.Organizations = {
 	},
 	"USBR" : {
 		displayName : "Bureau of Reclaimation",
-		url : "http://www.usbr.gov/",
+		url : "https://www.usbr.gov/",
 		logo : {
 			url : CONFIG.relativePath + "app/sources/source-usbr.gif",
 			width : 88,
@@ -73,7 +73,7 @@ GCMRC.Organizations = {
 	},
 	"NPS" : {
 		displayName : "National Park Service",
-		url : "http://www.nps.gov/",
+		url : "https://www.nps.gov/",
 		logo : {
 			url : CONFIG.relativePath + "app/sources/source-nps.gif",
 			width : 34,
@@ -82,7 +82,7 @@ GCMRC.Organizations = {
 	},
 	"BLM" : {
 		displayName : "Bureau of Land Management",
-		url : "http://www.blm.gov/",
+		url : "https://www.blm.gov/",
 		logo : {
 			url : CONFIG.relativePath + "app/sources/source-blm.gif",
 			width : 43,
@@ -91,7 +91,7 @@ GCMRC.Organizations = {
 	},
 	"CEC" : {
 		displayName : "Commission for Environmental Cooperation",
-		url : "http://www.cec.org/",
+		url : "https://www.cec.org/",
 		logo : {
 			url : CONFIG.relativePath + "app/sources/source-cec.gif",
 			width : 45,
@@ -100,7 +100,7 @@ GCMRC.Organizations = {
 	},
 	"USIBWC" : {
 		displayName : "U.S. International Boundary and Water Commission",
-		url : "http://www.ibwc.gov/home.html",
+		url : "https://www.ibwc.gov/home.html",
 		logo : {
 			url : CONFIG.relativePath + "app/sources/source-ibwc.jpg",
 			width : 40,
@@ -109,7 +109,7 @@ GCMRC.Organizations = {
 	},
 	"IIUABC" : {
 		displayName : "Instituto de Ingeniería UABC",
-		url : "http://institutodeingenieria.uabc.mx/",
+		url : "https://institutodeingenieria.uabc.mx/",
 		logo : {
 			url : CONFIG.relativePath + "app/sources/source-iiuabc.jpg",
 			width : 136,

@@ -94,7 +94,7 @@
 				<h2><span class="network-name"></span> Reaches</h2>
 				<div id="breadcrumbs">
 					<span>
-						<span><a href="http://www.gcmrc.gov/gcmrc.aspx">Home</a></span>
+						<span><a href="https://www.gcmrc.gov/gcmrc.aspx">Home</a></span>
 						<span> &gt; </span>
 						<span><a href="${relativePath}index.jsp">Discharge, Sediment and Water Quality</a></span>
 						<span> &gt; </span>

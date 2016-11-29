@@ -14,7 +14,7 @@ GCMRC.Mapping = function() {
 	var layers = {
 		esri : {
 		esriWorldImagery: new OpenLayers.Layer.XYZ("World Imagery",
-				"http://services.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/${z}/${y}/${x}",
+				"https://services.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/${z}/${y}/${x}",
 				{
 					sphericalMercator: true,
 					isBaseLayer: true,
@@ -23,7 +23,7 @@ GCMRC.Mapping = function() {
 				}
 		),
 		esriStreet: new OpenLayers.Layer.XYZ("Street",
-				"http://services.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/${z}/${y}/${x}",
+				"https://services.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/${z}/${y}/${x}",
 				{
 					sphericalMercator: true,
 					isBaseLayer: true,
@@ -32,7 +32,7 @@ GCMRC.Mapping = function() {
 				}
 		),
 		esriTopo: new OpenLayers.Layer.XYZ("Topo",
-				"http://services.arcgisonline.com/ArcGIS/rest/services/World_Topo_Map/MapServer/tile/${z}/${y}/${x}",
+				"https://services.arcgisonline.com/ArcGIS/rest/services/World_Topo_Map/MapServer/tile/${z}/${y}/${x}",
 				{
 					sphericalMercator: true,
 					isBaseLayer: true,
@@ -41,7 +41,7 @@ GCMRC.Mapping = function() {
 				}
 		),
 		esriTerrain: new OpenLayers.Layer.XYZ("Terrain",
-				"http://services.arcgisonline.com/ArcGIS/rest/services/World_Terrain_Base/MapServer/tile/${z}/${y}/${x}",
+				"https://services.arcgisonline.com/ArcGIS/rest/services/World_Terrain_Base/MapServer/tile/${z}/${y}/${x}",
 				{
 					sphericalMercator: true,
 					isBaseLayer: true,
@@ -50,7 +50,7 @@ GCMRC.Mapping = function() {
 				}
 		),
 		esriShadedRelief: new OpenLayers.Layer.XYZ("Shaded Relief",
-				"http://services.arcgisonline.com/ArcGIS/rest/services/World_Shaded_Relief/MapServer/tile/${z}/${y}/${x}",
+				"https://services.arcgisonline.com/ArcGIS/rest/services/World_Shaded_Relief/MapServer/tile/${z}/${y}/${x}",
 				{
 					sphericalMercator: true,
 					isBaseLayer: true,
@@ -59,7 +59,7 @@ GCMRC.Mapping = function() {
 				}
 		),
 		esriPhysical: new OpenLayers.Layer.XYZ("Physical",
-				"http://services.arcgisonline.com/ArcGIS/rest/services/World_Physical_Map/MapServer/tile/${z}/${y}/${x}",
+				"https://services.arcgisonline.com/ArcGIS/rest/services/World_Physical_Map/MapServer/tile/${z}/${y}/${x}",
 				{
 					sphericalMercator: true,
 					isBaseLayer: true,
@@ -68,7 +68,7 @@ GCMRC.Mapping = function() {
 				}
 		),
 		esriOcean: new OpenLayers.Layer.XYZ("Ocean",
-				"http://services.arcgisonline.com/ArcGIS/rest/services/Ocean_Basemap/MapServer/tile/${z}/${y}/${x}",
+				"https://services.arcgisonline.com/ArcGIS/rest/services/Ocean_Basemap/MapServer/tile/${z}/${y}/${x}",
 				{
 					sphericalMercator: true,
 					isBaseLayer: true,
@@ -146,7 +146,7 @@ GCMRC.Mapping = function() {
 				})
 			}),
 		satmap : new OpenLayers.Layer.ArcGIS93Rest( "ArcGIS Server Layer",
-                "http://137.227.239.42/ArcGIS/rest/services/GC_2009_05_4BAND_EARTHDATA/ImageServer/exportImage",
+                "https://137.227.239.42/ArcGIS/rest/services/GC_2009_05_4BAND_EARTHDATA/ImageServer/exportImage",
                 {
 					layers: "show:0",
 					srs : "EPSG:26949"

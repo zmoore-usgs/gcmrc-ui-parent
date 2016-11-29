@@ -19,7 +19,7 @@ GCMRC.Organizations = {
 	},
 	"USGSCOWC" : {
 		displayName : "Colorado Water Science Center",
-		url : "https://co.water.usgs.gov/",
+		url : "http://co.water.usgs.gov/",
 		logo : {
 			url : CONFIG.relativePath + "app/sources/source-usgs.gif",
 			width : 80,
@@ -28,7 +28,7 @@ GCMRC.Organizations = {
 	},
 	"USGSUTWC" : {
 		displayName : "Utah Water Science Center",
-		url : "https://ut.water.usgs.gov/",
+		url : "http://ut.water.usgs.gov/",
 		logo : {
 			url : CONFIG.relativePath + "app/sources/source-usgs.gif",
 			width : 80,
@@ -46,7 +46,7 @@ GCMRC.Organizations = {
 	},
 	"USGSAZWC" : {
 		displayName : "Arizona Water Science Center",
-		url : "https://az.water.usgs.gov/",
+		url : "http://az.water.usgs.gov/",
 		logo : {
 			url : CONFIG.relativePath + "app/sources/source-usgs.gif",
 			width : 80,
@@ -55,7 +55,7 @@ GCMRC.Organizations = {
 	},
 	"UTSU" : {
 		displayName : "Utah State University",
-		url : "https://www.usu.edu/",
+		url : "http://www.usu.edu/",
 		logo : {
 			url : CONFIG.relativePath + "app/sources/source-usu.gif",
 			width : 106,
@@ -91,7 +91,7 @@ GCMRC.Organizations = {
 	},
 	"CEC" : {
 		displayName : "Commission for Environmental Cooperation",
-		url : "https://www.cec.org/",
+		url : "http://www.cec.org/",
 		logo : {
 			url : CONFIG.relativePath + "app/sources/source-cec.gif",
 			width : 45,
@@ -100,7 +100,7 @@ GCMRC.Organizations = {
 	},
 	"USIBWC" : {
 		displayName : "U.S. International Boundary and Water Commission",
-		url : "https://www.ibwc.gov/home.html",
+		url : "http://www.ibwc.gov/home.html",
 		logo : {
 			url : CONFIG.relativePath + "app/sources/source-ibwc.jpg",
 			width : 40,
@@ -109,7 +109,7 @@ GCMRC.Organizations = {
 	},
 	"IIUABC" : {
 		displayName : "Instituto de Ingeniería UABC",
-		url : "https://institutodeingenieria.uabc.mx/",
+		url : "http://institutodeingenieria.uabc.mx/",
 		logo : {
 			url : CONFIG.relativePath + "app/sources/source-iiuabc.jpg",
 			width : 136,

@@ -134,9 +134,9 @@ GCMRC.Graphing = function(hoursOffset) {
 		var timeColumn = "time";
 		var conf = $.extend({}, config);
 		var hasData = false;
-		var bedLoadData;
+		var bedloadData;
 		if (graphToMake.groupId === 'sandbudget') {
-			    bedLoadData = GCMRC.Page.bedLoadCoeffData;
+			    bedloadData = GCMRC.Page.bedloadCoeffData;
 			}
 		conf.data = data.success.data.map(function(el) {
 			var result;
@@ -774,7 +774,7 @@ GCMRC.Graphing = function(hoursOffset) {
 								});
 							}
 							if (GCMRC.isDinoNetwork(CONFIG.networkName)) {
-							    GCMRC.Page.bedLoadToggleChange(Boolean(parseFloat($("input[name=bedLoadToggle]:checked").val())));
+							    GCMRC.Page.bedloadToggleChange(Boolean(parseFloat($("input[name=bedloadToggle]:checked").val())));
 							}
 						} else if (data.data && data.data.ERROR) {
 							clearErrorMessage();

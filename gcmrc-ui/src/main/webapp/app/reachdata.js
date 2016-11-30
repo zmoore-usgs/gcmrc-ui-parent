@@ -8,6 +8,13 @@ GCMRC.Reaches = function () {
 			adjustMax: 10,
 			adjustDefault: 5
 		},
+		riverBedload: {
+			name: "riverBedload",
+			displayName: "Magnitude of Possible Persistent Bias in Calculated River Sand Bedload",
+			adjustMin: 0,
+			adjustMax: 50,
+			adjustDefault: 50
+		},
 		riverFinesLoad: {
 			name: "e",
 			displayName: "Magnitude of Possible Persistent Bias in Measured River Silt and Clay Loads",
@@ -82,12 +89,10 @@ GCMRC.Reaches = function () {
 		slider.minorTribLoad.adjustMax = 100;
 	}
 	else if ("DINO" === CONFIG.networkName) {
-		slider.bedLoad.adjustMax = 0;
-		slider.bedLoad.adjustDefault = 0;
-
 		slider.riverFinesLoad.adjustMax = 50;
 		slider.riverFinesLoad.adjustDefault = 10;
-
+		
+		slider.riverLoad.displayName = "Magnitude of Possible Persistent Bias in Measured River Suspended-Sand Loads";
 		slider.riverLoad.adjustMax = 50;
 		slider.riverLoad.adjustDefault = 10;
 	}

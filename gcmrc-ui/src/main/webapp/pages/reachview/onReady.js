@@ -20,17 +20,18 @@ $(document).ready(function onReady() {
 	GCMRC.Page.buildPORView($('#porContainer'), GCMRC.Page.earliestPositionISO, GCMRC.Page.latestPositionISO);
         
         if (GCMRC.isDinoNetwork(CONFIG.networkName)) {
-			$('#bedLoadSlider').children().first().text('Sand Bedload Included in Sand Budget');
-			GCMRC.Page.buildRadioInfo($('#bedLoadList'));
-			$("input[name=bedLoadToggle][value=0]").prop('checked', true);
-			$('#bedLoadSlider').change(function(){
-				GCMRC.Page.bedLoadToggleChange(Boolean(parseFloat($("input[name=bedLoadToggle]:checked").val())));
+			$('#bedloadSlider').children().first().text('Sand Bedload Included in Sand Budget');
+			GCMRC.Page.buildRadioInfo($('#bedloadList'));
+			$("input[name=bedloadToggle][value=0]").prop('checked', true);
+			$('#bedloadSlider').change(function(){
+				GCMRC.Page.isBedloadIncluded = Boolean(parseFloat($("input[name=bedloadToggle]:checked").val()));
+				GCMRC.Page.bedloadToggleChange(GCMRC.Page.isBedloadIncluded);
 			});
         } else {
   
-        var bedLoadList = [GCMRC.Page.sliderConfig.bedLoad];
+        var bedloadList = [GCMRC.Page.sliderConfig.bedload];
         
-        GCMRC.Page.createParameterList($('#bedLoadList'), bedLoadList);
+        GCMRC.Page.createParameterList($('#bedloadList'), bedloadList);
 	}
 	
 	GCMRC.Page.createDateList($('#lastSedDates'), GCMRC.Page.reach);
@@ -47,7 +48,7 @@ $(document).ready(function onReady() {
 			finesMajor : false,
 			sandMinor : false,
 			finesMinor : false,
-			bedLoadCoeff: false
+			bedloadCoeff: false
 		}
 		
 		GCMRC.Page.reachDetail.each(function(el) {
@@ -68,11 +69,6 @@ $(document).ready(function onReady() {
 				if (el.minorStation) {
 					addToResult["finesMinor"] = true;
 				}
-			}
-			if (GCMRC.isDinoNetwork(CONFIG.networkName)) {
-			    if (el.reachGroup === "Calc Inst Sand Bedload") {
-				addToResult["bedLoadCoeff"] = true;
-			    }
 			}
 		});
 		

@@ -190,14 +190,15 @@
 				</div>
 				<div id="content" class="row-fluid">
 					<div class="span3">
-						<div id="bedLoadSlider" class="innerRightSidebar">
+						<div id="bedloadSlider" class="innerRightSidebar">
 							<div class="sectionTitle">Adjustable Bedload</div>
-							<div id="bedLoadList" class="rightSidebarText"></div>
+							<div id="bedloadList" class="rightSidebarText"></div>
 						</div>
 						<div class="innerRightSidebar">
 							<div class="sectionTitle">Adjustable Uncertainty</div>
 							<div id="parameterLoading" class="ajaxLoading"><div class="alert alert-info">Loading...</div><div style="margin-bottom: 20px;"><img src="${relativePath}app/ajax-loader-trsp.gif" alt="Loading..." height="32px" width="32px"></div></div>
 							<div id="parameterList" class="rightSidebarText"></div>
+                                                        <div id="riverBedloadSlider" class="rightSidebarText"></div>
 						</div>
 						<div id="resetParametersDiv" style="text-align:center;">
 							<a href="#" class="buildButton" id="resetDefaults">Restore Defaults</a>

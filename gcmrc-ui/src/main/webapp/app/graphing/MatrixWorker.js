@@ -69,7 +69,7 @@ MatrixWorker.prototype.addBedloadToDataArray = function(config) {
 		for(var i = 0; i < singleArray.length; i++){
 			var newEntry = [];
 			for(var j = 0; j < singleArray[i].length; j++){
-				newEntry.push(singleArray[i][j] + config.data[i][j]);
+				newEntry.push(singleArray[i][j] + (config.data[i][j] * config.bedloadPerc * 2));
 			}
 			dataArray.push(newEntry);
 		}

@@ -74,7 +74,7 @@ GCMRC.Page = {
 		div.append('<div>Uncertainty for ' + (("BIBE" === CONFIG.networkName)?"Tornillo Creek":"Major Tributary") + ' ' + dataType + ' Loads <span class="' + loadDivKey + '_qual' + multiplier + '"></span>% after ' + dateStr + '</div>');
 	},
 	buildRadioInfo : function(div) {
-		div.append('<div class="form-inline"><label class="radio bedRadio"><input type="radio" name="bedLoadToggle" value="1">Yes</label><label class="radio bedRadio"><input type="radio" name="bedLoadToggle" value="0">No</label></div>');
+		div.append('<div class="form-inline"><label class="radio bedRadio"><input type="radio" name="bedloadToggle" value="1">Yes</label><label class="radio bedRadio"><input type="radio" name="bedloadToggle" value="0">No</label></div>');
 	},
 	buildGraphClicked: function() {
 		var begin = $("input[name='beginPosition']").val();
@@ -292,7 +292,7 @@ GCMRC.Page = {
 	isFinesWorkerFed: false,
 	latestSandReqId: 1,
 	latestFinesReqId: 1,
-	bedLoadCoeffData: [],
+	bedloadCoeffData: [],
 	updateSandSummary: function(config) {
 		if (config) {
 			var upper = config.upper;
@@ -344,6 +344,20 @@ GCMRC.Page = {
 		}
 	},
 	drawBudget: function(config) {
+	    
+		if (GCMRC.Page.isSandWorkerFed) {
+			var msg = {
+				divId: 'data-dygraph',
+				labelDivId: 'legend-dygraph'
+			};
+			msg.messageType = "addBedloadToDataArray";
+			msg.useBedload = config.useBedload;
+			msg.data = GCMRC.Page.bedloadCoeffData;
+			msg.bedloadPerc = config.riverBedLoad;
+			msg.reqId = ++GCMRC.Page.latestSandReqId;
+
+			GCMRC.Page.sandworker.postMessage(msg);
+		}
 		if (GCMRC.Page.isSandWorkerFed) {
 			var msg = config.clone();
 			msg.messageType = "transformArray";
@@ -454,6 +468,7 @@ GCMRC.Page = {
 				config.e = parseFloat($('span[name=e_val]').html()) / 100.0;
 				config.f = parseFloat($('span[name=f_val]').html()) / 100.0;
 				config.g = parseFloat($('span[name=g_val]').html()) / 100.0;
+				config.riverBedload = parseFloat($('span[name=riverBedload_val]').html()) / 100.0;
 				
 				var identifier = graphToMake.groupId;
 
@@ -507,7 +522,7 @@ GCMRC.Page = {
 		};
 		
 		var GetBedloadCoeff = function() {
-			this.groupId = "bedLoadCoeff";
+			this.groupId = "bedloadCoeff";
 			this.columns = [];
 			this.responseColumns = []
 			this.columns.push("inst!" + "Calc Inst Sand Bedload" + "!" + GCMRC.Page.reach.upstreamStation);
@@ -556,7 +571,7 @@ GCMRC.Page = {
 					times.push(getValue(el, "time"));
 				});
 			       
-				GCMRC.Page.bedLoadCoeffData = coeffData;
+				GCMRC.Page.bedloadCoeffData = coeffData;
 			};
 		};
 
@@ -635,21 +650,14 @@ GCMRC.Page = {
 
 		container.append(result.join(""));
 	},
-	bedLoadToggleChange: function(useBedload){
-		var bedloadPerc = 0;
-		
-		if (GCMRC.Page.isSandWorkerFed) {
-			var msg = {
-				divId: 'data-dygraph',
-				labelDivId: 'legend-dygraph'
-			};
-			msg.messageType = "addBedloadToDataArray";
-			msg.useBedload = useBedload;
-			msg.data = GCMRC.Page.bedLoadCoeffData;
-			//msg.bedloadPerc = bedloadPerc;
-			msg.reqId = ++GCMRC.Page.latestSandReqId;
-
-			GCMRC.Page.sandworker.postMessage(msg);
+	isBedloadIncluded: null,
+	bedloadToggleChange: function(useBedload){
+		if (useBedload) {
+		    var riverBedloadSlider = [GCMRC.Page.sliderConfig.riverBedload];
+	            GCMRC.Page.createParameterList($('#riverBedloadSlider'), riverBedloadSlider);
+		} else {
+		    $('#riverBedloadSlider').html('');
+		}
 			
 			var a = parseFloat($('span[name=a_val]').html()) / 100.0;
 			var b = parseFloat($('span[name=b_val]').html()) / 100.0;
@@ -658,6 +666,7 @@ GCMRC.Page = {
 			var e = parseFloat($('span[name=e_val]').html()) / 100.0;
 			var f = parseFloat($('span[name=f_val]').html()) / 100.0;
 			var g = parseFloat($('span[name=g_val]').html()) / 100.0;
+			var riverBedload = parseFloat($('span[name=riverBedload_val]').html()) / 100.0;
 				
 			GCMRC.Page.drawBudget({
 				divId: 'data-dygraph',
@@ -668,9 +677,10 @@ GCMRC.Page = {
 				d: d,
 				e: e,
 				f: f,
-				g: g
+				g: g,
+				riverBedload: riverBedload,
+				useBedload: useBedload
 			});
-		}
 	},
 	createParameterList: function(container, params) {
 		var html = [];
@@ -717,6 +727,7 @@ GCMRC.Page = {
 				var e = parseFloat($('span[name=e_val]').html()) / 100.0;
 				var f = parseFloat($('span[name=f_val]').html()) / 100.0;
 				var g = parseFloat($('span[name=g_val]').html()) / 100.0;
+				var riverBedload = parseFloat($('span[name=riverBedload_val]').html()) / 100.0;
 				
 				GCMRC.Page.drawBudget({
 					divId: 'data-dygraph',
@@ -727,7 +738,9 @@ GCMRC.Page = {
 					d: d,
 					e: e,
 					f: f,
-					g: g
+					g: g,
+					riverBedload: riverBedload,
+					useBedload: GCMRC.Page.isBedloadIncluded
 				});
 			};
 		};

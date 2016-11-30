@@ -146,7 +146,7 @@ GCMRC.Mapping = function() {
 				})
 			}),
 		satmap : new OpenLayers.Layer.ArcGIS93Rest( "ArcGIS Server Layer",
-                "https://137.227.239.42/ArcGIS/rest/services/GC_2009_05_4BAND_EARTHDATA/ImageServer/exportImage",
+                "http://137.227.239.42/ArcGIS/rest/services/GC_2009_05_4BAND_EARTHDATA/ImageServer/exportImage",
                 {
 					layers: "show:0",
 					srs : "EPSG:26949"

@@ -353,7 +353,7 @@ GCMRC.Page = {
 			msg.messageType = "addBedloadToDataArray";
 			msg.useBedload = config.useBedload;
 			msg.data = GCMRC.Page.bedloadCoeffData;
-			msg.bedloadPerc = config.riverBedLoad;
+			msg.bedloadPerc = config.riverBedload;
 			msg.reqId = ++GCMRC.Page.latestSandReqId;
 
 			GCMRC.Page.sandworker.postMessage(msg);

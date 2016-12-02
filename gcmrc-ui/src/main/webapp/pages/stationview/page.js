@@ -389,7 +389,7 @@ GCMRC.Page = {
 				var durationCurveOptions = {
 					startTime: begin,
 					endTime: end,
-					binCount: 1000,
+					binCount: 2000,
 					binType: "both",
 					siteName: CONFIG.stationName
 				};
@@ -704,7 +704,7 @@ GCMRC.Page = {
 			startTime : beginClean,
 			endTime : endClean,
 			siteName : CONFIG.stationName,
-			binCount: "1000",
+			binCount: "2000",
 			binType: $('input[name=bintype]:checked').val(),
 			groupId: ids,
 			groupName: names

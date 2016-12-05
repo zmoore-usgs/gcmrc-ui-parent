@@ -29,7 +29,7 @@ $(document).ready(function onReady() {
 			});
         } else {
   
-        var bedloadList = [GCMRC.Page.sliderConfig.bedload];
+        var bedloadList = [GCMRC.Page.sliderConfig.bedLoad];
         
         GCMRC.Page.createParameterList($('#bedloadList'), bedloadList);
 	}

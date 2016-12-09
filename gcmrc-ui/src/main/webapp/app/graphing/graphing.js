@@ -431,8 +431,8 @@ GCMRC.Graphing = function(hoursOffset) {
 //			labelsSeparateLines: true,
 //			legend: 'always',
 			labelsDivWidth: 200,
-			dateWindow: [0, 100.25],
-			originalDateWindow: [0, 100.25],
+			dateWindow: [0, config.data[config.data.length-1][0] + 0.25],
+			originalDateWindow: [0,config.data[config.data.length-1][0] + 0.25],
 			showRangeSelector: true,
 			connectSeparatedPoints: false,
 			highlightCircleSize: 4,
@@ -444,27 +444,6 @@ GCMRC.Graphing = function(hoursOffset) {
 			drawPoints: false,
 			stackedGraph: false,
 			colors: confColors,
-			drawCallback: function(me, initial) {
-				if (blockRedraw || initial)
-					return;
-				blockRedraw = true;
-				var range = me.xAxisRange();
-				$.each(durationCurves[containerId]["lin"], function(key, val) {
-					if (val !== me) {
-						val.updateOptions({
-							dateWindow: range
-						});
-					}
-				});
-				$.each(durationCurves[containerId]["log"], function(key, val) {
-					if (val !== me) {
-						val.updateOptions({
-							dateWindow: range
-						});
-					}
-				});
-				blockRedraw = false;
-			},
 			highlightCallback: function(event, x, points, row, seriesName) {
 				if (blockHighlight) {
 					return;

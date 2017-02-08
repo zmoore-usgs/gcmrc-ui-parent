@@ -22,7 +22,7 @@ import org.slf4j.LoggerFactory;
  */
 public class DurationCurveService {
 	private static final Logger log = LoggerFactory.getLogger(DurationCurveService.class);
-	public static final int MAX_BINS = 2000;
+	public static final int MAX_BINS = 10000;
 	public static enum COLUMNS {BIN_NUMBER, BIN_VALUE, CUMULATIVE_BIN_PERC, IN_BIN_MINUTES, CUMULATIVE_IN_BIN_MINUTES, LOW_BOUND, HIGH_BOUND};
 	public static final String[] COLUMN_HEADERS = {"Bin Number", "Bin Value", "Percentage of Time Equaled or Exceeded", "In Bin Minutes", "Cumulative In Bin Minutes", "Low Bound", "High Bound"};
 	

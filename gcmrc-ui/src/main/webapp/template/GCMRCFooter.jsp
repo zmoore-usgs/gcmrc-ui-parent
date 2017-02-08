@@ -12,7 +12,6 @@
 
 	<div id="usgsfootertext">
 
-		<a href="https://www.takepride.gov/"><img src="${param['relPath']}template/images/footer_graphic_takePride.jpg" alt="Take Pride in America logo" title="Take Pride in America Home Page" width="60" height="58" /></a>
 		<a href="https://usa.gov/"><img src="${param['relPath']}template/images/footer_graphic_usagov.jpg" alt="USA.gov logo" title="USAGov: Government Made Easy" width="90" height="26" /></a>
 
 		<a href="https://www.doi.gov/">U.S. Department of the Interior</a> |

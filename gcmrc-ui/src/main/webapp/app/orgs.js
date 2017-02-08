@@ -1,7 +1,7 @@
 GCMRC.Organizations = {
 	"CIDA" : {
 		displayName : "USGS Center for Integrated Data Analytics",
-		url : "http://cida.usgs.gov",
+		url : "https://cida.usgs.gov",
 		logo : {
 			url : CONFIG.relativePath + "app/sources/source-cida.gif",
 			width : 80,
@@ -10,7 +10,7 @@ GCMRC.Organizations = {
 	},
 	"USGSGCMR" : {
 		displayName : "Grand Canyon Monitoring and Research Center",
-		url : "http://www.gcmrc.gov/",
+		url : "https://www.gcmrc.gov/",
 		logo : {
 			url : CONFIG.relativePath + "app/sources/source-usgs.gif",
 			width : 80,
@@ -37,7 +37,7 @@ GCMRC.Organizations = {
 	},
 	"USGSTXWC" : {
 		displayName : "Texas Water Science Center",
-		url : "http://tx.usgs.gov",
+		url : "https://tx.usgs.gov",
 		logo : {
 			url : CONFIG.relativePath + "app/sources/source-usgs.gif",
 			width : 80,
@@ -64,7 +64,7 @@ GCMRC.Organizations = {
 	},
 	"USBR" : {
 		displayName : "Bureau of Reclaimation",
-		url : "http://www.usbr.gov/",
+		url : "https://www.usbr.gov/",
 		logo : {
 			url : CONFIG.relativePath + "app/sources/source-usbr.gif",
 			width : 88,
@@ -73,7 +73,7 @@ GCMRC.Organizations = {
 	},
 	"NPS" : {
 		displayName : "National Park Service",
-		url : "http://www.nps.gov/",
+		url : "https://www.nps.gov/",
 		logo : {
 			url : CONFIG.relativePath + "app/sources/source-nps.gif",
 			width : 34,
@@ -82,7 +82,7 @@ GCMRC.Organizations = {
 	},
 	"BLM" : {
 		displayName : "Bureau of Land Management",
-		url : "http://www.blm.gov/",
+		url : "https://www.blm.gov/",
 		logo : {
 			url : CONFIG.relativePath + "app/sources/source-blm.gif",
 			width : 43,

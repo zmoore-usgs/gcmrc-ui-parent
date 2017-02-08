@@ -712,7 +712,7 @@ GCMRC.Graphing = function(hoursOffset) {
 				dataType: 'json',
 				url: CONFIG.relativePath + urls[param],
 				data: urlParams,
-				timeout: 1200000, /* 20 minutes allowed, from start to data complete */
+				timeout: 2400000, /* 40 minutes allowed, from start to data complete */
 				success: function(data, textStatus, jqXHR) {
 					if (!data || (!data.contentType && data.contentType === "text/xml")) {
 						clearErrorMessage();

@@ -23,6 +23,8 @@ self.addEventListener("message", function(msg) {
 		self.postMessage(result);
 	} else if ("setDataArray" === config.messageType) {
 		matrixStuff.setDataArray(config);
+	} else if ("addBedloadToDataArray" === config.messageType) {
+		matrixStuff.addBedloadToDataArray(config);
 	} else {
 		//damn
 	}

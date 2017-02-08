@@ -3,6 +3,7 @@ goog.require("goog.math.Matrix");
 var MatrixWorker = function(finesOrSand) {
 	this.dataArrays = {};
 	this.times = {};
+	this.originalDataArrays = {};
 	this.xformMatrices = {
 		"sign": new goog.math.Matrix([
 			[1, 1, 1],
@@ -54,9 +55,29 @@ MatrixWorker.getOffset = function(xform, doubleXform, offset) {
 
 MatrixWorker.prototype.setDataArray = function(config) {
 	this.dataArrays[config.divId] = config.data;
+	this.originalDataArrays[config.divId] = config.data;
 	this.times[config.divId] = config.time;
 	this.endStaticRec = config.endStaticRec;
 	this.newestSuspSed = config.newestSuspSed;
+};
+
+MatrixWorker.prototype.addBedloadToDataArray = function(config) {
+	var dataArray = [];
+	
+	if(config.useBedload){
+		var singleArray = this.originalDataArrays[config.divId].clone();
+		for(var i = 0; i < singleArray.length; i++){
+			var newEntry = [];
+			for(var j = 0; j < singleArray[i].length; j++){
+				newEntry.push(singleArray[i][j] + (config.data[i][j] * config.bedloadPerc * 2));
+			}
+			dataArray.push(newEntry);
+		}
+	} else {
+		var dataArray = this.originalDataArrays[config.divId].clone();
+	}
+	
+	this.dataArrays[config.divId] = dataArray;
 };
 
 MatrixWorker.prototype.transformArray = function(config) {

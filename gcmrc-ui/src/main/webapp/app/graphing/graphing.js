@@ -773,7 +773,7 @@ GCMRC.Graphing = function(hoursOffset) {
 									graph.resize();
 								});
 							}
-							if (GCMRC.isDinoNetwork(CONFIG.networkName)) {
+							if (GCMRC.isDinoNetwork(CONFIG.networkName) && config.graphsToMake.some({groupId:'sandbudget'})) {
 							    GCMRC.Page.bedloadToggleChange(Boolean(parseFloat($("input[name=bedloadToggle]:checked").val())));
 							}
 						} else if (data.data && data.data.ERROR) {

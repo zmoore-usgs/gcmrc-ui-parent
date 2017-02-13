@@ -22,9 +22,10 @@ $(document).ready(function onReady() {
         if (GCMRC.isDinoNetwork(CONFIG.networkName)) {
 			$('#bedloadSlider').children().first().text('Sand Bedload Included in Sand Budget');
 			GCMRC.Page.buildRadioInfo($('#bedloadList'));
-			$("input[name=bedloadToggle][value=0]").prop('checked', true);
+			$("input[name=bedloadToggle][value=1]").prop('checked', true);
+			GCMRC.Page.isBedloadIncluded = Boolean(parseFloat($("input[name=bedloadToggle]:checked").val()));
+			GCMRC.Page.bedloadToggleChange(GCMRC.Page.isBedloadIncluded);
 			$('#bedloadSlider').change(function(){
-				GCMRC.Page.isBedloadIncluded = Boolean(parseFloat($("input[name=bedloadToggle]:checked").val()));
 				GCMRC.Page.bedloadToggleChange(GCMRC.Page.isBedloadIncluded);
 			});
         } else {

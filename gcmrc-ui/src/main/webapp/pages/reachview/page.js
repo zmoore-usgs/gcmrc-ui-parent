@@ -351,7 +351,7 @@ GCMRC.Page = {
 				labelDivId: 'legend-dygraph'
 			};
 			msg.messageType = "addBedloadToDataArray";
-			msg.useBedload = config.useBedload;
+			msg.useBedload = GCMRC.Page.isBedloadIncluded;
 			msg.data = GCMRC.Page.bedloadCoeffData;
 			msg.bedloadPerc = config.riverBedload;
 			msg.reqId = ++GCMRC.Page.latestSandReqId;
@@ -425,6 +425,7 @@ GCMRC.Page = {
 			this.dealWithResponse = function(graphToMake, data, config, buildGraph) {
 				var self = this;
 				var datas = [];
+				var bedloadDatas = [];
 				var times = [];
 
 				var getValue = function(row, colName) {
@@ -451,7 +452,7 @@ GCMRC.Page = {
 						getValue(el, self.config.responseColumns[3])]);
 					times.push(getValue(el, "time"));
 				});
-				
+
 				GCMRC.Page[self.config.workerName].postMessage({
 					messageType: "setDataArray",
 					divId: config.divId,
@@ -651,13 +652,17 @@ GCMRC.Page = {
 		container.append(result.join(""));
 	},
 	isBedloadIncluded: null,
-	bedloadToggleChange: function(useBedload){
-		if (useBedload) {
+	bedloadToggleSlider: function(useBedload){
+	    if (useBedload) {
 		    var riverBedloadSlider = [GCMRC.Page.sliderConfig.riverBedload];
 	            GCMRC.Page.createParameterList($('#riverBedloadSlider'), riverBedloadSlider);
+		    isBedloadIncluded = useBedload;
 		} else {
 		    $('#riverBedloadSlider').html('');
 		}
+	},
+	bedloadToggleChange: function(useBedload){
+		GCMRC.Page.bedloadToggleSlider(useBedload);
 			
 			var a = parseFloat($('span[name=a_val]').html()) / 100.0;
 			var b = parseFloat($('span[name=b_val]').html()) / 100.0;

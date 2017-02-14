@@ -362,6 +362,10 @@ public class ColumnResolver {
 		//ugh. this is horrible.
 		result.put("inst!Sand Cumul Load", new ColumnMetadata("inst!Sand Cumul Load", "Cumulative Sand Load (Metric Tons)", 
 				new ColumnMetadata.SpecEntry(ParameterCode.parseParameterCode("inst!Sand Cumul Load"), ColumnMetadata.SpecEntry.SpecType.PARAM)));
+                
+                //need a shower after this.
+                result.put("inst!Calc Cumul Sand Bedload", new ColumnMetadata("inst!Calc Cumul Sand Bedload", "Calculated Cumulative Sand Bedload (Metric Tons)", 
+				new ColumnMetadata.SpecEntry(ParameterCode.parseParameterCode("inst!Calc Cumul Sand Bedload"), ColumnMetadata.SpecEntry.SpecType.PARAM)));
 		
 		
 		return result;

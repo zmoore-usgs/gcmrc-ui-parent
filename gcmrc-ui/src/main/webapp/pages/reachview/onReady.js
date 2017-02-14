@@ -26,7 +26,8 @@ $(document).ready(function onReady() {
 			GCMRC.Page.isBedloadIncluded = Boolean(parseFloat($("input[name=bedloadToggle]:checked").val()));
 			GCMRC.Page.bedloadToggleChange(GCMRC.Page.isBedloadIncluded);
 			$('#bedloadSlider').change(function(){
-				GCMRC.Page.bedloadToggleChange(GCMRC.Page.isBedloadIncluded);
+			    GCMRC.Page.isBedloadIncluded = Boolean(parseFloat($("input[name=bedloadToggle]:checked").val()));
+			    GCMRC.Page.bedloadToggleChange(GCMRC.Page.isBedloadIncluded);
 			});
         } else {
   

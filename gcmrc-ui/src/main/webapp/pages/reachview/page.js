@@ -353,7 +353,7 @@ GCMRC.Page = {
 			msg.messageType = "addBedloadToDataArray";
 			msg.useBedload = GCMRC.Page.isBedloadIncluded;
 			msg.data = GCMRC.Page.bedloadCoeffData;
-			msg.bedloadPerc = config.riverBedload;
+			msg.riverBedload = config.riverBedload;
 			msg.reqId = ++GCMRC.Page.latestSandReqId;
 
 			GCMRC.Page.sandworker.postMessage(msg);
@@ -362,6 +362,8 @@ GCMRC.Page = {
 			var msg = config.clone();
 			msg.messageType = "transformArray";
 			msg.reqId = ++GCMRC.Page.latestSandReqId;
+			msg.useBedload = GCMRC.Page.isBedloadIncluded;
+			msg.riverBedload = config.riverBedload;
 			delete msg.graphsToMake;
 
 			GCMRC.Page.sandworker.postMessage(msg);
@@ -370,6 +372,7 @@ GCMRC.Page = {
 			var msg = config.clone();
 			msg.messageType = "transformArray";
 			msg.reqId = ++GCMRC.Page.latestFinesReqId;
+			msg.useBedload = false;
 			delete msg.graphsToMake;
 
 			GCMRC.Page.finesworker.postMessage(msg);

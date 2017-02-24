@@ -4,6 +4,7 @@ var MatrixWorker = function(finesOrSand) {
 	this.dataArrays = {};
 	this.times = {};
 	this.originalDataArrays = {};
+	this.bedloadData = {};
 	this.xformMatrices = {
 		"sign": new goog.math.Matrix([
 			[1, 1, 1],
@@ -22,6 +23,12 @@ var MatrixWorker = function(finesOrSand) {
 			[0, 0, 0],
 			[0, 0, 0],
 			[-1, -0, 1]
+		]),
+		"riverBedload": new goog.math.Matrix([
+			[-1, 0, 1],
+			[0, 0, 0],
+			[0, 0, 0],
+			[-1, 0, 1]
 		]),
 		"minor": new goog.math.Matrix([
 			[0, 0, 0],
@@ -53,6 +60,36 @@ MatrixWorker.getOffset = function(xform, doubleXform, offset) {
 	return minused.getValueAt(0, 0);
 };
 
+MatrixWorker.addBedloads = function(dataArray, bedloadData, xformMatrices, riverBedloadPercentage) {
+	//Create the matrix that computes the edges for cumulative river bedload
+	var riverBedloadTransformMatrix = (xformMatrices["sign"].multiply(1)).
+		add(xformMatrices["riverBedload"].multiply(riverBedloadPercentage));
+		
+	//Do the multiplication/error calculations.
+	var bedloadMatrix = null;
+	bedloadMatrix = new goog.math.Matrix(bedloadData).multiply(riverBedloadTransformMatrix);
+	
+	//Convert the bedload matrix to an array so that it can be added to the data array.
+	var bedloadArray = bedloadMatrix.toArray();
+	for(var i = 0; i < bedloadArray.length; i++){
+		//Start at [i][1] because [i][0] is the times variable.
+		//lower, middle, upper
+		dataArray[i][1][0] += bedloadArray[i][0];
+		dataArray[i][1][1] += bedloadArray[i][1];
+		dataArray[i][1][2] += bedloadArray[i][2];
+		//All upper
+		dataArray[i][2][0] += bedloadArray[i][2];
+		dataArray[i][2][1] += bedloadArray[i][2];
+		dataArray[i][2][2] += bedloadArray[i][2];
+		//All lower
+		dataArray[i][3][0] += bedloadArray[i][0];
+		dataArray[i][3][1] += bedloadArray[i][0];
+		dataArray[i][3][2] += bedloadArray[i][0];
+	}
+	
+	return dataArray;
+};
+
 MatrixWorker.prototype.setDataArray = function(config) {
 	this.dataArrays[config.divId] = config.data;
 	this.originalDataArrays[config.divId] = config.data;
@@ -62,22 +99,12 @@ MatrixWorker.prototype.setDataArray = function(config) {
 };
 
 MatrixWorker.prototype.addBedloadToDataArray = function(config) {
-	var dataArray = [];
 	
 	if(config.useBedload){
-		var singleArray = this.originalDataArrays[config.divId].clone();
-		for(var i = 0; i < singleArray.length; i++){
-			var newEntry = [];
-			for(var j = 0; j < singleArray[i].length; j++){
-				newEntry.push(singleArray[i][j] + (config.data[i][j] * config.bedloadPerc * 2));
-			}
-			dataArray.push(newEntry);
-		}
-	} else {
-		var dataArray = this.originalDataArrays[config.divId].clone();
+		this.bedloadData = config.data;
 	}
 	
-	this.dataArrays[config.divId] = dataArray;
+	this.dataArrays[config.divId] = this.originalDataArrays[config.divId].clone();
 };
 
 MatrixWorker.prototype.transformArray = function(config) {
@@ -92,6 +119,7 @@ MatrixWorker.prototype.transformArray = function(config) {
 		percentages["river"] = config.b || 0;
 		percentages["major"] = config.c || 0;
 		percentages["minor"] = config.d || 0;
+		percentages["riverBedload"] = config.riverBedload || 0;
 	}
 	
 
@@ -112,7 +140,7 @@ MatrixWorker.prototype.transformArray = function(config) {
 		add(this.xformMatrices["river"].multiply(percentages["river"])).
 		add(this.xformMatrices["minor"].multiply(percentages["minor"])).
 		add(this.xformMatrices["major"].multiply(percentages["major"] * 4));
-
+	
 	var singleTimes = this.times[config.divId];
 	var singleArray = this.dataArrays[config.divId];
 	var offsetArray = [];
@@ -188,6 +216,10 @@ MatrixWorker.prototype.transformArray = function(config) {
 				[el[2]-quadOffset, el[2]-quadOffset, el[2]-quadOffset], 
 				[el[0]+quadOffset, el[0]+quadOffset, el[0]+quadOffset]]);
 		}, this);
+	}
+	
+	if(config.useBedload && !(this.bedloadData.isEmpty())){
+		dataArray = MatrixWorker.addBedloads(dataArray, this.bedloadData, this.xformMatrices, percentages["riverBedload"]);
 	}
 
 	var lastIndex = dataArray[dataArray.length - 1][1];

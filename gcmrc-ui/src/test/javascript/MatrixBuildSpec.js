@@ -45,31 +45,30 @@ describe("Matrix Worker", function() {
 		var matrixWorker = new MatrixWorker();
 		matrixWorker.setDataArray(MatrixBuildResources.config.setDataArray.unadjusted);
 		
-		var actual = matrixWorker.transformArray(MatrixBuildResources.config.transformArray.unadjusted).dataArray;
+		var actual = matrixWorker.transformArray(MatrixBuildResources.config.transformArray.unadjustedWithoutBedload).dataArray;
 		
 		expect(actual).toEqual(expectedDatas);
 	});
 	
 	it("handles bedload correctly for dinosaur", function() {
-		var expectedDivId = "data-dygraph";
 		var expectedDatas = MatrixBuildResources.results.unadjusted;
-		var expectedBedloadDatas = MatrixBuildResources.addBedloadDatas;
+		var expectedBedloadDatas = MatrixBuildResources.bedloadCoeffDatas;
 		
 		var matrixWorker = new MatrixWorker();
 		matrixWorker.setDataArray(MatrixBuildResources.config.setDataArray.unadjusted);
 		matrixWorker.addBedloadToDataArray(MatrixBuildResources.config.addBedloadToDataArray.useBedload);
 		
-		expect(matrixWorker.dataArrays[expectedDivId]).toEqual(expectedBedloadDatas);
+		expect(matrixWorker.bedloadData).toEqual(expectedBedloadDatas);
 		
-		var actual = matrixWorker.transformArray(MatrixBuildResources.config.transformArray.unadjusted).dataArray;
-		
+		var actual = matrixWorker.transformArray(MatrixBuildResources.config.transformArray.unadjustedWithBedload).dataArray;
+				
 		expect(actual).not.toEqual(expectedDatas);
 		
 		
 		matrixWorker.setDataArray(MatrixBuildResources.config.setDataArray.unadjusted);
 		matrixWorker.addBedloadToDataArray(MatrixBuildResources.config.addBedloadToDataArray.doNotUseBedload);
 		
-		var actual = matrixWorker.transformArray(MatrixBuildResources.config.transformArray.unadjusted).dataArray;
+		var actual = matrixWorker.transformArray(MatrixBuildResources.config.transformArray.unadjustedWithoutBedload).dataArray;
 		
 		expect(actual).toEqual(expectedDatas);
 		

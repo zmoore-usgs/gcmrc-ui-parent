@@ -60,6 +60,23 @@ MatrixWorker.getOffset = function(xform, doubleXform, offset) {
 	return minused.getValueAt(0, 0);
 };
 
+MatrixWorker.prototype.setDataArray = function(config) {
+	this.dataArrays[config.divId] = config.data;
+	this.originalDataArrays[config.divId] = config.data;
+	this.times[config.divId] = config.time;
+	this.endStaticRec = config.endStaticRec;
+	this.newestSuspSed = config.newestSuspSed;
+};
+
+MatrixWorker.prototype.addBedloadToDataArray = function(config) {
+	
+	if(config.useBedload){
+		this.bedloadData = config.data;
+	}
+	
+	this.dataArrays[config.divId] = this.originalDataArrays[config.divId].clone();
+};
+
 MatrixWorker.addBedloads = function(dataArray, bedloadData, xformMatrices, riverBedloadPercentage) {
 	//Create the matrix that computes the edges for cumulative river bedload
 	var riverBedloadTransformMatrix = (xformMatrices["sign"].multiply(1)).
@@ -88,23 +105,6 @@ MatrixWorker.addBedloads = function(dataArray, bedloadData, xformMatrices, river
 	}
 	
 	return dataArray;
-};
-
-MatrixWorker.prototype.setDataArray = function(config) {
-	this.dataArrays[config.divId] = config.data;
-	this.originalDataArrays[config.divId] = config.data;
-	this.times[config.divId] = config.time;
-	this.endStaticRec = config.endStaticRec;
-	this.newestSuspSed = config.newestSuspSed;
-};
-
-MatrixWorker.prototype.addBedloadToDataArray = function(config) {
-	
-	if(config.useBedload){
-		this.bedloadData = config.data;
-	}
-	
-	this.dataArrays[config.divId] = this.originalDataArrays[config.divId].clone();
 };
 
 MatrixWorker.prototype.transformArray = function(config) {

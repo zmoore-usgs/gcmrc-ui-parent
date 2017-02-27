@@ -84,7 +84,7 @@ MatrixBuildResources.config = {
 		}
 	},
 	transformArray: {
-		unadjusted: {
+		unadjustedWithoutBedload: {
 			"divId": "data-dygraph",
 			"labelDivId": "legend-dygraph",
 			"a": 0.05,
@@ -94,8 +94,25 @@ MatrixBuildResources.config = {
 			"e": null,
 			"f": null,
 			"g": null,
+			"riverBedload": 0.5,
 			"messageType": "transformArray",
-			"reqId": 3
+			"reqId": 3,
+			"useBedload": false
+		},
+		unadjustedWithBedload: {
+			"divId": "data-dygraph",
+			"labelDivId": "legend-dygraph",
+			"a": 0.05,
+			"b": 0.05,
+			"c": 0.1,
+			"d": 0.5,
+			"e": null,
+			"f": null,
+			"g": null,
+			"riverBedload": 0.5,
+			"messageType": "transformArray",
+			"reqId": 3,
+			"useBedload": true
 		},
 		double: {
 			"divId": "data-dygraph",

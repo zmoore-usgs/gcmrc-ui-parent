@@ -44,8 +44,8 @@ $(document).ready(function onReady() {
 		];
 		
 		var addToResult = {
-			finesRiverLoad : false,
 			sandRiverLoad : false,
+			finesRiverLoad : false,
 			sandMajor : false,
 			finesMajor : false,
 			sandMinor : false,

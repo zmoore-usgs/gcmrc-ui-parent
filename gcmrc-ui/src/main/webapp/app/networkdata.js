@@ -12,7 +12,7 @@ GCMRC.Networks = function() {
 	return {
 		"GCDAMP" : {
 			displayName : 'Grand Canyon',
-			folderId: '56461a54e4b0e2669b30f2db',
+			itemId: '56461a54e4b0e2669b30f2db',
 			labelLoc : 'bl',
 			bbox : {
 				"left": -114.003737,
@@ -24,7 +24,7 @@ GCMRC.Networks = function() {
 		},
 		"CL" : {
 			displayName : 'Canyonlands',
-			folderId: '56461a7de4b0e2669b30f2df',
+			itemId: '56461a7de4b0e2669b30f2df',
 			labelLoc: 'tl',
 			bbox: {
 				"left": -110.26759,
@@ -36,7 +36,7 @@ GCMRC.Networks = function() {
 		},
 		"DINO" : {
 			displayName : 'Dinosaur',
-			folderId: '56461a8be4b0e2669b30f2e1',
+			itemId: '56461a8be4b0e2669b30f2e1',
 			bbox : {
 				"left": -109.592736,
 				"bottom": 40.067194,
@@ -47,7 +47,7 @@ GCMRC.Networks = function() {
 		},
 		"CRD" : {
 			displayName : 'Colorado River Delta',
-			folderId: '56461a96e4b0e2669b30f2e4',
+			itemId: '56461a96e4b0e2669b30f2e4',
 			labelLoc: 'bl',
 			bbox : {
 				"left": -115.12630,
@@ -59,7 +59,7 @@ GCMRC.Networks = function() {
 		},
 		"BIBE" : {
 			displayName : 'Big Bend',
-			folderId: '56461aa1e4b0e2669b30f2e6',
+			itemId: '56461aa1e4b0e2669b30f2e6',
 			bbox : {
 				"left": -103.950969,
 				"bottom": 28.780138,

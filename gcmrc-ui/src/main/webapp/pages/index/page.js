@@ -56,7 +56,7 @@ GCMRC.Page = {
 				var siteFeature = new OpenLayers.Feature.Vector(networkBBox, {
 					networkName: key,
 					networkDisplayName: network.displayName,
-					networkFolder: network.folderId
+					networkFolder: network.itemId
 				});
 				GCMRC.Mapping.layers.network.addFeatures([siteFeature]);
 				
@@ -113,7 +113,7 @@ GCMRC.Page = {
 				this.unselectAll();
 				$('#networkPopup .network-name').html(vector.attributes.networkDisplayName);
 				$('#networkStation').attr('href', CONFIG.relativePath + 'stations/' + vector.attributes.networkName);
-				$('#networkFolder').attr('href', 'https://www.sciencebase.gov/catalog/folder/' + vector.attributes.networkFolder);
+				$('#networkFolder').attr('href', 'https://www.sciencebase.gov/catalog/item/' + vector.attributes.networkFolder);
 				if (GCMRC.Networks[vector.attributes.networkName].reaches) {
 					$('#networkReach').attr('href', CONFIG.relativePath + 'reaches/' + vector.attributes.networkName);					
 					$('#networkReach').parent().show();										

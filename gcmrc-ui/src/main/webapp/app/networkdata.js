@@ -38,10 +38,10 @@ GCMRC.Networks = function() {
 			displayName : 'Dinosaur',
 			itemId: '56461a8be4b0e2669b30f2e1',
 			bbox : {
-				"left": -109.592736,
-				"bottom": 40.067194,
-				"right": -107.693084,
-				"top": 41.093398
+				"left": -109.93,
+				"bottom": 39.98,
+				"right": -108.06,
+				"top": 40.93
 			},
 			reaches : true
 		},

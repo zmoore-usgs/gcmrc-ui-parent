@@ -331,6 +331,22 @@ GCMRC.Mapping = function() {
 					yx : {'EPSG:900913' : false}
 				}
 			),
+			zone9272300 : new OpenLayers.Layer.WMS(
+				'Flow Lines',
+				CONFIG.relativePath + 'geoserver/sample/wms',
+				{
+					SRS: 'EPSG:900913',
+					CRS: 'EPSG:900913',
+					LAYERS: 'sample:dinosaur_reaches_final',
+					STYLES: 'dinosaur',
+					transparent : true
+				},
+				{
+					buffer: 0,
+					displayOutsideMaxExtent: true,
+					yx : {'EPSG:900913' : false}
+				}
+			),		
 			dinosaur_reaches : new OpenLayers.Layer.WMS(
 				'Dinosaur Reaches',
 				CONFIG.relativePath + 'geoserver/sample/wms',
@@ -338,6 +354,7 @@ GCMRC.Mapping = function() {
 					SRS: 'EPSG: 900913',
 					CRS: 'EPSG:900913',
 					LAYERS: 'sample:dinosaur_reaches_final',
+					styles: 'dinosaur',
 					transparent: true
 				},
 				{

@@ -34,6 +34,17 @@ GCMRC.Networks = function() {
 			},
 			appFeatureId : "CANYONLANDS"
 		},
+		"CHIP" : {
+			displayName : 'Chippewa',
+			itemId: '5a0c952ae4b09af898cd417b',
+			labelLoc: 'bl',
+			bbox: {
+				"left": -92.24,
+				"bottom": 44.383,
+				"right": -91.814,
+				"top": 44.674
+			},
+		},
 		"DINO" : {
 			displayName : 'Dinosaur',
 			itemId: '56461a8be4b0e2669b30f2e1',

@@ -90,6 +90,8 @@ public class StationSiteSpec extends GCMRCSpec {
 		result.append("    THEN 'CL'");
 		result.append("    WHEN NETWORK_NAME='RiverDelta'");
 		result.append("    THEN 'CRD'");
+                result.append("    WHEN NETWORK_NAME='Chippewa'");
+		result.append("    THEN 'CHIP'");
 		result.append("    ELSE NETWORK_NAME");
 		result.append("  END AS NET,");
 		result.append("  ACTIVE,");

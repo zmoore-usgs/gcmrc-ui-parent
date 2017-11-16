@@ -166,6 +166,14 @@
 										</div>
 									</a>
 								</div>
+                                                                <div class="media">
+									<a href="http://www.usace.army.mil/">
+										<div class="media-object pull-left" style="width:106px; text-align: center;"><img src="./template/images/source-ace.jpg"></div>
+										<div class="media-body">
+											<h4 class="media-heading">US Army Corps of Engineers</h4>
+										</div>
+									</a>
+								</div>
 								<div class="media">
 									<a href="https://www.blm.gov/">
 										<div class="media-object pull-left" style="width:106px; text-align: center;"><img src="./template/images/source-blm.jpg"></div>
@@ -187,14 +195,6 @@
 										<div class="media-object pull-left" style="width:106px; text-align: center;"><img src="./template/images/source-usu.gif"></div>
 										<div class="media-body">
 											<h4 class="media-heading">Utah State University</h4>
-										</div>
-									</a>
-								</div>
-                                                                <div class="media">
-									<a href="http://www.usace.army.mil/">
-										<div class="media-object pull-left" style="width:106px; text-align: center;"><img src="./template/images/source-ace.jpg"></div>
-										<div class="media-body">
-											<h4 class="media-heading">US Army Corps of Engineers</h4>
 										</div>
 									</a>
 								</div>

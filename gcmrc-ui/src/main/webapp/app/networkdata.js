@@ -22,6 +22,17 @@ GCMRC.Networks = function() {
 			},
 			reaches : true
 		},
+                "DINO" : {
+			displayName : 'Dinosaur',
+			itemId: '56461a8be4b0e2669b30f2e1',
+			bbox : {
+				"left": -109.734,
+				"bottom": 39.98,
+				"right": -108.075,
+				"top": 40.93
+			},
+			reaches : true
+		},
 		"CL" : {
 			displayName : 'Canyonlands',
 			itemId: '56461a7de4b0e2669b30f2df',
@@ -34,29 +45,7 @@ GCMRC.Networks = function() {
 			},
 			appFeatureId : "CANYONLANDS"
 		},
-		"CHIP" : {
-			displayName : 'Chippewa',
-			itemId: '5a0c952ae4b09af898cd417b',
-			labelLoc: 'bl',
-			bbox: {
-				"left": -92.24,
-				"bottom": 44.383,
-				"right": -91.814,
-				"top": 44.674
-			},
-		},
-		"DINO" : {
-			displayName : 'Dinosaur',
-			itemId: '56461a8be4b0e2669b30f2e1',
-			bbox : {
-				"left": -109.734,
-				"bottom": 39.98,
-				"right": -108.075,
-				"top": 40.93
-			},
-			reaches : true
-		},
-		"CRD" : {
+                "CRD" : {
 			displayName : 'Colorado River Delta',
 			itemId: '56461a96e4b0e2669b30f2e4',
 			labelLoc: 'bl',
@@ -78,6 +67,17 @@ GCMRC.Networks = function() {
 				"top": 29.561388
 			},
 			reaches : true
+		},
+                "CHIP" : {
+			displayName : 'Chippewa',
+			itemId: '5a0c952ae4b09af898cd417b',
+			labelLoc: 'bl',
+			bbox: {
+				"left": -92.24,
+				"bottom": 44.383,
+				"right": -91.814,
+				"top": 44.674
+			}
 		}
 	};
 }();

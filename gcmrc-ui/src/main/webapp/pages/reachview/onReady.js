@@ -74,11 +74,11 @@ $(document).ready(function onReady() {
 			}
 		});
 		
-		if (addToResult["sandRiverLoad"]) {
-			result.push(GCMRC.Page.sliderConfig.riverLoad);
-		}
 		if (addToResult["finesRiverLoad"]) {
 			result.push(GCMRC.Page.sliderConfig.riverFinesLoad);
+		}
+		if (addToResult["sandRiverLoad"]) {
+			result.push(GCMRC.Page.sliderConfig.riverLoad);
 		}
 		if (addToResult["sandMajor"]) {
 			result.push(GCMRC.Page.sliderConfig.majorTribLoad);

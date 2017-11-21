@@ -1,6 +1,7 @@
 CONFIG.everyPeriod = 'P1M';
 
 GCMRC.Page = {
+	oldDinosaurSite : "09261000",
 	createMiniMap : function(config) {
 		if (!config) config = {};
 		

@@ -331,7 +331,7 @@ GCMRC.Mapping = function() {
 					yx : {'EPSG:900913' : false}
 				}
 			),
-			zone9272300 : new OpenLayers.Layer.WMS(
+			zone9261000 : new OpenLayers.Layer.WMS(
 				'Flow Lines',
 				CONFIG.relativePath + 'geoserver/sample/wms',
 				{

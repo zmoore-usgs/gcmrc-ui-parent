@@ -22,7 +22,7 @@ GCMRC.Networks = function() {
 			},
 			reaches : true
 		},
-                "DINO" : {
+		"DINO" : {
 			displayName : 'Dinosaur',
 			itemId: '56461a8be4b0e2669b30f2e1',
 			bbox : {
@@ -45,7 +45,7 @@ GCMRC.Networks = function() {
 			},
 			appFeatureId : "CANYONLANDS"
 		},
-                "CRD" : {
+		"CRD" : {
 			displayName : 'Colorado River Delta',
 			itemId: '56461a96e4b0e2669b30f2e4',
 			labelLoc: 'bl',
@@ -68,7 +68,7 @@ GCMRC.Networks = function() {
 			},
 			reaches : true
 		},
-                "CHIP" : {
+		"CHIP" : {
 			displayName : 'Chippewa',
 			itemId: '5a0c952ae4b09af898cd417b',
 			labelLoc: 'bl',

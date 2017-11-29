@@ -46,7 +46,8 @@ GCMRC.Page = {
 			if ('GCDAMP' === CONFIG.networkName) {
 				GCMRC.Mapping.maps[divId].moveTo(new OpenLayers.LonLat(-12499366.619029, 4338225.8756765), 8);
 			} else if ('DINO' === CONFIG.networkName) {
-				GCMRC.Mapping.maps[divId].moveTo(new OpenLayers.LonLat(-12097598.376886, 4950668.6874257), 9);
+				//GCMRC.Mapping.maps[divId].moveTo(new OpenLayers.LonLat(-12097598.376886, 4950668.6874257), 9);
+				GCMRC.Mapping.maps[divId].moveTo(new OpenLayers.LonLat(-12133916.55599665, 4937675.397935071), 9);
 			} else if ('BIBE' === CONFIG.networkName) {
 				GCMRC.Mapping.maps[divId].moveTo(new OpenLayers.LonLat(-11492369.987008, 3397774.0210003), 9);
 			} else if ('CRD' === CONFIG.networkName) {

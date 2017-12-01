@@ -24,6 +24,29 @@ MatrixBuildResources.times = [
 	1336204800000
 ];
 
+MatrixBuildResources.bedloadCoeffDatas = [
+	[1, 1, 1, 1],
+	[1, 1, 1, 1],
+	[1, 1, 1, 1],
+	[1, 1, 1, 1],
+	[1, 1, 1, 1],
+	[1, 1, 1, 1],
+	[1, 1, 1, 1],
+	[1, 1, 1, 1],
+	[1, 1, 1, 1]
+];
+
+MatrixBuildResources.addBedloadDatas = [
+	[1, 1, 1, 1],
+	[1, 1.1715097, 1.01715097, 4.024426],
+	[1, 1.25726451, 1.025726451, 5.53663831],
+	[1, 1.4335484, 1.04335484, 8.347232],
+	[1, 1.52169032, 1.052169032, 9.75252929],
+	[1, 1.6932, 1.06932, 12.94103],
+	[1, 1.77895484, 1.077895484, 14.53527526],
+	[1, 1.9504645, 1.09504645, 18.22992],
+	[1, 2.03621935, 1.103621935, 20.0772446]
+];
 
 MatrixBuildResources.config = {
 	setDataArray: {
@@ -61,7 +84,7 @@ MatrixBuildResources.config = {
 		}
 	},
 	transformArray: {
-		unadjusted: {
+		unadjustedWithoutBedload: {
 			"divId": "data-dygraph",
 			"labelDivId": "legend-dygraph",
 			"a": 0.05,
@@ -71,8 +94,25 @@ MatrixBuildResources.config = {
 			"e": null,
 			"f": null,
 			"g": null,
+			"riverBedload": 0.5,
 			"messageType": "transformArray",
-			"reqId": 3
+			"reqId": 3,
+			"useBedload": false
+		},
+		unadjustedWithBedload: {
+			"divId": "data-dygraph",
+			"labelDivId": "legend-dygraph",
+			"a": 0.05,
+			"b": 0.05,
+			"c": 0.1,
+			"d": 0.5,
+			"e": null,
+			"f": null,
+			"g": null,
+			"riverBedload": 0.5,
+			"messageType": "transformArray",
+			"reqId": 3,
+			"useBedload": true
 		},
 		double: {
 			"divId": "data-dygraph",
@@ -113,6 +153,41 @@ MatrixBuildResources.config = {
 			"messageType": "transformArray",
 			"reqId": 3
 		}
+	},
+	addBedloadToDataArray: {
+	    useBedload: {
+			"divId": "data-dygraph",
+			"labelDivId": "legend-dygraph",
+			"data": MatrixBuildResources.bedloadCoeffDatas,
+			"a": 0.05,
+			"b": 0.05,
+			"c": 0.1,
+			"d": 0.5,
+			"e": null,
+			"f": null,
+			"g": null,
+			"riverBedload": 0.5,
+			"useBedload": true,
+			"bedloadPerc" : 0.5,
+			"messageType": "addBedloadToDataArray",
+			"reqId": 3
+		},
+		doNotUseBedload: {
+			"divId": "data-dygraph",
+			"labelDivId": "legend-dygraph",
+			"data": MatrixBuildResources.datas,
+			"a": 0.05,
+			"b": 0.05,
+			"c": 0.1,
+			"d": 0.5,
+			"e": null,
+			"f": null,
+			"g": null,
+			"riverBedload": 0.5,
+			"useBedload": false,
+			"messageType": "addBedloadToDataArray",
+			"reqId": 3
+		},
 	}
 };
 
@@ -160,5 +235,5 @@ MatrixBuildResources.results = {
 		[1336203900000, [-14.278144076, -13.355188699000001, -12.432233322], [-12.432233322, -12.432233322, -12.432233322], [-14.278144076, -14.278144076, -14.278144076]],
 		[1336204500000, [-18.230772011000003, -17.045905050000002, -15.861038089000001], [-15.861038089000001, -15.861038089000001, -15.861038089000001], [-18.230772011000003, -18.230772011000003, -18.230772011000003]],
 		[1336204800000, [-20.2070884185, -18.891265545000003, -17.5754426715], [-17.5754426715, -17.5754426715, -17.5754426715], [-20.2070884185, -20.2070884185, -20.2070884185]]
-	]
+	],
 };

@@ -37,7 +37,7 @@ GCMRC.Stations = {
 		"network" : "none",
 		"nwisSite" : "00000000",
 		"displayName" : "ERROR",
-		"folderId" : "ERROR",
+		"itemId" : "ERROR",
 		"lat" : 43.0731,
 		"lon" : -89.4011
 	},
@@ -74,7 +74,9 @@ GCMRC.Features = {
 		return result;
 	}
 };
-
+GCMRC.isDinoNetwork = function(netName) {
+  return netName != null && 'DINO' == netName.toUpperCase();
+}
 CONFIG.instColor = "#4DAF4A";
 CONFIG.instHiColor = "#FF0033";
 CONFIG.pumpColor = "#A6CEE3";

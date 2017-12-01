@@ -28,6 +28,7 @@ describe("Matrix Worker", function() {
 	it("likes what it sees", function() {
 		var expectedDivId = "data-dygraph";
 		var expectedDatas = MatrixBuildResources.datas;
+		var expectedOriginalDatas = MatrixBuildResources.datas;
 		var expectedTimes = MatrixBuildResources.times;
 		
 		var matrixWorker = new MatrixWorker();
@@ -35,6 +36,7 @@ describe("Matrix Worker", function() {
 		
 		expect(matrixWorker.dataArrays[expectedDivId]).toEqual(expectedDatas);
 		expect(matrixWorker.times[expectedDivId]).toEqual(expectedTimes);
+		expect(matrixWorker.originalDataArrays[expectedDivId]).toEqual(expectedOriginalDatas);
 	});
 	
 	it("computes stuff", function() {
@@ -43,9 +45,34 @@ describe("Matrix Worker", function() {
 		var matrixWorker = new MatrixWorker();
 		matrixWorker.setDataArray(MatrixBuildResources.config.setDataArray.unadjusted);
 		
-		var actual = matrixWorker.transformArray(MatrixBuildResources.config.transformArray.unadjusted).dataArray;
+		var actual = matrixWorker.transformArray(MatrixBuildResources.config.transformArray.unadjustedWithoutBedload).dataArray;
 		
 		expect(actual).toEqual(expectedDatas);
+	});
+	
+	it("handles bedload correctly for dinosaur", function() {
+		var expectedDatas = MatrixBuildResources.results.unadjusted;
+		var expectedBedloadDatas = MatrixBuildResources.bedloadCoeffDatas;
+		
+		var matrixWorker = new MatrixWorker();
+		matrixWorker.setDataArray(MatrixBuildResources.config.setDataArray.unadjusted);
+		matrixWorker.addBedloadToDataArray(MatrixBuildResources.config.addBedloadToDataArray.useBedload);
+		
+		expect(matrixWorker.bedloadData).toEqual(expectedBedloadDatas);
+		
+		var actual = matrixWorker.transformArray(MatrixBuildResources.config.transformArray.unadjustedWithBedload).dataArray;
+				
+		expect(actual).not.toEqual(expectedDatas);
+		
+		
+		matrixWorker.setDataArray(MatrixBuildResources.config.setDataArray.unadjusted);
+		matrixWorker.addBedloadToDataArray(MatrixBuildResources.config.addBedloadToDataArray.doNotUseBedload);
+		
+		var actual = matrixWorker.transformArray(MatrixBuildResources.config.transformArray.unadjustedWithoutBedload).dataArray;
+		
+		expect(actual).toEqual(expectedDatas);
+		
+		
 	});
 	
 	describe("Uncertainty adjustment", function() {

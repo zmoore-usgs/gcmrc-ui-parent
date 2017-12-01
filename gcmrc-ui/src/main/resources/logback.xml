@@ -19,7 +19,7 @@
 		</encoder>
 	</appender>
 	
-	<logger name="gov.usgs.webservices.jdbc.spec" level="TRACE"/>
+	<logger name="gov.usgs.webservices.jdbc.spec" level="INFO"/>
 	<logger name="gov.usgs.webservices.jdbc.service" level="DEBUG"/>
 	<logger name="gov.usgs.cida.nude" level="DEBUG"/>
 	<logger name="org.apache" level="INFO"/>

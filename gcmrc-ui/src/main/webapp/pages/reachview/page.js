@@ -73,11 +73,12 @@ GCMRC.Page = {
 	buildSliderInfo : function(div, dateStr, multiplier, loadDivKey, dataType) {
 		div.append('<div>Uncertainty for ' + (("BIBE" === CONFIG.networkName)?"Tornillo Creek":"Major Tributary") + ' ' + dataType + ' Loads <span class="' + loadDivKey + '_qual' + multiplier + '"></span>% after ' + dateStr + '</div>');
 	},
+	buildRadioInfo : function(div) {
+		div.append('<div class="form-inline"><label class="radio bedRadio"><input type="radio" name="bedloadToggle" value="1">Yes</label><label class="radio bedRadio"><input type="radio" name="bedloadToggle" value="0">No</label></div>');
+	},
 	buildGraphClicked: function() {
-		var NETWORK_DINO = "DINO";
 		var begin = $("input[name='beginPosition']").val();
 		var end = $("input[name='endPosition']").val();
-
 		var endStaticRecMillis = new Date(GCMRC.Page.reach.endStaticRec).getTime() + (CONFIG.networkHoursOffset * 60 * 60 * 1000);
 		var newestSuspSedMillis = new Date(GCMRC.Page.reach.newestSuspSed).getTime() + (CONFIG.networkHoursOffset * 60 * 60 * 1000);
 
@@ -174,8 +175,9 @@ GCMRC.Page = {
 					},
 			serviceOptions);
 
-			if (CONFIG.networkName === NETWORK_DINO) {
+			if (GCMRC.isDinoNetwork(CONFIG.networkName)) {
 				GCMRC.Graphing.showInfoMsg("#infoMsg",'The sediment supplies from ungaged small tributaries are not included in these sediment budgets.  These tributaries transport relatively small amounts of silt and clay and negligible amounts of sand.  Not including the sediment supplied from these small tributaries therefore does not measurably affect the sand budgets, but does result in small negative step changes in the silt and clay budgets that are not the result of erosion.');
+				
 			}
 			
 		} else {
@@ -290,6 +292,7 @@ GCMRC.Page = {
 	isFinesWorkerFed: false,
 	latestSandReqId: 1,
 	latestFinesReqId: 1,
+	bedloadCoeffData: [],
 	updateSandSummary: function(config) {
 		if (config) {
 			var upper = config.upper;
@@ -341,10 +344,26 @@ GCMRC.Page = {
 		}
 	},
 	drawBudget: function(config) {
+	    
+		if (GCMRC.Page.isSandWorkerFed) {
+			var msg = {
+				divId: 'data-dygraph',
+				labelDivId: 'legend-dygraph'
+			};
+			msg.messageType = "addBedloadToDataArray";
+			msg.useBedload = GCMRC.Page.isBedloadIncluded;
+			msg.data = GCMRC.Page.bedloadCoeffData;
+			msg.riverBedload = config.riverBedload;
+			msg.reqId = ++GCMRC.Page.latestSandReqId;
+
+			GCMRC.Page.sandworker.postMessage(msg);
+		}
 		if (GCMRC.Page.isSandWorkerFed) {
 			var msg = config.clone();
 			msg.messageType = "transformArray";
 			msg.reqId = ++GCMRC.Page.latestSandReqId;
+			msg.useBedload = GCMRC.Page.isBedloadIncluded;
+			msg.riverBedload = config.riverBedload;
 			delete msg.graphsToMake;
 
 			GCMRC.Page.sandworker.postMessage(msg);
@@ -353,6 +372,7 @@ GCMRC.Page = {
 			var msg = config.clone();
 			msg.messageType = "transformArray";
 			msg.reqId = ++GCMRC.Page.latestFinesReqId;
+			msg.useBedload = false;
 			delete msg.graphsToMake;
 
 			GCMRC.Page.finesworker.postMessage(msg);
@@ -408,6 +428,7 @@ GCMRC.Page = {
 			this.dealWithResponse = function(graphToMake, data, config, buildGraph) {
 				var self = this;
 				var datas = [];
+				var bedloadDatas = [];
 				var times = [];
 
 				var getValue = function(row, colName) {
@@ -451,6 +472,7 @@ GCMRC.Page = {
 				config.e = parseFloat($('span[name=e_val]').html()) / 100.0;
 				config.f = parseFloat($('span[name=f_val]').html()) / 100.0;
 				config.g = parseFloat($('span[name=g_val]').html()) / 100.0;
+				config.riverBedload = parseFloat($('span[name=riverBedload_val]').html()) / 100.0;
 				
 				var identifier = graphToMake.groupId;
 
@@ -502,6 +524,60 @@ GCMRC.Page = {
 				GCMRC.Page.drawBudget(config);
 			};
 		};
+		
+		var GetBedloadCoeff = function() {
+			this.groupId = "bedloadCoeff";
+			this.columns = [];
+			this.responseColumns = []
+			this.columns.push("inst!" + "Calc Cumul Sand Bedload" + "!" + GCMRC.Page.reach.upstreamStation);
+			this.columns.push("inst!" + "Calc Cumul Sand Bedload" + "!" + GCMRC.Page.reach.downstreamStation);
+			if (GCMRC.Page.reach.majorStation) {
+				this.columns.push("inst!" + GCMRC.Page.reach.majorGroup + "!" + GCMRC.Page.reach.majorStation);
+			}
+			if (GCMRC.Page.reach.minorStation) {
+				this.columns.push("inst!" + GCMRC.Page.reach.minorGroup + "!" + GCMRC.Page.reach.minorStation);
+			}
+			this.columns.push("inst!" + "Calc Cumul Sand Bedload" + "!" + GCMRC.Page.reach.upstreamSecondaryStation);
+			this.responseColumns.push("inst!" + "Calc Cumul Sand Bedload" + "-" + GCMRC.Page.reach.upstreamStation);
+			this.responseColumns.push("inst!" + GCMRC.Page.reach.majorGroup + "-" + GCMRC.Page.reach.majorStation);
+			this.responseColumns.push("inst!" + GCMRC.Page.reach.minorGroup + "-" + GCMRC.Page.reach.minorStation);
+			this.responseColumns.push("inst!" + "Calc Cumul Sand Bedload" + "-" + GCMRC.Page.reach.downstreamStation);
+			this.responseColumns.push("inst!" + "Calc Cumul Sand Bedload" + "-" + GCMRC.Page.reach.upstreamSecondaryStation);
+			this.yAxisLabel = "";
+			this.dealWithResponse = function(graphToMake, data, config, buildGraph) {
+				var self = this;
+				var times = [];
+				var coeffData = [];
+				
+				var getValue = function(row, colName) {
+					var result = 0.0;
+					if (row[colName]) {
+						result = parseFloat(row[colName]);
+					}
+					return result;
+				};
+				
+				if(!data.success){
+					return;
+				}
+
+				//Extract and store bedloadCoeffData
+				// add additional sediment station value for both DINO networks
+				data.success.data.each(function(el) {
+					var combinedValue = self.responseColumns.length > 4 ?
+							getValue(el, self.responseColumns[0]) + 
+							getValue(el, self.responseColumns[4]):
+							getValue(el, self.responseColumns[0]);
+					coeffData.push([combinedValue,
+						getValue(el, self.responseColumns[1]),
+						getValue(el, self.responseColumns[2]),
+						getValue(el, self.responseColumns[3])]);
+					times.push(getValue(el, "time"));
+				});
+			       
+				GCMRC.Page.bedloadCoeffData = coeffData;
+			};
+		};
 
 		if (GCMRC.Page.reachDetail.some(function(el){return el.reachGroup === "S Sand Cumul Load"})) {
 			result.push(new Budget({
@@ -530,7 +606,12 @@ GCMRC.Page = {
 				workerName : "finesworker"
 			}));
 		}
-
+		
+		//Get special bedload coefficients for dinosaur network
+		if (GCMRC.isDinoNetwork(CONFIG.networkName)) {
+			result.push(new GetBedloadCoeff());
+		}
+		
 		return result;
 	},
 	createDateList: function(container, dates) {
@@ -572,6 +653,42 @@ GCMRC.Page = {
 		}
 
 		container.append(result.join(""));
+	},
+	isBedloadIncluded: null,
+	bedloadToggleSlider: function(useBedload){
+	    if (useBedload) {
+		    var riverBedloadSlider = [GCMRC.Page.sliderConfig.riverBedload];
+	            GCMRC.Page.createParameterList($('#riverBedloadSlider'), riverBedloadSlider);
+		    isBedloadIncluded = useBedload;
+		} else {
+		    $('#riverBedloadSlider').html('');
+		}
+	},
+	bedloadToggleChange: function(useBedload){
+		GCMRC.Page.bedloadToggleSlider(useBedload);
+			
+			var a = parseFloat($('span[name=a_val]').html()) / 100.0;
+			var b = parseFloat($('span[name=b_val]').html()) / 100.0;
+			var c = parseFloat($('span[name=c_val]').html()) / 100.0;
+			var d = parseFloat($('span[name=d_val]').html()) / 100.0;
+			var e = parseFloat($('span[name=e_val]').html()) / 100.0;
+			var f = parseFloat($('span[name=f_val]').html()) / 100.0;
+			var g = parseFloat($('span[name=g_val]').html()) / 100.0;
+			var riverBedload = parseFloat($('span[name=riverBedload_val]').html()) / 100.0;
+				
+			GCMRC.Page.drawBudget({
+				divId: 'data-dygraph',
+				labelDivId: 'legend-dygraph',
+				a: a,
+				b: b,
+				c: c,
+				d: d,
+				e: e,
+				f: f,
+				g: g,
+				riverBedload: riverBedload,
+				useBedload: useBedload
+			});
 	},
 	createParameterList: function(container, params) {
 		var html = [];
@@ -618,7 +735,8 @@ GCMRC.Page = {
 				var e = parseFloat($('span[name=e_val]').html()) / 100.0;
 				var f = parseFloat($('span[name=f_val]').html()) / 100.0;
 				var g = parseFloat($('span[name=g_val]').html()) / 100.0;
-
+				var riverBedload = parseFloat($('span[name=riverBedload_val]').html()) / 100.0;
+				
 				GCMRC.Page.drawBudget({
 					divId: 'data-dygraph',
 					labelDivId: 'legend-dygraph',
@@ -628,10 +746,13 @@ GCMRC.Page = {
 					d: d,
 					e: e,
 					f: f,
-					g: g
+					g: g,
+					riverBedload: riverBedload,
+					useBedload: GCMRC.Page.isBedloadIncluded
 				});
 			};
 		};
+				
 		var slidequal = function(changeThis, multiplier) {
 			return function(event, ui) {
 				$(changeThis).html(ui.value * multiplier);
@@ -750,7 +871,7 @@ GCMRC.Page = {
 				units: "Cubic feet per second",
 				unitsShort: "cfs"
 			}
-		}
+		};
 	}),
 	params: {},
 	credits: ["USGSGCMR"],

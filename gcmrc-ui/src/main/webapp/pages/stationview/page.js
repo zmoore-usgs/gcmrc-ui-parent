@@ -1,6 +1,7 @@
 CONFIG.everyPeriod = 'P1M';
 
 GCMRC.Page = {
+	oldDinosaurSite : "09261000",
 	createMiniMap : function(config) {
 		if (!config) config = {};
 		
@@ -389,7 +390,7 @@ GCMRC.Page = {
 				var durationCurveOptions = {
 					startTime: begin,
 					endTime: end,
-					binCount: 2000,
+					binCount: 1000,
 					binType: "both",
 					siteName: CONFIG.stationName
 				};
@@ -704,7 +705,7 @@ GCMRC.Page = {
 			startTime : beginClean,
 			endTime : endClean,
 			siteName : CONFIG.stationName,
-			binCount: "2000",
+			binCount: "1000",
 			binType: $('input[name=bintype]:checked').val(),
 			groupId: ids,
 			groupName: names

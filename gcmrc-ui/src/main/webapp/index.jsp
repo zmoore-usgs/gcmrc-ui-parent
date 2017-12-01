@@ -126,19 +126,18 @@
 										<ul class="unstyled">
 											<li>Brad Garner
 												<ul>
-													<li>USGS Arizona Water Science Center</li>
+													<li>USGS Water Mission Area</li>
 												</ul>
 											</li>
 										</ul>
 									</div>
 								</div>
 								<div class="media">
-									<a class="pull-left" href="https://cida.usgs.gov/"><img class="media-object" src="./template/images/source-cida.gif"></a>
 									<div class="media-body">
 										<h5 class="media-heading">Website Design and Programming</h5>
 										<ul class="unstyled">
 											<li>
-												USGS Center for Integrated Data Analytics
+                                                                                            <a href="https://www.usgs.gov/science/mission-areas/water">USGS Water Mission Area</a>
 												<ul>
 													<li>Contact <a href="mailto:cida_gcmrc@usgs.gov">cida_gcmrc@usgs.gov</a></li>
 												</ul>
@@ -164,6 +163,14 @@
 										<div class="media-object pull-left" style="width:106px; text-align: center;"><img src="./template/images/source-nps.gif"></div>
 										<div class="media-body">
 											<h4 class="media-heading">National Park Service</h4>
+										</div>
+									</a>
+								</div>
+                                                                <div class="media">
+									<a href="http://www.usace.army.mil/">
+										<div class="media-object pull-left" style="width:106px; text-align: center;"><img src="./template/images/source-ace.jpg"></div>
+										<div class="media-body">
+											<h4 class="media-heading">US Army Corps of Engineers</h4>
 										</div>
 									</a>
 								</div>
@@ -195,26 +202,34 @@
 							<div class="sectionWideTitle">Cooperating USGS Water Science Centers</div>
 							<div class="well half">
 								<div class="media">
-									<a href="http://az.water.usgs.gov/">
+									<a href="https://az.water.usgs.gov/">
 										<!--<img class="media-object pull-left" src="app/sources/source-usgs.gif">-->
 										<div class="media-body">
 											<h4 class="media-heading">Arizona Water Science Center</h4>
 										</div>
 									</a>
 								</div>
-								<div class="media">
-									<a href="http://ut.water.usgs.gov/">
+                                                                <div class="media">
+									<a href="https://co.water.usgs.gov/">
 										<!--<img class="media-object pull-left" src="app/sources/source-usgs.gif">-->
 										<div class="media-body">
-											<h4 class="media-heading">Utah Water Science Center</h4>
+											<h4 class="media-heading">Colorado Water Science Center</h4>
+										</div>
+									</a>
+								</div>
+                                                                <div class="media">
+									<a href="https://mn.water.usgs.gov/">
+										<!--<img class="media-object pull-left" src="app/sources/source-usgs.gif">-->
+										<div class="media-body">
+											<h4 class="media-heading">Minnesota Water Science Center</h4>
 										</div>
 									</a>
 								</div>
 								<div class="media">
-									<a href="http://co.water.usgs.gov/">
+									<a href="https://ut.water.usgs.gov/">
 										<!--<img class="media-object pull-left" src="app/sources/source-usgs.gif">-->
 										<div class="media-body">
-											<h4 class="media-heading">Colorado Water Science Center</h4>
+											<h4 class="media-heading">Utah Water Science Center</h4>
 										</div>
 									</a>
 								</div>
@@ -223,6 +238,14 @@
 										<!--<img class="media-object pull-left" src="app/sources/source-usgs.gif">-->
 										<div class="media-body">
 											<h4 class="media-heading">Texas Water Science Center</h4>
+										</div>
+									</a>
+								</div>
+                                                                <div class="media">
+									<a href="https://www.usgs.gov/centers/wisconsin-water-science-center">
+										<!--<img class="media-object pull-left" src="app/sources/source-usgs.gif">-->
+										<div class="media-body">
+											<h4 class="media-heading">Wisconsin Water Science Center</h4>
 										</div>
 									</a>
 								</div>

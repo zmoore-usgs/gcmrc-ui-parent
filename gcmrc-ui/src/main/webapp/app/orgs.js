@@ -115,6 +115,24 @@ GCMRC.Organizations = {
 			width : 136,
 			height : 102
 		}
+	},
+        "USGSMNWC" : {
+		displayName : "Minnesota Water Science Center",
+		url : "https://mn.water.usgs.gov/",
+		logo : {
+			url : CONFIG.relativePath + "app/sources/source-usgs.gif",
+			width : 80,
+			height : 21
+		}
+	},
+        "USGSWIWC" : {
+		displayName : "Wisconsin Water Science Center",
+		url : "https://www.usgs.gov/centers/wisconsin-water-science-center",
+		logo : {
+			url : CONFIG.relativePath + "app/sources/source-usgs.gif",
+			width : 80,
+			height : 21
+		}
 	}
 };
 

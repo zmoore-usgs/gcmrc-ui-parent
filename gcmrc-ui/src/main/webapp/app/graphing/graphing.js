@@ -19,7 +19,7 @@ GCMRC.Graphing = function(hoursOffset) {
 	};
 	
 	// Don't show duration curve plot option for bed sediment or any cumulative timeseries
-	var NO_DURATION_CURVE_IDS = ["3", "4", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23", "24", "25", "26", "27", "28", "29", "30", "31", "32", "33", "34", "35", "36", "37", "38", "39", "40", "41", "42", "43", "44", "45", "46", "47", "48", "49", "50", "51", "52", "58", "61", "115"];
+	var NO_DURATION_CURVE_IDS = ["3", "4", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23", "24", "25", "26", "27", "28", "29", "30", "31", "32", "33", "34", "35", "36", "37", "38", "39", "40", "41", "42", "43", "44", "45", "46", "47", "48", "49", "50", "51", "52", "58", "61", "115", "117"];
 
 	var showInfoMessage = function(locator, msg) {
 		$(locator).append('<div class="alert alert-info"><button type="button" class="close" data-dismiss="alert">×</button>' + msg + '</div>');
@@ -134,9 +134,13 @@ GCMRC.Graphing = function(hoursOffset) {
 		var timeColumn = "time";
 		var conf = $.extend({}, config);
 		var hasData = false;
+		var bedloadData;
+		if (graphToMake.groupId === 'sandbudget') {
+			    bedloadData = GCMRC.Page.bedloadCoeffData;
+			}
 		conf.data = data.success.data.map(function(el) {
 			var result;
-
+			
 			result = [parseInt(el[timeColumn])];
 			
 			var columns = graphToMake.responseColumns || graphToMake.columns;
@@ -657,6 +661,9 @@ GCMRC.Graphing = function(hoursOffset) {
 		NO_DURATION_CURVE_IDS : NO_DURATION_CURVE_IDS,
 		createDataGraph: function(param, config, urlParams) {
 			$('#infoMsg').empty();
+			if (CONFIG.stationName === GCMRC.Page.oldDinosaurSite) {
+			    showInfoMessage($('#infoMsg'), "The cumulative silt and clay load, cumulative suspended-sand load, and cumulative calculated sand bedload are calculated using suspended-sediment measurements from the Green River above Jensen, UT, station after April 12, 2016.");
+			}
 			$("#errorMsg").empty();
 
 			if (urlParams['downscale']) {
@@ -687,7 +694,7 @@ GCMRC.Graphing = function(hoursOffset) {
 				dataType: 'json',
 				url: CONFIG.relativePath + urls[param],
 				data: urlParams,
-				timeout: 1200000, /* 20 minutes allowed, from start to data complete */
+				timeout: 2400000, /* 40 minutes allowed, from start to data complete */
 				success: function(data, textStatus, jqXHR) {
 					if (!data || (!data.contentType && data.contentType === "text/xml")) {
 						clearErrorMessage();
@@ -747,6 +754,9 @@ GCMRC.Graphing = function(hoursOffset) {
 									graph.updateOptions({});
 									graph.resize();
 								});
+							}
+							if (GCMRC.isDinoNetwork(CONFIG.networkName) && config.graphsToMake.some({groupId:'sandbudget'})) {
+							    GCMRC.Page.bedloadToggleChange(Boolean(parseFloat($("input[name=bedloadToggle]:checked").val())));
 							}
 						} else if (data.data && data.data.ERROR) {
 							clearErrorMessage();

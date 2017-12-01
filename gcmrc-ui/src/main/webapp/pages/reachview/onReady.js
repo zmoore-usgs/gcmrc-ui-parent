@@ -18,10 +18,23 @@ $(document).ready(function onReady() {
 	});
 	
 	GCMRC.Page.buildPORView($('#porContainer'), GCMRC.Page.earliestPositionISO, GCMRC.Page.latestPositionISO);
-
-	var bedLoadList = [GCMRC.Page.sliderConfig.bedLoad];
-	
-	GCMRC.Page.createParameterList($('#bedLoadList'), bedLoadList);
+        
+        if (GCMRC.isDinoNetwork(CONFIG.networkName)) {
+			$('#bedloadSlider').children().first().text('Sand Bedload Included in Sand Budget');
+			GCMRC.Page.buildRadioInfo($('#bedloadList'));
+			$("input[name=bedloadToggle][value=1]").prop('checked', true);
+			GCMRC.Page.isBedloadIncluded = Boolean(parseFloat($("input[name=bedloadToggle]:checked").val()));
+			GCMRC.Page.bedloadToggleChange(GCMRC.Page.isBedloadIncluded);
+			$('#bedloadSlider').change(function(){
+			    GCMRC.Page.isBedloadIncluded = Boolean(parseFloat($("input[name=bedloadToggle]:checked").val()));
+			    GCMRC.Page.bedloadToggleChange(GCMRC.Page.isBedloadIncluded);
+			});
+        } else {
+  
+        var bedloadList = [GCMRC.Page.sliderConfig.bedLoad];
+        
+        GCMRC.Page.createParameterList($('#bedloadList'), bedloadList);
+	}
 	
 	GCMRC.Page.createDateList($('#lastSedDates'), GCMRC.Page.reach);
 	
@@ -36,7 +49,8 @@ $(document).ready(function onReady() {
 			sandMajor : false,
 			finesMajor : false,
 			sandMinor : false,
-			finesMinor : false
+			finesMinor : false,
+			bedloadCoeff: false
 		}
 		
 		GCMRC.Page.reachDetail.each(function(el) {
@@ -60,11 +74,11 @@ $(document).ready(function onReady() {
 			}
 		});
 		
-		if (addToResult["sandRiverLoad"]) {
-			result.push(GCMRC.Page.sliderConfig.riverLoad);
-		}
 		if (addToResult["finesRiverLoad"]) {
 			result.push(GCMRC.Page.sliderConfig.riverFinesLoad);
+		}
+		if (addToResult["sandRiverLoad"]) {
+			result.push(GCMRC.Page.sliderConfig.riverLoad);
 		}
 		if (addToResult["sandMajor"]) {
 			result.push(GCMRC.Page.sliderConfig.majorTribLoad);

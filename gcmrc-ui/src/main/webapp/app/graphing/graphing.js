@@ -88,8 +88,11 @@ GCMRC.Graphing = function(hoursOffset) {
 				conf.labels = ["Percentage", "Value"];
 
 				conf['yAxisLabel'] = graphToMake.yAxisLabel || graphName + " (" + parameterMetadata['unitsShort'] + ")";
-				conf['dataformatter'] = GCMRC.Dygraphs.DataFormatter(parameterMetadata['decimalPlaces']);
-				conf['decimalPlaces'] = parameterMetadata['decimalPlaces'];
+				
+				//Need a minimum of 1 decimal place for Duration Curves
+				conf['decimalPlaces'] = parameterMetadata['decimalPlaces'] > 1 ? parameterMetadata['decimalPlaces'] : 1;
+				conf['dataformatter'] = GCMRC.Dygraphs.DataFormatter(conf['decimalPlaces']);
+				
 				conf["parameterName"] = identifier;
 				conf["labelDiv"] = $('#' + conf.labelDivId + ' div.duration-plot-' + identifier).get(0);
 				conf["colors"] = durationCurveConfiguration[identifier].colors;
@@ -250,7 +253,7 @@ GCMRC.Graphing = function(hoursOffset) {
 				ticker: Dygraph.dateTicker,
 				axisLabelFormatter: GCMRC.Dygraphs.timeFormatter(hoursOffset),
 				valueFormatter: GCMRC.Dygraphs.timeLabelFormatter(hoursOffset),
-				pixelsPerLabel: 95
+				pixelsPerLabel: 85
 			}
 		};
 
@@ -273,6 +276,7 @@ GCMRC.Graphing = function(hoursOffset) {
 			ylabel: yAxisLabel,
 			yAxisLabelWidth: 85,
 			xAxisHeight: 50,
+			xAxisLabelWidth: 85,
 			axes: axes,
 			yRangePad: 5,
 //			includeZero: true,
@@ -288,7 +292,7 @@ GCMRC.Graphing = function(hoursOffset) {
 			connectSeparatedPoints: false,
 			highlightCircleSize: 4,
 			strokeWidth: 2,
-			pixelsPerTimeLabel : 95,
+			pixelsPerTimeLabel : 85,
 			ticker: GCMRC.Dygraphs.ScaledTicker(decimalPlaces),
 			drawHighlightPointCallback: lighterColorHighlightPoint,
 			customBars: true,
@@ -391,12 +395,12 @@ GCMRC.Graphing = function(hoursOffset) {
 
 		var yAxisLabel = config['yAxisLabel'] || 'Data';
 
-		var dataformatter = config['dataformatter'] || GCMRC.Dygraphs.DataFormatter(0);
-		var decimalPlaces = config['decimalPlaces'] || 0;
+		var dataformatter = config['dataformatter'] || GCMRC.Dygraphs.DataFormatter(1);
+		var decimalPlaces = config['decimalPlaces'] || 1;
 		
 		var confColors = config['colors'] || [CONFIG.instColor, CONFIG.pumpColor, CONFIG.sampColor, CONFIG.sampColor];
 		var highlightColor = config['highlightColor'];
-
+		
 		var axes = {
 			y: {
 				axisLabelFormatter: dataformatter,
@@ -404,7 +408,7 @@ GCMRC.Graphing = function(hoursOffset) {
 				includeZero: false
 			},
 			x: {
-				axisLabelFormatter: GCMRC.Dygraphs.DataFormatter(0),
+				axisLabelFormatter: GCMRC.Dygraphs.DataFormatter(config.data[config.data.length-1][0] <= 10 ? 1 : 0),
 				valueFormatter: GCMRC.Dygraphs.DataFormatter(2),
 				pixelsPerLabel: 50,
 				logscale: false

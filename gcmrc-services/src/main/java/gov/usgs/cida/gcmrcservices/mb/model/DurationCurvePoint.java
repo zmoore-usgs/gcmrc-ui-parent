@@ -54,4 +54,32 @@ public class DurationCurvePoint {
 	public Double getHighBound() {
 		return highBound;
 	}
+	
+	public void setBinNumber(int val) {
+		binNumber = val;
+	}
+	
+	public void setCumulativeBinPerc(double val){
+		cumulativeBinPerc = val;
+	}
+	
+	public void setBinValue(double val) {
+		binValue = val;
+	}
+	
+	public void setInBinMinutes(double val) {
+		inBinMinutes = val;
+	}
+	
+	public void setCumulativeInBinMinutes(double val) {
+		cumulativeInBinMinutes = val;
+	}
+	
+	public void setLowBound(double val) {
+		lowBound = val;
+	}
+	
+	public void setHighBound(double val) {
+		highBound = val;
+	}
 }

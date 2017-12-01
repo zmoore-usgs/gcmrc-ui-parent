@@ -43,19 +43,20 @@ public class DurationCurveDAO {
 		
 		try (SqlSession session = sqlSessionFactory.openSession()) {
 			List<DurationCurvePoint> returnedPoints = session.selectList( queryPackage + ".DurationCurveMapper.getDurationCurve", params);
-
+			
+			//Log claculations will sometimes return an extra bin with the values that are <= 0 so check that points == binCount or binCount + 1
 			//Verify returned points are valid
-			boolean invalid = returnedPoints.size() != binCount;
-			if(!invalid){
+			boolean valid = returnedPoints.size() == binCount || returnedPoints.size() == binCount + 1;
+			if(valid){
 				for(DurationCurvePoint point : returnedPoints){
 					if(point.getCumulativeBinPerc() > 100 || point.getCumulativeBinPerc() < 0){
-						invalid = true;
+						valid = false;
 						break;
 					}
 				}
 			}
 			
-			if(!invalid){
+			if(valid){
 				result = new DurationCurve(returnedPoints, siteName, groupId, binType);
 			} else {
 				log.error("Duration curve query returned invalid data with parameters: [siteName: " + siteName + ", groupId: " + groupId + ", binType: " + binType + "]");

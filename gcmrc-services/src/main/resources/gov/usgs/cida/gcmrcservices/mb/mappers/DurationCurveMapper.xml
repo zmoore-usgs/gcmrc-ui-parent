@@ -40,7 +40,7 @@
 					   60 MAX_GAP_MINUTES, <!-- Max single invalid timespan that interpolation is allowed through. -->
 					   <!-- Max days for which interpolation is allowed between two measured values. -->
 					   60 MAX_INTERPOLATION_DAYS,
-					   1 MIN_LOG_BIN_VALUE <!-- Min value to use for bins.  Log bins don't allow zeros and low values are basically noise -->
+					   0.1 MIN_LOG_BIN_VALUE <!-- Min value to use for bins.  Log bins don't allow zeros and low values are basically noise -->
 					 From DUAL
 				   ), RAW_MTI_DATA (START_VALUE, END_VALUE, START_TIME, END_TIME, GAP_MINUTES) AS (
 

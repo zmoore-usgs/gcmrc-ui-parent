@@ -62,43 +62,50 @@ GCMRC.Graphing = function(hoursOffset) {
 		}
 		
 		if (hasData) {
-			var minY = parseFloat(relevantData.points[0].binValue);
-			var maxY = parseFloat(relevantData.points[0].binValue);
+			var minY = parseFloat(relevantData.points[0].lowBound);
+			var maxY = parseFloat(relevantData.points[0].lowBound);
+			
 			relevantData.points.forEach(function(point){
 				var xVal = parseFloat(point.cumulativeBinPerc);
-				var yVal = parseFloat(point.binValue);
+				var yVal = parseFloat(point.lowBound);
 				
-				if(yVal > maxY){
-					maxY = yVal;
-				} else if(yVal < minY){
-					minY = yVal;
-				}
-				
-				displayData.push([xVal, [yVal, yVal, yVal]]);
+				//Logarithmic Plots should not show bins that are negative or 0
+				if(relevantData.binType.toLowerCase() === "lin" || yVal > 0){
+					if(yVal > maxY){
+						maxY = yVal;
+					} else if(yVal < minY){
+						minY = yVal;
+					}
+
+
+					displayData.push([xVal, [yVal, yVal, yVal]]);
+				}				
 			});
 			
-			displayData.reverse();
-
-			conf.labels = ["Percentage", "Value"];
-
-			conf['yAxisLabel'] = graphToMake.yAxisLabel || graphName + " (" + parameterMetadata['unitsShort'] + ")";
-			conf['dataformatter'] = GCMRC.Dygraphs.DataFormatter(parameterMetadata['decimalPlaces']);
-			conf['decimalPlaces'] = parameterMetadata['decimalPlaces'];
-			conf["parameterName"] = identifier;
-			conf["labelDiv"] = $('#' + conf.labelDivId + ' div.duration-plot-' + identifier).get(0);
-			conf["colors"] = durationCurveConfiguration[identifier].colors;
-			conf["highlightColor"] = durationCurveConfiguration[identifier].highlightColor.values()[0];
-			conf["data"] = displayData;
-			conf["minY"] = minY;
-			conf["maxY"] = maxY;
+			if(displayData.length > 0) {
+				displayData.reverse();
 			
-			//Logarithmic vs Linear Plots
-			if(relevantData.binType.toLowerCase() === "log"){
-				conf["div"] = $('#' + conf.divId + ' div.duration-plot-' + identifier + '[id=log]').get(0);
-				buildGraph(conf, true);
-			} else {
-				conf["div"] = $('#' + conf.divId + ' div.duration-plot-' + identifier + '[id=lin]').get(0);
-				buildGraph(conf, false);
+				conf.labels = ["Percentage", "Value"];
+
+				conf['yAxisLabel'] = graphToMake.yAxisLabel || graphName + " (" + parameterMetadata['unitsShort'] + ")";
+				conf['dataformatter'] = GCMRC.Dygraphs.DataFormatter(parameterMetadata['decimalPlaces']);
+				conf['decimalPlaces'] = parameterMetadata['decimalPlaces'];
+				conf["parameterName"] = identifier;
+				conf["labelDiv"] = $('#' + conf.labelDivId + ' div.duration-plot-' + identifier).get(0);
+				conf["colors"] = durationCurveConfiguration[identifier].colors;
+				conf["highlightColor"] = durationCurveConfiguration[identifier].highlightColor.values()[0];
+				conf["data"] = displayData;
+				conf["minY"] = minY;
+				conf["maxY"] = maxY;
+
+				//Logarithmic vs Linear Plots
+				if(relevantData.binType.toLowerCase() === "log"){
+					conf["div"] = $('#' + conf.divId + ' div.duration-plot-' + identifier + '[id=log]').get(0);
+					buildGraph(conf, true);
+				} else {
+					conf["div"] = $('#' + conf.divId + ' div.duration-plot-' + identifier + '[id=lin]').get(0);
+					buildGraph(conf, false);
+				}
 			}
 		}
 	};
@@ -144,7 +151,7 @@ GCMRC.Graphing = function(hoursOffset) {
 			result = [parseInt(el[timeColumn])];
 			
 			var columns = graphToMake.responseColumns || graphToMake.columns;
-			var dataColumns = columns.filter(function(n){return !n.startsWith(timeColumn)}).map(function(col) {
+			var dataColumns = columns.filter(function(n){return !n.startsWith(timeColumn);}).map(function(col) {
 				return parseColData(el[col]);
 			});
 

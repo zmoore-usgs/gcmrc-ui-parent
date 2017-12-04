@@ -409,7 +409,7 @@ GCMRC.Graphing = function(hoursOffset) {
 		
 		var confColors = config['colors'] || [CONFIG.instColor, CONFIG.pumpColor, CONFIG.sampColor, CONFIG.sampColor];
 		var highlightColor = config['highlightColor'];
-		
+
 		var axes = {
 			y: {
 				axisLabelFormatter: dataformatter,

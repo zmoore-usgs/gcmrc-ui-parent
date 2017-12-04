@@ -56,6 +56,7 @@ GCMRC.Graphing = function(hoursOffset) {
 		var graphName = parameterMetadata['displayName'];
 		var hasData = false;
 		var displayData = new Array();
+		var logDataExcluded = false;
 		
 		if(Array.isArray(relevantData.points) && relevantData.points.length > 0){
 			hasData = true;
@@ -79,7 +80,9 @@ GCMRC.Graphing = function(hoursOffset) {
 
 
 					displayData.push([xVal, [yVal, yVal, yVal]]);
-				}				
+				} else {
+					logDataExcluded = true;
+				}
 			});
 			
 			if(displayData.length > 0) {
@@ -109,6 +112,12 @@ GCMRC.Graphing = function(hoursOffset) {
 					conf["div"] = $('#' + conf.divId + ' div.duration-plot-' + identifier + '[id=lin]').get(0);
 					buildGraph(conf, false);
 				}
+			}
+			
+			if(logDataExcluded){
+				var div = '#' + conf.divId + " .plot-container-" + identifier;
+				showInfoMessage(div, "Logarithmic duration curves only account for data points with a value greater than or equal to 0.1." + 
+						" In order to see a full duration curve for this parameter over this time period please check the linear view.");
 			}
 		}
 	};

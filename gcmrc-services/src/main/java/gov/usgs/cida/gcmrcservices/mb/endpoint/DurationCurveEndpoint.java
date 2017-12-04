@@ -6,6 +6,7 @@ import gov.usgs.cida.gcmrcservices.mb.endpoint.response.GCMRCResponse;
 import gov.usgs.cida.gcmrcservices.mb.model.DurationCurve;
 import gov.usgs.cida.gcmrcservices.mb.service.DurationCurveService;
 import java.io.OutputStream;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -40,6 +41,9 @@ public class DurationCurveEndpoint {
 		List<DurationCurve> durationCurves = new ArrayList<>();
 		
 		try {
+			//Duration curve query logic must treat the end date as exclusive so we need to add one day to it
+			endTime = LocalDate.parse(endTime).plusDays(1).toString();
+			
 			durationCurves = DurationCurveService.getDurationCurves(siteName, startTime, endTime, binCount, binType, groupIds);
 			
 			//Check for any empty duration curves

@@ -537,12 +537,16 @@ GCMRC.Page = {
 			if (GCMRC.Page.reach.minorStation) {
 				this.columns.push("inst!" + GCMRC.Page.reach.minorGroup + "!" + GCMRC.Page.reach.minorStation);
 			}
-			this.columns.push("inst!" + "Calc Cumul Sand Bedload" + "!" + GCMRC.Page.reach.upstreamSecondaryStation);
+			if (GCMRC.Page.reach.upstreamSecondaryStation) {
+				this.columns.push("inst!" + "Calc Cumul Sand Bedload" + "!" + GCMRC.Page.reach.upstreamSecondaryStation);
+			}
 			this.responseColumns.push("inst!" + "Calc Cumul Sand Bedload" + "-" + GCMRC.Page.reach.upstreamStation);
 			this.responseColumns.push("inst!" + GCMRC.Page.reach.majorGroup + "-" + GCMRC.Page.reach.majorStation);
 			this.responseColumns.push("inst!" + GCMRC.Page.reach.minorGroup + "-" + GCMRC.Page.reach.minorStation);
 			this.responseColumns.push("inst!" + "Calc Cumul Sand Bedload" + "-" + GCMRC.Page.reach.downstreamStation);
-			this.responseColumns.push("inst!" + "Calc Cumul Sand Bedload" + "-" + GCMRC.Page.reach.upstreamSecondaryStation);
+			if (GCMRC.Page.reach.upstreamSecondaryStation){
+				this.responseColumns.push("inst!" + "Calc Cumul Sand Bedload" + "-" + GCMRC.Page.reach.upstreamSecondaryStation);
+			}
 			this.yAxisLabel = "";
 			this.dealWithResponse = function(graphToMake, data, config, buildGraph) {
 				var self = this;

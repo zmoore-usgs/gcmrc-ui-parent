@@ -413,7 +413,7 @@ GCMRC.Graphing = function(hoursOffset) {
 		var axes = {
 			y: {
 				axisLabelFormatter: dataformatter,
-				valueFormatter: dataformatter,
+				valueFormatter: GCMRC.Dygraphs.DataFormatter(2),
 				includeZero: false
 			},
 			x: {

@@ -14,8 +14,13 @@
 		<result property="lowBound" column="LOW_BOUND"/>
 		<result property="highBound" column="HIGH_BOUND"/>
 	</resultMap>
-	<select id="getDurationCurve" parameterType="map" resultMap="durationCurveResult">	
-		WITH CONST (ONE_DAY_OF_MINUTES, DATA_GAP_MARKER, MAX_GAP_MINUTES, MAX_INTERPOLATION_DAYS, MIN_LOG_BIN_VALUE) AS
+        
+        <resultMap id="durationCurveGapMinutesResult" type="DurationCurveGapMinutesPercent">
+		<result property="gapMinutesPercent" column="GAP_MINUTES_PERCENT"/>
+	</resultMap>
+        
+        <sql id="withConstants">
+            CONST (ONE_DAY_OF_MINUTES, DATA_GAP_MARKER, MAX_GAP_MINUTES, MAX_INTERPOLATION_DAYS, MIN_LOG_BIN_VALUE) AS
 				(
 				   <!-- CONSTANTS
 
@@ -42,7 +47,11 @@
 					   60 MAX_INTERPOLATION_DAYS,
 					   0.1 MIN_LOG_BIN_VALUE <!-- Min value to use for bins.  Log bins don't allow zeros and low values are basically noise -->
 					 From DUAL
-				   ), RAW_MTI_DATA (START_VALUE, END_VALUE, START_TIME, END_TIME, GAP_MINUTES) AS (
+				   )
+        </sql>
+        <sql id="withRawMtiData">
+            <include refid="withConstants"/>,
+            RAW_MTI_DATA (GROUP_ID, START_VALUE, END_VALUE, START_TIME, END_TIME, GAP_MINUTES) AS (
 
 					 <!-- Create a coarsely filtered set of data where each row is a Measured Time Interval (MTI).
 					   The rows returned from this query will span slightly beyond the fromTime and toTime (MAX_INTERPOLATION_DAYS
@@ -81,7 +90,8 @@
 					   _____________________
 					   The 2nd row is unmodified here (its removed in the outer select).
 					   -->
-					   START_VALUE,
+					   GROUP_ID,
+                                           START_VALUE,
 					   CASE WHEN END_VALUE = (SELECT DATA_GAP_MARKER FROM CONST) THEN LEAD(END_VALUE) OVER (ORDER BY START_TIME) ELSE END_VALUE END as END_VALUE,
 					   START_TIME,
 					   CASE WHEN END_VALUE = (SELECT DATA_GAP_MARKER FROM CONST) THEN LEAD(END_TIME) OVER (ORDER BY START_TIME) ELSE END_TIME END AS END_TIME,
@@ -90,7 +100,8 @@
 					   SELECT * FROM ( <!-- WHERE removes invalid data rows (start and end values = DATA_GAP_MARKER -->
 						 SELECT
 						   <!-- Record data gap durations into the row before the gap (gaps removed in outer query) -->
-						   START_VALUE,
+						   GROUP_ID,
+                                                   START_VALUE,
 						   END_VALUE,
 						   START_TIME, <!-- Can we be sure there are no duplicate date entries for a site? Yes. -->
 						   END_TIME,
@@ -108,7 +119,8 @@
 							 db rows that bound it.
 
 							 The coarse time filter keeps only rows in the specified range + the max interpolation time period. -->
-							 FINAL_VALUE AS START_VALUE,
+							 GROUP_ID,
+                                                         FINAL_VALUE AS START_VALUE,
 							 LEAD(FINAL_VALUE) OVER (ORDER BY MEASUREMENT_DATE) AS END_VALUE,
 							 MEASUREMENT_DATE AS START_TIME, <!-- Can we be sure there are no duplicate date entries for a site? Yes. -->
 							 LEAD(MEASUREMENT_DATE) OVER (ORDER BY MEASUREMENT_DATE) AS END_TIME
@@ -134,7 +146,11 @@
 					   ) WHERE
 						 NOT (START_VALUE = (SELECT DATA_GAP_MARKER FROM CONST) AND END_VALUE = (SELECT DATA_GAP_MARKER FROM CONST)) 
 					 )
-				   ), CLEAN_MTI_DATA (START_VALUE, END_VALUE, MIN_VALUE, MAX_VALUE, START_TIME, END_TIME, DURATION_MINUTES, GAP_MINUTES, IS_START_INTERPOLATED, IS_END_INTERPOLATED) AS (
+				   )
+        </sql>
+        <sql id="withCleanMtiData">
+            <include refid="withRawMtiData"/>,
+            CLEAN_MTI_DATA (GROUP_ID, START_VALUE, END_VALUE, MIN_VALUE, MAX_VALUE, START_TIME, END_TIME, DURATION_MINUTES, GAP_MINUTES, IS_START_INTERPOLATED, IS_END_INTERPOLATED) AS (
 
 					 <!-- Further clean Measured Time Intervals (MTI) to remove interpolation ranges that are either too
 					   long or contain gaps that are too long.  Some other useful columns are added.
@@ -148,7 +164,8 @@
 					 -->
 
 					 SELECT
-					   START_VALUE, END_VALUE, 
+					   GROUP_ID,
+                                           START_VALUE, END_VALUE, 
 					   LEAST(START_VALUE, END_VALUE) AS MIN_VALUE,
 					   GREATEST(START_VALUE, END_VALUE) AS MAX_VALUE,
 					   START_TIME,
@@ -157,7 +174,7 @@
 					   GAP_MINUTES, IS_START_INTERPOLATED, IS_END_INTERPOLATED <!-- These are all for debugging -->
 					 FROM (
 					   SELECT
-
+                                                 GROUP_ID,
 						 <!--
 						 Interpolation of the start value (applied to the single row which would have a start time b/f the user spec'ed start time.
 						 V1 = START_VALUE, V2 = END_VALUE, T1 = START_TIME, T2 = END_TIME, Ts = User Spec'ed fromTime.
@@ -193,10 +210,15 @@
 						 AND NOT EXTRACT(DAY FROM (END_TIME - START_TIME)) > (SELECT MAX_INTERPOLATION_DAYS FROM CONST)
 					   Order by START_TIME <!-- Used for debugging -->
 					 ) Order by START_TIME <!-- Used for debugging -->
-				   ), CONST_DATA (FIRST_MEASURE_DATE, LAST_MEASURE_DATE, OVERALL_DURATION_MINUTES, USER_DURATION_MINUTES, OVERALL_MIN_VALUE, OVERALL_MAX_VALUE, OVERALL_VALUE_RANGE, MEASUREMENT_COUNT) AS
+				   )
+        </sql>
+        <sql id="withData">
+            <include refid="withCleanMtiData"/>,
+            CONST_DATA (GROUP_ID, FIRST_MEASURE_DATE, LAST_MEASURE_DATE, OVERALL_DURATION_MINUTES, USER_DURATION_MINUTES, OVERALL_MIN_VALUE, OVERALL_MAX_VALUE, OVERALL_VALUE_RANGE, MEASUREMENT_COUNT) AS
 					(
 					 SELECT
-					   MIN(START_TIME) as FIRST_MEASURE_DATE,
+					   GROUP_ID,
+                                           MIN(START_TIME) as FIRST_MEASURE_DATE,
 					   MAX(END_TIME) as LAST_MEASURE_DATE,
 					   SUM(DURATION_MINUTES) as OVERALL_DURATION_MINUTES,
 					   EXTRACT(DAY FROM (to_timestamp(#{endTime, jdbcType=CHAR}, 'YYYY-MM-DD"T"HH24:MI:SS') - to_timestamp (#{startTime, jdbcType=CHAR}, 'YYYY-MM-DD"T"HH24:MI:SS'))*60*24) as USER_DURATION_MINUTES,
@@ -205,12 +227,18 @@
 					   MAX(MAX_VALUE) - MIN(MIN_VALUE) AS OVERALL_VALUE_RANGE,
 					   COUNT(*) AS MEASUREMENT_COUNT
 					 From CLEAN_MTI_DATA
-				   ), INT_BINS (BIN_NUMBER) AS
+                                            GROUP BY GROUP_ID
+        </sql>   
+        <sql id="withIntBins">
+            INT_BINS (BIN_NUMBER) AS
 				   (
 					 SELECT level BIN_NUMBER   
 					 FROM DUAL   
 					 CONNECT BY level &lt;=#{binCount, jdbcType=NUMERIC}
-				   ), LIN_BINS (BIN_NUMBER, LOW_BOUND, HIGH_BOUND) AS (
+				   )
+        </sql>
+        <sql id="withLinBins">
+            LIN_BINS (BIN_NUMBER, LOW_BOUND, HIGH_BOUND) AS (
 				   <!-- Linear spaced bins -->
 					 SELECT
 					   BIN_NUMBER,
@@ -221,7 +249,10 @@
 					   END AS HIGH_BOUND
 					 FROM INT_BINS
 					 ORDER BY BIN_NUMBER
-				   ), LOG_BINS (BIN_NUMBER, LOW_BOUND, HIGH_BOUND) AS (
+				   )
+        </sql> 
+        <sql id="withLogBins">
+            LOG_BINS (BIN_NUMBER, LOW_BOUND, HIGH_BOUND) AS (
 				   <!-- Log spaced bins
 					 Log bins may include a zero bin that goes from the lowest measured value to the min_log_bin value, since we
 					 can't do log calcs on zero.  This only occurs when the lowest value is below the MIN_LOG_BIN_VALUE. -->
@@ -243,7 +274,13 @@
 						ORDER BY BIN_NUMBER
 					)
 				)
-
+        </sql>
+	<select id="getDurationCurve" parameterType="map" resultMap="durationCurveResult">	
+            WITH
+            <include refid="withData"/>,
+            <include refid="withIntBins"/>,
+            <include refid="withIntBins"/>,
+            <include refid="withLogBins"/> 
 				   SELECT 
 					 BIN_NUMBER,
 					 SUM(IN_BIN_MINUTES) OVER (ORDER BY BIN_NUMBER DESC ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW) /
@@ -277,7 +314,7 @@
 						 CASE
 						   <!--
 							All these CASE statements deal w/ handling 4 possible cases for a Measured
-							Data Chunck (MTI).  A MTI block of known time and values and it occurs between
+							Data Chunk (MTI).  A MTI block of known time and values and it occurs between
 							two individual measurements.  Thus, it has a starting value, an ending value
 							and a duration.  It doesn't matter for the calculation if the values are
 							increasing from initial measure to ending measure, so instead of working with
@@ -317,8 +354,12 @@
 					   ORDER BY bin.BIN_NUMBER, START_TIME
 					 ) 
 					 GROUP BY BIN_NUMBER
-					 ORDER BY BIN_NUMBER <!-- dbeug -->
+					 ORDER BY BIN_NUMBER <!-- debug -->
 				   )
 				   ORDER BY BIN_NUMBER
 	</select>	
+        <select id="getDurationCurveGapMinutesPercent" parameterType="map" resultMap="durationCurveGapMinutesResult">	
+            WITH
+            <include refid="withData"/>
+            select round(gap_minutes/user_duration_minutes,0) as gap_minutes_percent from const_data
 </mapper>

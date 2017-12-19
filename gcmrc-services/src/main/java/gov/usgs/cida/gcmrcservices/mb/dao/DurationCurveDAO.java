@@ -2,6 +2,7 @@ package gov.usgs.cida.gcmrcservices.mb.dao;
 
 import gov.usgs.cida.gcmrcservices.mb.MyBatisConnectionFactory;
 import gov.usgs.cida.gcmrcservices.mb.model.DurationCurve;
+import gov.usgs.cida.gcmrcservices.mb.model.DurationCurveGapMinutesPercent;
 import gov.usgs.cida.gcmrcservices.mb.model.DurationCurvePoint;
 import java.util.HashMap;
 import java.util.List;
@@ -43,7 +44,7 @@ public class DurationCurveDAO {
 		
 		try (SqlSession session = sqlSessionFactory.openSession()) {
 			List<DurationCurvePoint> returnedPoints = session.selectList( queryPackage + ".DurationCurveMapper.getDurationCurve", params);
-			
+			Double gapMinutes;
 			//Log claculations will sometimes return an extra bin with the values that are <= 0 so check that points == binCount or binCount + 1
 			//Verify returned points are valid
 			boolean valid = returnedPoints.size() == binCount || returnedPoints.size() == binCount + 1;
@@ -56,15 +57,39 @@ public class DurationCurveDAO {
 				}
 			}
 			
+			gapMinutes = getDurationCurveGapMinutesPercent(siteName, startTime, endTime, groupId);
+			
 			if(valid){
-				result = new DurationCurve(returnedPoints, siteName, groupId, binType);
+				result = new DurationCurve(returnedPoints, siteName, groupId, binType, Double.toString(gapMinutes));
 			} else {
 				log.error("Duration curve query returned invalid data with parameters: [siteName: " + siteName + ", groupId: " + groupId + ", binType: " + binType + "]");
-				result = new DurationCurve(null, siteName, groupId, binType);
+				result = new DurationCurve(null, siteName, groupId, binType, null);
 			}
 		} catch (Exception e) {
 			log.error("Could not get duration curve with parameters: [siteName: " + siteName + ", groupId: " + groupId + ", binType: " + binType + "] Error: " + e.getMessage());
-			result = new DurationCurve(null, siteName, groupId, binType);
+			result = new DurationCurve(null, siteName, groupId, binType, null);
+		}
+				
+		return result;
+	}
+	
+	public Double getDurationCurveGapMinutesPercent(String siteName, String startTime, String endTime, int groupId) {		
+		Double result;
+		
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("siteName", siteName);
+		params.put("startTime", startTime);
+		params.put("endTime", endTime);
+		params.put("groupId", groupId);
+		
+		try (SqlSession session = sqlSessionFactory.openSession()) {
+			DurationCurveGapMinutesPercent returned = session.selectOne( queryPackage + ".DurationCurveMapper.getDurationCurveGapMinutesPercent", params);
+			
+			result = returned.getGapMinutesPercent();
+			
+		} catch (Exception e) {
+			log.error("Could not get duration curve gap minutes percent with parameters: [siteName: " + siteName + ", groupId: " + groupId + "] Error: " + e.getMessage());
+			result = null;
 		}
 				
 		return result;

@@ -4,6 +4,7 @@ import gov.usgs.cida.gcmrcservices.mb.endpoint.response.FailureEnvelope;
 import gov.usgs.cida.gcmrcservices.mb.endpoint.response.SuccessEnvelope;
 import gov.usgs.cida.gcmrcservices.mb.endpoint.response.GCMRCResponse;
 import gov.usgs.cida.gcmrcservices.mb.model.DurationCurve;
+import gov.usgs.cida.gcmrcservices.mb.model.DurationCurveGapMinutesPercent;
 import gov.usgs.cida.gcmrcservices.mb.service.DurationCurveService;
 import java.io.OutputStream;
 import java.time.LocalDate;
@@ -90,4 +91,5 @@ public class DurationCurveEndpoint {
 			throw new WebApplicationException(Response.status(Status.INTERNAL_SERVER_ERROR).type("text/plain").entity("Could not download duration curve data. Error: " + e.getMessage()).build());
 		}
 	}
+
 }

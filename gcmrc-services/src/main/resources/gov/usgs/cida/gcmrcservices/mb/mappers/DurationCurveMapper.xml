@@ -362,4 +362,5 @@
             WITH
             <include refid="withData"/>
             select round(gap_minutes/user_duration_minutes,0) as gap_minutes_percent from const_data
+        </select>
 </mapper>

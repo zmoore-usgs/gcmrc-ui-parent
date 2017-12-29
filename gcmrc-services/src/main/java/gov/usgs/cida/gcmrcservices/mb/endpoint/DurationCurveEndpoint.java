@@ -90,4 +90,5 @@ public class DurationCurveEndpoint {
 			throw new WebApplicationException(Response.status(Status.INTERNAL_SERVER_ERROR).type("text/plain").entity("Could not download duration curve data. Error: " + e.getMessage()).build());
 		}
 	}
+
 }

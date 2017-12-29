@@ -8,6 +8,7 @@ package gov.usgs.cida.gcmrcservices.mb.service;
 import gov.usgs.cida.gcmrcservices.TSVUtil;
 import gov.usgs.cida.gcmrcservices.mb.dao.DurationCurveDAO;
 import gov.usgs.cida.gcmrcservices.mb.model.DurationCurve;
+import gov.usgs.cida.gcmrcservices.mb.model.DurationCurveGapMinutesPercent;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -139,5 +140,13 @@ public class DurationCurveService {
 				
 		//Create TSV File
 		return output;
+	}
+	
+	public static Double getDurationCurveGapMinutesPercent(String siteName, String startTime, String endTime, final int groupId) {
+	    Double gapMinutesPercent;
+	    
+	    gapMinutesPercent = new DurationCurveDAO().getDurationCurveGapMinutesPercent(siteName, startTime, endTime, groupId);
+	
+	    return gapMinutesPercent;
 	}
 }

@@ -10,6 +10,7 @@
         <typeAlias type='gov.usgs.cida.gcmrcservices.mb.model.Reach' alias='Reach'></typeAlias>
         <typeAlias type='gov.usgs.cida.gcmrcservices.mb.model.ReachDetail' alias='ReachDetail'></typeAlias>
         <typeAlias type='gov.usgs.cida.gcmrcservices.mb.model.DurationCurvePoint' alias='DurationCurvePoint'></typeAlias>
+        <typeAlias type='gov.usgs.cida.gcmrcservices.mb.model.DurationCurveGapMinutesPercent' alias='DurationCurveGapMinutesPercent'></typeAlias>
     </typeAliases>
     <environments default='container'>
         <environment id='container'>

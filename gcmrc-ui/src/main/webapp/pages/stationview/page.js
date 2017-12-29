@@ -474,11 +474,13 @@ GCMRC.Page = {
 		switch(event.target.value){
 			case "chart":
 				$(event.target).parent().siblings('.scaleSelectButton').hide();
+				$(event.target).parent().siblings('.durationCurveMessage').hide();
 				$(event.target).parent().siblings("div[class*=duration-plot-][class*=selected-duration-scale]").hide();
 				$(event.target).parent().siblings("div[class^=timeseries-plot-]").show();
 				break;
 			case "curve":
 				$(event.target).parent().siblings('.scaleSelectButton').show();
+				$(event.target).parent().siblings('.durationCurveMessage').show();
 				$(event.target).parent().siblings("div[class*=duration-plot-][class*=selected-duration-scale]").show();
 				$(event.target).parent().siblings("div[class^=timeseries-plot-]").hide();
 				break;

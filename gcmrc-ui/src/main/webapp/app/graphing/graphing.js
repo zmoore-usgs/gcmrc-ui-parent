@@ -57,6 +57,7 @@ GCMRC.Graphing = function(hoursOffset) {
 		var hasData = false;
 		var displayData = new Array();
 		var logDataExcluded = false;
+		var gapMinutes = relevantData.gapMinutesPercent;
 		
 		if(Array.isArray(relevantData.points) && relevantData.points.length > 0){
 			hasData = true;
@@ -119,6 +120,8 @@ GCMRC.Graphing = function(hoursOffset) {
 				showInfoMessage(div, "Logarithmic duration curves only account for data points with a value greater than or equal to 0.1." + 
 						" In order to see a full duration curve for this parameter over this time period please check the linear view.");
 			}
+			var div = $('#' + conf.divId + ' div.duration-plot-' + identifier + '[id=lin]').get(0);
+			showInfoMessage(div, "There is " + gapMinutes + "% of minutes with no data in the selected time period.");
 		}
 	};
 	
@@ -556,10 +559,12 @@ GCMRC.Graphing = function(hoursOffset) {
 						};
 					}	
 					//has valid data
-					if (data.success && data.success.data && $.isArray(data.success.data)) {						
+					if (data.success && data.success.data && $.isArray(data.success.data)) {
+					    var gapMinutes;
 						//Build plots
 						data.success.data.forEach(function(graph) {
 							dealWithDurationCurveResponse(graph.groupId, graph, config, buildDurationCurve);
+							gapMinutes = graph.gapMinutesPercent;
 						});
 						
 						//Add proper UI elements based on which duration curves were built
@@ -580,7 +585,7 @@ GCMRC.Graphing = function(hoursOffset) {
 								}
 								
 								if(hasLin || hasLog){
-									$(createDurationCurveToggles(id, hasLin, hasLog)).prependTo(div);
+									$(createDurationCurveToggles(id, hasLin, hasLog, gapMinutes)).prependTo(div);
 								} else {
 									clearErrorMessage();
 									showErrorMessage("Duration curves could not be calculated for some of the selected parameters for the selected time period.");
@@ -629,7 +634,7 @@ GCMRC.Graphing = function(hoursOffset) {
 			}
 		});
 	};
-	
+
 	var createDurationCurveToggle = function(chartId) {
 		return '<div onselectstart="return false" class="curveSelectButton toggle-switch-' + chartId + '" style="display: inline-block;">' +
 					'<input class="curve-select" type="radio" id="chart-view-input-' + chartId + '" name="toggle-curve-' + chartId + '" checked="checked" value="chart">' +
@@ -639,8 +644,9 @@ GCMRC.Graphing = function(hoursOffset) {
 				'</div>';
 	};
 	
-	var createDurationCurveScaleToggle = function(chartId, hasLin, hasLog) {
+	var createDurationCurveScaleToggle = function(chartId, hasLin, hasLog, gapMinutes) {
 		var toReturn = "";
+		var gapMinutesMessage = '<div class="alert alert-info durationCurveMessage" style="display: none;"><button type="button" class="close" data-dismiss="alert">×</button>There are ' + gapMinutes + '% of minutes with no measured data in the selected time period.</div>';
 		
 		if(hasLin && hasLog) {
 			toReturn = '<div onselectstart="return false" class="scaleSelectButton toggle-switch-' + chartId + '" style="display: none;">' +
@@ -648,7 +654,8 @@ GCMRC.Graphing = function(hoursOffset) {
 							'<label for="log-view-input-' + chartId + '" class="log-scale-label">Logarithmic</label>' +
 							'<input class="scale-select" type="radio" id="lin-view-input-' + chartId + '" name="toggle-scale-' + chartId + '" value="lin">' +
 							'<label for="lin-view-input-' + chartId + '" class="lin-scale-label">Linear</label>' +
-						'</div>';
+						'</div>'  + gapMinutesMessage;
+				 
 		} else if(hasLin) {
 			toReturn = '<div onselectstart="return false" class="scaleSelectButton toggle-switch-' + chartId + '" style="display: none;">' +
 							'<input class="scale-select" type="radio" id="lin-view-input-' + chartId + '" name="toggle-scale-' + chartId + '" checked="checked" value="lin">' +
@@ -664,10 +671,10 @@ GCMRC.Graphing = function(hoursOffset) {
 		return toReturn;
 	};
 	
-	var createDurationCurveToggles = function(chartId, hasLin, hasLog){
-		return createDurationCurveToggle(chartId) + createDurationCurveScaleToggle(chartId, hasLin, hasLog);
+	var createDurationCurveToggles = function(chartId, hasLin, hasLog, gapMinutes){
+		return createDurationCurveToggle(chartId) + createDurationCurveScaleToggle(chartId, hasLin, hasLog, gapMinutes);
 	};
-
+	
 	return {
 		graphs: graphs,
 		durationCurves: durationCurves,

@@ -74,7 +74,8 @@ public class DurationCurveDAO {
 	}
 	
 	public Double getDurationCurveGapMinutesPercent(String siteName, String startTime, String endTime, int groupId) {		
-		Double result;
+	    DurationCurveGapMinutesPercent returned;	
+	    Double result;
 		
 		Map<String, Object> params = new HashMap<String, Object>();
 		params.put("siteName", siteName);
@@ -83,7 +84,7 @@ public class DurationCurveDAO {
 		params.put("groupId", groupId);
 		
 		try (SqlSession session = sqlSessionFactory.openSession()) {
-			DurationCurveGapMinutesPercent returned = session.selectOne( queryPackage + ".DurationCurveMapper.getDurationCurveGapMinutesPercent", params);
+			returned = session.selectOne( queryPackage + ".DurationCurveMapper.getDurationCurveGapMinutesPercent", params);
 			
 			result = returned.getGapMinutesPercent();
 			

@@ -8,9 +8,11 @@ public class DurationCurveGapMinutesPercent {
 	
 	private Double gapMinutesPercent;
 
-
-	public DurationCurveGapMinutesPercent(Double gapMinutesPercent) {
-		this.gapMinutesPercent = gapMinutesPercent;
+	public DurationCurveGapMinutesPercent() {
+	}
+	
+	public DurationCurveGapMinutesPercent(Double gapMinutes) {
+		this.gapMinutesPercent = gapMinutes;
 	}
 	
 	public Double getGapMinutesPercent() {

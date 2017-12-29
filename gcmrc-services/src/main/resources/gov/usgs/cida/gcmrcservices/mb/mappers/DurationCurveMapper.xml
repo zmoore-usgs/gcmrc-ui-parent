@@ -214,10 +214,11 @@
         </sql>
         <sql id="withData">
             <include refid="withCleanMtiData"/>,
-            CONST_DATA (GROUP_ID, FIRST_MEASURE_DATE, LAST_MEASURE_DATE, OVERALL_DURATION_MINUTES, USER_DURATION_MINUTES, OVERALL_MIN_VALUE, OVERALL_MAX_VALUE, OVERALL_VALUE_RANGE, MEASUREMENT_COUNT) AS
+            CONST_DATA (GROUP_ID, GAP_MINUTES, FIRST_MEASURE_DATE, LAST_MEASURE_DATE, OVERALL_DURATION_MINUTES, USER_DURATION_MINUTES, OVERALL_MIN_VALUE, OVERALL_MAX_VALUE, OVERALL_VALUE_RANGE, MEASUREMENT_COUNT) AS
 					(
 					 SELECT
 					   GROUP_ID,
+                                           SUM(GAP_MINUTES) GAP_MINUTES,
                                            MIN(START_TIME) as FIRST_MEASURE_DATE,
 					   MAX(END_TIME) as LAST_MEASURE_DATE,
 					   SUM(DURATION_MINUTES) as OVERALL_DURATION_MINUTES,
@@ -228,6 +229,7 @@
 					   COUNT(*) AS MEASUREMENT_COUNT
 					 From CLEAN_MTI_DATA
                                             GROUP BY GROUP_ID
+            )
         </sql>   
         <sql id="withIntBins">
             INT_BINS (BIN_NUMBER) AS
@@ -279,7 +281,7 @@
             WITH
             <include refid="withData"/>,
             <include refid="withIntBins"/>,
-            <include refid="withIntBins"/>,
+            <include refid="withLinBins"/>,
             <include refid="withLogBins"/> 
 				   SELECT 
 					 BIN_NUMBER,
@@ -361,6 +363,6 @@
         <select id="getDurationCurveGapMinutesPercent" parameterType="map" resultMap="durationCurveGapMinutesResult">	
             WITH
             <include refid="withData"/>
-            select round(gap_minutes/user_duration_minutes,0) as gap_minutes_percent from const_data
+            select round(gap_minutes/user_duration_minutes*100,0) as gap_minutes_percent from const_data
         </select>
 </mapper>

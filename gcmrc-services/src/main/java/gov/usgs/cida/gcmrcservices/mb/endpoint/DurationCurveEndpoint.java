@@ -4,7 +4,6 @@ import gov.usgs.cida.gcmrcservices.mb.endpoint.response.FailureEnvelope;
 import gov.usgs.cida.gcmrcservices.mb.endpoint.response.SuccessEnvelope;
 import gov.usgs.cida.gcmrcservices.mb.endpoint.response.GCMRCResponse;
 import gov.usgs.cida.gcmrcservices.mb.model.DurationCurve;
-import gov.usgs.cida.gcmrcservices.mb.model.DurationCurveGapMinutesPercent;
 import gov.usgs.cida.gcmrcservices.mb.service.DurationCurveService;
 import java.io.OutputStream;
 import java.time.LocalDate;

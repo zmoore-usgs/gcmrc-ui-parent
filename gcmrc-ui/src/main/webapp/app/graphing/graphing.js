@@ -646,7 +646,7 @@ GCMRC.Graphing = function(hoursOffset) {
 	
 	var createDurationCurveScaleToggle = function(chartId, hasLin, hasLog, gapMinutes) {
 		var toReturn = "";
-		var gapMinutesMessage = '<div class="alert alert-info durationCurveMessage" style="display: none;"><button type="button" class="close" data-dismiss="alert">×</button>There is ' + gapMinutes + '% of minutes with no data in the selected time period.</div>';
+		var gapMinutesMessage = '<div class="alert alert-info durationCurveMessage" style="display: none;"><button type="button" class="close" data-dismiss="alert">×</button>There are ' + gapMinutes + '% of minutes with no measured data in the selected time period.</div>';
 		
 		if(hasLin && hasLog) {
 			toReturn = '<div onselectstart="return false" class="scaleSelectButton toggle-switch-' + chartId + '" style="display: none;">' +

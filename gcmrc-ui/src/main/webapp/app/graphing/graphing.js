@@ -584,7 +584,8 @@ GCMRC.Graphing = function(hoursOffset) {
 								}
 								
 								if(hasLin || hasLog){
-									$(createDurationCurveToggles(id, hasLin, hasLog, gapMinutes, consecutiveGapMinutes)).prependTo(div);
+									$(createDurationCurveToggles(id, hasLin, hasLog)).prependTo(div);
+									$(createDurationCurveGapMinutesMessage(gapMinutes, consecutiveGapMinutes)).appendTo(div);
 								} else {
 									clearErrorMessage();
 									showErrorMessage("Duration curves could not be calculated for some of the selected parameters for the selected time period.");
@@ -634,12 +635,20 @@ GCMRC.Graphing = function(hoursOffset) {
 		});
 	};
 
-	var createDurationCurveConsecutiveGapMinutes = function(consecutiveGapMinutes){
+	var createDurationCurveGapMinutesMessage = function(gapMinutes, consecutiveGapMinutes){
 	    var consecutiveGapMinutesResult = '';
+	    var consecGapMinutesMessage = "";
+	    
 	    consecutiveGapMinutes.forEach(function(el){
 		consecutiveGapMinutesResult = consecutiveGapMinutesResult + el.gapStart + ' to ' + el.gapEnd + ': ' + el.gapMinutes.toString() + ' minutes of no data.<br>'
 	    });
-	    return consecutiveGapMinutesResult;
+
+	    if (consecutiveGapMinutes) {
+	        consecGapMinutesMessage = ' Longest consecutive period(s) of missing data: <br>' + consecutiveGapMinutesResult;
+	    }
+	    var gapMinutesMessage = '<div class="alert alert-info durationCurveMessage" style="display: none;"><button type="button" class="close" data-dismiss="alert">×</button>There are ' + gapMinutes + '% of minutes with no measured data in the selected time period. ' + consecGapMinutesMessage + '</div>';
+	    
+	    return gapMinutesMessage;
 	};
 	var createDurationCurveToggle = function(chartId) {
 		return '<div onselectstart="return false" class="curveSelectButton toggle-switch-' + chartId + '" style="display: inline-block;">' +
@@ -651,9 +660,7 @@ GCMRC.Graphing = function(hoursOffset) {
 	};
 	
 	var createDurationCurveScaleToggle = function(chartId, hasLin, hasLog, gapMinutes, consecutiveGapMinutes) {
-		var toReturn = "";
-		var consecGapMinutesMessage = createDurationCurveConsecutiveGapMinutes (consecutiveGapMinutes)
-		var gapMinutesMessage = '<div class="alert alert-info durationCurveMessage" style="display: none;"><button type="button" class="close" data-dismiss="alert">×</button>There are ' + gapMinutes + '% of minutes with no measured data in the selected time period.  Longest consecutive period(s) of missing data: <br>' + consecGapMinutesMessage + '</div>';
+		var toReturn = "";		
 		
 		if(hasLin && hasLog) {
 			toReturn = '<div onselectstart="return false" class="scaleSelectButton toggle-switch-' + chartId + '" style="display: none;">' +
@@ -661,18 +668,18 @@ GCMRC.Graphing = function(hoursOffset) {
 							'<label for="log-view-input-' + chartId + '" class="log-scale-label">Logarithmic</label>' +
 							'<input class="scale-select" type="radio" id="lin-view-input-' + chartId + '" name="toggle-scale-' + chartId + '" value="lin">' +
 							'<label for="lin-view-input-' + chartId + '" class="lin-scale-label">Linear</label>' +
-						'</div>'  + gapMinutesMessage;
+						'</div>';
 				 
 		} else if(hasLin) {
 			toReturn = '<div onselectstart="return false" class="scaleSelectButton toggle-switch-' + chartId + '" style="display: none;">' +
 							'<input class="scale-select" type="radio" id="lin-view-input-' + chartId + '" name="toggle-scale-' + chartId + '" checked="checked" value="lin">' +
 							'<label for="lin-view-input-' + chartId + '" class="one-scale-only-label">Linear</label>' +
-						'</div>' + gapMinutesMessage;
+						'</div>';
 		} else if(hasLog) {
 			toReturn = '<div onselectstart="return false" class="scaleSelectButton toggle-switch-' + chartId + '" style="display: none;">' +
 							'<input class="scale-select" type="radio" id="log-view-input-' + chartId + '" name="toggle-scale-' + chartId + '" checked="checked" value="log">' +
 							'<label for="log-view-input-' + chartId + '" class="one-scale-label">Logarithmic</label>' +
-						'</div>' + gapMinutesMessage;
+						'</div>';
 		}
 		
 		return toReturn;

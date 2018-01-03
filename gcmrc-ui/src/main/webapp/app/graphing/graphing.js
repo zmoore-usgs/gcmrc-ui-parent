@@ -585,7 +585,9 @@ GCMRC.Graphing = function(hoursOffset) {
 								
 								if(hasLin || hasLog){
 									$(createDurationCurveToggles(id, hasLin, hasLog)).prependTo(div);
-									$(createDurationCurveGapMinutesMessage(gapMinutes, consecutiveGapMinutes)).appendTo(div);
+									if (gapMinutes >= 60) {
+									    $(createDurationCurveGapMinutesMessage(gapMinutes, consecutiveGapMinutes)).appendTo(div);
+									}
 								} else {
 									clearErrorMessage();
 									showErrorMessage("Duration curves could not be calculated for some of the selected parameters for the selected time period.");

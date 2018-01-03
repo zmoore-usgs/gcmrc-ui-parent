@@ -18,6 +18,11 @@
         <resultMap id="durationCurveGapMinutesResult" type="DurationCurveGapMinutesPercent">
 		<result property="gapMinutesPercent" column="GAP_MINUTES_PERCENT"/>
 	</resultMap>
+        <resultMap id="durationCurveConsecutiveGapMinutesResult" type="DurationCurveConsecutiveGapMinutes">
+		<result property="gapStart" column="GAP_START"/>
+                <result property="gapEnd" column="GAP_END"/>
+                <result property="gapMinutes" column="GAP_MINUTES"/>
+	</resultMap>
         
         <sql id="withConstants">
             CONST (ONE_DAY_OF_MINUTES, DATA_GAP_MARKER, MAX_GAP_MINUTES, MAX_INTERPOLATION_DAYS, MIN_LOG_BIN_VALUE, INPUT_START_DATE, INPUT_END_DATE) AS
@@ -157,9 +162,9 @@
 					 SELECT
 					   GROUP_ID,
                                            START_VALUE,
-					   CASE WHEN END_VALUE = (SELECT DATA_GAP_MARKER FROM CONST) THEN LEAD(END_VALUE) OVER (ORDER BY START_TIME) ELSE END_VALUE END as END_VALUE,
+					   END_VALUE,
 					   START_TIME,
-					   CASE WHEN END_VALUE = (SELECT DATA_GAP_MARKER FROM CONST) THEN LEAD(END_TIME) OVER (ORDER BY START_TIME) ELSE END_TIME END AS END_TIME,
+					   END_TIME,
                                            EXTRACT(DAY FROM ((END_TIME - START_TIME)*60*24)) AS DURATION_MINUTES,
 					   GAP_MINUTES <!-- How many minutes in the gap (if any) in the following bin -->
 					 FROM (
@@ -209,6 +214,29 @@
 					   ) 
 					 )
 				   )
+        </sql>
+        <sql id="withGapDuration">
+            <include refid="withRawGapData"/>,
+            gap_duration (group_id, gap_start, gap_end, gap_minutes)
+            as ( select group_id, gap_start, gap_end, extract (
+                                         day from (( gap_end - gap_start)
+                                                   * 60
+                                                   * 24)) gap_minutes
+             from (
+                    select group_id, case
+                        when 
+                        end_value = (select data_gap_marker from const) and 
+                        lead(start_value) over (order by start_time) = (select data_gap_marker from const) 
+                        then end_time end gap_start,
+                        case
+                        when 
+                        end_value = (select data_gap_marker from const) and 
+                        lead(start_value) over (order by start_time) = (select data_gap_marker from const) 
+                        then lead(start_time) over (order by start_time) end gap_end
+                    from raw_gap_data 
+                    where  not (start_value = (select data_gap_marker from const)
+                        and end_value = (select data_gap_marker from const)))
+             where gap_start is not null and gap_end is not null)
         </sql>
         <sql id="withCleanMtiData">
             <include refid="withRawMtiData"/>,
@@ -443,5 +471,17 @@
             WITH
             <include refid="withGapData"/>
             select round(gap_minutes/overall_duration_minutes*100,0) as gap_minutes_percent from const_gap_data
+        </select>
+        <select id="getDurationCurveConsecutiveGapMinutes" parameterType="map" resultMap="durationCurveConsecutiveGapMinutesResult">
+          with
+            <include refid="withGapDuration"/>
+            select to_char(gap_start, 'YYYY-MM-DD"T"HH24:MI:SS') gap_start, 
+            to_char(gap_end,'YYYY-MM-DD"T"HH24:MI:SS')gap_end, 
+            max_gap_minutes gap_minutes from (
+          select 
+          group_id, gap_start, gap_end, gap_minutes, max(gap_minutes) over (partition by group_id) max_gap_minutes
+          from gap_duration )
+          where gap_minutes = max_gap_minutes
+            order by gap_start
         </select>
 </mapper>

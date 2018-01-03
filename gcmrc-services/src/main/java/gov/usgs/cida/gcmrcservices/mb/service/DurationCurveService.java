@@ -8,7 +8,6 @@ package gov.usgs.cida.gcmrcservices.mb.service;
 import gov.usgs.cida.gcmrcservices.TSVUtil;
 import gov.usgs.cida.gcmrcservices.mb.dao.DurationCurveDAO;
 import gov.usgs.cida.gcmrcservices.mb.model.DurationCurve;
-import gov.usgs.cida.gcmrcservices.mb.model.DurationCurveGapMinutesPercent;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;

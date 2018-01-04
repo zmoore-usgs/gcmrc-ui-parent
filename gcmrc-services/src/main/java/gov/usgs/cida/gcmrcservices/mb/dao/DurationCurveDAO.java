@@ -46,7 +46,7 @@ public class DurationCurveDAO {
 		try (SqlSession session = sqlSessionFactory.openSession()) {
 			List<DurationCurvePoint> returnedPoints = session.selectList( queryPackage + ".DurationCurveMapper.getDurationCurve", params);
 			Double gapMinutes;
-			//DurationCurveConsecutiveGap consecutiveGap;
+			DurationCurveConsecutiveGap consecutiveGap;
 			//Log claculations will sometimes return an extra bin with the values that are <= 0 so check that points == binCount or binCount + 1
 			//Verify returned points are valid
 			boolean valid = returnedPoints.size() == binCount || returnedPoints.size() == binCount + 1;
@@ -60,17 +60,17 @@ public class DurationCurveDAO {
 			}
 			
 			gapMinutes = getDurationCurveGapMinutesPercent(siteName, startTime, endTime, groupId);
-			//consecutiveGap = getDurationCurveConsecutiveGap(siteName, startTime, endTime, groupId);
+			consecutiveGap = getDurationCurveConsecutiveGap(siteName, startTime, endTime, groupId);
 			
 			if(valid){
-				result = new DurationCurve(returnedPoints, siteName, groupId, binType, Double.toString(gapMinutes));
+				result = new DurationCurve(returnedPoints, siteName, groupId, binType, Double.toString(gapMinutes), consecutiveGap);
 			} else {
 				log.error("Duration curve query returned invalid data with parameters: [siteName: " + siteName + ", groupId: " + groupId + ", binType: " + binType + "]");
-				result = new DurationCurve(null, siteName, groupId, binType, null);
+				result = new DurationCurve(null, siteName, groupId, binType, null, null);
 			}
 		} catch (Exception e) {
 			log.error("Could not get duration curve with parameters: [siteName: " + siteName + ", groupId: " + groupId + ", binType: " + binType + "] Error: " + e.getMessage());
-			result = new DurationCurve(null, siteName, groupId, binType, null);
+			result = new DurationCurve(null, siteName, groupId, binType, null, null);
 		}
 				
 		return result;
@@ -98,7 +98,7 @@ public class DurationCurveDAO {
 				
 		return result;
 	}
-	/*
+	
 	public DurationCurveConsecutiveGap getDurationCurveConsecutiveGap(String siteName, String startTime, String endTime, int groupId) {		
 	    DurationCurveConsecutiveGap returnedGap;
 	    DurationCurveConsecutiveGap result;
@@ -121,5 +121,5 @@ public class DurationCurveDAO {
 				
 		return result;
 	}
-*/
+
 }

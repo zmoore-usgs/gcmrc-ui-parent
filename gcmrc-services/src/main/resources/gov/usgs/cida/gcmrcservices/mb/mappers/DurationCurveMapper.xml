@@ -477,8 +477,8 @@
             <include refid="withGapDuration"/>
             select 
                 case 
-                when round(gap_minutes/60,2) < 24 then round(gap_minutes/60,2) 
-                when round(gap_minutes/60,2) >= 24 then round(gap_minutes/60/24,2)
+                when round(gap_minutes/60,2) < 24 then to_char(round(gap_minutes/60,2)) 
+                when round(gap_minutes/60,2) >= 24 then to_char(round(gap_minutes/60/24,2))
                 end gap_time,
                 case 
                 when round(gap_minutes/60,2) < 24 then 'hours'

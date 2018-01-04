@@ -25,8 +25,8 @@ public class DurationCurveConsecutiveGap {
 		return gapUnit;
 	}
 	
-	public void setGapTime(Double val) {
-		gapTime = val.toString();
+	public void setGapTime(String val) {
+		gapTime = val;
 	}
 	
 	public void setGapUnit(String val) {

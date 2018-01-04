@@ -13,9 +13,9 @@ public class DurationCurve {
 	private final String siteName;
 	private final String binType;
 	private final String gapMinutesPercent;
-	private final List<DurationCurveConsecutiveGapMinutes> consecutiveGapMinutes;
+	//private final DurationCurveConsecutiveGap consecutiveGap;
 
-	public DurationCurve(List<DurationCurvePoint> pts, String site, int group, String bin, String gapMinutes, List<DurationCurveConsecutiveGapMinutes>  consecutiveGapMins) {
+	public DurationCurve(List<DurationCurvePoint> pts, String site, int group, String bin, String gapMinutes) {
 		if(pts == null) {
 			points = new ArrayList<>();
 		} else {
@@ -25,7 +25,7 @@ public class DurationCurve {
 		siteName = site;
 		binType = bin.equalsIgnoreCase("LOG_BINS") ? "log" : "lin";
 		gapMinutesPercent = gapMinutes;
-		consecutiveGapMinutes = consecutiveGapMins;
+		//consecutiveGap = consecGap;
 	}
 	
 	public List<DurationCurvePoint> getPoints() {
@@ -48,9 +48,9 @@ public class DurationCurve {
 		return gapMinutesPercent;
 	}
 	
-	public List<DurationCurveConsecutiveGapMinutes> getConsecutiveGapMinutes() {
-		return consecutiveGapMinutes;
-	}
+	//public DurationCurveConsecutiveGap getConsecutiveGap() {
+	//	return consecutiveGap;
+	//}
 	
 	public List<Double> extractBinValues() {
 		List<Double> toReturn = new ArrayList<>();

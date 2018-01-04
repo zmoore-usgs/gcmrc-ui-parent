@@ -141,11 +141,4 @@ public class DurationCurveService {
 		return output;
 	}
 	
-	public static Double getDurationCurveGapMinutesPercent(String siteName, String startTime, String endTime, final int groupId) {
-	    Double gapMinutesPercent;
-	    
-	    gapMinutesPercent = new DurationCurveDAO().getDurationCurveGapMinutesPercent(siteName, startTime, endTime, groupId);
-	
-	    return gapMinutesPercent;
-	}
 }

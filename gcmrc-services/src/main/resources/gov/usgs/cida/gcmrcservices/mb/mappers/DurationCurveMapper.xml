@@ -19,9 +19,8 @@
 		<result property="gapMinutesPercent" column="GAP_MINUTES_PERCENT"/>
 	</resultMap>
         <resultMap id="durationCurveConsecutiveGapResult" type="DurationCurveConsecutiveGap">
-		<result property="gapStart" column="GAP_START"/>
-                <result property="gapEnd" column="GAP_END"/>
-                <result property="gapMinutes" column="GAP_MINUTES"/>
+		<result property="gapTime" column="GAP_TIME"/>
+                <result property="gapUnit" column="GAP_UNIT"/>
 	</resultMap>
         
         <sql id="withConstants">
@@ -477,11 +476,11 @@
             <include refid="withGapDuration"/>
             select 
                 case 
-                when round(gap_minutes/60,2) < 24 then to_char(round(gap_minutes/60,2)) 
+                when round(gap_minutes/60,2) &lt; 24 then to_char(round(gap_minutes/60,2)) 
                 when round(gap_minutes/60,2) >= 24 then to_char(round(gap_minutes/60/24,2))
                 end gap_time,
                 case 
-                when round(gap_minutes/60,2) < 24 then 'hours'
+                when round(gap_minutes/60,2) &lt; 24 then 'hours'
                 when round(gap_minutes/60,2) >=24 then 'days'
                 end gap_unit
            from (

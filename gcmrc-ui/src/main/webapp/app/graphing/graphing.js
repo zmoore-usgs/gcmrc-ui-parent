@@ -695,7 +695,6 @@ GCMRC.Graphing = function(hoursOffset) {
 		NO_DURATION_CURVE_IDS : NO_DURATION_CURVE_IDS,
 		createDataGraph: function(param, config, urlParams) {
 			$('#infoMsg').empty();
-			var thing = CONFIG.stationName;
 			if (CONFIG.stationName && CONFIG.stationName === GCMRC.Page.oldDinosaurSite) {
 			    showInfoMessage($('#infoMsg'), "The cumulative silt and clay load, cumulative suspended-sand load, and cumulative calculated sand bedload are calculated using suspended-sediment measurements from the Green River above Jensen, UT, station after April 12, 2016.");
 			}

@@ -556,10 +556,14 @@ GCMRC.Graphing = function(hoursOffset) {
 						};
 					}	
 					//has valid data
-					if (data.success && data.success.data && $.isArray(data.success.data)) {						
+					if (data.success && data.success.data && $.isArray(data.success.data)) {
+					    var gapMinutes;
+					    var consecutiveGapMinutes;
 						//Build plots
 						data.success.data.forEach(function(graph) {
 							dealWithDurationCurveResponse(graph.groupId, graph, config, buildDurationCurve);
+							gapMinutes = graph.gapMinutesPercent;
+							consecutiveGapMinutes = graph.consecutiveGapMinutes;
 						});
 						
 						//Add proper UI elements based on which duration curves were built
@@ -581,6 +585,9 @@ GCMRC.Graphing = function(hoursOffset) {
 								
 								if(hasLin || hasLog){
 									$(createDurationCurveToggles(id, hasLin, hasLog)).prependTo(div);
+									if (gapMinutes >= 60) {
+									    $(createDurationCurveGapMinutesMessage(gapMinutes, consecutiveGapMinutes)).appendTo(div);
+									}
 								} else {
 									clearErrorMessage();
 									showErrorMessage("Duration curves could not be calculated for some of the selected parameters for the selected time period.");
@@ -629,7 +636,22 @@ GCMRC.Graphing = function(hoursOffset) {
 			}
 		});
 	};
-	
+
+	var createDurationCurveGapMinutesMessage = function(gapMinutes, consecutiveGapMinutes){
+	    var consecutiveGapMinutesResult = '';
+	    var consecGapMinutesMessage = "";
+	    
+	    consecutiveGapMinutes.forEach(function(el){
+		consecutiveGapMinutesResult = consecutiveGapMinutesResult + el.gapStart + ' to ' + el.gapEnd + ': ' + el.gapMinutes.toString() + ' minutes of no data.<br>'
+	    });
+
+	    if (consecutiveGapMinutes) {
+	        consecGapMinutesMessage = ' Longest consecutive period(s) of missing data: <br>' + consecutiveGapMinutesResult;
+	    }
+	    var gapMinutesMessage = '<div class="alert alert-info durationCurveMessage" style="display: none;"><button type="button" class="close" data-dismiss="alert">×</button>There are ' + gapMinutes + '% of minutes with no measured data in the selected time period. ' + consecGapMinutesMessage + '</div>';
+	    
+	    return gapMinutesMessage;
+	};
 	var createDurationCurveToggle = function(chartId) {
 		return '<div onselectstart="return false" class="curveSelectButton toggle-switch-' + chartId + '" style="display: inline-block;">' +
 					'<input class="curve-select" type="radio" id="chart-view-input-' + chartId + '" name="toggle-curve-' + chartId + '" checked="checked" value="chart">' +
@@ -639,8 +661,8 @@ GCMRC.Graphing = function(hoursOffset) {
 				'</div>';
 	};
 	
-	var createDurationCurveScaleToggle = function(chartId, hasLin, hasLog) {
-		var toReturn = "";
+	var createDurationCurveScaleToggle = function(chartId, hasLin, hasLog, gapMinutes, consecutiveGapMinutes) {
+		var toReturn = "";		
 		
 		if(hasLin && hasLog) {
 			toReturn = '<div onselectstart="return false" class="scaleSelectButton toggle-switch-' + chartId + '" style="display: none;">' +
@@ -649,6 +671,7 @@ GCMRC.Graphing = function(hoursOffset) {
 							'<input class="scale-select" type="radio" id="lin-view-input-' + chartId + '" name="toggle-scale-' + chartId + '" value="lin">' +
 							'<label for="lin-view-input-' + chartId + '" class="lin-scale-label">Linear</label>' +
 						'</div>';
+				 
 		} else if(hasLin) {
 			toReturn = '<div onselectstart="return false" class="scaleSelectButton toggle-switch-' + chartId + '" style="display: none;">' +
 							'<input class="scale-select" type="radio" id="lin-view-input-' + chartId + '" name="toggle-scale-' + chartId + '" checked="checked" value="lin">' +
@@ -664,10 +687,10 @@ GCMRC.Graphing = function(hoursOffset) {
 		return toReturn;
 	};
 	
-	var createDurationCurveToggles = function(chartId, hasLin, hasLog){
-		return createDurationCurveToggle(chartId) + createDurationCurveScaleToggle(chartId, hasLin, hasLog);
+	var createDurationCurveToggles = function(chartId, hasLin, hasLog, gapMinutes, consecutiveGapMinutes){
+		return createDurationCurveToggle(chartId) + createDurationCurveScaleToggle(chartId, hasLin, hasLog, gapMinutes, consecutiveGapMinutes);
 	};
-
+	
 	return {
 		graphs: graphs,
 		durationCurves: durationCurves,

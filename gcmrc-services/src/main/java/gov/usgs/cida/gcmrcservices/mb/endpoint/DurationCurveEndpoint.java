@@ -75,7 +75,7 @@ public class DurationCurveEndpoint {
 			List<DurationCurve> durationCurves = DurationCurveService.getDurationCurves(siteName, startTime, endTime, binCount, binType, groupIds);
 						
 			//Create output file
-			List<DurationCurveService.COLUMNS> outputColumns = Arrays.asList(DurationCurveService.COLUMNS.CUMULATIVE_BIN_PERC, DurationCurveService.COLUMNS.BIN_VALUE);
+			List<DurationCurveService.COLUMNS> outputColumns = Arrays.asList(DurationCurveService.COLUMNS.CUMULATIVE_BIN_PERC, DurationCurveService.COLUMNS.BIN_VALUE, DurationCurveService.COLUMNS.LOW_BOUND, DurationCurveService.COLUMNS.HIGH_BOUND);
 			String result = DurationCurveService.getTSVForDurationCurves(durationCurves, outputColumns, groupIds, groupNames, binCount);
 			
 			// Write the header line

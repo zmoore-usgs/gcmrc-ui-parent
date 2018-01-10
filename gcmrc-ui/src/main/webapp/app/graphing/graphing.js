@@ -558,12 +558,12 @@ GCMRC.Graphing = function(hoursOffset) {
 					//has valid data
 					if (data.success && data.success.data && $.isArray(data.success.data)) {
 					    var gapMinutes;
-					    var consecutiveGapMinutes;
+					    var consecutiveGap;
 						//Build plots
 						data.success.data.forEach(function(graph) {
 							dealWithDurationCurveResponse(graph.groupId, graph, config, buildDurationCurve);
 							gapMinutes = graph.gapMinutesPercent;
-							consecutiveGapMinutes = graph.consecutiveGapMinutes;
+							consecutiveGap = graph.consecutiveGap;
 						});
 						
 						//Add proper UI elements based on which duration curves were built
@@ -586,7 +586,7 @@ GCMRC.Graphing = function(hoursOffset) {
 								if(hasLin || hasLog){
 									$(createDurationCurveToggles(id, hasLin, hasLog)).prependTo(div);
 									if (gapMinutes >= 60) {
-									    $(createDurationCurveGapMinutesMessage(gapMinutes, consecutiveGapMinutes)).appendTo(div);
+									    $(createDurationCurveGapMessage(gapMinutes, consecutiveGap)).appendTo(div);
 									}
 								} else {
 									clearErrorMessage();
@@ -637,20 +637,11 @@ GCMRC.Graphing = function(hoursOffset) {
 		});
 	};
 
-	var createDurationCurveGapMinutesMessage = function(gapMinutes, consecutiveGapMinutes){
-	    var consecutiveGapMinutesResult = '';
-	    var consecGapMinutesMessage = "";
-	    
-	    consecutiveGapMinutes.forEach(function(el){
-		consecutiveGapMinutesResult = consecutiveGapMinutesResult + el.gapStart + ' to ' + el.gapEnd + ': ' + el.gapMinutes.toString() + ' minutes of no data.<br>'
-	    });
+	var createDurationCurveGapMessage = function(gapMinutes, consecutiveGap){
 
-	    if (consecutiveGapMinutes) {
-	        consecGapMinutesMessage = ' Longest consecutive period(s) of missing data: <br>' + consecutiveGapMinutesResult;
-	    }
-	    var gapMinutesMessage = '<div class="alert alert-info durationCurveMessage" style="display: none;"><button type="button" class="close" data-dismiss="alert">×</button>There are ' + gapMinutes + '% of minutes with no measured data in the selected time period. ' + consecGapMinutesMessage + '</div>';
+	    var gapMessage = '<div class="alert alert-info durationCurveMessage" style="display: none;"><button type="button" class="close" data-dismiss="alert">×</button>Data are missing for ' + gapMinutes + '% of the requested period.  The longest consecutive period of missing data is ' + consecutiveGap.gapTime + ' ' + consecutiveGap.gapUnit + ' in duration.</div>';
 	    
-	    return gapMinutesMessage;
+	    return gapMessage;
 	};
 	var createDurationCurveToggle = function(chartId) {
 		return '<div onselectstart="return false" class="curveSelectButton toggle-switch-' + chartId + '" style="display: inline-block;">' +
@@ -661,7 +652,7 @@ GCMRC.Graphing = function(hoursOffset) {
 				'</div>';
 	};
 	
-	var createDurationCurveScaleToggle = function(chartId, hasLin, hasLog, gapMinutes, consecutiveGapMinutes) {
+	var createDurationCurveScaleToggle = function(chartId, hasLin, hasLog) {
 		var toReturn = "";		
 		
 		if(hasLin && hasLog) {

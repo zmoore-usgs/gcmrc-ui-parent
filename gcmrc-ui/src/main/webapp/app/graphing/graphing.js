@@ -562,8 +562,8 @@ GCMRC.Graphing = function(hoursOffset) {
 						//Build plots
 						data.success.data.forEach(function(graph) {
 							dealWithDurationCurveResponse(graph.groupId, graph, config, buildDurationCurve);
-							gapMinutes = graph.gapMinutesPercent;
-							consecutiveGap = graph.consecutiveGap;
+							GCMRC.Graphing.durationCurves[config.divId]['gapMinutes'][graph.groupId] = graph.gapMinutesPercent;
+							GCMRC.Graphing.durationCurves[config.divId]['consecutiveGap'][graph.groupId] = graph.consecutiveGap;
 						});
 						
 						//Add proper UI elements based on which duration curves were built
@@ -584,10 +584,10 @@ GCMRC.Graphing = function(hoursOffset) {
 								}
 								
 								if(hasLin || hasLog){
-									$(createDurationCurveToggles(id, hasLin, hasLog)).prependTo(div);
-									if (gapMinutes >= 60) {
-									    $(createDurationCurveGapMessage(gapMinutes, consecutiveGap)).appendTo(div);
+									if (GCMRC.Graphing.durationCurves[config.divId]['gapMinutes'][id] >= 60) {
+									    $(createDurationCurveGapMessage(GCMRC.Graphing.durationCurves[config.divId]['gapMinutes'][id], GCMRC.Graphing.durationCurves[config.divId]['consecutiveGap'][id])).prependTo(div);
 									}
+									$(createDurationCurveToggles(id, hasLin, hasLog)).prependTo(div);
 								} else {
 									clearErrorMessage();
 									showErrorMessage("Duration curves could not be calculated for some of the selected parameters for the selected time period.");
@@ -711,7 +711,9 @@ GCMRC.Graphing = function(hoursOffset) {
 			graphs[config.divId] = {};
 			durationCurves[config.divId] = {
 				log: {},
-				lin: {}
+				lin: {},
+				gapMinutes: {}, 
+				consecutiveGap: {}
 			};
 			durationCurveConfiguration = {};
 						

@@ -15,7 +15,7 @@
 		<result property="highBound" column="HIGH_BOUND"/>
 	</resultMap>
         
-        <resultMap id="durationCurveGapMinutesResult" type="DurationCurveGapMinutesPercent">
+        <resultMap id="durationCurveGapMinutesResult" type="Double">
 		<result property="gapMinutesPercent" column="GAP_MINUTES_PERCENT"/>
 	</resultMap>
         <resultMap id="durationCurveConsecutiveGapResult" type="DurationCurveConsecutiveGap">

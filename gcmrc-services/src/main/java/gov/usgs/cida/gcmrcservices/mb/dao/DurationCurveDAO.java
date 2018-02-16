@@ -2,7 +2,6 @@ package gov.usgs.cida.gcmrcservices.mb.dao;
 
 import gov.usgs.cida.gcmrcservices.mb.MyBatisConnectionFactory;
 import gov.usgs.cida.gcmrcservices.mb.model.DurationCurve;
-import gov.usgs.cida.gcmrcservices.mb.model.DurationCurveGapMinutesPercent;
 import gov.usgs.cida.gcmrcservices.mb.model.DurationCurveConsecutiveGap;
 import gov.usgs.cida.gcmrcservices.mb.model.DurationCurvePoint;
 import java.util.HashMap;

@@ -57,6 +57,17 @@ GCMRC.Networks = function() {
 			},
 			reaches : true
 		},
+		"URG" : {
+			displayName : 'Upper Rio Grande',
+			itemId: '5a8dc5f6e4b0699060596dc0',
+			labelLoc: 'tl',
+			bbox : {
+				"left": -107.118,
+				"bottom": 34.085,
+				"right": -106.604,
+				"top": 34.454
+			}
+		},
 		"BIBE" : {
 			displayName : 'Big Bend',
 			itemId: '56461aa1e4b0e2669b30f2e6',

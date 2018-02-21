@@ -133,6 +133,15 @@ GCMRC.Organizations = {
 			width : 80,
 			height : 21
 		}
+        },
+        "USGSNMWC" : {
+		displayName : "New Mexico Water Science Center",
+		url : "https://nm.water.usgs.gov/",
+		logo : {
+			url : CONFIG.relativePath + "app/sources/source-usgs.gif",
+			width : 80,
+			height : 21
+		}
 	}
 };
 

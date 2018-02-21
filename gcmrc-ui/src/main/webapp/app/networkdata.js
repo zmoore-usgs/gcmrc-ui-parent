@@ -60,11 +60,12 @@ GCMRC.Networks = function() {
 		"URG" : {
 			displayName : 'Upper Rio Grande',
 			itemId: '5a8dc5f6e4b0699060596dc0',
+			labelLoc: 'tl',
 			bbox : {
-				"left": -106.89125,
-				"bottom": 34.25546,
-				"right": -106.88986,
-				"top": 34.25658
+				"left": -107.118,
+				"bottom": 34.085,
+				"right": -106.604,
+				"top": 34.454
 			}
 		},
 		"BIBE" : {

@@ -15,7 +15,7 @@
 		<result property="highBound" column="HIGH_BOUND"/>
 	</resultMap>
         
-        <resultMap id="durationCurveGapMinutesResult" type="DurationCurveGapMinutesPercent">
+        <resultMap id="durationCurveGapMinutesResult" type="Double">
 		<result property="gapMinutesPercent" column="GAP_MINUTES_PERCENT"/>
 	</resultMap>
         <resultMap id="durationCurveConsecutiveGapResult" type="DurationCurveConsecutiveGap">
@@ -24,7 +24,7 @@
 	</resultMap>
         
         <sql id="withConstants">
-            CONST (ONE_DAY_OF_MINUTES, DATA_GAP_MARKER, MAX_GAP_MINUTES, MAX_INTERPOLATION_DAYS, MIN_LOG_BIN_VALUE, INPUT_START_DATE, INPUT_END_DATE) AS
+            CONST (ONE_DAY_OF_MINUTES, DATA_GAP_MARKER, MAX_GAP_MINUTES, MAX_INTERPOLATION_DAYS, MIN_LOG_BIN_VALUE, INPUT_START_DATE, INPUT_END_DATE, SITE_ID, GROUP_ID) AS
 				(
 				   <!-- CONSTANTS
 
@@ -50,10 +50,24 @@
 					   <!-- Max days for which interpolation is allowed between two measured values. -->
 					   60 MAX_INTERPOLATION_DAYS,
 					   0.1 MIN_LOG_BIN_VALUE, <!-- Min value to use for bins.  Log bins don't allow zeros and low values are basically noise -->
-                                           #{startTime, jdbcType=CHAR} INPUT_START_DATE, <!-- Makes for easier debugging when you can just substitute the date in one place -->
-                                           #{endTime, jdbcType=CHAR} INPUT_END_DATE
-					 From DUAL
-				   )
+                                           to_timestamp(#{startTime, jdbcType=CHAR}, 'YYYY-MM-DD"T"HH24:MI:SS') INPUT_START_DATE, <!-- Makes for easier debugging when you can just substitute the date in one place -->
+                                           to_timestamp(#{endTime, jdbcType=CHAR}, 'YYYY-MM-DD"T"HH24:MI:SS') INPUT_END_DATE,
+					 (SELECT 
+                                            SITE_ID
+                                            FROM 
+                                              (SELECT 
+                                                  SITE_ID,
+                                                  CASE WHEN NWIS_SITE_NO IS NULL
+                                                       THEN SHORT_NAME
+                                                       ELSE NWIS_SITE_NO
+                                                  END AS SITE_NAME
+                                                  FROM 
+                                                    SITE_STAR)
+                                               WHERE 
+                                                  SITE_NAME = #{siteName, jdbcType=CHAR}) SITE_ID,
+                                            #{groupId, jdbcType=NUMERIC} GROUP_ID
+                                            FROM DUAL
+            )
         </sql>
         <sql id="withRawMtiData">
             <include refid="withConstants"/>,
@@ -132,22 +146,11 @@
 							 LEAD(MEASUREMENT_DATE) OVER (ORDER BY MEASUREMENT_DATE) AS END_TIME
 						   From TIME_SERIES_STAR
 						   Where 
-							 SITE_ID=(
-								SELECT SITE_ID
-								FROM (
-								SELECT SITE_ID,
-								  CASE
-									WHEN NWIS_SITE_NO IS NULL
-									THEN SHORT_NAME
-									ELSE NWIS_SITE_NO
-								  END AS SITE_NAME
-								  FROM SITE_STAR
-								) WHERE SITE_NAME = #{siteName, jdbcType=CHAR}
-							) <!-- Only this site -->
-							 And GROUP_ID= #{groupId, jdbcType=NUMERIC} <!-- Only measurements from selected parameter -->
+                                                    <!-- Only this site and selected parameter -->
+                                                   (SITE_ID, GROUP_ID) IN (SELECT SITE_ID, GROUP_ID FROM CONST)
 							 <!-- Filter the time window to the specified range + the max interpolation time period -->
-							 AND MEASUREMENT_DATE > (to_timestamp((SELECT INPUT_START_DATE FROM CONST), 'YYYY-MM-DD"T"HH24:MI:SS') - (SELECT MAX_INTERPOLATION_DAYS FROM CONST))
-							 AND MEASUREMENT_DATE &lt; (to_timestamp((SELECT INPUT_END_DATE FROM CONST), 'YYYY-MM-DD"T"HH24:MI:SS') + (SELECT MAX_INTERPOLATION_DAYS FROM CONST))
+							 AND MEASUREMENT_DATE > ((SELECT INPUT_START_DATE FROM CONST) - (SELECT MAX_INTERPOLATION_DAYS FROM CONST))
+							 AND MEASUREMENT_DATE &lt; ((SELECT INPUT_END_DATE FROM CONST) + (SELECT MAX_INTERPOLATION_DAYS FROM CONST))
 						 )
 					   ) WHERE
 						 NOT (START_VALUE = (SELECT DATA_GAP_MARKER FROM CONST) AND END_VALUE = (SELECT DATA_GAP_MARKER FROM CONST)) 
@@ -156,86 +159,52 @@
         </sql>
         <sql id="withRawGapData">
             <include refid="withConstants"/>,
-            RAW_GAP_DATA (GROUP_ID, START_VALUE, END_VALUE, START_TIME, END_TIME, DURATION_MINUTES, GAP_MINUTES) AS (
-
-					 SELECT
-					   GROUP_ID,
-                                           START_VALUE,
-					   END_VALUE,
-					   START_TIME,
-					   END_TIME,
-                                           EXTRACT(DAY FROM ((END_TIME - START_TIME)*60*24)) AS DURATION_MINUTES,
-					   GAP_MINUTES <!-- How many minutes in the gap (if any) in the following bin -->
-					 FROM (
-					   SELECT * FROM (
-						 SELECT
-						   GROUP_ID,
-                                                   START_VALUE,
-						   END_VALUE,
-						   START_TIME, <!-- Can we be sure there are no duplicate date entries for a site? Yes. -->
-						   END_TIME,
-						   <!-- If the end value is the gap marker, record the duration of the gap in this row -->
-						   CASE
-							 WHEN END_VALUE = (SELECT DATA_GAP_MARKER FROM CONST)
-							   THEN EXTRACT(DAY FROM ((END_TIME - START_TIME)*60*24))
-							 ELSE 0
-						   END AS GAP_MINUTES
-						 FROM (
-						   Select
-							 <!-- Selects the measured values at the site, creating a start/end time/value for each row
-							 from the db rows, which just contain a single measurement at a single time.  Thus
-							 one resulting row contains the start and end times and values of the two
-							 db rows that bound it. -->
-							 GROUP_ID,
-                                                         FINAL_VALUE AS START_VALUE,
-							 LEAD(FINAL_VALUE) OVER (ORDER BY MEASUREMENT_DATE) AS END_VALUE,
-							 MEASUREMENT_DATE AS START_TIME, <!-- Can we be sure there are no duplicate date entries for a site? Yes. -->
-							 LEAD(MEASUREMENT_DATE) OVER (ORDER BY MEASUREMENT_DATE) AS END_TIME
-						   From TIME_SERIES_STAR
-						   Where 
-							 SITE_ID=(
-								SELECT SITE_ID
-								FROM (
-								SELECT SITE_ID,
-								  CASE
-									WHEN NWIS_SITE_NO IS NULL
-									THEN SHORT_NAME
-									ELSE NWIS_SITE_NO
-								  END AS SITE_NAME
-								  FROM SITE_STAR
-								) WHERE SITE_NAME = #{siteName, jdbcType=CHAR}
-							) <!-- Only this site -->
-							 And GROUP_ID= #{groupId, jdbcType=NUMERIC} <!-- Only measurements from selected parameter -->
-							 <!-- Filter the time window to the specified range -->
-							 AND MEASUREMENT_DATE >= (to_timestamp((SELECT INPUT_START_DATE FROM CONST), 'YYYY-MM-DD"T"HH24:MI:SS'))
-							 AND MEASUREMENT_DATE &lt;= (to_timestamp((SELECT INPUT_END_DATE FROM CONST), 'YYYY-MM-DD"T"HH24:MI:SS'))
-						 )
-					   ) 
-					 )
-				   )
+            raw_gap_data (site_id, group_id, start_time, gap_status) AS (
+                select
+                /* level 1: mark appropriate rows as "gap starts" or "gap stops" and limits rows to those */
+                /*          overlapping the INPUT_START_DATE - INPUT_END_DATE range (for site_id/group_id)*/
+                site_id,
+                group_id,
+                greatest(measurement_date, (select input_start_date from const)) start_time,
+                case when nvl(lag(final_value) over (order by measurement_date), 0) != (SELECT DATA_GAP_MARKER FROM CONST) and final_value = (SELECT DATA_GAP_MARKER FROM CONST) then 'gap starts'
+                     when lag(final_value) over (order by measurement_date) = (SELECT DATA_GAP_MARKER FROM CONST) and final_value != (SELECT DATA_GAP_MARKER FROM CONST) then 'gap ends'
+                end gap_status
+                from
+                  time_series_star
+                where     
+                  (site_id, group_id) in (select site_id, group_id from const) and
+                   measurement_date between 
+                      nvl(
+                          (select 
+                              /* determine most recent measurement_date for site/group preceding INPUT_START_DATE */
+                              max(measurement_date)
+                           from 
+                              time_series_star
+                           where 
+                              (site_id, group_id) in (select site_id, group_id from const) and 
+                               measurement_date &lt;= (select input_start_date from const)
+                          ),
+                          (select input_start_date from const))
+                                   and /* second half of "between..." */
+                          (select input_end_date from const)
+            )
         </sql>
         <sql id="withGapDuration">
             <include refid="withRawGapData"/>,
-            gap_duration (group_id, gap_start, gap_end, gap_minutes)
-            as ( select group_id, gap_start, gap_end, extract (
-                                         day from (( gap_end - gap_start)
-                                                   * 60
-                                                   * 24)) gap_minutes
-             from (
-                    select group_id, case
-                        when 
-                        end_value = (select data_gap_marker from const) and 
-                        lead(start_value) over (order by start_time) = (select data_gap_marker from const) 
-                        then end_time end gap_start,
-                        case
-                        when 
-                        end_value = (select data_gap_marker from const) and 
-                        lead(start_value) over (order by start_time) = (select data_gap_marker from const) 
-                        then lead(start_time) over (order by start_time) end gap_end
-                    from raw_gap_data 
-                    where  not (start_value = (select data_gap_marker from const)
-                        and end_value = (select data_gap_marker from const)))
-             where gap_start is not null and gap_end is not null)
+            gap_duration (site_id, group_id, gap_start_time, gap_end_time, gap_status)
+            as 
+            (select 
+                /* level 2: using only "gap starts" and "gap ends" rows, calculate gap_end_time */
+                site_id,
+                group_id,
+                start_time gap_start_time,
+                lead(start_time, 1, (select input_end_date from const)) over (order by start_time) gap_end_time,
+                gap_status
+              from
+                raw_gap_data
+                where 
+                   gap_status in ('gap starts', 'gap ends')
+             )
         </sql>
         <sql id="withCleanMtiData">
             <include refid="withRawMtiData"/>,
@@ -271,8 +240,8 @@
 						 Vs = V1 + (Tx - T1) * ((V2 - V1) / (T2 - T1))
 						 -->
 						 CASE
-						   WHEN START_TIME &lt; to_timestamp((SELECT INPUT_START_DATE FROM CONST), 'YYYY-MM-DD"T"HH24:MI:SS') THEN
-						   START_VALUE + (EXTRACT(DAY FROM ((to_timestamp((SELECT INPUT_START_DATE FROM CONST), 'YYYY-MM-DD"T"HH24:MI:SS') - START_TIME) * (SELECT ONE_DAY_OF_MINUTES FROM CONST)))) * ((END_VALUE - START_VALUE)/(EXTRACT(DAY FROM ((END_TIME - START_TIME) * (SELECT ONE_DAY_OF_MINUTES FROM CONST)))))
+						   WHEN START_TIME &lt; (SELECT INPUT_START_DATE FROM CONST) THEN
+						   START_VALUE + (EXTRACT(DAY FROM (((SELECT INPUT_START_DATE FROM CONST) - START_TIME) * (SELECT ONE_DAY_OF_MINUTES FROM CONST)))) * ((END_VALUE - START_VALUE)/(EXTRACT(DAY FROM ((END_TIME - START_TIME) * (SELECT ONE_DAY_OF_MINUTES FROM CONST)))))
 						   ELSE START_VALUE
 						 END AS START_VALUE,
 						 <!--
@@ -280,21 +249,21 @@
 						 Same equation as above, but Ts is the user spec'ed toTime.
 						 -->
 						 CASE
-						   WHEN END_TIME > to_timestamp((SELECT INPUT_END_DATE FROM CONST), 'YYYY-MM-DD"T"HH24:MI:SS') THEN
-						   START_VALUE + (EXTRACT(DAY FROM ((to_timestamp((SELECT INPUT_END_DATE FROM CONST), 'YYYY-MM-DD"T"HH24:MI:SS') - START_TIME) * (SELECT ONE_DAY_OF_MINUTES FROM CONST)))) * ((END_VALUE - START_VALUE)/(EXTRACT(DAY FROM ((END_TIME - START_TIME) * (SELECT ONE_DAY_OF_MINUTES FROM CONST)))))
+						   WHEN END_TIME > (SELECT INPUT_END_DATE FROM CONST) THEN
+						   START_VALUE + (EXTRACT(DAY FROM (((SELECT INPUT_END_DATE FROM CONST) - START_TIME) * (SELECT ONE_DAY_OF_MINUTES FROM CONST)))) * ((END_VALUE - START_VALUE)/(EXTRACT(DAY FROM ((END_TIME - START_TIME) * (SELECT ONE_DAY_OF_MINUTES FROM CONST)))))
 						   ELSE END_VALUE
 						 END AS END_VALUE,
 						 <!-- Adjust start and end times to be the spec'ed from/to times if they fall outside the spec'ed range -->
-						 CASE WHEN START_TIME &lt; to_timestamp((SELECT INPUT_START_DATE FROM CONST), 'YYYY-MM-DD"T"HH24:MI:SS') THEN to_timestamp((SELECT INPUT_START_DATE FROM CONST), 'YYYY-MM-DD"T"HH24:MI:SS') ELSE START_TIME END AS START_TIME,
-						 CASE WHEN END_TIME > to_timestamp((SELECT INPUT_END_DATE FROM CONST), 'YYYY-MM-DD"T"HH24:MI:SS') THEN to_timestamp((SELECT INPUT_END_DATE FROM CONST), 'YYYY-MM-DD"T"HH24:MI:SS') ELSE END_TIME END AS END_TIME,
+						 CASE WHEN START_TIME &lt; (SELECT INPUT_START_DATE FROM CONST) THEN (SELECT INPUT_START_DATE FROM CONST) ELSE START_TIME END AS START_TIME,
+						 CASE WHEN END_TIME > (SELECT INPUT_END_DATE FROM CONST) THEN (SELECT INPUT_END_DATE FROM CONST) ELSE END_TIME END AS END_TIME,
 						 GAP_MINUTES,
-						 CASE WHEN START_TIME &lt; to_timestamp((SELECT INPUT_START_DATE FROM CONST), 'YYYY-MM-DD"T"HH24:MI:SS') THEN 1 ELSE 0 END AS IS_START_INTERPOLATED,
-						 CASE WHEN END_TIME > to_timestamp((SELECT INPUT_END_DATE FROM CONST), 'YYYY-MM-DD"T"HH24:MI:SS') THEN 1 ELSE 0 END AS IS_END_INTERPOLATED
+						 CASE WHEN START_TIME &lt; (SELECT INPUT_START_DATE FROM CONST) THEN 1 ELSE 0 END AS IS_START_INTERPOLATED,
+						 CASE WHEN END_TIME > (SELECT INPUT_END_DATE FROM CONST) THEN 1 ELSE 0 END AS IS_END_INTERPOLATED
 					   FROM RAW_MTI_DATA
 					   WHERE
 						 START_VALUE != (SELECT DATA_GAP_MARKER FROM CONST) <!-- Already filtered out end value and double values - this is the only case left -->
-						 AND END_TIME > to_timestamp((SELECT INPUT_START_DATE FROM CONST), 'YYYY-MM-DD"T"HH24:MI:SS')
-						 AND START_TIME &lt; to_timestamp((SELECT INPUT_END_DATE FROM CONST), 'YYYY-MM-DD"T"HH24:MI:SS')
+						 AND END_TIME > (SELECT INPUT_START_DATE FROM CONST)
+						 AND START_TIME &lt; (SELECT INPUT_END_DATE FROM CONST)
 						 AND NOT GAP_MINUTES > (SELECT MAX_GAP_MINUTES FROM CONST)
 						 AND NOT EXTRACT(DAY FROM (END_TIME - START_TIME)) > (SELECT MAX_INTERPOLATION_DAYS FROM CONST)
 					   Order by START_TIME <!-- Used for debugging -->
@@ -311,7 +280,7 @@
                                            MIN(START_TIME) as FIRST_MEASURE_DATE,
 					   MAX(END_TIME) as LAST_MEASURE_DATE,
 					   SUM(DURATION_MINUTES) as OVERALL_DURATION_MINUTES,
-					   EXTRACT(DAY FROM (to_timestamp((SELECT INPUT_END_DATE FROM CONST), 'YYYY-MM-DD"T"HH24:MI:SS') - to_timestamp ((SELECT INPUT_START_DATE FROM CONST), 'YYYY-MM-DD"T"HH24:MI:SS'))*60*24) as USER_DURATION_MINUTES,
+					   EXTRACT(DAY FROM ((SELECT INPUT_END_DATE FROM CONST) - (SELECT INPUT_START_DATE FROM CONST))*60*24) as USER_DURATION_MINUTES,
 					   MIN(MIN_VALUE) AS OVERALL_MIN_VALUE,
 					   MAX(MAX_VALUE) AS OVERALL_MAX_VALUE,
 					   MAX(MAX_VALUE) - MIN(MIN_VALUE) AS OVERALL_VALUE_RANGE,
@@ -321,21 +290,34 @@
             )
         </sql> 
         <sql id="withGapData">
-        <include refid="withRawGapData"/>, 
-        CONST_GAP_DATA (GROUP_ID, GAP_MINUTES, FIRST_MEASURE_DATE, LAST_MEASURE_DATE, OVERALL_DURATION_MINUTES, USER_DURATION_MINUTES, MEASUREMENT_COUNT) AS
-					(
-					 SELECT
-					   GROUP_ID,
-                                           SUM(GAP_MINUTES) GAP_MINUTES,
-                                           MIN(START_TIME) as FIRST_MEASURE_DATE,
-					   MAX(END_TIME) as LAST_MEASURE_DATE,
-					   SUM(DURATION_MINUTES) as OVERALL_DURATION_MINUTES,
-					   EXTRACT(DAY FROM (to_timestamp((SELECT INPUT_END_DATE FROM CONST), 'YYYY-MM-DD"T"HH24:MI:SS') - to_timestamp ((SELECT INPUT_START_DATE FROM CONST), 'YYYY-MM-DD"T"HH24:MI:SS'))*60*24) as USER_DURATION_MINUTES,
-					   COUNT(*) AS MEASUREMENT_COUNT
-					 From RAW_GAP_DATA
-                                            GROUP BY GROUP_ID
-                                         
-            )
+        <include refid="withGapDuration"/>, 
+        const_gap_data (site_id, 
+            group_id,
+            gap_start_time,
+            gap_end_time,
+            gap_minutes,
+            rn) as
+           (select 
+               /* level 3: limit the rows to the ones marked "gap starts" */
+               /*          so each row represents a gap in measurements   */
+               site_id,
+               group_id,
+               gap_start_time,
+               gap_end_time,
+               (extract(DAY from (gap_end_time - gap_start_time)) * 24 * 60 * 60 +
+               extract(HOUR from (gap_end_time - gap_start_time)) * 60 * 60 +
+               extract(MINUTE from (gap_end_time - gap_start_time)) * 60 +
+               extract(SECOND from (gap_end_time - gap_start_time)))/60 gap_minutes,
+               row_number() over (order by 
+                  extract(DAY from (gap_end_time - gap_start_time)) * 24 * 60 * 60 +
+                  extract(HOUR from (gap_end_time - gap_start_time)) * 60 * 60 +
+                  extract(MINUTE from (gap_end_time - gap_start_time)) * 60 +
+                  extract(SECOND from (gap_end_time - gap_start_time)) desc, gap_start_time) rn
+            from
+              gap_duration
+              where 
+                gap_status = 'gap starts'
+           )
         </sql>
         <sql id="withIntBins">
             INT_BINS (BIN_NUMBER) AS
@@ -469,11 +451,19 @@
         <select id="getDurationCurveGapMinutesPercent" parameterType="map" resultMap="durationCurveGapMinutesResult">	
             WITH
             <include refid="withGapData"/>
-            select round(gap_minutes/overall_duration_minutes*100,0) as gap_minutes_percent from const_gap_data
+            select round(gaps.gap_minutes/duration.duration_minutes*100,0) as gap_minutes_percent from
+            (select
+            (extract(DAY from (max(start_time) - min(start_time))) * 24 * 60 * 60 +
+             extract(HOUR from (max(start_time) - min(start_time))) * 60 * 60 +
+             extract(MINUTE from (max(start_time) - min(start_time))) * 60 +
+             extract(SECOND from (max(start_time) - min(start_time))))/60 duration_minutes
+              from
+                 raw_gap_data) duration,
+                 (select sum(gap_minutes) gap_minutes from const_gap_data) gaps
         </select>
         <select id="getDurationCurveConsecutiveGap" parameterType="map" resultMap="durationCurveConsecutiveGapResult">
           with
-            <include refid="withGapDuration"/>
+            <include refid="withGapData"/>
             select 
                 case 
                 when round(gap_minutes/60,2) &lt; 24 then to_char(round(gap_minutes/60,2)) 
@@ -483,9 +473,7 @@
                 when round(gap_minutes/60,2) &lt; 24 then 'hours'
                 when round(gap_minutes/60,2) >=24 then 'days'
                 end gap_unit
-           from (
-            select max(gap_minutes) gap_minutes
-                      from gap_duration
-                      )
+           from const_gap_data
+           where rn = 1
         </select>
 </mapper>

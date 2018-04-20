@@ -2,7 +2,6 @@ package gov.usgs.cida.gcmrcservices.mb.dao;
 
 import gov.usgs.cida.gcmrcservices.mb.MyBatisConnectionFactory;
 import gov.usgs.cida.gcmrcservices.mb.model.DurationCurve;
-import gov.usgs.cida.gcmrcservices.mb.model.DurationCurveGapMinutesPercent;
 import gov.usgs.cida.gcmrcservices.mb.model.DurationCurveConsecutiveGap;
 import gov.usgs.cida.gcmrcservices.mb.model.DurationCurvePoint;
 import java.util.HashMap;
@@ -77,8 +76,8 @@ public class DurationCurveDAO {
 	}
 	
 	public Double getDurationCurveGapMinutesPercent(String siteName, String startTime, String endTime, int groupId) {		
-	    DurationCurveGapMinutesPercent returned;	
-	    Double result;
+	    Double returned = 0.0;	
+	    Double result = 0.0;
 		
 		Map<String, Object> params = new HashMap<String, Object>();
 		params.put("siteName", siteName);
@@ -89,8 +88,9 @@ public class DurationCurveDAO {
 		try (SqlSession session = sqlSessionFactory.openSession()) {
 			returned = session.selectOne( queryPackage + ".DurationCurveMapper.getDurationCurveGapMinutesPercent", params);
 			
-			result = returned.getGapMinutesPercent();
-			
+			if (returned != null){
+			    result = returned;
+			}
 		} catch (Exception e) {
 			log.error("Could not get duration curve gap minutes percent with parameters: [siteName: " + siteName + ", groupId: " + groupId + "] Error: " + e.getMessage());
 			result = null;

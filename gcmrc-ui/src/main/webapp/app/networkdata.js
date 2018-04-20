@@ -12,8 +12,9 @@ GCMRC.Networks = function() {
 	return {
 		"GCDAMP" : {
 			displayName : 'Grand Canyon',
-			itemId: '56461a54e4b0e2669b30f2db',
+			researchItemId: '56461a54e4b0e2669b30f2db',
 			labelLoc : 'bl',
+			photoItemId: '5ada096be4b0e2c2dd2894ed',
 			bbox : {
 				"left": -114.003737,
 				"bottom": 35.130507,
@@ -24,7 +25,8 @@ GCMRC.Networks = function() {
 		},
 		"DINO" : {
 			displayName : 'Dinosaur',
-			itemId: '56461a8be4b0e2669b30f2e1',
+			researchItemId: '56461a8be4b0e2669b30f2e1',
+			photoItemId: '5ada08bde4b0e2c2dd288ca3',
 			bbox : {
 				"left": -109.734,
 				"bottom": 39.98,
@@ -35,8 +37,9 @@ GCMRC.Networks = function() {
 		},
 		"CL" : {
 			displayName : 'Canyonlands',
-			itemId: '56461a7de4b0e2669b30f2df',
+			researchItemId: '56461a7de4b0e2669b30f2df',
 			labelLoc: 'tl',
+			photoItemId: '5ada088ce4b0e2c2dd2889fc',
 			bbox: {
 				"left": -110.26759,
 				"bottom": 38.02643,
@@ -47,8 +50,9 @@ GCMRC.Networks = function() {
 		},
 		"CRD" : {
 			displayName : 'Colorado River Delta',
-			itemId: '56461a96e4b0e2669b30f2e4',
+			researchItemId: '56461a96e4b0e2669b30f2e4',
 			labelLoc: 'bl',
+			photoItemId: '5ada08a7e4b0e2c2dd288b70',
 			bbox : {
 				"left": -115.12630,
 				"bottom": 32.13372,
@@ -59,7 +63,8 @@ GCMRC.Networks = function() {
 		},
 		"URG" : {
 			displayName : 'Upper Rio Grande',
-			itemId: '5a8dc5f6e4b0699060596dc0',
+			researchItemId: '5a8dc5f6e4b0699060596dc0',
+			photoItemId: '5ada097be4b0e2c2dd289599',
 			labelLoc: 'tl',
 			bbox : {
 				"left": -107.118,
@@ -70,7 +75,8 @@ GCMRC.Networks = function() {
 		},
 		"BIBE" : {
 			displayName : 'Big Bend',
-			itemId: '56461aa1e4b0e2669b30f2e6',
+			researchItemId: '56461aa1e4b0e2669b30f2e6',
+			photoItemId: '5ada087ae4b0e2c2dd2888fd',
 			bbox : {
 				"left": -103.950969,
 				"bottom": 28.780138,
@@ -81,8 +87,9 @@ GCMRC.Networks = function() {
 		},
 		"CHIP" : {
 			displayName : 'Chippewa',
-			itemId: '5a0c952ae4b09af898cd417b',
+			researchItemId: '5a0c952ae4b09af898cd417b',
 			labelLoc: 'bl',
+			photoItemId: '5ada089ae4b0e2c2dd288aad',
 			bbox: {
 				"left": -92.24,
 				"bottom": 44.383,

@@ -37,7 +37,8 @@ GCMRC.Stations = {
 		"network" : "none",
 		"nwisSite" : "00000000",
 		"displayName" : "ERROR",
-		"itemId" : "ERROR",
+		"researchItemId" : "ERROR",
+		"photoItemId" : "ERROR",
 		"lat" : 43.0731,
 		"lon" : -89.4011
 	},

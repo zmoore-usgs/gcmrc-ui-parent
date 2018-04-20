@@ -9,7 +9,8 @@ $(document).ready(function() {
 			if (GCMRC.Networks[key].reaches) {
 				networkDesc = networkDesc + '<li><a href="' + CONFIG.relativePath + 'reaches/' + key +'">Sediment Budget Reaches</a></li>';
 			}
-			networkDesc = networkDesc + '<li><a href="https://www.sciencebase.gov/catalog/item/'+ GCMRC.Networks[key].itemId +'">Research Trip Data</li>';
+			networkDesc = networkDesc + '<li><a href="https://www.sciencebase.gov/catalog/item/'+ GCMRC.Networks[key].researchItemId +'">Research Trip Data</li>';
+			networkDesc = networkDesc + '<li><a href="https://www.sciencebase.gov/catalog/item/'+ GCMRC.Networks[key].photoItemId +'">Historical Photographs</li>';
 			networkDesc = networkDesc + '</ul>';
 			$networkList.append(networkDesc)
 		}

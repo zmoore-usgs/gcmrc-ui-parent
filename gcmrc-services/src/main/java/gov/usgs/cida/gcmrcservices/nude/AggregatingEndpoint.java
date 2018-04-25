@@ -72,6 +72,9 @@ public class AggregatingEndpoint extends SpecEndpoint {
 		
 		Set<Column> exemptColumns = new HashSet<Column>();
 		for (String station : stations) {
+			for (Entry<String, ColumnMetadata> ent : ColumnResolver.getDischargeErrorColumns(sqlProvider).entrySet()) {
+				exemptColumns.addAll(getExemptColumns(ent.getValue(), station));
+			}
 			for (Entry<String, ColumnMetadata> ent : ColumnResolver.getQWColumns(sqlProvider).entrySet()) {
 				exemptColumns.addAll(getExemptColumns(ent.getValue(), station));
 			}

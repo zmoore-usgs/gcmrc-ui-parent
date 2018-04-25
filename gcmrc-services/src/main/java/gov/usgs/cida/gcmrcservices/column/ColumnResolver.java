@@ -59,6 +59,17 @@ public class ColumnResolver {
 		cumulativeColumnMetadatas = Collections.unmodifiableMap(buildCumulativeParametersCols());
 	}
 	
+	public static Map<String, ColumnMetadata> getDischargeErrorColumns(SQLProvider sqlProvider) {
+		Map<String, ColumnMetadata> result = new HashMap<String, ColumnMetadata>();
+		if (null == resolver) {
+			resolver = new ColumnResolver(sqlProvider);
+		}
+		
+		result.putAll(resolver.dischargeErrorColumnMetadatas);
+		
+		return Collections.unmodifiableMap(result);
+	}
+	
 	public static Map<String, ColumnMetadata> getBedSedColumns(SQLProvider sqlProvider) {
 		Map<String, ColumnMetadata> result = new HashMap<String, ColumnMetadata>();
 		if (null == resolver) {

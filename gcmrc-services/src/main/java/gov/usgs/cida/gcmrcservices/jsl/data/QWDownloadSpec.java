@@ -1,21 +1,22 @@
 package gov.usgs.cida.gcmrcservices.jsl.data;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import gov.usgs.cida.gcmrcservices.nude.Endpoint;
 import gov.usgs.webservices.jdbc.spec.GCMRCSpec;
-import static gov.usgs.webservices.jdbc.spec.Spec.FIELD_NAME_KEY;
-import static gov.usgs.webservices.jdbc.spec.Spec.USER_VALUE_KEY;
 import gov.usgs.webservices.jdbc.spec.mapping.ColumnMapping;
 import gov.usgs.webservices.jdbc.spec.mapping.SearchMapping;
 import gov.usgs.webservices.jdbc.spec.mapping.WhereClauseType;
 import gov.usgs.webservices.jdbc.util.CleaningOption;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  *
  * @author dmsibley
  */
 public class QWDownloadSpec extends GCMRCSpec implements CentralizableTimezone {
+	private static final long serialVersionUID = -1530791245783905611L;
+	@SuppressWarnings("unused")
 	private static final Logger log = LoggerFactory.getLogger(QWDownloadSpec.class);
 
 	@Override

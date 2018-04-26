@@ -1,17 +1,12 @@
 package gov.usgs.cida.gcmrcservices.mb.endpoint;
 
-import gov.usgs.cida.gcmrcservices.mb.endpoint.response.FailureEnvelope;
-import gov.usgs.cida.gcmrcservices.mb.endpoint.response.SuccessEnvelope;
-import gov.usgs.cida.gcmrcservices.mb.endpoint.response.GCMRCResponse;
-import gov.usgs.cida.gcmrcservices.mb.model.DurationCurve;
-import gov.usgs.cida.gcmrcservices.mb.service.DurationCurveService;
 import java.io.OutputStream;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+
 import javax.servlet.http.HttpServletResponse;
-import javax.ws.rs.BadRequestException;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
@@ -20,9 +15,16 @@ import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
+
 import org.glassfish.jersey.server.JSONP;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import gov.usgs.cida.gcmrcservices.mb.endpoint.response.FailureEnvelope;
+import gov.usgs.cida.gcmrcservices.mb.endpoint.response.GCMRCResponse;
+import gov.usgs.cida.gcmrcservices.mb.endpoint.response.SuccessEnvelope;
+import gov.usgs.cida.gcmrcservices.mb.model.DurationCurve;
+import gov.usgs.cida.gcmrcservices.mb.service.DurationCurveService;
 
 /**
  *
@@ -30,6 +32,7 @@ import org.slf4j.LoggerFactory;
  */
 @Path("durationcurve")
 public class DurationCurveEndpoint {
+	@SuppressWarnings("unused")
 	private static final Logger log = LoggerFactory.getLogger(DurationCurveEndpoint.class);
 	
 	@GET

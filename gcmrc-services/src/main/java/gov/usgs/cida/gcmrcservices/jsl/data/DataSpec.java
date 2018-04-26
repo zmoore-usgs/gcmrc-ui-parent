@@ -9,6 +9,8 @@ import org.slf4j.LoggerFactory;
  * @author dmsibley
  */
 public abstract class DataSpec extends GCMRCSpec {
+	private static final long serialVersionUID = 1L;
+	@SuppressWarnings("unused")
 	private static final Logger log = LoggerFactory.getLogger(DataSpec.class);
 	
 	protected final String stationName;

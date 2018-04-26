@@ -10,6 +10,7 @@ import org.slf4j.LoggerFactory;
  * @author dmsibley
  */
 public class TimeConfig {
+	@SuppressWarnings("unused")
 	private static final Logger log = LoggerFactory.getLogger(TimeConfig.class);
 
 	protected final DateRange dateRange;

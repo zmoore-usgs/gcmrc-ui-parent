@@ -14,6 +14,7 @@ import org.slf4j.LoggerFactory;
  * @author dmsibley
  */
 public class TimeSummaryFilteringPlanStep implements PlanStep {
+	@SuppressWarnings("unused")
 	private static final Logger log = LoggerFactory.getLogger(TimeSummaryFilteringPlanStep.class);
 
 	protected final ColumnGrouping colGroup;

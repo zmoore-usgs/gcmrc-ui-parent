@@ -1,12 +1,9 @@
 package gov.usgs.cida.gcmrcservices.nude.time;
 
-import static gov.usgs.cida.gcmrcservices.ResultSetUtils.*;
-import gov.usgs.cida.nude.column.Column;
-import gov.usgs.cida.nude.column.ColumnGrouping;
-import gov.usgs.cida.nude.column.SimpleColumn;
-import gov.usgs.cida.nude.resultset.inmemory.IteratorWrappingResultSet;
-import gov.usgs.cida.nude.resultset.inmemory.TableRow;
-import gov.usgs.cida.nude.time.DateRange;
+import static gov.usgs.cida.gcmrcservices.ResultSetUtils.checkEqualRows;
+import static gov.usgs.cida.gcmrcservices.ResultSetUtils.createTableRows;
+import static org.junit.Assert.assertTrue;
+
 import java.sql.ResultSet;
 import java.util.Arrays;
 import java.util.Collections;
@@ -14,21 +11,28 @@ import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
+
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
 import org.joda.time.Period;
 import org.junit.BeforeClass;
-import static org.junit.Assert.*;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import gov.usgs.cida.nude.column.Column;
+import gov.usgs.cida.nude.column.ColumnGrouping;
+import gov.usgs.cida.nude.column.SimpleColumn;
+import gov.usgs.cida.nude.resultset.inmemory.IteratorWrappingResultSet;
+import gov.usgs.cida.nude.resultset.inmemory.TableRow;
+import gov.usgs.cida.nude.time.DateRange;
 
 /**
  *
  * @author dmsibley
  */
 public class TimeSummaryFilteringTest {
+	@SuppressWarnings("unused")
 	private static final Logger log = LoggerFactory.getLogger(TimeSummaryFilteringTest.class);
 	
 	@Test
@@ -36,7 +40,7 @@ public class TimeSummaryFilteringTest {
 		ResultSet expected = new IteratorWrappingResultSet(normalFilteredDataset.iterator());
 		ResultSet in = new IteratorWrappingResultSet(normalDataset.iterator());
 		
-		TimeSummaryFilteringPlanStep tsfps = new TimeSummaryFilteringPlanStep(normalColumnGrouping, Collections.EMPTY_SET, normalDateRange);
+		TimeSummaryFilteringPlanStep tsfps = new TimeSummaryFilteringPlanStep(normalColumnGrouping, Collections.emptySet(), normalDateRange);
 		
 		ResultSet actual = tsfps.runStep(in);
 		
@@ -48,7 +52,7 @@ public class TimeSummaryFilteringTest {
 		ResultSet expected = new IteratorWrappingResultSet(gappedFilteredDataset.iterator());
 		ResultSet in = new IteratorWrappingResultSet(gappedDataset.iterator());
 		
-		TimeSummaryFilteringPlanStep tsfps = new TimeSummaryFilteringPlanStep(gappedColumnGrouping, Collections.EMPTY_SET, gappedDateRange);
+		TimeSummaryFilteringPlanStep tsfps = new TimeSummaryFilteringPlanStep(gappedColumnGrouping, Collections.emptySet(), gappedDateRange);
 		
 		ResultSet actual = tsfps.runStep(in);
 		

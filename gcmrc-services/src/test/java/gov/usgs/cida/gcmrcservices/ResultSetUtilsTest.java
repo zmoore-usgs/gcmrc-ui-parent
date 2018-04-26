@@ -35,6 +35,7 @@ public class ResultSetUtilsTest {
 		ResultSet expected = new IteratorWrappingResultSet(kitchenSinkDataset.iterator());
 		
 		assertTrue(checkEqualRows(expected, actual));
+		actual.close();
 	}
 	
 	@Test
@@ -43,6 +44,7 @@ public class ResultSetUtilsTest {
 		ResultSet expected = new IteratorWrappingResultSet(identicalSinkDataset.iterator());
 		
 		assertTrue(checkEqualRows(expected, actual));
+		actual.close();
 	}
 	
 	@Test

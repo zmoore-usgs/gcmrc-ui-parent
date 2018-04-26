@@ -8,6 +8,7 @@ import org.slf4j.LoggerFactory;
  * @author dmsibley
  */
 public class Reach {
+	@SuppressWarnings("unused")
 	private static final Logger log = LoggerFactory.getLogger(Reach.class);
 	
 	private final String reachName;

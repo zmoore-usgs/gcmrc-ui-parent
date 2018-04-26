@@ -11,16 +11,12 @@ import gov.usgs.webservices.jdbc.spec.mapping.ColumnMapping;
 import gov.usgs.webservices.jdbc.spec.mapping.SearchMapping;
 import gov.usgs.webservices.jdbc.spec.mapping.WhereClauseType;
 import gov.usgs.webservices.jdbc.util.CleaningOption;
-import gov.usgs.webservices.jdbc.util.SqlUtils;
 
 /**
  *
  * @author thongsav
  */
 public class DischargeErrorSpec extends DataSpec {
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 	
 	private static final Logger log = LoggerFactory.getLogger(DischargeErrorSpec.class);

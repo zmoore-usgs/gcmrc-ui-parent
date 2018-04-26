@@ -12,11 +12,8 @@ import org.slf4j.LoggerFactory;
  * @author thongsav
  */
 public class StationDischargeErrorSpec extends GCMRCSpec {
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
-	
+	@SuppressWarnings("unused")
 	private static final Logger log = LoggerFactory.getLogger(StationDischargeErrorSpec.class);
 
 	@Override

@@ -12,6 +12,7 @@ import org.slf4j.LoggerFactory;
  * @author dmsibley
  */
 public class ReplaceValueTransform implements ColumnTransform {
+	@SuppressWarnings("unused")
 	private static final Logger log = LoggerFactory.getLogger(ReplaceValueTransform.class);
 
 	protected final Column col;

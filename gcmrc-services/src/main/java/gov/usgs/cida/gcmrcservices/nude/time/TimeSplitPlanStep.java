@@ -20,6 +20,7 @@ import org.slf4j.LoggerFactory;
  * @author dmsibley
  */
 public class TimeSplitPlanStep implements PlanStep {
+	@SuppressWarnings("unused")
 	private static final Logger log = LoggerFactory.getLogger(TimeSplitPlanStep.class);
 	
 	protected final FilterStep fs;

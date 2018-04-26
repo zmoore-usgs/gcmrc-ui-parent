@@ -12,6 +12,8 @@ import org.slf4j.LoggerFactory;
  * @author dmsibley
  */
 public class StationCreditSpec extends GCMRCSpec {
+	private static final long serialVersionUID = 1L;
+	@SuppressWarnings("unused")
 	private static final Logger log = LoggerFactory.getLogger(StationCreditSpec.class);
 
 	@Override

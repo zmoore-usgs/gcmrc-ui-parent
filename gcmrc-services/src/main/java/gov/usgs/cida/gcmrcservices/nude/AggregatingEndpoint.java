@@ -44,7 +44,7 @@ import org.slf4j.LoggerFactory;
  * @author dmsibley
  */
 public class AggregatingEndpoint extends SpecEndpoint {
-
+	private static final long serialVersionUID = 1L;
 	private static final Logger log = LoggerFactory.getLogger(AggregatingEndpoint.class);
 	
 	public static final String BAD_DATA_KEYWORD = "BAD_BAD_DATA";

@@ -1,13 +1,13 @@
 package gov.usgs.cida.gcmrcservices.nude.time;
 
+import org.joda.time.DateTimeZone;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import gov.usgs.cida.gcmrcservices.TimeUtil;
 import gov.usgs.cida.nude.column.Column;
 import gov.usgs.cida.nude.filter.ColumnTransform;
 import gov.usgs.cida.nude.resultset.inmemory.TableRow;
-import org.joda.time.DateTime;
-import org.joda.time.DateTimeZone;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  *

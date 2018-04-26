@@ -17,6 +17,7 @@ import org.slf4j.LoggerFactory;
  * @author dmsibley
  */
 public class ReachDAO {
+	@SuppressWarnings("unused")
 	private static final Logger log = LoggerFactory.getLogger(ReachDAO.class);
 	
 	private final SqlSessionFactory sqlSessionFactory;

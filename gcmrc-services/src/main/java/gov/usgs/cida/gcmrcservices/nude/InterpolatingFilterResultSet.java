@@ -1,11 +1,5 @@
 package gov.usgs.cida.gcmrcservices.nude;
 
-import com.google.common.base.Objects;
-import gov.usgs.cida.gcmrcservices.TableRowUtil;
-import gov.usgs.cida.nude.column.Column;
-import gov.usgs.cida.nude.column.ColumnGrouping;
-import gov.usgs.cida.nude.resultset.inmemory.PeekingResultSet;
-import gov.usgs.cida.nude.resultset.inmemory.TableRow;
 import java.math.BigDecimal;
 import java.math.MathContext;
 import java.sql.ResultSet;
@@ -17,6 +11,7 @@ import java.util.LinkedList;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
+
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
@@ -24,6 +19,14 @@ import org.joda.time.DateTime;
 import org.joda.time.Period;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import com.google.common.base.MoreObjects;
+
+import gov.usgs.cida.gcmrcservices.TableRowUtil;
+import gov.usgs.cida.nude.column.Column;
+import gov.usgs.cida.nude.column.ColumnGrouping;
+import gov.usgs.cida.nude.resultset.inmemory.PeekingResultSet;
+import gov.usgs.cida.nude.resultset.inmemory.TableRow;
 
 /**
  *
@@ -301,7 +304,7 @@ public class InterpolatingFilterResultSet extends PeekingResultSet {
 			if (obj == null) { return false; }
 			if (obj == this) { return true; }
 			if (obj instanceof Tuple) {
-				Tuple rhs = (Tuple) obj;
+				Tuple<?, ?> rhs = (Tuple<?, ?>) obj;
 				return new EqualsBuilder()
 						.append(this.getX(), rhs.getX())
 						.append(this.getY(), rhs.getY())
@@ -320,7 +323,7 @@ public class InterpolatingFilterResultSet extends PeekingResultSet {
 
 		@Override
 		public String toString() {
-			return Objects.toStringHelper(this)
+			return MoreObjects.toStringHelper(this)
 					.add("X", this.getX())
 					.add("Y", this.getY())
 					.toString();

@@ -25,6 +25,7 @@ import org.slf4j.LoggerFactory;
  * @author dmsibley
  */
 public class CutoffTimesResultSet extends PeekingResultSet {
+	@SuppressWarnings("unused")
 	private static final Logger log = LoggerFactory.getLogger(CutoffTimesResultSet.class);
 	
 	protected final ResultSet in;

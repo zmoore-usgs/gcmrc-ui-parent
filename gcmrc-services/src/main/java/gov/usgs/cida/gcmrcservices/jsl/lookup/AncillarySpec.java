@@ -1,18 +1,19 @@
 package gov.usgs.cida.gcmrcservices.jsl.lookup;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import gov.usgs.webservices.jdbc.spec.GCMRCSpec;
 import gov.usgs.webservices.jdbc.spec.mapping.ColumnMapping;
 import gov.usgs.webservices.jdbc.spec.mapping.SearchMapping;
-import gov.usgs.webservices.jdbc.spec.mapping.WhereClauseType;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  *
  * @author dmsibley
  */
 public class AncillarySpec extends GCMRCSpec {
+	private static final long serialVersionUID = -6703504301537358471L;
+	@SuppressWarnings("unused")
 	private static final Logger log = LoggerFactory.getLogger(AncillarySpec.class);
 
 	@Override

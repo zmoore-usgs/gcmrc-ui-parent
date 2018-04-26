@@ -16,6 +16,7 @@ import org.slf4j.LoggerFactory;
  * @author dmsibley
  */
 public class QWDataSpec extends DataSpec {
+	private static final long serialVersionUID = 1L;
 
 	private static final Logger log = LoggerFactory.getLogger(QWDataSpec.class);
 

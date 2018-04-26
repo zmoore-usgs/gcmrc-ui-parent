@@ -15,6 +15,7 @@ import org.slf4j.LoggerFactory;
  * @author dmsibley
  */
 public class IntegratingBySecondTransform implements ColumnTransform {
+	@SuppressWarnings("unused")
 	private static final Logger log = LoggerFactory.getLogger(IntegratingBySecondTransform.class);
 	
 	protected final Column col;

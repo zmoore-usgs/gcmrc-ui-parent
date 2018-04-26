@@ -1,22 +1,13 @@
 package gov.usgs.cida.gcmrc;
 
-//import gov.usgs.cida.imageproxy.file.Image;
-//import gov.usgs.cida.imageproxy.file.ImageFactory;
-//import gov.usgs.cida.imageproxy.file.ImageProxyFileUtils;
-import gov.usgs.cida.path.PathUtil;
-import java.io.File;
 import java.io.IOException;
-import java.net.URL;
-import java.net.URLDecoder;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.List;
 import java.util.Map;
+
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import org.apache.commons.io.FileUtils;
+
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,6 +17,9 @@ import org.slf4j.LoggerFactory;
  * @author dmsibley
  */
 public class StationPhotoServlet extends HttpServlet {
+	private static final long serialVersionUID = 4986068507640412410L;
+
+	@SuppressWarnings("unused")
 	private static final Logger LOG = LoggerFactory.getLogger(StationPhotoServlet.class);
 	
 	public static final String BASE_PATH = "img";

@@ -14,6 +14,7 @@ import org.slf4j.LoggerFactory;
  * @author dmsibley
  */
 public class IntoMillisTransform implements ColumnTransform {
+	@SuppressWarnings("unused")
 	private static final Logger log = LoggerFactory.getLogger(IntoMillisTransform.class);
 	
 	protected final Column time;

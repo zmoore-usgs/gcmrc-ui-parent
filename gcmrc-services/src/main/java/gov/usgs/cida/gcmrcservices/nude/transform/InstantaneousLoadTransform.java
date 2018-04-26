@@ -15,6 +15,7 @@ import org.slf4j.LoggerFactory;
  * @author dmsibley
  */
 public class InstantaneousLoadTransform implements ColumnTransform {
+	@SuppressWarnings("unused")
 	private static final Logger log = LoggerFactory.getLogger(InstantaneousLoadTransform.class);
 
 	protected final Column dischargeColumn;

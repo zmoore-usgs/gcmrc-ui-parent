@@ -18,6 +18,7 @@ import org.slf4j.LoggerFactory;
  * @author dmsibley
  */
 public class CutoffTimesPlanStep implements PlanStep {
+	@SuppressWarnings("unused")
 	private static final Logger log = LoggerFactory.getLogger(CutoffTimesPlanStep.class);
 	
 	protected final Column timeColumn;

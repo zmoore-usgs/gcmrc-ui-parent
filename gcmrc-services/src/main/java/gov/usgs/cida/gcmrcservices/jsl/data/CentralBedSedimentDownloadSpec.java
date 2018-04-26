@@ -8,6 +8,8 @@ import org.slf4j.LoggerFactory;
  * @author dmsibley
  */
 public class CentralBedSedimentDownloadSpec extends BedSedimentDownloadSpec {
+	private static final long serialVersionUID = 1L;
+	@SuppressWarnings("unused")
 	private static final Logger log = LoggerFactory.getLogger(CentralBedSedimentDownloadSpec.class);
 
 	@Override

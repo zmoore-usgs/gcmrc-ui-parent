@@ -20,7 +20,7 @@ public class SuccessEnvelope<T> {
 	}
 	
 	public List<T> getData() {
-		return (List)data;
+		return data;
 	}
 
 	public Integer getRowCount() {

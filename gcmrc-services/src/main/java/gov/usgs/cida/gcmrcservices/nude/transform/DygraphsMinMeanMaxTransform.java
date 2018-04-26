@@ -1,13 +1,9 @@
 package gov.usgs.cida.gcmrcservices.nude.transform;
 
-import com.google.common.base.Objects;
-import gov.usgs.cida.nude.column.Column;
-import gov.usgs.cida.nude.filter.transform.MathFunction;
-import gov.usgs.cida.nude.filter.transform.WindowedMathTransform;
-import gov.usgs.cida.nude.resultset.inmemory.TableRow;
 import java.math.BigDecimal;
 import java.math.MathContext;
 import java.math.RoundingMode;
+
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
@@ -15,6 +11,12 @@ import org.joda.time.DateTime;
 import org.joda.time.Period;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import com.google.common.base.MoreObjects;
+
+import gov.usgs.cida.nude.column.Column;
+import gov.usgs.cida.nude.filter.transform.WindowedMathTransform;
+import gov.usgs.cida.nude.resultset.inmemory.TableRow;
 
 /**
  *
@@ -163,7 +165,7 @@ public class DygraphsMinMeanMaxTransform extends WindowedMathTransform {
 
 		@Override
 		public String toString() {
-			return Objects.toStringHelper(AggregateResult.class)
+			return MoreObjects.toStringHelper(AggregateResult.class)
 					.add("count", this.count)
 					.add("sum", this.sum)
 					.add("mean", this.mean)

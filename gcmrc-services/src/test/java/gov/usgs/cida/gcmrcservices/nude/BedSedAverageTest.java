@@ -26,6 +26,7 @@ import org.slf4j.LoggerFactory;
  * @author dmsibley
  */
 public class BedSedAverageTest {
+	@SuppressWarnings("unused")
 	private static final Logger log = LoggerFactory.getLogger(BedSedAverageTest.class);
 
 	public BedSedAverageTest() {
@@ -41,6 +42,7 @@ public class BedSedAverageTest {
 		ResultSet actual = new BedSedAverageResultSet(in, expectedSampleJiraColGroup, timeColumn, sampleSetColumn, valueColumn, sampleMassColumn, errorColumn, conf95Column);
 
 		assertTrue(checkEqualRows(expected, actual));
+		actual.close();
 	}
 	
 	@Test
@@ -53,6 +55,7 @@ public class BedSedAverageTest {
 		ResultSet actual = new BedSedAverageResultSet(in, expectedRealWorldColGroup, timeColumn, sampleSetColumn, valueColumn, sampleMassColumn, errorColumn, conf95Column);
 
 		assertTrue(checkEqualRows(expected, actual));
+		actual.close();
 	}
 	
 	@Test
@@ -64,6 +67,7 @@ public class BedSedAverageTest {
 		ResultSet actual = new BedSedAverageResultSet(in, expectedBugReportColGroup, timeColumn, sampleSetColumn, valueColumn, sampleMassColumn, errorColumn, conf95Column);
 		
 		assertTrue(checkEqualRows(expected, actual));
+		actual.close();
 	}
 	
 	@Test
@@ -75,6 +79,7 @@ public class BedSedAverageTest {
 		ResultSet actual = new BedSedAverageResultSet(in, expectedGCMON296ColGroup, timeColumn, sampleSetColumn, valueColumn, sampleMassColumn, errorColumn, conf95Column);
 		
 		assertTrue(checkEqualRows(expected, actual));
+		actual.close();
 	}
 	
 	@BeforeClass

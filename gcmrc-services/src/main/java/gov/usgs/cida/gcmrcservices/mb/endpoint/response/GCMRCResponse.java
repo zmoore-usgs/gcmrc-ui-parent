@@ -8,6 +8,7 @@ import org.slf4j.LoggerFactory;
  * @author zmoore
  */
 public class GCMRCResponse {
+	@SuppressWarnings("unused")
 	private static final Logger log = LoggerFactory.getLogger(GCMRCResponse.class);
 	
 	private final SuccessEnvelope success;

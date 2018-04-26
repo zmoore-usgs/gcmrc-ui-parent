@@ -11,8 +11,9 @@ import org.slf4j.LoggerFactory;
  * @author dmsibley
  */
 public class OutputConfig {
-
+	@SuppressWarnings("unused")
 	private static final Logger log = LoggerFactory.getLogger(OutputConfig.class);
+
 	protected final String fill;
 	protected final ColumnToXmlMapping[] columnMappings;
 	protected final boolean isTransparent;

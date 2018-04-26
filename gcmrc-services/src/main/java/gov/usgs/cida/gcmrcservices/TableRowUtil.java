@@ -11,6 +11,7 @@ import org.slf4j.LoggerFactory;
  * @author dmsibley
  */
 public class TableRowUtil {
+	@SuppressWarnings("unused")
 	private static final Logger log = LoggerFactory.getLogger(TableRowUtil.class);
 	
 	public static TableRow replace(TableRow row, Column column, String value) {

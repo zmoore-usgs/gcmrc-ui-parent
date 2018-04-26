@@ -1,16 +1,18 @@
 package gov.usgs.cida.gcmrcservices.jsl.data;
 
-import com.google.common.base.Objects;
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import com.google.common.base.MoreObjects;
 
 /**
  *
  * @author dmsibley
  */
 public class ParameterCode {
+	@SuppressWarnings("unused")
 	private static final Logger log = LoggerFactory.getLogger(ParameterCode.class);
 	
 	public final String sampleMethod;
@@ -45,7 +47,7 @@ public class ParameterCode {
 	public String toString() {
 		String result = null;
 		
-		result = Objects.toStringHelper(ParameterCode.class)
+		result = MoreObjects.toStringHelper(ParameterCode.class)
 				.add("sampleMethod", this.sampleMethod)
 				.add("groupName", this.groupName)
 				.toString();

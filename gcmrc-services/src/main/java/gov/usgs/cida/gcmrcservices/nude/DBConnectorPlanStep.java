@@ -1,31 +1,28 @@
 package gov.usgs.cida.gcmrcservices.nude;
 
-import gov.usgs.cida.gcmrcservices.TimeUtil;
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import gov.usgs.cida.gcmrcservices.nude.time.IntoMillisTransform;
 import gov.usgs.cida.nude.column.Column;
 import gov.usgs.cida.nude.column.ColumnGrouping;
 import gov.usgs.cida.nude.column.SimpleColumn;
-import gov.usgs.cida.nude.filter.ColumnTransform;
 import gov.usgs.cida.nude.filter.FilterStageBuilder;
 import gov.usgs.cida.nude.filter.NudeFilter;
 import gov.usgs.cida.nude.filter.NudeFilterBuilder;
 import gov.usgs.cida.nude.plan.PlanStep;
 import gov.usgs.cida.nude.provider.sql.SQLProvider;
 import gov.usgs.cida.nude.resultset.inmemory.MuxResultSet;
-import gov.usgs.cida.nude.resultset.inmemory.TableRow;
 import gov.usgs.webservices.jdbc.routing.ActionType;
 import gov.usgs.webservices.jdbc.spec.Spec;
 import gov.usgs.webservices.jdbc.spec.SpecResponse;
 import gov.usgs.webservices.jdbc.spec.mapping.ColumnMapping;
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
-import org.joda.time.DateTime;
-import org.joda.time.DateTimeZone;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  *

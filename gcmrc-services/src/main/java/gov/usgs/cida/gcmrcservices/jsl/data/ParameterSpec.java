@@ -1,22 +1,23 @@
 package gov.usgs.cida.gcmrcservices.jsl.data;
 
-import gov.usgs.cida.gcmrcservices.column.ColumnMetadata;
-import gov.usgs.cida.gcmrcservices.nude.Endpoint;
-import static gov.usgs.webservices.jdbc.spec.GCMRCSpec.ASCENDING_ORDER;
-import gov.usgs.webservices.jdbc.spec.mapping.ColumnMapping;
-import gov.usgs.webservices.jdbc.spec.mapping.SearchMapping;
-import gov.usgs.webservices.jdbc.spec.mapping.WhereClauseType;
-import gov.usgs.webservices.jdbc.util.CleaningOption;
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import gov.usgs.cida.gcmrcservices.column.ColumnMetadata;
+import gov.usgs.cida.gcmrcservices.nude.Endpoint;
+import gov.usgs.webservices.jdbc.spec.mapping.ColumnMapping;
+import gov.usgs.webservices.jdbc.spec.mapping.SearchMapping;
+import gov.usgs.webservices.jdbc.spec.mapping.WhereClauseType;
+import gov.usgs.webservices.jdbc.util.CleaningOption;
 
 /**
  *
  * @author dmsibley
  */
 public class ParameterSpec extends DataSpec {
+	private static final long serialVersionUID = -4493630171150826021L;
 	private static final Logger log = LoggerFactory.getLogger(ParameterSpec.class);
 
 	public ParameterSpec(String stationName, ParameterCode parameterCode, SpecOptions options) {

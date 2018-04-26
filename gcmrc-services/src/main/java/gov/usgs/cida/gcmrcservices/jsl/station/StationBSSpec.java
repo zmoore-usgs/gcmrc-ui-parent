@@ -12,6 +12,7 @@ import org.slf4j.LoggerFactory;
  * @author dmsibley
  */
 public class StationBSSpec extends GCMRCSpec {
+	@SuppressWarnings("unused")
 	private static final Logger log = LoggerFactory.getLogger(StationBSSpec.class);
 	private static final long serialVersionUID = 153252L;
 

@@ -19,6 +19,8 @@ import org.slf4j.LoggerFactory;
  * @author dmsibley
  */
 public class ParamService extends WebService {
+	private static final long serialVersionUID = 1L;
+	@SuppressWarnings("unused")
 	private static final Logger log = LoggerFactory.getLogger(ParamService.class);
 
 	public ParamService() {

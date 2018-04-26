@@ -11,6 +11,7 @@ import org.slf4j.LoggerFactory;
  * @author dmsibley
  */
 public class SpecOptions {
+	@SuppressWarnings("unused")
 	private static final Logger log = LoggerFactory.getLogger(SpecOptions.class);
 	
 	/**

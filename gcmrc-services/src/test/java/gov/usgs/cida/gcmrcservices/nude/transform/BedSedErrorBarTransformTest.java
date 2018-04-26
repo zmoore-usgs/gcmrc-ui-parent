@@ -24,7 +24,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class BedSedErrorBarTransformTest {
-	
+	@SuppressWarnings("unused")
 	private static final Logger LOGGER = LoggerFactory.getLogger(BedSedErrorBarTransformTest.class);
 
 	public BedSedErrorBarTransformTest() {

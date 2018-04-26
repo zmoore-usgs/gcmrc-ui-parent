@@ -39,6 +39,7 @@ import org.slf4j.LoggerFactory;
  * @author dmsibley
  */
 public abstract class Endpoint extends HttpServlet {
+	private static final long serialVersionUID = 1L;
 
 	private static final Logger log = LoggerFactory.getLogger(Endpoint.class);
 	public static final String COLUMN_KEYWORD = "column[]";

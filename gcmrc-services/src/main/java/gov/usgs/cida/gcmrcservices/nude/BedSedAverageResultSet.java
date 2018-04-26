@@ -1,12 +1,5 @@
 package gov.usgs.cida.gcmrcservices.nude;
 
-import com.google.common.collect.Range;
-import com.google.common.collect.Ranges;
-import gov.usgs.cida.nude.column.Column;
-import gov.usgs.cida.nude.column.ColumnGrouping;
-import gov.usgs.cida.nude.column.SimpleColumn;
-import gov.usgs.cida.nude.resultset.inmemory.PeekingResultSet;
-import gov.usgs.cida.nude.resultset.inmemory.TableRow;
 import java.math.BigDecimal;
 import java.math.MathContext;
 import java.math.RoundingMode;
@@ -18,10 +11,19 @@ import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.Map;
 import java.util.Set;
+
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import com.google.common.collect.Range;
+
+import gov.usgs.cida.nude.column.Column;
+import gov.usgs.cida.nude.column.ColumnGrouping;
+import gov.usgs.cida.nude.column.SimpleColumn;
+import gov.usgs.cida.nude.resultset.inmemory.PeekingResultSet;
+import gov.usgs.cida.nude.resultset.inmemory.TableRow;
 
 /**
  *
@@ -32,9 +34,9 @@ public class BedSedAverageResultSet extends PeekingResultSet {
 
 	protected static final BigDecimal cutoffMassInGrams = new BigDecimal("20.000");
 	protected static final Set<SampleSetRule> rules = new HashSet<>(Arrays.asList(new SampleSetRule[] {
-		new SampleSetRule(Ranges.singleton(1), Ranges.atLeast(1)),
-		new SampleSetRule(Ranges.singleton(3), Ranges.atLeast(2)),
-		new SampleSetRule(Ranges.atLeast(4), Ranges.atLeast(3))
+		new SampleSetRule(Range.singleton(1), Range.atLeast(1)),
+		new SampleSetRule(Range.singleton(3), Range.atLeast(2)),
+		new SampleSetRule(Range.atLeast(4), Range.atLeast(3))
 	}));
 	
 	

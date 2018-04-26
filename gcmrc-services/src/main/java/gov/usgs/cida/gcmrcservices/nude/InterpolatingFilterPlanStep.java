@@ -14,6 +14,7 @@ import org.slf4j.LoggerFactory;
  * @author dmsibley
  */
 public class InterpolatingFilterPlanStep implements PlanStep {
+	@SuppressWarnings("unused")
 	private static final Logger log = LoggerFactory.getLogger(InterpolatingFilterPlanStep.class);
 	
 	protected final ColumnGrouping colGroup;

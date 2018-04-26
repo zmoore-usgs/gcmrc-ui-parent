@@ -1,23 +1,32 @@
 package gov.usgs.cida.gcmrcservices.nude;
 
-import gov.usgs.cida.gcmrcservices.column.ColumnMetadata;
+import static gov.usgs.cida.gcmrcservices.TimeUtil.TZ_CODE_LOOKUP;
+import static gov.usgs.cida.gcmrcservices.column.ColumnResolver.getStation;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.UUID;
+
+import org.apache.commons.lang.StringUtils;
+import org.joda.time.DateTime;
+import org.joda.time.DateTimeZone;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.ListMultimap;
 import com.google.common.collect.Multimap;
 
 import gov.usgs.cida.gcmrcservices.TimeUtil;
-import static gov.usgs.cida.gcmrcservices.TimeUtil.TZ_CODE_LOOKUP;
+import gov.usgs.cida.gcmrcservices.column.ColumnMetadata;
 import gov.usgs.cida.gcmrcservices.column.ColumnResolver;
-import static gov.usgs.cida.gcmrcservices.column.ColumnResolver.getStation;
 import gov.usgs.cida.gcmrcservices.jsl.data.ParameterSpec;
 import gov.usgs.cida.gcmrcservices.jsl.data.SpecOptions;
-import static gov.usgs.cida.gcmrcservices.nude.Endpoint.COLUMN_KEYWORD;
-import static gov.usgs.cida.gcmrcservices.nude.Endpoint.TIMEZONE_IN_HEADER_KEYWORD;
-import static gov.usgs.cida.gcmrcservices.nude.Endpoint.TIMEZONE_KEYWORD;
-import static gov.usgs.cida.gcmrcservices.nude.Endpoint.getDateRange;
-import static gov.usgs.cida.gcmrcservices.nude.Endpoint.getParameter;
-import static gov.usgs.cida.gcmrcservices.nude.Endpoint.getStations;
 import gov.usgs.cida.gcmrcservices.nude.time.CutoffTimesPlanStep;
 import gov.usgs.cida.gcmrcservices.nude.time.TimeColumnReq;
 import gov.usgs.cida.gcmrcservices.nude.time.TimeConfig;
@@ -32,19 +41,12 @@ import gov.usgs.cida.nude.provider.sql.SQLProvider;
 import gov.usgs.cida.nude.resultset.inmemory.TableRow;
 import gov.usgs.webservices.jdbc.spec.Spec;
 
-import java.util.*;
-
-import org.apache.commons.lang.StringUtils;
-import org.joda.time.DateTime;
-import org.joda.time.DateTimeZone;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 /**
  *
  * @author dmsibley
  */
 public abstract class SpecEndpoint extends Endpoint {
+	private static final long serialVersionUID = 4669743697541090504L;
 	private static final Logger log = LoggerFactory.getLogger(SpecEndpoint.class);
 	public static final Column time = new SimpleColumn(ParameterSpec.C_TSM_DT);
 	public static final DateTimeZone DATABASE_TIMEZONE = DateTimeZone.forOffsetHours(-7);

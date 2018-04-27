@@ -96,7 +96,7 @@ public class DischargeErrorSpec extends DataSpec {
 		
 		if(this.parameterCode != null && this.parameterCode.sampleMethod != null) {
 			String sqlCleanMethod = cleanSql(this.parameterCode.sampleMethod);
-			result.append("  AND LOWER(DED.METHOD) = '" + sqlCleanMethod + "'");
+			result.append("  AND DED.METHOD = '" + sqlCleanMethod + "'");
 		}
 			
 		result.append(") T_A_INNER");

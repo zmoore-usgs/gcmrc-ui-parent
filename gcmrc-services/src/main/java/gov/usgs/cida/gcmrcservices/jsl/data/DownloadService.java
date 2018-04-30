@@ -26,7 +26,7 @@ public class DownloadService extends WebService {
 		this.specMapping.put("BIBEsamples", CentralQWDownloadSpec.class);
 		this.specMapping.put("CRDsamples", QWDownloadSpec.class);
 		this.specMapping.put("DINOsamples", QWDownloadSpec.class);
-		this.specMapping.put("CHIPsamples", QWDownloadSpec.class);
+		this.specMapping.put("CHIPsamples", CentralQWDownloadSpec.class);
 		this.specMapping.put("URGsamples", QWDownloadSpec.class);
 		this.specMapping.put("bedSediment", BedSedimentDownloadSpec.class);
 		this.specMapping.put("GCDAMPbedSediment", BedSedimentDownloadSpec.class);
@@ -34,7 +34,7 @@ public class DownloadService extends WebService {
 		this.specMapping.put("BIBEbedSediment", CentralBedSedimentDownloadSpec.class);
 		this.specMapping.put("CRDbedSediment", BedSedimentDownloadSpec.class);
 		this.specMapping.put("DINObedSediment", BedSedimentDownloadSpec.class);
-		this.specMapping.put("CHIPbedSediment", BedSedimentDownloadSpec.class);
+		this.specMapping.put("CHIPbedSediment", CentralBedSedimentDownloadSpec.class);
 		this.specMapping.put("URGbedSediment", BedSedimentDownloadSpec.class);
 		this.specMapping.put("dischargeError", DischargeErrorSpec.class);
 	}

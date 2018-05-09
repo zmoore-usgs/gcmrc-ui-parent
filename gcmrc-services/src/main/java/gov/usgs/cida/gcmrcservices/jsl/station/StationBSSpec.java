@@ -101,7 +101,7 @@ public class StationBSSpec extends GCMRCSpec {
 		result.append("    GROUP_NAME G");
 		result.append("  WHERE BS.SITE_ID = S.SITE_ID");
 		result.append("  AND BS.GROUP_ID = G.GROUP_ID");
-		result.append("  AND BS.GROUP_ID = 15");
+		result.append("  AND BS.GROUP_ID IN (").append(String.join(",", BS_GROUP_ID_LIST)).append(")");
 		result.append("  ) T_A_BED_SEDIMENT");
 		
 		return result.toString();
@@ -129,4 +129,5 @@ public class StationBSSpec extends GCMRCSpec {
 	public static final String C_DISPLAY_ORDER = "DISPLAY_ORDER";
 	public static final String S_IS_VISIBLE = "isVisible";
 	public static final String C_IS_VISIBLE = "IS_VISIBLE";
+	public static final String[] BS_GROUP_ID_LIST = {"15","18"};
 }

@@ -219,7 +219,7 @@
 						</div>
 						<div id="viz" class="innerRightSidebar">
 							<div class="sectionTitle">Data</div>
-							<div class="rightSidebarText">
+							<div class="dataChartView">
 								<div id="errorMsg"></div>
 								<div id="infoMsg">
 									To visualize data in a graph, please select parameters from the left as well as a date range from above.

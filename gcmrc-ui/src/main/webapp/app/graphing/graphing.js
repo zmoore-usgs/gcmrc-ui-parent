@@ -283,7 +283,7 @@ GCMRC.Graphing = function(hoursOffset) {
 			height: 420,
 			xlabel: 'Time',
 			ylabel: yAxisLabel,
-			yAxisLabelWidth: 85,
+			yAxisLabelWidth: 120,
 			xAxisHeight: 50,
 			xAxisLabelWidth: 85,
 			axes: axes,

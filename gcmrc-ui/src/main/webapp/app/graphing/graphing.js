@@ -239,7 +239,8 @@ GCMRC.Graphing = function(hoursOffset) {
 		dateWindow[1] = dateWindow[1] + (24 * 60 * 60 * 1000) - 1;
 		
 		div.style.display = "inline-block";
-		div.style.margin = "4px";
+		div.style.marginTop = "4px";
+		div.style.marginBottom = "4px";
 
 		var data = config['data'];
 

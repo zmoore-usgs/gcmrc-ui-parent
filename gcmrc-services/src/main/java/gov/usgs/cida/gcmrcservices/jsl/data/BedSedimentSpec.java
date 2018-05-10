@@ -2,6 +2,7 @@ package gov.usgs.cida.gcmrcservices.jsl.data;
 
 import static gov.usgs.cida.gcmrcservices.jsl.data.ParameterSpec.C_TSM_DT;
 import gov.usgs.cida.gcmrcservices.column.ColumnMetadata;
+import gov.usgs.cida.gcmrcservices.jsl.station.StationBSSpec;
 import gov.usgs.cida.gcmrcservices.nude.BedSedAverageResultSet;
 import gov.usgs.cida.gcmrcservices.nude.DBConnectorPlanStep;
 import gov.usgs.cida.gcmrcservices.nude.Endpoint;
@@ -73,35 +74,42 @@ public class BedSedimentSpec extends DataSpec {
 	@Override
 	public String setupTableName() {
 		StringBuilder result = new StringBuilder();
-		
+
 		result.append("(");
-		result.append("  SELECT TO_CHAR(BED_MEAS_DT, 'YYYY-MM-DD\"T\"HH24:MI:SS') AS TSM_DT,");
-		result.append("    NVL(S.NWIS_SITE_NO, S.SHORT_NAME) AS SITE_NAME,");
-		result.append("    VAL AS ").append(ColumnMetadata.createColumnName(this.stationName, this.parameterCode)).append(C_BED_VALUE).append(",");
-		result.append("    SAMPLE_MASS AS ").append(ColumnMetadata.createColumnName(this.stationName, this.parameterCode)).append(C_SAMPLE_MASS).append(",");
-		result.append("    SAMPLE_SET AS ").append(ColumnMetadata.createColumnName(this.stationName, this.parameterCode)).append(C_SAMPLE_SET).append("");
-		result.append("  FROM");
-		result.append("    (SELECT BED_MEAS_DT,");
-		result.append("      SITE_ID,");
-		result.append("      MAX(");
-		result.append("      CASE");
-		result.append("        WHEN BM.GROUP_ID = 15");
-		result.append("        THEN BM.BED_VALUE");
-		result.append("      END) VAL,");
-		result.append("      MAX(");
-		result.append("      CASE");
-		result.append("        WHEN BM.GROUP_ID = 14");
-		result.append("        THEN BM.BED_VALUE");
-		result.append("      END) SAMPLE_MASS,");
-		result.append("      BM.SAMPLE_SET");
-		result.append("    FROM BED_MATERIAL BM");
-		result.append("    WHERE BM.GROUP_ID IN (14, 15)");
-		result.append("    GROUP BY BED_MEAS_DT,");
-		result.append("      SITE_ID,");
-		result.append("      BM.SAMPLE_SET");
-		result.append("    ) T_A_BED,");
-		result.append("    SITE_STAR S");
-		result.append("  WHERE T_A_BED.SITE_ID = S.SITE_ID");
+		result.append("    SELECT");
+		result.append("    TO_CHAR(VALUE_TABLE.BED_MEAS_DT, 'YYYY-MM-DD\"T\"HH24:MI:SS') AS TSM_DT,");
+		result.append("    VALUE_TABLE.SITE_NAME,");
+		result.append("    VALUE_TABLE.BED_VALUE AS ").append(ColumnMetadata.createColumnName(this.stationName, this.parameterCode)).append(C_BED_VALUE).append(",");
+		result.append("    MASS_TABLE.SAMPLE_MASS AS ").append(ColumnMetadata.createColumnName(this.stationName, this.parameterCode)).append(C_SAMPLE_MASS).append(",");
+		result.append("    VALUE_TABLE.SAMPLE_SET AS ").append(ColumnMetadata.createColumnName(this.stationName, this.parameterCode)).append(C_SAMPLE_SET).append("");
+		result.append("    FROM ( SELECT");
+		result.append("        BM.BED_MEAS_DT,");
+		result.append("        NVL(S.NWIS_SITE_NO, S.SHORT_NAME) AS SITE_NAME,");
+		result.append("        BM.BED_VALUE,");
+		result.append("        BM.SAMPLE_SET");
+		result.append("        FROM BED_MATERIAL BM, SITE_STAR S, GROUP_NAME G");
+		result.append("        WHERE BM.SITE_ID = S.SITE_ID");
+		result.append("        AND BM.GROUP_ID = G.GROUP_ID");
+		result.append("        AND BM.GROUP_ID IN (").append(String.join(",",StationBSSpec.BS_GROUP_ID_LIST)).append(")");
+
+		if(this.parameterCode != null && this.parameterCode.groupName != null) {
+			result.append("        AND G.NAME = '").append(cleanSql(this.parameterCode.groupName)).append("'");
+		}
+
+		result.append("    ) VALUE_TABLE ");
+		result.append("    INNER JOIN (  SELECT");
+		result.append("        BM.BED_MEAS_DT,");
+		result.append("        NVL(S.NWIS_SITE_NO, S.SHORT_NAME) AS SITE_NAME,");
+		result.append("        BM.BED_VALUE AS SAMPLE_MASS,");
+		result.append("        BM.SAMPLE_SET");
+		result.append("        FROM BED_MATERIAL BM, SITE_STAR S, GROUP_NAME G");
+		result.append("        WHERE BM.SITE_ID = S.SITE_ID");
+		result.append("        AND BM.GROUP_ID = G.GROUP_ID");
+		result.append("        AND BM.GROUP_ID = 14");
+		result.append("    ) MASS_TABLE");
+		result.append("    ON MASS_TABLE.BED_MEAS_DT = VALUE_TABLE.BED_MEAS_DT ");
+		result.append("        AND MASS_TABLE.SITE_NAME = VALUE_TABLE.SITE_NAME");
+		result.append("        AND MASS_TABLE.SAMPLE_SET = VALUE_TABLE.SAMPLE_SET");
 		result.append(") T_A_BED_SEDIMENT");
 		
 		return result.toString();
@@ -170,9 +178,20 @@ public class BedSedimentSpec extends DataSpec {
 		
 		return result;
 	}
+
+	public static String cleanSql(String input) {
+		if (input == null) {
+			return null;
+		}
+		String output = input.trim();
+		output = output.replace("'", "");
+		output = output.replace("|", "");
+		output = output.replace(";", "");
+
+		return output;
+	}
 	
 	public static final String C_SITE_ID = "SITE_ID";
-	
 	public static final String S_SITE_NAME = "site";
 	public static final String C_SITE_NAME = "SITE_NAME";
 	public static final String S_BED_VALUE = "bedValue";
@@ -181,5 +200,4 @@ public class BedSedimentSpec extends DataSpec {
 	public static final String C_SAMPLE_MASS = "MASS";
 	public static final String S_SAMPLE_SET = "sampleSet";
 	public static final String C_SAMPLE_SET = "SET";
-	
 }

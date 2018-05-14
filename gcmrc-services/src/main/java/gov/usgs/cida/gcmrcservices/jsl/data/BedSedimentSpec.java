@@ -208,8 +208,6 @@ public class BedSedimentSpec extends DataSpec {
 	}
 	
 	public static final String C_SITE_ID = "SITE_ID";
-	public static final String C_UNITS = "UNITS";
-	public static final String S_UNITS = "units";
 	public static final String S_SITE_NAME = "site";
 	public static final String C_SITE_NAME = "SITE_NAME";
 	public static final String S_BED_VALUE = "bedValue";

@@ -13,32 +13,35 @@ import org.slf4j.LoggerFactory;
 
 /**
  *
- * @author dmsibley
+ * @author dmsibley, zmoore
  */
-public class SandGrainSizeLimiterTransform implements ColumnTransform {
-	private static final Logger log = LoggerFactory.getLogger(SandGrainSizeLimiterTransform.class);
+public class ValueRangeLimiterTransform implements ColumnTransform {
+	private static final Logger log = LoggerFactory.getLogger(ValueRangeLimiterTransform.class);
 	private final static String DELIMITER = ";";
 
-	protected static final BigDecimal LOWER_LIMIT = new BigDecimal("0.0625");
-	protected static final BigDecimal UPPER_LIMIT = new BigDecimal("2.000");
+	protected BigDecimal lowerLimit;
+	protected BigDecimal upperLimit;
 	
 	protected final Column inColumn;
 
-	public SandGrainSizeLimiterTransform(Column inColumn) {
+	public ValueRangeLimiterTransform(Column inColumn, BigDecimal lowerLimit, BigDecimal upperLimit) {
 		this.inColumn = inColumn;
+		this.lowerLimit = lowerLimit;
+		this.upperLimit = upperLimit;
 	}
 	
-	public static BigDecimal limitValue(BigDecimal inVal) {
+	public BigDecimal limitValue(BigDecimal inVal) {
 		BigDecimal result = inVal;
 		if (null != inVal) {
-			if (LOWER_LIMIT.compareTo(inVal) > 0) {
-				result = LOWER_LIMIT;
-			} else if (UPPER_LIMIT.compareTo(inVal) < 0) {
-				result = UPPER_LIMIT;
+			if (null != lowerLimit && lowerLimit.compareTo(inVal) > 0) {
+				result = lowerLimit;
+			} else if (null !=  upperLimit && upperLimit.compareTo(inVal) < 0) {
+				result = upperLimit;
 			}
 		}
 		return result;
 	}
+
 	
 	@Override
 	public String transform(TableRow tr) {
@@ -60,5 +63,4 @@ public class SandGrainSizeLimiterTransform implements ColumnTransform {
 		
 		return result;
 	}
-
 }

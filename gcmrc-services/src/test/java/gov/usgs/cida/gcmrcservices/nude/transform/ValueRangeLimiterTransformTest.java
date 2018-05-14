@@ -1,8 +1,9 @@
 package gov.usgs.cida.gcmrcservices.nude.transform;
 
 import gov.usgs.cida.gcmrcservices.ResultSetUtils;
-import static gov.usgs.cida.gcmrcservices.nude.transform.SandGrainSizeLimiterTransform.LOWER_LIMIT;
-import static gov.usgs.cida.gcmrcservices.nude.transform.SandGrainSizeLimiterTransform.UPPER_LIMIT;
+import static gov.usgs.cida.gcmrcservices.jsl.data.BedSedimentSpec.LOWER_LIMIT_MM;
+import static gov.usgs.cida.gcmrcservices.jsl.data.BedSedimentSpec.LOWER_LIMIT_PERCENT;
+import static gov.usgs.cida.gcmrcservices.jsl.data.BedSedimentSpec.UPPER_LIMIT_MM;
 import gov.usgs.cida.nude.column.Column;
 import gov.usgs.cida.nude.column.ColumnGrouping;
 import gov.usgs.cida.nude.column.SimpleColumn;
@@ -28,10 +29,10 @@ import org.slf4j.LoggerFactory;
  *
  * @author dmsibley
  */
-public class SandGrainSizeLimiterTransformTest {
-	private static final Logger log = LoggerFactory.getLogger(SandGrainSizeLimiterTransformTest.class);
+public class ValueRangeLimiterTransformTest {
+	private static final Logger log = LoggerFactory.getLogger(ValueRangeLimiterTransformTest.class);
 	
-	public SandGrainSizeLimiterTransformTest() {
+	public ValueRangeLimiterTransformTest() {
 	}
 	
 	protected static Column valueColumn = new SimpleColumn("value");
@@ -66,17 +67,17 @@ public class SandGrainSizeLimiterTransformTest {
 		
 		expectedSampleDataset = ResultSetUtils.createTableRows(sampleColGroup, new String[][] {
 			new String[] {null},
-			new String[] {LOWER_LIMIT.toPlainString()},
+			new String[] {LOWER_LIMIT_MM.toPlainString()},
 			new String[] {medValue},
-			new String[] {UPPER_LIMIT.toPlainString()},
-			new String[] {LOWER_LIMIT.toPlainString()+";"+LOWER_LIMIT.toPlainString()+";"+LOWER_LIMIT.toPlainString()},
-			new String[] {LOWER_LIMIT.toPlainString()+";"+LOWER_LIMIT.toPlainString()+";"+medValue},
-			new String[] {LOWER_LIMIT.toPlainString()+";"+medValue+";"+medValue},
+			new String[] {UPPER_LIMIT_MM.toPlainString()},
+			new String[] {LOWER_LIMIT_MM.toPlainString()+";"+LOWER_LIMIT_MM.toPlainString()+";"+LOWER_LIMIT_MM.toPlainString()},
+			new String[] {LOWER_LIMIT_MM.toPlainString()+";"+LOWER_LIMIT_MM.toPlainString()+";"+medValue},
+			new String[] {LOWER_LIMIT_MM.toPlainString()+";"+medValue+";"+medValue},
 			new String[] {medValue+";"+medValue+";"+medValue},
-			new String[] {medValue+";"+medValue+";"+UPPER_LIMIT.toPlainString()},
-			new String[] {medValue+";"+UPPER_LIMIT.toPlainString()+";"+UPPER_LIMIT.toPlainString()},
-			new String[] {UPPER_LIMIT.toPlainString()+";"+UPPER_LIMIT.toPlainString()+";"+UPPER_LIMIT.toPlainString()},
-			new String[] {LOWER_LIMIT.toPlainString()+";"+medValue+";"+UPPER_LIMIT.toPlainString()}
+			new String[] {medValue+";"+medValue+";"+UPPER_LIMIT_MM.toPlainString()},
+			new String[] {medValue+";"+UPPER_LIMIT_MM.toPlainString()+";"+UPPER_LIMIT_MM.toPlainString()},
+			new String[] {UPPER_LIMIT_MM.toPlainString()+";"+UPPER_LIMIT_MM.toPlainString()+";"+UPPER_LIMIT_MM.toPlainString()},
+			new String[] {LOWER_LIMIT_MM.toPlainString()+";"+medValue+";"+UPPER_LIMIT_MM.toPlainString()}
 		});
 	}
 	
@@ -93,39 +94,59 @@ public class SandGrainSizeLimiterTransformTest {
 	}
 
 	/**
-	 * Test of limitValue method, of class SandGrainSizeLimiterTransform.
+	 * Test of limitValue method, of class ValueRangeLimiterTransform.
 	 */
 	@Test
-	public void testLimitValue() {
+	public void testLimitValueMM() {
 		log.info("limitValue");
 		BigDecimal inVal = null;
 		BigDecimal expResult = null;
-		BigDecimal result = SandGrainSizeLimiterTransform.limitValue(inVal);
+		ValueRangeLimiterTransform transformer = new ValueRangeLimiterTransform(null, LOWER_LIMIT_MM, UPPER_LIMIT_MM);
+		BigDecimal result = transformer.limitValue(inVal);
 		assertEquals(expResult, result);
 		
 		inVal = new BigDecimal("0.000");
 		expResult = new BigDecimal("0.0625");
-		result = SandGrainSizeLimiterTransform.limitValue(inVal);
+		result = transformer.limitValue(inVal);
 		assertEquals(expResult, result);
 		
 		inVal = new BigDecimal("0.630");
 		expResult = new BigDecimal("0.630");
-		result = SandGrainSizeLimiterTransform.limitValue(inVal);
+		result = transformer.limitValue(inVal);
 		assertEquals(expResult, result);
 		
 		inVal = new BigDecimal("5.321");
 		expResult = new BigDecimal("2.000");
-		result = SandGrainSizeLimiterTransform.limitValue(inVal);
+		result = transformer.limitValue(inVal);
+		assertEquals(expResult, result);
+	}
+
+	@Test
+	public void testLimitValuePerc() {
+		BigDecimal inVal = new BigDecimal("5.321");
+		BigDecimal expResult = new BigDecimal("5.321");
+		ValueRangeLimiterTransform transformer = new ValueRangeLimiterTransform(null, LOWER_LIMIT_PERCENT, null);
+		BigDecimal result = transformer.limitValue(inVal);
+		assertEquals(expResult, result);
+
+		inVal = new BigDecimal("0.001");
+		expResult = new BigDecimal("0.001");
+		result = transformer.limitValue(inVal);
+		assertEquals(expResult, result);
+		
+		inVal = new BigDecimal("-5.321");
+		expResult = new BigDecimal("0.000");
+		result = transformer.limitValue(inVal);
 		assertEquals(expResult, result);
 	}
 
 	/**
-	 * Test of transform method, of class SandGrainSizeLimiterTransform.
+	 * Test of transform method, of class ValueRangeLimiterTransform.
 	 */
 	@Test
 	public void testTransform() throws SQLException {
 		log.info("transform");
-		SandGrainSizeLimiterTransform instance = new SandGrainSizeLimiterTransform(valueColumn);
+		ValueRangeLimiterTransform instance = new ValueRangeLimiterTransform(valueColumn, LOWER_LIMIT_MM, UPPER_LIMIT_MM);
 		
 		NudeFilter nf = new NudeFilter(Arrays.asList(new FilterStage[] {
 			new FilterStageBuilder(sampleColGroup)

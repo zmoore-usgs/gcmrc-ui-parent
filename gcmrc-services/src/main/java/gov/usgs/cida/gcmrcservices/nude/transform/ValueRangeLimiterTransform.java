@@ -13,28 +13,30 @@ import org.slf4j.LoggerFactory;
 
 /**
  *
- * @author dmsibley
+ * @author dmsibley, zmoore
  */
 public class ValueRangeLimiterTransform implements ColumnTransform {
 	private static final Logger log = LoggerFactory.getLogger(ValueRangeLimiterTransform.class);
 	private final static String DELIMITER = ";";
 
-	protected BigDecimal limits[];
+	protected BigDecimal lowerLimit;
+	protected BigDecimal upperLimit;
 	
 	protected final Column inColumn;
 
-	public ValueRangeLimiterTransform(Column inColumn, BigDecimal[] limits) {
+	public ValueRangeLimiterTransform(Column inColumn, BigDecimal lowerLimit, BigDecimal upperLimit) {
 		this.inColumn = inColumn;
-		this.limits = limits;
+		this.lowerLimit = lowerLimit;
+		this.upperLimit = upperLimit;
 	}
 	
-	public static BigDecimal limitValue(BigDecimal inVal, BigDecimal LOWER_LIMIT, BigDecimal UPPER_LIMIT) {
+	public BigDecimal limitValue(BigDecimal inVal) {
 		BigDecimal result = inVal;
 		if (null != inVal) {
-			if (null != LOWER_LIMIT && LOWER_LIMIT.compareTo(inVal) > 0) {
-				result = LOWER_LIMIT;
-			} else if (null !=  UPPER_LIMIT && UPPER_LIMIT.compareTo(inVal) < 0) {
-				result = UPPER_LIMIT;
+			if (null != lowerLimit && lowerLimit.compareTo(inVal) > 0) {
+				result = lowerLimit;
+			} else if (null !=  upperLimit && upperLimit.compareTo(inVal) < 0) {
+				result = upperLimit;
 			}
 		}
 		return result;
@@ -52,7 +54,7 @@ public class ValueRangeLimiterTransform implements ColumnTransform {
 			List<String> results = new LinkedList<>();
 			for (String val : values) {
 				BigDecimal inVal = new BigDecimal(val);
-				results.add(limitValue(inVal, limits[0], limits[1]).toPlainString());
+				results.add(limitValue(inVal).toPlainString());
 			}
 			result = StringUtils.join(results, DELIMITER);
 		} catch (Exception e) {

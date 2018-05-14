@@ -154,6 +154,8 @@ public class BedSedimentSpec extends DataSpec {
 		final Column sampleMassColumn = new SimpleColumn(common + C_SAMPLE_MASS);
 		final Column errorColumn = new SimpleColumn(common + "ERROR");
 		final Column conf95Column = new SimpleColumn(common + "CONF95");
+
+		BigDecimal limits[] = getLimitsByGroupName(this.parameterCode.groupName);
 		
 		ColumnGrouping cols = DBConnectorPlanStep.buildColumnGroupingFromSpec(this, timeColumn);
 		NudeFilter prefilter = new NudeFilterBuilder(cols)
@@ -175,7 +177,7 @@ public class BedSedimentSpec extends DataSpec {
 		
 		NudeFilter postfilter = new NudeFilterBuilder(colGroup)
 			.addFilterStage(new FilterStageBuilder(colGroup).addTransform(valueColumn, new BedSedErrorBarTransform(valueColumn, conf95Column)).buildFilterStage())
-			.addFilterStage(new FilterStageBuilder(colGroup).addTransform(valueColumn, new ValueRangeLimiterTransform(valueColumn, getLimitsByGroupName(this.parameterCode.groupName))).buildFilterStage())
+			.addFilterStage(new FilterStageBuilder(colGroup).addTransform(valueColumn, new ValueRangeLimiterTransform(valueColumn, limits[0], limits[1])).buildFilterStage())
 			.addFilterStage(new FilterStageBuilder(colGroup).addTransform(timeColumn, new OutOfMillisTransform(timeColumn)).buildFilterStage())
 			.buildFilter();
 		

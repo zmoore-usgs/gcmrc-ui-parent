@@ -101,22 +101,23 @@ public class ValueRangeLimiterTransformTest {
 		log.info("limitValue");
 		BigDecimal inVal = null;
 		BigDecimal expResult = null;
-		BigDecimal result = ValueRangeLimiterTransform.limitValue(inVal, LOWER_LIMIT_MM, UPPER_LIMIT_MM);
+		ValueRangeLimiterTransform transformer = new ValueRangeLimiterTransform(null, LOWER_LIMIT_MM, UPPER_LIMIT_MM);
+		BigDecimal result = transformer.limitValue(inVal);
 		assertEquals(expResult, result);
 		
 		inVal = new BigDecimal("0.000");
 		expResult = new BigDecimal("0.0625");
-		result = ValueRangeLimiterTransform.limitValue(inVal, LOWER_LIMIT_MM, UPPER_LIMIT_MM);
+		result = transformer.limitValue(inVal);
 		assertEquals(expResult, result);
 		
 		inVal = new BigDecimal("0.630");
 		expResult = new BigDecimal("0.630");
-		result = ValueRangeLimiterTransform.limitValue(inVal, LOWER_LIMIT_MM, UPPER_LIMIT_MM);
+		result = transformer.limitValue(inVal);
 		assertEquals(expResult, result);
 		
 		inVal = new BigDecimal("5.321");
 		expResult = new BigDecimal("2.000");
-		result = ValueRangeLimiterTransform.limitValue(inVal, LOWER_LIMIT_MM, UPPER_LIMIT_MM);
+		result = transformer.limitValue(inVal);
 		assertEquals(expResult, result);
 	}
 
@@ -124,17 +125,18 @@ public class ValueRangeLimiterTransformTest {
 	public void testLimitValuePerc() {
 		BigDecimal inVal = new BigDecimal("5.321");
 		BigDecimal expResult = new BigDecimal("5.321");
-		BigDecimal result = ValueRangeLimiterTransform.limitValue(inVal, LOWER_LIMIT_PERCENT, null);
+		ValueRangeLimiterTransform transformer = new ValueRangeLimiterTransform(null, LOWER_LIMIT_PERCENT, null);
+		BigDecimal result = transformer.limitValue(inVal);
 		assertEquals(expResult, result);
 
 		inVal = new BigDecimal("0.001");
 		expResult = new BigDecimal("0.001");
-		result = ValueRangeLimiterTransform.limitValue(inVal, LOWER_LIMIT_PERCENT, null);
+		result = transformer.limitValue(inVal);
 		assertEquals(expResult, result);
 		
 		inVal = new BigDecimal("-5.321");
 		expResult = new BigDecimal("0.000");
-		result = ValueRangeLimiterTransform.limitValue(inVal, LOWER_LIMIT_PERCENT, null);
+		result = transformer.limitValue(inVal);
 		assertEquals(expResult, result);
 	}
 
@@ -144,7 +146,7 @@ public class ValueRangeLimiterTransformTest {
 	@Test
 	public void testTransform() throws SQLException {
 		log.info("transform");
-		ValueRangeLimiterTransform instance = new ValueRangeLimiterTransform(valueColumn, new BigDecimal[] {LOWER_LIMIT_MM, UPPER_LIMIT_MM});
+		ValueRangeLimiterTransform instance = new ValueRangeLimiterTransform(valueColumn, LOWER_LIMIT_MM, UPPER_LIMIT_MM);
 		
 		NudeFilter nf = new NudeFilter(Arrays.asList(new FilterStage[] {
 			new FilterStageBuilder(sampleColGroup)

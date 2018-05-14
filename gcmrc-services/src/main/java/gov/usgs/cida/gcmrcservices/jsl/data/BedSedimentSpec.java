@@ -9,7 +9,7 @@ import gov.usgs.cida.gcmrcservices.nude.Endpoint;
 import gov.usgs.cida.gcmrcservices.nude.time.IntoMillisTransform;
 import gov.usgs.cida.gcmrcservices.nude.time.OutOfMillisTransform;
 import gov.usgs.cida.gcmrcservices.nude.transform.BedSedErrorBarTransform;
-import gov.usgs.cida.gcmrcservices.nude.transform.SandGrainSizeLimiterTransform;
+import gov.usgs.cida.gcmrcservices.nude.transform.ValueRangeLimiterTransform;
 import gov.usgs.cida.nude.column.Column;
 import gov.usgs.cida.nude.column.ColumnGrouping;
 import gov.usgs.cida.nude.column.SimpleColumn;
@@ -22,6 +22,7 @@ import gov.usgs.webservices.jdbc.spec.mapping.SearchMapping;
 import gov.usgs.webservices.jdbc.spec.mapping.WhereClauseType;
 import gov.usgs.webservices.jdbc.util.CleaningOption;
 
+import java.math.BigDecimal;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -36,6 +37,10 @@ public class BedSedimentSpec extends DataSpec {
 
 	private static final long serialVersionUID = 2263816089456993501L;
 	private static final Logger log = LoggerFactory.getLogger(BedSedimentSpec.class);
+
+	public static final BigDecimal LOWER_LIMIT_MM = new BigDecimal("0.0625");
+	public static final BigDecimal UPPER_LIMIT_MM = new BigDecimal("2.000");
+	public static final BigDecimal LOWER_LIMIT_PERCENT = new BigDecimal("0.000");
 
 	public BedSedimentSpec(String stationName, ParameterCode parameterCode, SpecOptions options) {
 		super(stationName, parameterCode, options);
@@ -170,7 +175,7 @@ public class BedSedimentSpec extends DataSpec {
 		
 		NudeFilter postfilter = new NudeFilterBuilder(colGroup)
 			.addFilterStage(new FilterStageBuilder(colGroup).addTransform(valueColumn, new BedSedErrorBarTransform(valueColumn, conf95Column)).buildFilterStage())
-			.addFilterStage(new FilterStageBuilder(colGroup).addTransform(valueColumn, new SandGrainSizeLimiterTransform(valueColumn)).buildFilterStage())
+			.addFilterStage(new FilterStageBuilder(colGroup).addTransform(valueColumn, new ValueRangeLimiterTransform(valueColumn, getLimitsByGroupName(this.parameterCode.groupName))).buildFilterStage())
 			.addFilterStage(new FilterStageBuilder(colGroup).addTransform(timeColumn, new OutOfMillisTransform(timeColumn)).buildFilterStage())
 			.buildFilter();
 		
@@ -190,8 +195,21 @@ public class BedSedimentSpec extends DataSpec {
 
 		return output;
 	}
+
+	public static BigDecimal[] getLimitsByGroupName(String groupName) {
+		switch(groupName.toLowerCase()) {
+			case "pct bed sand btwn 0.063 & 0.125":
+				return new BigDecimal[] {LOWER_LIMIT_PERCENT, null};
+			case "bed sand d50":
+				return new BigDecimal[] {LOWER_LIMIT_MM, UPPER_LIMIT_MM};
+			default:
+				return new BigDecimal[] {null, null};
+		}
+	}
 	
 	public static final String C_SITE_ID = "SITE_ID";
+	public static final String C_UNITS = "UNITS";
+	public static final String S_UNITS = "units";
 	public static final String S_SITE_NAME = "site";
 	public static final String C_SITE_NAME = "SITE_NAME";
 	public static final String S_BED_VALUE = "bedValue";

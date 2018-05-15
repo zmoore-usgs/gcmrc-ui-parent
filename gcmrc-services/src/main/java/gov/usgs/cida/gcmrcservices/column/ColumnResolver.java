@@ -33,6 +33,7 @@ public class ColumnResolver {
 
 	public ColumnResolver(SQLProvider sqlProvider) {
 		this.sqlProvider = sqlProvider;
+		this.columns = new HashMap<>();
 		this.columns.putAll(buildInstantaneousParametersCols());
 		this.columns.putAll(buildBedMaterialParametersCols());
 		this.columns.putAll(buildQWParametersCols());

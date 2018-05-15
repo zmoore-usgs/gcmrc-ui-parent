@@ -76,29 +76,20 @@ public abstract class Endpoint extends HttpServlet {
 	public static final String CUTOFF_AFTER_KEYWORD = "cutoffAfter";
 	public static final String CUTOFF_BEFORE_KEYWORD = "cutoffBefore";
 	
-	protected Map<Provider, IProvider> providers;
+	protected SQLProvider sqlProvider;
 	protected ColumnResolver resolver;
 	
 	@Override
 	public void init() throws ServletException {
-		providers = new EnumMap<Provider, IProvider>(Provider.class);
-		SQLProvider sqlProvider = new SQLProvider("java:comp/env/jdbc/gcmrcDS");
+		sqlProvider = new SQLProvider("java:comp/env/jdbc/gcmrcDS");
 		sqlProvider.init();
-		providers.put(Provider.SQL, sqlProvider);
-		providers = Collections.unmodifiableMap(providers);
-		resolver = new ColumnResolver(sqlProvider);
 		super.init();
 	}
 	
 	@Override
 	public void destroy() {
-		if (null != providers) {
-			for (IProvider provider : providers.values()) {
-				provider.destroy();
-			}
-		}
-		if (null != resolver) {
-			resolver = null;
+		if (null != sqlProvider) {
+			sqlProvider.destroy();
 		}
 		super.destroy();
 	}
@@ -107,6 +98,8 @@ public abstract class Endpoint extends HttpServlet {
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		UUID requestUUID = UUID.randomUUID();
 		try {
+			resolver = new ColumnResolver(sqlProvider);
+
 			log.info("Started Request " + requestUUID.toString() + " " + req.getRequestURI() + "?" + req.getQueryString());
 
 			Map<String, String[]> reqArrayMap = req.getParameterMap();

@@ -36,8 +36,6 @@ import gov.usgs.cida.nude.filter.NudeFilter;
 import gov.usgs.cida.nude.filter.NudeFilterBuilder;
 import gov.usgs.cida.nude.out.mapping.ColumnToXmlMapping;
 import gov.usgs.cida.nude.plan.PlanStep;
-import gov.usgs.cida.nude.provider.Provider;
-import gov.usgs.cida.nude.provider.sql.SQLProvider;
 import gov.usgs.cida.nude.resultset.inmemory.TableRow;
 import gov.usgs.cida.nude.time.DateRange;
 import gov.usgs.webservices.jdbc.spec.Spec;
@@ -57,7 +55,7 @@ public class AggregatingEndpoint extends SpecEndpoint {
 	public List<PlanStep> configurePlan(UUID requestId, List<String> stations, Iterable<Spec> specs, Multimap<Column, Column> mux, TimeConfig timeConfig, boolean noDataFilter) {
 		LinkedList<PlanStep> result = new LinkedList<PlanStep>();
 		
-		result.add(new DBConnectorPlanStep(time, specs, (SQLProvider) this.providers.get(Provider.SQL), requestId));
+		result.add(new DBConnectorPlanStep(time, specs, sqlProvider, requestId));
 			
 		Collection<Column> muxedCols = mux.values();
 		List<Column> interestingColumns = new LinkedList<Column>();

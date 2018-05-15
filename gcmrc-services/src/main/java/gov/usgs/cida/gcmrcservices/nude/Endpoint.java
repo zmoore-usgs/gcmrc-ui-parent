@@ -1,7 +1,36 @@
 package gov.usgs.cida.gcmrcservices.nude;
 
+import java.io.IOException;
+import java.io.Writer;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.EnumMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.UUID;
+
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.xml.stream.XMLStreamException;
+
+import org.apache.commons.lang.StringUtils;
+import org.joda.time.DateTime;
+import org.joda.time.DateTimeZone;
+import org.joda.time.Period;
+import org.joda.time.format.ISODateTimeFormat;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.ListMultimap;
+
 import gov.usgs.cida.gcmrcservices.TimeUtil;
 import gov.usgs.cida.gcmrcservices.column.ColumnResolver;
 import gov.usgs.cida.gcmrcservices.nude.time.TimeConfig;
@@ -16,23 +45,6 @@ import gov.usgs.cida.nude.provider.Provider;
 import gov.usgs.cida.nude.provider.sql.SQLProvider;
 import gov.usgs.cida.nude.time.DateRange;
 import gov.usgs.webservices.framework.basic.MimeType;
-import java.io.IOException;
-import java.io.Writer;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.*;
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.xml.stream.XMLStreamException;
-import org.apache.commons.lang.StringUtils;
-import org.joda.time.DateTime;
-import org.joda.time.DateTimeZone;
-import org.joda.time.Period;
-import org.joda.time.format.ISODateTimeFormat;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  *
@@ -65,6 +77,7 @@ public abstract class Endpoint extends HttpServlet {
 	public static final String CUTOFF_BEFORE_KEYWORD = "cutoffBefore";
 	
 	protected Map<Provider, IProvider> providers;
+	protected ColumnResolver resolver;
 	
 	@Override
 	public void init() throws ServletException {
@@ -73,19 +86,20 @@ public abstract class Endpoint extends HttpServlet {
 		sqlProvider.init();
 		providers.put(Provider.SQL, sqlProvider);
 		providers = Collections.unmodifiableMap(providers);
-		
+		resolver = new ColumnResolver(sqlProvider);
 		super.init();
 	}
 	
 	@Override
 	public void destroy() {
-		
 		if (null != providers) {
 			for (IProvider provider : providers.values()) {
 				provider.destroy();
 			}
 		}
-		
+		if (null != resolver) {
+			resolver = null;
+		}
 		super.destroy();
 	}
 	

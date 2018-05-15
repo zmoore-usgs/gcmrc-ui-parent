@@ -24,7 +24,6 @@ import com.google.common.collect.Multimap;
 
 import gov.usgs.cida.gcmrcservices.TimeUtil;
 import gov.usgs.cida.gcmrcservices.column.ColumnMetadata;
-import gov.usgs.cida.gcmrcservices.column.ColumnResolver;
 import gov.usgs.cida.gcmrcservices.jsl.data.ParameterSpec;
 import gov.usgs.cida.gcmrcservices.jsl.data.SpecOptions;
 import gov.usgs.cida.gcmrcservices.nude.time.CutoffTimesPlanStep;
@@ -36,8 +35,6 @@ import gov.usgs.cida.nude.column.SimpleColumn;
 import gov.usgs.cida.nude.plan.ConfigPlanStep;
 import gov.usgs.cida.nude.plan.Plan;
 import gov.usgs.cida.nude.plan.PlanStep;
-import gov.usgs.cida.nude.provider.Provider;
-import gov.usgs.cida.nude.provider.sql.SQLProvider;
 import gov.usgs.cida.nude.resultset.inmemory.TableRow;
 import gov.usgs.webservices.jdbc.spec.Spec;
 
@@ -106,10 +103,7 @@ public abstract class SpecEndpoint extends Endpoint {
 	
 	public Iterable<Spec> createSpecifiedSpecs(ListMultimap<String, String> params) {
 		Set<Spec> result = new HashSet<Spec>();
-		
 		SpecOptions specOptions = buildSpecOptions(params);
-		SQLProvider sqlProvider = (SQLProvider) providers.get(Provider.SQL);
-
 		List<String> userCols = params.get(COLUMN_KEYWORD);
 		for (String colName : userCols) {
 			if (colName.startsWith("iceAffected") || 
@@ -117,7 +111,7 @@ public abstract class SpecEndpoint extends Endpoint {
 				//do not create separate spec
 			}
 			else {
-				Spec resolvedSpec = ColumnResolver.createSpecs(colName, specOptions, sqlProvider);
+				Spec resolvedSpec = resolver.createSpecs(colName, specOptions);
 				if (null != resolvedSpec) {
 					result.add(resolvedSpec);
 				}				
@@ -132,7 +126,7 @@ public abstract class SpecEndpoint extends Endpoint {
 		
 		List<String> userCols = params.get(COLUMN_KEYWORD);
 		for (String colName : userCols) {
-			ColumnMetadata cmd = ColumnResolver.resolveColumn(colName, ((SQLProvider)providers.get(Provider.SQL)));
+			ColumnMetadata cmd = resolver.resolveColumn(colName);
 			String station = getStation(colName);
 
 			if (null != cmd && null!= station && !result.containsKey(cmd.getColumn(station))) {

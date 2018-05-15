@@ -1,13 +1,27 @@
 package gov.usgs.cida.gcmrcservices.nude;
 
-import gov.usgs.cida.gcmrcservices.column.ColumnMetadata;
-import com.google.common.collect.ListMultimap;
-import com.google.common.collect.Multimap;
 import static gov.usgs.cida.gcmrcservices.TimeUtil.TZ_CODE_LOOKUP;
-import gov.usgs.cida.gcmrcservices.column.ColumnMetadata.SpecEntry;
-import gov.usgs.cida.gcmrcservices.column.ColumnResolver;
 import static gov.usgs.cida.gcmrcservices.column.ColumnResolver.getCustomName;
 import static gov.usgs.cida.gcmrcservices.column.ColumnResolver.getStation;
+
+import java.math.BigDecimal;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map.Entry;
+import java.util.Set;
+import java.util.UUID;
+
+import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import com.google.common.collect.ListMultimap;
+import com.google.common.collect.Multimap;
+
+import gov.usgs.cida.gcmrcservices.column.ColumnMetadata;
+import gov.usgs.cida.gcmrcservices.column.ColumnMetadata.SpecEntry;
 import gov.usgs.cida.gcmrcservices.nude.time.CutoffTimesPlanStep;
 import gov.usgs.cida.gcmrcservices.nude.time.TimeColumnReq;
 import gov.usgs.cida.gcmrcservices.nude.time.TimeConfig;
@@ -27,17 +41,6 @@ import gov.usgs.cida.nude.provider.sql.SQLProvider;
 import gov.usgs.cida.nude.resultset.inmemory.TableRow;
 import gov.usgs.cida.nude.time.DateRange;
 import gov.usgs.webservices.jdbc.spec.Spec;
-import java.math.BigDecimal;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map.Entry;
-import java.util.Set;
-import java.util.UUID;
-import org.apache.commons.lang.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  *
@@ -68,17 +71,15 @@ public class AggregatingEndpoint extends SpecEndpoint {
 			result.add(new FilterStep(buildReplaceValueFilter(new ColumnGrouping(interestingColumns), interestingColumns, MINUS_999, BAD_DATA_KEYWORD)));
 		}
 		
-		SQLProvider sqlProvider = (SQLProvider) providers.get(Provider.SQL);
-		
 		Set<Column> exemptColumns = new HashSet<Column>();
 		for (String station : stations) {
-			for (Entry<String, ColumnMetadata> ent : ColumnResolver.getDischargeErrorColumns(sqlProvider).entrySet()) {
+			for (Entry<String, ColumnMetadata> ent : resolver.buildQErrorCols().entrySet()) {
 				exemptColumns.addAll(getExemptColumns(ent.getValue(), station));
 			}
-			for (Entry<String, ColumnMetadata> ent : ColumnResolver.getQWColumns(sqlProvider).entrySet()) {
+			for (Entry<String, ColumnMetadata> ent : resolver.buildQWParametersCols().entrySet()) {
 				exemptColumns.addAll(getExemptColumns(ent.getValue(), station));
 			}
-			for (Entry<String, ColumnMetadata> ent : ColumnResolver.getBedSedColumns(sqlProvider).entrySet()) {
+			for (Entry<String, ColumnMetadata> ent : resolver.buildBedMaterialParametersCols().entrySet()) {
 				exemptColumns.addAll(getExemptColumns(ent.getValue(), station));
 			}
 		}
@@ -86,7 +87,7 @@ public class AggregatingEndpoint extends SpecEndpoint {
 		NudeFilterBuilder offsettingLoadBuilder = new NudeFilterBuilder(new ColumnGrouping(interestingColumns));
 		offsettingLoadBuilder.addFilterStage(new FilterStageBuilder(offsettingLoadBuilder.getCurrOutCols()).buildFilterStage());
 		for (String station : stations) {
-			for (Entry<String, ColumnMetadata> ent : ColumnResolver.getCumulativeColumns(sqlProvider).entrySet()) {
+			for (Entry<String, ColumnMetadata> ent : resolver.buildCumulativeParametersCols().entrySet()) {
 				final Column derivedMux = ent.getValue().getColumn(station);
 				final Column derivedCol = ent.getValue().getInternalColumn(station);
 				if (mux.keySet().contains(derivedMux)) {
@@ -190,10 +191,9 @@ public class AggregatingEndpoint extends SpecEndpoint {
 			timeDisplayName = "time (" + timezoneCode + ")";
 		}
 		
-		SQLProvider sqlProvider = (SQLProvider) providers.get(Provider.SQL);
 		List<String> userCols = params.get(COLUMN_KEYWORD);
 		for (String colName : userCols) {
-			ColumnMetadata cmd = ColumnResolver.resolveColumn(colName, sqlProvider);
+			ColumnMetadata cmd = resolver.resolveColumn(colName);
 			String station = getStation(colName);
 			String customName = getCustomName(colName);
 			

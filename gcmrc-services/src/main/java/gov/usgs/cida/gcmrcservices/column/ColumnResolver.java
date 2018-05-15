@@ -80,15 +80,24 @@ public class ColumnResolver {
 		return result;
 	}
 
+	/**
+	 * This is garbage but possibly better than all the static nonsense?
+	 * @param uncleanName
+	 * @return
+	 */
 	public ColumnMetadata resolveColumn(String uncleanName) {
 		ColumnMetadata result = null;
-//		CM_LOOKUP.putAll(buildInstantaneousParametersCols(sqlProvider));
-//		CM_LOOKUP.putAll(buildAncillaryCols(sqlProvider));
-//		String cleanName = stripColName(uncleanName);
-//		if (null != cleanName) {
-//			result = CM_LOOKUP.get(cleanName);
-//		}
-
+		String cleanName = stripColName(uncleanName);
+		if (null != cleanName) {
+			Map<String, ColumnMetadata> allColumns = new HashMap<>();
+			allColumns.putAll(buildInstantaneousParametersCols());
+			allColumns.putAll(buildBedMaterialParametersCols());
+			allColumns.putAll(buildQWParametersCols());
+			allColumns.putAll(buildAncillaryCols());
+			allColumns.putAll(buildCumulativeParametersCols());
+			allColumns.putAll(buildQErrorCols());
+			result = allColumns.get(cleanName);
+		}
 		return result;
 	}
 	
@@ -116,7 +125,7 @@ public class ColumnResolver {
 		return result;
 	}
 	
-	protected Map<String, ColumnMetadata> buildInstantaneousParametersCols() {
+	private Map<String, ColumnMetadata> buildInstantaneousParametersCols() {
 		Map<String, ColumnMetadata> result = new HashMap<String, ColumnMetadata>();
 		ResultSet rs = null;
 		try {

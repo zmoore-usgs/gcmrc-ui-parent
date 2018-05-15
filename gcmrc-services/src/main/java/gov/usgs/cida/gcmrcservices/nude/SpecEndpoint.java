@@ -129,7 +129,7 @@ public abstract class SpecEndpoint extends Endpoint {
 			ColumnMetadata cmd = resolver.resolveColumn(colName);
 			String station = getStation(colName);
 
-			if (null != cmd && null!= station && !result.containsKey(cmd.getColumn(station))) {
+			if (null != cmd && null != station && !result.containsKey(cmd.getColumn(station))) {
 				List<ColumnMetadata.SpecEntry> specEntries = cmd.getSpecEntries();
 				for (ColumnMetadata.SpecEntry se : specEntries) {
 					result.put(cmd.getColumn(station), se.getColumn(station));

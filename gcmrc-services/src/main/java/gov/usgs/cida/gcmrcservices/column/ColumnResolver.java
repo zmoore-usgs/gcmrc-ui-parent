@@ -29,9 +29,16 @@ public class ColumnResolver {
 	public static final int columnIdentifierLength = 2; // HACK HAAAAAAAAAAAAAACK
 
 	private SQLProvider sqlProvider;
+	private Map<String, ColumnMetadata> columns;
 
 	public ColumnResolver(SQLProvider sqlProvider) {
 		this.sqlProvider = sqlProvider;
+		this.columns.putAll(buildInstantaneousParametersCols());
+		this.columns.putAll(buildBedMaterialParametersCols());
+		this.columns.putAll(buildQWParametersCols());
+		this.columns.putAll(buildAncillaryCols());
+		this.columns.putAll(buildCumulativeParametersCols());
+		this.columns.putAll(buildQErrorCols());
 	}
 	
 	protected static String stripColName(String colName) {
@@ -80,27 +87,15 @@ public class ColumnResolver {
 		return result;
 	}
 
-	/**
-	 * This is garbage but possibly better than all the static nonsense?
-	 * @param uncleanName
-	 * @return
-	 */
 	public ColumnMetadata resolveColumn(String uncleanName) {
 		ColumnMetadata result = null;
 		String cleanName = stripColName(uncleanName);
 		if (null != cleanName) {
-			Map<String, ColumnMetadata> allColumns = new HashMap<>();
-			allColumns.putAll(buildInstantaneousParametersCols());
-			allColumns.putAll(buildBedMaterialParametersCols());
-			allColumns.putAll(buildQWParametersCols());
-			allColumns.putAll(buildAncillaryCols());
-			allColumns.putAll(buildCumulativeParametersCols());
-			allColumns.putAll(buildQErrorCols());
-			result = allColumns.get(cleanName);
+			result = columns.get(cleanName);
 		}
 		return result;
 	}
-	
+
 	public Spec createSpecs(String colName, SpecOptions specOptions) {
 		Spec result = null;
 		

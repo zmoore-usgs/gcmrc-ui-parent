@@ -4,6 +4,7 @@ import java.sql.ResultSet;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
@@ -30,6 +31,17 @@ public class ColumnResolver {
 
 	private SQLProvider sqlProvider;
 	private Map<String, ColumnMetadata> columns;
+	
+	private static Map<String, String> cumulativeLoadParams = new HashMap<>();
+	
+	static {
+		cumulativeLoadParams.put("inst!S Sand Cumul Load", "Cumulative Suspended Sand Load (Metric Tons)");
+		cumulativeLoadParams.put("inst!Minor Trib S Sand Cumul Load", "Cumulative Suspended Sand Load (Metric Tons)");
+		cumulativeLoadParams.put("inst!S Fines Cumul Load", "Cumulative Silt-and-Clay Load (Metric Tons)");
+		cumulativeLoadParams.put("inst!Minor Trib S Fines Cumul Load", "Cumulative Silt-and-Clay Load (Metric Tons)");
+		cumulativeLoadParams.put("inst!Sand Cumul Load", "Cumulative Sand Load (Metric Tons)");
+		cumulativeLoadParams.put("inst!Calc Cumul Sand Bedload", "Calculated Cumulative Sand Bedload (Metric Tons)");
+	}
 
 	public ColumnResolver(SQLProvider sqlProvider) {
 		this.sqlProvider = sqlProvider;
@@ -95,6 +107,26 @@ public class ColumnResolver {
 			result = columns.get(cleanName);
 		}
 		return result;
+	}
+
+	/**
+	 * We need to know Cumulative Load parameters, so we can zero out the timeseries per request.
+	 * @return 
+	 */
+	public Map<String, ColumnMetadata> buildCumulativeParametersCols() {
+		Map<String, ColumnMetadata> result = new HashMap<String, ColumnMetadata>();
+		
+		for (Entry<String, String> entry : cumulativeLoadParams.entrySet()) {
+			result.put(entry.getKey(), makeColumnMetadata(entry.getKey(), entry.getValue()));
+		}
+
+		return result;
+	}
+
+	private ColumnMetadata makeColumnMetadata(String paramCode, String title) {
+		ParameterCode parsedParameterCode = ParameterCode.parseParameterCode(paramCode);
+		ColumnMetadata.SpecEntry specEntry = new ColumnMetadata.SpecEntry(parsedParameterCode, ColumnMetadata.SpecEntry.SpecType.PARAM);
+		return new ColumnMetadata(paramCode, title, specEntry);
 	}
 
 	public Spec createSpecs(String colName, SpecOptions specOptions) {
@@ -278,34 +310,6 @@ public class ColumnResolver {
 		} finally {
 			Closers.closeQuietly(rs);
 		}
-		return result;
-	}
-	
-	/**
-	 * We need to know Cumulative Load parameters, so we can zero out the timeseries per request.
-	 * @return 
-	 */
-	public Map<String, ColumnMetadata> buildCumulativeParametersCols() {
-		Map<String, ColumnMetadata> result = new HashMap<String, ColumnMetadata>();
-		
-		//WAYYY HAAACK
-		result.put("inst!S Sand Cumul Load", new ColumnMetadata("inst!S Sand Cumul Load", "Cumulative Suspended Sand Load (Metric Tons)", 
-				new ColumnMetadata.SpecEntry(ParameterCode.parseParameterCode("inst!S Sand Cumul Load"), ColumnMetadata.SpecEntry.SpecType.PARAM)));
-		result.put("inst!Minor Trib S Sand Cumul Load", new ColumnMetadata("inst!Minor Trib S Sand Cumul Load", "Cumulative Suspended Sand Load (Metric Tons)", 
-				new ColumnMetadata.SpecEntry(ParameterCode.parseParameterCode("inst!Minor Trib S Sand Cumul Load"), ColumnMetadata.SpecEntry.SpecType.PARAM)));
-		result.put("inst!S Fines Cumul Load", new ColumnMetadata("inst!S Fines Cumul Load", "Cumulative Silt-and-Clay Load (Metric Tons)", 
-				new ColumnMetadata.SpecEntry(ParameterCode.parseParameterCode("inst!S Fines Cumul Load"), ColumnMetadata.SpecEntry.SpecType.PARAM)));
-		result.put("inst!Minor Trib S Fines Cumul Load", new ColumnMetadata("inst!Minor Trib S Fines Cumul Load", "Cumulative Silt-and-Clay Load (Metric Tons)", 
-				new ColumnMetadata.SpecEntry(ParameterCode.parseParameterCode("inst!Minor Trib S Fines Cumul Load"), ColumnMetadata.SpecEntry.SpecType.PARAM)));
-		
-		//ugh. this is horrible.
-		result.put("inst!Sand Cumul Load", new ColumnMetadata("inst!Sand Cumul Load", "Cumulative Sand Load (Metric Tons)", 
-				new ColumnMetadata.SpecEntry(ParameterCode.parseParameterCode("inst!Sand Cumul Load"), ColumnMetadata.SpecEntry.SpecType.PARAM)));
-                
-         //need a shower after this.
-         result.put("inst!Calc Cumul Sand Bedload", new ColumnMetadata("inst!Calc Cumul Sand Bedload", "Calculated Cumulative Sand Bedload (Metric Tons)", 
-        		 new ColumnMetadata.SpecEntry(ParameterCode.parseParameterCode("inst!Calc Cumul Sand Bedload"), ColumnMetadata.SpecEntry.SpecType.PARAM)));
-		
 		return result;
 	}
 	

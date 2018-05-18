@@ -11,11 +11,11 @@ public class GCMRCResponse {
 	@SuppressWarnings("unused")
 	private static final Logger log = LoggerFactory.getLogger(GCMRCResponse.class);
 	
-	private final SuccessEnvelope success;
+	private final SuccessEnvelope<?> success;
 	private final FailureEnvelope failure;
 	private final String status;
 
-	public GCMRCResponse(SuccessEnvelope success) {
+	public GCMRCResponse(SuccessEnvelope<?> success) {
 		this.success = success;
 		this.failure = null;
 		this.status = "success";
@@ -27,13 +27,13 @@ public class GCMRCResponse {
 		this.status = "failure";
 	}
 	
-	public GCMRCResponse(SuccessEnvelope success, FailureEnvelope faliure) {
+	public GCMRCResponse(SuccessEnvelope<?> success, FailureEnvelope faliure) {
 		this.success = success;
 		this.failure = faliure;
 		this.status = "mixed";
 	}
 
-	public SuccessEnvelope getSuccess() {
+	public SuccessEnvelope<?> getSuccess() {
 		return this.success;
 	}
 	

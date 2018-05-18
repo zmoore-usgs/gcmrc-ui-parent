@@ -1,5 +1,15 @@
 package gov.usgs.cida.gcmrcservices.column;
 
+import java.sql.ResultSet;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+
+import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import gov.usgs.cida.gcmrcservices.jsl.data.ParameterCode;
 import gov.usgs.cida.gcmrcservices.jsl.data.ParameterSpec;
 import gov.usgs.cida.gcmrcservices.jsl.data.QWDataSpec;
@@ -13,115 +23,116 @@ import gov.usgs.cida.nude.provider.sql.SQLProvider;
 import gov.usgs.cida.nude.resultset.inmemory.TableRow;
 import gov.usgs.webservices.jdbc.spec.Spec;
 
-import java.sql.ResultSet;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import org.apache.commons.lang.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-/**
- *
- * @author dmsibley
- */
 public class ColumnResolver {
 
 	private static final Logger log = LoggerFactory.getLogger(ColumnResolver.class);
 
-	private static ColumnResolver resolver = null;
-	protected Map<String, ColumnMetadata> CM_LOOKUP;
-	protected Map<String, ColumnMetadata> qwColumnMetadatas;
-	protected Map<String, ColumnMetadata> dischargeErrorColumnMetadatas;
-	protected Map<String, ColumnMetadata> cumulativeColumnMetadatas;
-	protected Map<String, ColumnMetadata> ancillaryColumnMetadatas;
-	protected Map<String, ColumnMetadata> bedSedimentColumnMetadatas;
-
 	public static final int columnIdentifierLength = 2; // HACK HAAAAAAAAAAAAAACK
 
-	private ColumnResolver(SQLProvider sqlProvider) {
-		CM_LOOKUP = new HashMap<String, ColumnMetadata>();
-		CM_LOOKUP.putAll(buildInstantaneousParametersCols(sqlProvider));
-		
-		qwColumnMetadatas = Collections.unmodifiableMap(buildQWParametersCols(sqlProvider));
-		CM_LOOKUP.putAll(qwColumnMetadatas);
-
-		dischargeErrorColumnMetadatas = Collections.unmodifiableMap(buildQErrorCols(sqlProvider));
-		CM_LOOKUP.putAll(dischargeErrorColumnMetadatas);
-		
-		ancillaryColumnMetadatas = Collections.unmodifiableMap(buildAncillaryCols(sqlProvider));
-		CM_LOOKUP.putAll(ancillaryColumnMetadatas);
-		bedSedimentColumnMetadatas = Collections.unmodifiableMap(buildBedMaterialParametersCols(sqlProvider));
-		CM_LOOKUP.putAll(buildBedMaterialParametersCols(sqlProvider));
-		CM_LOOKUP = Collections.unmodifiableMap(CM_LOOKUP);
-		
-		cumulativeColumnMetadatas = Collections.unmodifiableMap(buildCumulativeParametersCols());
-	}
+	private SQLProvider sqlProvider;
+	private Map<String, ColumnMetadata> columns;
 	
-	public static Map<String, ColumnMetadata> getDischargeErrorColumns(SQLProvider sqlProvider) {
-		Map<String, ColumnMetadata> result = new HashMap<String, ColumnMetadata>();
-		if (null == resolver) {
-			resolver = new ColumnResolver(sqlProvider);
-		}
-		
-		result.putAll(resolver.dischargeErrorColumnMetadatas);
-		
-		return Collections.unmodifiableMap(result);
-	}
+	private static Map<String, String> cumulativeLoadParams = new HashMap<>();
 	
-	public static Map<String, ColumnMetadata> getBedSedColumns(SQLProvider sqlProvider) {
-		Map<String, ColumnMetadata> result = new HashMap<String, ColumnMetadata>();
-		if (null == resolver) {
-			resolver = new ColumnResolver(sqlProvider);
-		}
-		
-		result.putAll(resolver.bedSedimentColumnMetadatas);
-		
-		return Collections.unmodifiableMap(result);
-	}
-	
-	public static Map<String, ColumnMetadata> getQWColumns(SQLProvider sqlProvider) {
-		Map<String, ColumnMetadata> result = new HashMap<String, ColumnMetadata>();
-		if (null == resolver) {
-			resolver = new ColumnResolver(sqlProvider);
-		}
-		
-		result.putAll(resolver.qwColumnMetadatas);
-		
-		return Collections.unmodifiableMap(result);
-	}
-	
-	public static Map<String, ColumnMetadata> getCumulativeColumns(SQLProvider sqlProvider) {
-		Map<String, ColumnMetadata> result = new HashMap<String, ColumnMetadata>();
-		if (null == resolver) {
-			resolver = new ColumnResolver(sqlProvider);
-		}
-		
-		result.putAll(resolver.cumulativeColumnMetadatas);
-		
-		return Collections.unmodifiableMap(result);
+	static {
+		cumulativeLoadParams.put("inst!S Sand Cumul Load", "Cumulative Suspended Sand Load (Metric Tons)");
+		cumulativeLoadParams.put("inst!Minor Trib S Sand Cumul Load", "Cumulative Suspended Sand Load (Metric Tons)");
+		cumulativeLoadParams.put("inst!S Fines Cumul Load", "Cumulative Silt-and-Clay Load (Metric Tons)");
+		cumulativeLoadParams.put("inst!Minor Trib S Fines Cumul Load", "Cumulative Silt-and-Clay Load (Metric Tons)");
+		cumulativeLoadParams.put("inst!Sand Cumul Load", "Cumulative Sand Load (Metric Tons)");
+		cumulativeLoadParams.put("inst!Calc Cumul Sand Bedload", "Calculated Cumulative Sand Bedload (Metric Tons)");
 	}
 
-	public static ColumnMetadata resolveColumn(String uncleanName, SQLProvider sqlProvider) {
+	public ColumnResolver(SQLProvider sqlProvider) {
+		this.sqlProvider = sqlProvider;
+		this.columns = new HashMap<>();
+		this.columns.putAll(buildInstantaneousParametersCols());
+		this.columns.putAll(buildBedMaterialParametersCols());
+		this.columns.putAll(buildQWParametersCols());
+		this.columns.putAll(buildAncillaryCols());
+		this.columns.putAll(buildCumulativeParametersCols());
+		this.columns.putAll(buildQErrorCols());
+	}
+	
+	protected static String stripColName(String colName) {
+		String result = colName;
+		String cleanName = StringUtils.trimToNull(colName);
+		if (null != cleanName) {
+			int colLength = columnIdentifierLength;
+			if (cleanName.startsWith("time")) {
+				colLength--;
+			}
+			String[] tings = cleanName.split("!", colLength + 1);
+			if (tings.length > colLength) {
+				//Strip the extra tings
+				int restOfInfo = cleanName.indexOf(tings[colLength]) - 1;
+				if (0 < restOfInfo) {
+					result = cleanName.substring(0, restOfInfo);
+				} else {
+					log.error("could not find rest of string in column name");
+				}
+			} else {
+				log.trace("No extra tings.");
+			}
+		}
+		return result;
+	}
+
+	public static String getStation(String colName) {
+		String result = null;
+		String stripped = stripColName(colName);
+		String restOfStation = colName.substring(stripped.length());
+		String[] otherThings = restOfStation.split("!");
+		if (1 < otherThings.length) {
+			result = otherThings[1];
+		}
+		return result;
+	}
+
+	public static String getCustomName(String colName) {
+		String result = null;
+		String stripped = stripColName(colName);
+		String restOfStation = colName.substring(stripped.length());
+		String[] otherThings = restOfStation.split("!");
+		if (2 < otherThings.length) {
+			result = otherThings[2];
+		}
+		return result;
+	}
+
+	public ColumnMetadata resolveColumn(String uncleanName) {
 		ColumnMetadata result = null;
-		if (null == resolver) {
-			resolver = new ColumnResolver(sqlProvider);
-		}
-
 		String cleanName = stripColName(uncleanName);
 		if (null != cleanName) {
-			result = resolver.CM_LOOKUP.get(cleanName);
+			result = columns.get(cleanName);
+		}
+		return result;
+	}
+
+	/**
+	 * We need to know Cumulative Load parameters, so we can zero out the timeseries per request.
+	 * @return 
+	 */
+	public Map<String, ColumnMetadata> buildCumulativeParametersCols() {
+		Map<String, ColumnMetadata> result = new HashMap<String, ColumnMetadata>();
+		
+		for (Entry<String, String> entry : cumulativeLoadParams.entrySet()) {
+			result.put(entry.getKey(), makeColumnMetadata(entry.getKey(), entry.getValue()));
 		}
 
 		return result;
 	}
-	
-	public static Spec createSpecs(String colName, SpecOptions specOptions, SQLProvider sqlProvider) {
+
+	private ColumnMetadata makeColumnMetadata(String paramCode, String title) {
+		ParameterCode parsedParameterCode = ParameterCode.parseParameterCode(paramCode);
+		ColumnMetadata.SpecEntry specEntry = new ColumnMetadata.SpecEntry(parsedParameterCode, ColumnMetadata.SpecEntry.SpecType.PARAM);
+		return new ColumnMetadata(paramCode, title, specEntry);
+	}
+
+	public Spec createSpecs(String colName, SpecOptions specOptions) {
 		Spec result = null;
 		
-		ColumnMetadata cmd = ColumnResolver.resolveColumn(colName, sqlProvider);
+		ColumnMetadata cmd = resolveColumn(colName);
 		String station = ColumnResolver.getStation(colName);
 
 		if (null != cmd && null != station) {
@@ -142,59 +153,7 @@ public class ColumnResolver {
 		return result;
 	}
 	
-	protected static String stripColName(String colName) {
-		String result = colName;
-
-		String cleanName = StringUtils.trimToNull(colName);
-		if (null != cleanName) {
-			int colLength = columnIdentifierLength;
-			if (cleanName.startsWith("time")) {
-				colLength--;
-			}
-			String[] tings = cleanName.split("!", colLength + 1);
-			if (tings.length > colLength) {
-				//Strip the extra tings
-				int restOfInfo = cleanName.indexOf(tings[colLength]) - 1;
-				if (0 < restOfInfo) {
-					result = cleanName.substring(0, restOfInfo);
-				} else {
-					log.error("could not find rest of string in column name");
-				}
-			} else {
-				log.trace("No extra tings.");
-			}
-		}
-
-		return result;
-	}
-
-	public static String getStation(String colName) {
-		String result = null;
-
-		String stripped = stripColName(colName);
-		String restOfStation = colName.substring(stripped.length());
-		String[] otherThings = restOfStation.split("!");
-		if (1 < otherThings.length) {
-			result = otherThings[1];
-		}
-
-		return result;
-	}
-
-	public static String getCustomName(String colName) {
-		String result = null;
-
-		String stripped = stripColName(colName);
-		String restOfStation = colName.substring(stripped.length());
-		String[] otherThings = restOfStation.split("!");
-		if (2 < otherThings.length) {
-			result = otherThings[2];
-		}
-
-		return result;
-	}
-	
-	protected static Map<String, ColumnMetadata> buildInstantaneousParametersCols(SQLProvider sqlProvider) {
+	private Map<String, ColumnMetadata> buildInstantaneousParametersCols() {
 		Map<String, ColumnMetadata> result = new HashMap<String, ColumnMetadata>();
 		ResultSet rs = null;
 		try {
@@ -233,7 +192,7 @@ public class ColumnResolver {
 		return result;
 	}
 	
-	protected static Map<String, ColumnMetadata> buildBedMaterialParametersCols(SQLProvider sqlProvider) {
+	public Map<String, ColumnMetadata> buildBedMaterialParametersCols() {
 		Map<String, ColumnMetadata> result = new HashMap<String, ColumnMetadata>();
 		ResultSet rs = null;
 		try {
@@ -273,7 +232,7 @@ public class ColumnResolver {
 		return result;
 	}
 	
-	protected static Map<String, ColumnMetadata> buildQWParametersCols(SQLProvider sqlProvider) {
+	public Map<String, ColumnMetadata> buildQWParametersCols() {
 		Map<String, ColumnMetadata> result = new HashMap<String, ColumnMetadata>();
 		ResultSet rs = null;
 		try {
@@ -318,7 +277,7 @@ public class ColumnResolver {
 		return result;
 	}
 	
-	protected static Map<String, ColumnMetadata> buildAncillaryCols(SQLProvider sqlProvider) {
+	protected Map<String, ColumnMetadata> buildAncillaryCols() {
 		Map<String, ColumnMetadata> result = new HashMap<String, ColumnMetadata>();
 		ResultSet rs = null;
 		try {
@@ -355,39 +314,10 @@ public class ColumnResolver {
 	}
 	
 	/**
-	 * We need to know Cumulative Load parameters, so we can zero out the timeseries per request.
+	 * Cols for discharge error values
 	 * @return 
 	 */
-	protected static Map<String, ColumnMetadata> buildCumulativeParametersCols() {
-		Map<String, ColumnMetadata> result = new HashMap<String, ColumnMetadata>();
-		
-		//WAYYY HAAACK
-		result.put("inst!S Sand Cumul Load", new ColumnMetadata("inst!S Sand Cumul Load", "Cumulative Suspended Sand Load (Metric Tons)", 
-				new ColumnMetadata.SpecEntry(ParameterCode.parseParameterCode("inst!S Sand Cumul Load"), ColumnMetadata.SpecEntry.SpecType.PARAM)));
-		result.put("inst!Minor Trib S Sand Cumul Load", new ColumnMetadata("inst!Minor Trib S Sand Cumul Load", "Cumulative Suspended Sand Load (Metric Tons)", 
-				new ColumnMetadata.SpecEntry(ParameterCode.parseParameterCode("inst!Minor Trib S Sand Cumul Load"), ColumnMetadata.SpecEntry.SpecType.PARAM)));
-		result.put("inst!S Fines Cumul Load", new ColumnMetadata("inst!S Fines Cumul Load", "Cumulative Silt-and-Clay Load (Metric Tons)", 
-				new ColumnMetadata.SpecEntry(ParameterCode.parseParameterCode("inst!S Fines Cumul Load"), ColumnMetadata.SpecEntry.SpecType.PARAM)));
-		result.put("inst!Minor Trib S Fines Cumul Load", new ColumnMetadata("inst!Minor Trib S Fines Cumul Load", "Cumulative Silt-and-Clay Load (Metric Tons)", 
-				new ColumnMetadata.SpecEntry(ParameterCode.parseParameterCode("inst!Minor Trib S Fines Cumul Load"), ColumnMetadata.SpecEntry.SpecType.PARAM)));
-		
-		//ugh. this is horrible.
-		result.put("inst!Sand Cumul Load", new ColumnMetadata("inst!Sand Cumul Load", "Cumulative Sand Load (Metric Tons)", 
-				new ColumnMetadata.SpecEntry(ParameterCode.parseParameterCode("inst!Sand Cumul Load"), ColumnMetadata.SpecEntry.SpecType.PARAM)));
-                
-                //need a shower after this.
-                result.put("inst!Calc Cumul Sand Bedload", new ColumnMetadata("inst!Calc Cumul Sand Bedload", "Calculated Cumulative Sand Bedload (Metric Tons)", 
-				new ColumnMetadata.SpecEntry(ParameterCode.parseParameterCode("inst!Calc Cumul Sand Bedload"), ColumnMetadata.SpecEntry.SpecType.PARAM)));
-		
-		
-		return result;
-	}
-	
-	/**
-	 * Cols for error values
-	 * @return 
-	 */
-	protected static Map<String, ColumnMetadata> buildQErrorCols(SQLProvider sqlProvider) {
+	public Map<String, ColumnMetadata> buildQErrorCols() {
 		Map<String, ColumnMetadata> result = new HashMap<String, ColumnMetadata>();
 		
 		Column methodCol = new SimpleColumn("METHOD");

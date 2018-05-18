@@ -8,7 +8,6 @@
 	<name>GCMRC Parent</name>
 	
 	<modules>
-		<module>gcmrc-ui</module>
 		<module>gcmrc-labs</module>
 		<module>gcmrc-services</module>
 	</modules>

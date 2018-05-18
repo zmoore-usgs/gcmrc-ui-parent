@@ -182,6 +182,9 @@ public class BedSedAverageResultSet extends PeekingResultSet {
 					modMap.put(col, sample.getValue(col));
 				}
 				n++;
+				
+				//Find the largest scale in the list of samples being averaged
+				int largestScale = 0;
 				for (Column col : cumulColGroup) {
 					//CUMULATIVE MOVING AVERAGE
 					//http://en.wikipedia.org/wiki/Moving_average#Cumulative_moving_average
@@ -191,6 +194,7 @@ public class BedSedAverageResultSet extends PeekingResultSet {
 					String cumulativeValue = modMap.get(cuMeanColumn);
 					try {
 						BigDecimal x1 = new BigDecimal(sample.getValue(col));
+						largestScale = x1.scale() > largestScale ? x1.scale() : largestScale;
 						BigDecimal cmaN = BigDecimal.ZERO;
 						if (null != cumulativeValue) {
 							cmaN = new BigDecimal(cumulativeValue);
@@ -205,10 +209,9 @@ public class BedSedAverageResultSet extends PeekingResultSet {
 					modMap.put(cuMeanColumn, cumulativeValue);
 					modMap.put(lastCuMeanColumn, lastCumulativeValue);
 				}
-				
-				//Consistent MathContext to use when Rounding
-				MathContext mc = new MathContext(4, RoundingMode.HALF_EVEN);
-				int largestScale = 4;
+
+				//Add 1 to the largest scale found so that error bars are precise enough
+				largestScale+=2;
 
 				//STANDARD DEVIATION
 				//http://en.wikipedia.org/wiki/Standard_deviation#Corrected_sample_standard_deviation
@@ -242,13 +245,11 @@ public class BedSedAverageResultSet extends PeekingResultSet {
 					
 					BigDecimal qValue = null;
 					if (null != currVal) {
-						largestScale = currVal.scale()+2 > largestScale ? currVal.scale()+2 : largestScale;
-						mc = new MathContext(largestScale, RoundingMode.HALF_EVEN);
 						BigDecimal xAk1 = currVal.subtract(lastCuMeanValue);
 						BigDecimal xAk = currVal.subtract(cuMeanValue);
 						qValue = lastQValue.add(xAk1.multiply(xAk));
-						BigDecimal sampleVariance = qValue.divide(new BigDecimal(n - 1), mc);
-						stdDevValue = new BigDecimal(Math.sqrt(sampleVariance.doubleValue()), mc);
+						BigDecimal sampleVariance = qValue.divide(new BigDecimal(n - 1), largestScale, RoundingMode.HALF_EVEN).setScale(largestScale, BigDecimal.ROUND_HALF_EVEN);
+						stdDevValue = new BigDecimal(Math.sqrt(sampleVariance.doubleValue())).setScale(largestScale, BigDecimal.ROUND_HALF_EVEN);
 					} else {
 						log.error("BAD THINGS! We should never have a null value in this area!");
 					}
@@ -278,7 +279,7 @@ public class BedSedAverageResultSet extends PeekingResultSet {
 						stdDevValue = new BigDecimal(modMap.get(stdDevColumn));
 					}
 					
-					BigDecimal stdErrValue = stdDevValue.divide(new BigDecimal(Math.sqrt(n), mc), mc);
+					BigDecimal stdErrValue = stdDevValue.divide(new BigDecimal(Math.sqrt(n)), largestScale, RoundingMode.HALF_EVEN).setScale(largestScale, BigDecimal.ROUND_HALF_EVEN);
 					
 					String stdErrResult = null;
 					if (null != stdErrValue) {
@@ -297,8 +298,8 @@ public class BedSedAverageResultSet extends PeekingResultSet {
 					if (null != modMap.get(stdErrColumn)) {
 						stdErrValue = new BigDecimal(modMap.get(stdErrColumn));
 					}
-					BigDecimal confidenceInterval = new BigDecimal(1.96, new MathContext(3, RoundingMode.HALF_EVEN));
-					BigDecimal conf95Value = confidenceInterval.multiply(stdErrValue, mc);
+					BigDecimal confidenceInterval = new BigDecimal(1.96);
+					BigDecimal conf95Value = confidenceInterval.multiply(stdErrValue).setScale(largestScale, BigDecimal.ROUND_HALF_EVEN);
 					
 					String conf95Result = null;
 					if (null != conf95Value) {

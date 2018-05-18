@@ -1,7 +1,6 @@
 package gov.usgs.cida.gcmrcservices.nude;
 
 import java.math.BigDecimal;
-import java.math.MathContext;
 import java.math.RoundingMode;
 import java.sql.ResultSet;
 import java.sql.SQLException;

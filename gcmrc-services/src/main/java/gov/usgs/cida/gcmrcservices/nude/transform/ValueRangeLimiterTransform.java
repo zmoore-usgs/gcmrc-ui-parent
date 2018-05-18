@@ -41,7 +41,6 @@ public class ValueRangeLimiterTransform implements ColumnTransform {
 		}
 		return result;
 	}
-
 	
 	@Override
 	public String transform(TableRow tr) {

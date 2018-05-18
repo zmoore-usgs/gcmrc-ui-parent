@@ -206,6 +206,10 @@ public class BedSedAverageResultSet extends PeekingResultSet {
 					modMap.put(lastCuMeanColumn, lastCumulativeValue);
 				}
 				
+				//Consistent MathContext to use when Rounding
+				MathContext mc = new MathContext(4, RoundingMode.HALF_EVEN);
+				int largestScale = 4;
+
 				//STANDARD DEVIATION
 				//http://en.wikipedia.org/wiki/Standard_deviation#Corrected_sample_standard_deviation
 				//http://en.wikipedia.org/wiki/Standard_deviation#Rapid_calculation_methods
@@ -238,11 +242,12 @@ public class BedSedAverageResultSet extends PeekingResultSet {
 					
 					BigDecimal qValue = null;
 					if (null != currVal) {
-						MathContext mc = new MathContext(currVal.precision(), RoundingMode.HALF_EVEN);
+						largestScale = currVal.scale()+2 > largestScale ? currVal.scale()+2 : largestScale;
+						mc = new MathContext(largestScale, RoundingMode.HALF_EVEN);
 						BigDecimal xAk1 = currVal.subtract(lastCuMeanValue);
 						BigDecimal xAk = currVal.subtract(cuMeanValue);
 						qValue = lastQValue.add(xAk1.multiply(xAk));
-						BigDecimal sampleVariance = qValue.divide(new BigDecimal(n - 1), RoundingMode.HALF_EVEN);
+						BigDecimal sampleVariance = qValue.divide(new BigDecimal(n - 1), mc);
 						stdDevValue = new BigDecimal(Math.sqrt(sampleVariance.doubleValue()), mc);
 					} else {
 						log.error("BAD THINGS! We should never have a null value in this area!");
@@ -273,7 +278,7 @@ public class BedSedAverageResultSet extends PeekingResultSet {
 						stdDevValue = new BigDecimal(modMap.get(stdDevColumn));
 					}
 					
-					BigDecimal stdErrValue = stdDevValue.divide(new BigDecimal(Math.sqrt(n), new MathContext(stdDevValue.precision(), RoundingMode.HALF_EVEN)), RoundingMode.HALF_EVEN);
+					BigDecimal stdErrValue = stdDevValue.divide(new BigDecimal(Math.sqrt(n), mc), mc);
 					
 					String stdErrResult = null;
 					if (null != stdErrValue) {
@@ -292,8 +297,8 @@ public class BedSedAverageResultSet extends PeekingResultSet {
 					if (null != modMap.get(stdErrColumn)) {
 						stdErrValue = new BigDecimal(modMap.get(stdErrColumn));
 					}
-					BigDecimal confidenceInterval = new BigDecimal(1.96, new MathContext(3, RoundingMode.HALF_EVEN));
-					BigDecimal conf95Value = confidenceInterval.multiply(stdErrValue, new MathContext(confidenceInterval.precision(), RoundingMode.HALF_EVEN));
+					BigDecimal confidenceInterval = new BigDecimal(1.96, new MathContext(4, RoundingMode.HALF_EVEN));
+					BigDecimal conf95Value = confidenceInterval.multiply(stdErrValue, mc);
 					
 					String conf95Result = null;
 					if (null != conf95Value) {

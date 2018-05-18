@@ -297,7 +297,7 @@ public class BedSedAverageResultSet extends PeekingResultSet {
 					if (null != modMap.get(stdErrColumn)) {
 						stdErrValue = new BigDecimal(modMap.get(stdErrColumn));
 					}
-					BigDecimal confidenceInterval = new BigDecimal(1.96, new MathContext(4, RoundingMode.HALF_EVEN));
+					BigDecimal confidenceInterval = new BigDecimal(1.96, new MathContext(3, RoundingMode.HALF_EVEN));
 					BigDecimal conf95Value = confidenceInterval.multiply(stdErrValue, mc);
 					
 					String conf95Result = null;

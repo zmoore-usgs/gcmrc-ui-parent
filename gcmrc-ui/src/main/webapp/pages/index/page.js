@@ -57,6 +57,8 @@ GCMRC.Page = {
 					networkName: key,
 					networkDisplayName: network.displayName,
 					networkResearchFolder: network.researchItemId,
+					networkTopoSurveyFolder: network.topoSurveyId,
+					networkGisFolder: network.gisDataId,
 					networkPhotoFolder: network.photoItemId
 				});
 				GCMRC.Mapping.layers.network.addFeatures([siteFeature]);
@@ -115,13 +117,25 @@ GCMRC.Page = {
 				$('#networkPopup .network-name').html(vector.attributes.networkDisplayName);
 				$('#networkStation').attr('href', CONFIG.relativePath + 'stations/' + vector.attributes.networkName);
 				$('#networkResearchFolder').attr('href', 'https://www.sciencebase.gov/catalog/item/' + vector.attributes.networkResearchFolder);
+				if (GCMRC.Networks[vector.attributes.networkName].topo) {
+					$('#networkTopoSurveyFolder').attr('href', 'https://www.sciencebase.gov/catalog/item/' + vector.attributes.networkTopoSurveyFolder);
+					$('#networkTopoSurveyFolder').parent().show();
+				} else {
+					$('#networkTopoSurveyFolder').parent().hide();
+				}
+				if (GCMRC.Networks[vector.attributes.networkName].gis) {
+					$('#networkGisFolder').attr('href', 'https://www.sciencebase.gov/catalog/item/' + vector.attributes.networkGisFolder);
+					$('#networkGisFolder').parent().show();
+				} else {
+					$('#networkGisFolder').parent().hide();
+				}
 				$('#networkPhotoFolder').attr('href', 'https://www.sciencebase.gov/catalog/item/' + vector.attributes.networkPhotoFolder);
 				if (GCMRC.Networks[vector.attributes.networkName].reaches) {
 					$('#networkReach').attr('href', CONFIG.relativePath + 'reaches/' + vector.attributes.networkName);					
 					$('#networkReach').parent().show();										
 				}
 				else {
-					$('#networkReach').parent().hide();										
+					$('#networkReach').parent().hide();
 				}
 				$('#networkPopup').modal();
 			}

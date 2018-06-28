@@ -9,8 +9,18 @@ $(document).ready(function() {
 			if (GCMRC.Networks[key].reaches) {
 				networkDesc = networkDesc + '<li><a href="' + CONFIG.relativePath + 'reaches/' + key +'">Sediment Budget Reaches</a></li>';
 			}
-			networkDesc = networkDesc + '<li><a href="https://www.sciencebase.gov/catalog/item/'+ GCMRC.Networks[key].researchItemId +'">Research Trip Data</li>';
-			networkDesc = networkDesc + '<li><a href="https://www.sciencebase.gov/catalog/item/'+ GCMRC.Networks[key].photoItemId +'">Historical Photographs</li>';
+			if (GCMRC.Networks[key].researchItemId) {
+				networkDesc = networkDesc + '<li><a href="https://www.sciencebase.gov/catalog/item/'+ GCMRC.Networks[key].researchItemId +'">Research Trip Data</li>';
+			}
+			if (GCMRC.Networks[key].topoSurveyId) {
+				networkDesc = networkDesc + '<li><a href="https://www.sciencebase.gov/catalog/item/'+ GCMRC.Networks[key].topoSurveyId +'">Topographic Surveys</li>';
+			}
+			if (GCMRC.Networks[key].photoItemId) {
+				networkDesc = networkDesc + '<li><a href="https://www.sciencebase.gov/catalog/item/'+ GCMRC.Networks[key].photoItemId +'">Historical Photographs</li>';
+			}
+			if (GCMRC.Networks[key].gisDataId) {
+				networkDesc = networkDesc + '<li><a href="https://www.sciencebase.gov/catalog/item/'+ GCMRC.Networks[key].gisDataId +'">GIS Data</li>';
+			}
 			networkDesc = networkDesc + '</ul>';
 			$networkList.append(networkDesc)
 		}

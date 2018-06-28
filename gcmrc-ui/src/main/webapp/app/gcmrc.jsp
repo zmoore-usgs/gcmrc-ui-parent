@@ -39,6 +39,8 @@ GCMRC.Stations = {
 		"displayName" : "ERROR",
 		"researchItemId" : "ERROR",
 		"photoItemId" : "ERROR",
+		"topoSurveyId" : "ERROR",
+		"gisDataId" : "ERROR",
 		"lat" : 43.0731,
 		"lon" : -89.4011
 	},

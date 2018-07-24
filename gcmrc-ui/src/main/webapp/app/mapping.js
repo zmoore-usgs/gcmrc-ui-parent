@@ -157,12 +157,11 @@ GCMRC.Mapping = function() {
 		flowlines : {
 			allzones : new OpenLayers.Layer.WMS(
 				'Flow Lines',
-				CONFIG.relativePath + 'geoserver/sample/wms',
+				'https://www.sciencebase.gov/catalogMaps/mapping/ows/5b525607e4b05cbf87bfe21c?SERVICE=WMS&REQUEST=GetMap&FORMAT=image/png',
 				{
 					SRS: 'EPSG:900913',
 					CRS: 'EPSG:900913',
-					LAYERS: 'sample:CR_CLIP',
-					STYLES: 'CR_CLIP_LONG',
+					LAYERS: 'CR_CLIP',
 					transparent : true
 				},
 				{
@@ -173,12 +172,11 @@ GCMRC.Mapping = function() {
 			),
 			zone9380000 : new OpenLayers.Layer.WMS(
 				'Flow Lines',
-				CONFIG.relativePath + 'geoserver/sample/wms',
+				'https://www.sciencebase.gov/catalogMaps/mapping/ows/5b525607e4b05cbf87bfe21c?SERVICE=WMS&REQUEST=GetMap&FORMAT=image/png',
 				{
 					SRS: 'EPSG:900913',
 					CRS: 'EPSG:900913',
-					LAYERS: 'sample:CR_CLIP',
-					STYLES: 'CR_CLIP_ZONE_9380000',
+					LAYERS: 'CR_CLIP',
 					transparent : true
 				},
 				{
@@ -189,12 +187,11 @@ GCMRC.Mapping = function() {
 			),
 			zone9383050 : new OpenLayers.Layer.WMS(
 				'Flow Lines',
-				CONFIG.relativePath + 'geoserver/sample/wms',
+				'https://www.sciencebase.gov/catalogMaps/mapping/ows/5b525607e4b05cbf87bfe21c?SERVICE=WMS&REQUEST=GetMap&FORMAT=image/png',
 				{
 					SRS: 'EPSG:900913',
 					CRS: 'EPSG:900913',
-					LAYERS: 'sample:CR_CLIP',
-					STYLES: 'CR_CLIP_ZONE_9383050',
+					LAYERS: 'CR_CLIP',
 					transparent : true
 				},
 				{
@@ -205,12 +202,11 @@ GCMRC.Mapping = function() {
 			),
 			zone9383100 : new OpenLayers.Layer.WMS(
 				'Flow Lines',
-				CONFIG.relativePath + 'geoserver/sample/wms',
+				'https://www.sciencebase.gov/catalogMaps/mapping/ows/5b525607e4b05cbf87bfe21c?SERVICE=WMS&REQUEST=GetMap&FORMAT=image/png',
 				{
 					SRS: 'EPSG:900913',
 					CRS: 'EPSG:900913',
-					LAYERS: 'sample:CR_CLIP',
-					STYLES: 'CR_CLIP_ZONE_9383100',
+					LAYERS: 'CR_CLIP',
 					transparent : true
 				},
 				{
@@ -221,12 +217,11 @@ GCMRC.Mapping = function() {
 			),
 			zone9402500 : new OpenLayers.Layer.WMS(
 				'Flow Lines',
-				CONFIG.relativePath + 'geoserver/sample/wms',
+				'https://www.sciencebase.gov/catalogMaps/mapping/ows/5b525607e4b05cbf87bfe21c?SERVICE=WMS&REQUEST=GetMap&FORMAT=image/png',
 				{
 					SRS: 'EPSG:900913',
 					CRS: 'EPSG:900913',
-					LAYERS: 'sample:CR_CLIP',
-					STYLES: 'CR_CLIP_ZONE_9402500',
+					LAYERS: 'CR_CLIP',
 					transparent : true
 				},
 				{
@@ -237,12 +232,11 @@ GCMRC.Mapping = function() {
 			),
 			zone9404120 : new OpenLayers.Layer.WMS(
 				'Flow Lines',
-				CONFIG.relativePath + 'geoserver/sample/wms',
+				'https://www.sciencebase.gov/catalogMaps/mapping/ows/5b525607e4b05cbf87bfe21c?SERVICE=WMS&REQUEST=GetMap&FORMAT=image/png',
 				{
 					SRS: 'EPSG:900913',
 					CRS: 'EPSG:900913',
-					LAYERS: 'sample:CR_CLIP',
-					STYLES: 'CR_CLIP_ZONE_9404120',
+					LAYERS: 'CR_CLIP',
 					transparent : true
 				},
 				{
@@ -253,12 +247,11 @@ GCMRC.Mapping = function() {
 			),
 			zone9404200 : new OpenLayers.Layer.WMS(
 				'Flow Lines',
-				CONFIG.relativePath + 'geoserver/sample/wms',
+				'https://www.sciencebase.gov/catalogMaps/mapping/ows/5b525607e4b05cbf87bfe21c?SERVICE=WMS&REQUEST=GetMap&FORMAT=image/png',
 				{
 					SRS: 'EPSG:900913',
 					CRS: 'EPSG:900913',
-					LAYERS: 'sample:CR_CLIP',
-					STYLES: 'CR_CLIP_ZONE_9404200',
+					LAYERS: 'CR_CLIP',
 					transparent : true
 				},
 				{
@@ -269,12 +262,11 @@ GCMRC.Mapping = function() {
 			),
 			zone8374549 : new OpenLayers.Layer.WMS(
 				'Flow Lines',
-				CONFIG.relativePath + 'geoserver/sample/wms',
+				'https://www.sciencebase.gov/catalogMaps/mapping/ows/5b55f61be4b05cbf87c208b1?SERVICE=WMS&REQUEST=GetMap&FORMAT=image/png',
 				{
 					SRS: 'EPSG:900913',
 					CRS: 'EPSG:900913',
-					LAYERS: 'sample:gcmrc_subset_rio_grande_short',
-					STYLES: 'RG_CLIP_ZONE_8374549',
+					LAYERS: 'gcmrc_subset_rio_grande_short',
 					transparent : true
 				},
 				{
@@ -285,12 +277,11 @@ GCMRC.Mapping = function() {
 			),
 			zone8374535 : new OpenLayers.Layer.WMS(
 				'Flow Lines',
-				CONFIG.relativePath + 'geoserver/sample/wms',
+				'https://www.sciencebase.gov/catalogMaps/mapping/ows/5b55f61be4b05cbf87c208b1?SERVICE=WMS&REQUEST=GetMap&FORMAT=image/png',
 				{
 					SRS: 'EPSG:900913',
 					CRS: 'EPSG:900913',
-					LAYERS: 'sample:gcmrc_subset_rio_grande_short',
-					STYLES: 'RG_CLIP_ZONE_8374535',
+					LAYERS: 'gcmrc_subset_rio_grande_short',
 					transparent : true
 				},
 				{
@@ -301,12 +292,11 @@ GCMRC.Mapping = function() {
 			),
 			zone9251000 : new OpenLayers.Layer.WMS(
 				'Flow Lines',
-				CONFIG.relativePath + 'geoserver/sample/wms',
+				'https://www.sciencebase.gov/catalogMaps/mapping/ows/5b525912e4b05cbf87bfe23e?SERVICE=WMS&REQUEST=GetMap&FORMAT=image/png',
 				{
 					SRS: 'EPSG:900913',
 					CRS: 'EPSG:900913',
-					LAYERS: 'sample:dinosaur_reaches_final',
-					STYLES: 'dinosaur',
+					LAYERS: 'dinosaur_reaches',
 					transparent : true
 				},
 				{
@@ -317,12 +307,11 @@ GCMRC.Mapping = function() {
 			),
 			zone9260050 : new OpenLayers.Layer.WMS(
 				'Flow Lines',
-				CONFIG.relativePath + 'geoserver/sample/wms',
+				'https://www.sciencebase.gov/catalogMaps/mapping/ows/5b525912e4b05cbf87bfe23e?SERVICE=WMS&REQUEST=GetMap&FORMAT=image/png',
 				{
 					SRS: 'EPSG:900913',
 					CRS: 'EPSG:900913',
-					LAYERS: 'sample:dinosaur_reaches_final',
-					STYLES: 'dinosaur',
+					LAYERS: 'dinosaur_reaches',
 					transparent : true
 				},
 				{
@@ -333,12 +322,11 @@ GCMRC.Mapping = function() {
 			),
 			zone9261000 : new OpenLayers.Layer.WMS(
 				'Flow Lines',
-				CONFIG.relativePath + 'geoserver/sample/wms',
+				'https://www.sciencebase.gov/catalogMaps/mapping/ows/5b525912e4b05cbf87bfe23e?SERVICE=WMS&REQUEST=GetMap&FORMAT=image/png',
 				{
 					SRS: 'EPSG:900913',
 					CRS: 'EPSG:900913',
-					LAYERS: 'sample:dinosaur_reaches_final',
-					STYLES: 'dinosaur',
+					LAYERS: 'dinosaur_reaches',
 					transparent : true
 				},
 				{
@@ -349,13 +337,12 @@ GCMRC.Mapping = function() {
 			),		
 			dinosaur_reaches : new OpenLayers.Layer.WMS(
 				'Dinosaur Reaches',
-				CONFIG.relativePath + 'geoserver/sample/wms',
+				'https://www.sciencebase.gov/catalogMaps/mapping/ows/5b525912e4b05cbf87bfe23e?SERVICE=WMS&REQUEST=GetMap&FORMAT=image/png',
 				{
-					SRS: 'EPSG: 900913',
+					SRS: 'EPSG:900913',
 					CRS: 'EPSG:900913',
-					LAYERS: 'sample:dinosaur_reaches_final',
-					styles: 'dinosaur',
-					transparent: true
+					LAYERS: 'dinosaur_reaches',
+					transparent : true
 				},
 				{
 					buffer: 0,
@@ -365,12 +352,11 @@ GCMRC.Mapping = function() {
 			),
 			zone9522000 : new OpenLayers.Layer.WMS(
 					'Colorado River Delta Reaches',
-					CONFIG.relativePath + 'geoserver/sample/wms',
+					'https://www.sciencebase.gov/catalogMaps/mapping/ows/5b5259dee4b05cbf87bfe241?SERVICE=WMS&REQUEST=GetMap&FORMAT=image/png',
 					{
 						SRS: 'EPSG: 900913',
 						CRS: 'EPSG:900913',
-						LAYERS: 'sample:colorado_river_delta',
-						STYLES: 'colorado_river_delta',
+						LAYERS: 'colorado_river_delta',
 						transparent: true
 					},
 					{
@@ -381,12 +367,11 @@ GCMRC.Mapping = function() {
 			),
 			zone9522100 : new OpenLayers.Layer.WMS(
 					'Colorado River Delta Reaches',
-					CONFIG.relativePath + 'geoserver/sample/wms',
+					'https://www.sciencebase.gov/catalogMaps/mapping/ows/5b5259dee4b05cbf87bfe241?SERVICE=WMS&REQUEST=GetMap&FORMAT=image/png',
 					{
 						SRS: 'EPSG: 900913',
 						CRS: 'EPSG:900913',
-						LAYERS: 'sample:colorado_river_delta',
-						STYLES: 'colorado_river_delta',
+						LAYERS: 'colorado_river_delta',
 						transparent: true
 					},
 					{
@@ -397,12 +382,11 @@ GCMRC.Mapping = function() {
 			),
 			zone9522150 : new OpenLayers.Layer.WMS(
 					'Colorado River Delta Reaches',
-					CONFIG.relativePath + 'geoserver/sample/wms',
+					'https://www.sciencebase.gov/catalogMaps/mapping/ows/5b5259dee4b05cbf87bfe241?SERVICE=WMS&REQUEST=GetMap&FORMAT=image/png',
 					{
 						SRS: 'EPSG: 900913',
 						CRS: 'EPSG:900913',
-						LAYERS: 'sample:colorado_river_delta',
-						STYLES: 'colorado_river_delta',
+						LAYERS: 'colorado_river_delta',
 						transparent: true
 					},
 					{
@@ -413,12 +397,11 @@ GCMRC.Mapping = function() {
 			),
 			zone9522200 : new OpenLayers.Layer.WMS(
 					'Colorado River Delta Reaches',
-					CONFIG.relativePath + 'geoserver/sample/wms',
+					'https://www.sciencebase.gov/catalogMaps/mapping/ows/5b5259dee4b05cbf87bfe241?SERVICE=WMS&REQUEST=GetMap&FORMAT=image/png',
 					{
 						SRS: 'EPSG: 900913',
 						CRS: 'EPSG:900913',
-						LAYERS: 'sample:colorado_river_delta',
-						STYLES: 'colorado_river_delta',
+						LAYERS: 'colorado_river_delta',
 						transparent: true
 					},
 					{
@@ -429,13 +412,13 @@ GCMRC.Mapping = function() {
 			),
 			colorado_river_delta_reaches : new OpenLayers.Layer.WMS(
 				'Colorado River Delta Reaches',
-				CONFIG.relativePath + 'geoserver/sample/wms',
-				{
-					SRS: 'EPSG: 900913',
-					CRS: 'EPSG:900913',
-					LAYERS: 'sample:colorado_river_delta',
-					transparent: true
-				},
+				'https://www.sciencebase.gov/catalogMaps/mapping/ows/5b5259dee4b05cbf87bfe241?SERVICE=WMS&REQUEST=GetMap&FORMAT=image/png',
+					{
+						SRS: 'EPSG: 900913',
+						CRS: 'EPSG:900913',
+						LAYERS: 'colorado_river_delta',
+						transparent: true
+					},
 				{
 					buffer: 0,
 					displayOutsideMaxExtent: true,

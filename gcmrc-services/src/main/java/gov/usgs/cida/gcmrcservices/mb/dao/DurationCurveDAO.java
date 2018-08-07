@@ -48,7 +48,7 @@ public class DurationCurveDAO {
 			DurationCurveConsecutiveGap consecutiveGap;
 			//Log claculations will sometimes return an extra bin with the values that are <= 0 so check that points == binCount or binCount + 1
 			//Verify returned points are valid
-			boolean valid = returnedPoints.size() == binCount || returnedPoints.size() == binCount + 1;
+			boolean valid = returnedPoints.size() > 0;
 			if(valid){
 				for(DurationCurvePoint point : returnedPoints){
 					if(point.getCumulativeBinPerc() > 100 || point.getCumulativeBinPerc() < 0){

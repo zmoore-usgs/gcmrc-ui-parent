@@ -39,7 +39,7 @@
 	request.setAttribute("networkName", networkName);
 	
 	String networkHoursOffset = "7";
-	if ("BIBE".equals(networkName)) {
+	if ( ("BIBE".equals(networkName)) || ("CHIP".equals(networkName)) ) {
 		networkHoursOffset = "6";
 	}
 	request.setAttribute("networkHoursOffset", networkHoursOffset);

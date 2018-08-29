@@ -586,7 +586,9 @@ GCMRC.Graphing = function(hoursOffset) {
 								
 								if(hasLin || hasLog){
 									if (GCMRC.Graphing.durationCurves[config.divId]['consecutiveGap'][id]) {
-									    $(createDurationCurveGapMessage(GCMRC.Graphing.durationCurves[config.divId]['gapMinutesPercent'][id], GCMRC.Graphing.durationCurves[config.divId]['consecutiveGap'][id])).prependTo(div);
+									    if ((GCMRC.Graphing.durationCurves[config.divId]['consecutiveGap'][id]['gapUnit']=='hours' && GCMRC.Graphing.durationCurves[config.divId]['consecutiveGap'][id]['gapTime'] > 1) || (GCMRC.Graphing.durationCurves[config.divId]['consecutiveGap'][id]['gapUnit']=='days')) {
+										$(createDurationCurveGapMessage(GCMRC.Graphing.durationCurves[config.divId]['gapMinutesPercent'][id], GCMRC.Graphing.durationCurves[config.divId]['consecutiveGap'][id])).prependTo(div);
+									    }   
 									}
 									$(createDurationCurveToggles(id, hasLin, hasLog)).prependTo(div);
 								} else {

@@ -558,14 +558,12 @@ GCMRC.Graphing = function(hoursOffset) {
 					}	
 					//has valid data
 					if (data.success && data.success.data && $.isArray(data.success.data)) {
-					    var gapMinutes;
-					    var gapMinutesPercent;
 					    var consecutiveGap;
+					    var cumulativeGap;
 						//Build plots
 						data.success.data.forEach(function(graph) {
 							dealWithDurationCurveResponse(graph.groupId, graph, config, buildDurationCurve);
-							GCMRC.Graphing.durationCurves[config.divId]['gapMinutes'][graph.groupId] = graph.gapMinutes;
-							GCMRC.Graphing.durationCurves[config.divId]['gapMinutesPercent'][graph.groupId] = graph.gapMinutesPercent;
+							GCMRC.Graphing.durationCurves[config.divId]['cumulativeGap'][graph.groupId] = graph.cumulativeGap;
 							GCMRC.Graphing.durationCurves[config.divId]['consecutiveGap'][graph.groupId] = graph.consecutiveGap;
 						});
 						
@@ -587,10 +585,8 @@ GCMRC.Graphing = function(hoursOffset) {
 								}
 								
 								if(hasLin || hasLog){
-									if (GCMRC.Graphing.durationCurves[config.divId]['consecutiveGap'][id]) {
-									    if ((GCMRC.Graphing.durationCurves[config.divId]['consecutiveGap'][id]['gapUnit']=='hours' && GCMRC.Graphing.durationCurves[config.divId]['consecutiveGap'][id]['gapTime'] > 1) || (GCMRC.Graphing.durationCurves[config.divId]['consecutiveGap'][id]['gapUnit']=='days')) {
-										$(createDurationCurveGapMessage(GCMRC.Graphing.durationCurves[config.divId]['gapMinutesPercent'][id], GCMRC.Graphing.durationCurves[config.divId]['consecutiveGap'][id])).prependTo(div);
-									    }   
+									if (GCMRC.Graphing.durationCurves[config.divId]['cumulativeGap'][id] && GCMRC.Graphing.durationCurves[config.divId]['cumulativeGap'][id]['gapMinutes'] >= 60) {
+									    $(createDurationCurveGapMessage(GCMRC.Graphing.durationCurves[config.divId]['cumulativeGap'][id], GCMRC.Graphing.durationCurves[config.divId]['consecutiveGap'][id])).prependTo(div);
 									}
 									$(createDurationCurveToggles(id, hasLin, hasLog)).prependTo(div);
 								} else {
@@ -642,9 +638,9 @@ GCMRC.Graphing = function(hoursOffset) {
 		});
 	};
 
-	var createDurationCurveGapMessage = function(gapMinutesPercent, consecutiveGap){
+	var createDurationCurveGapMessage = function(cumulativeGap, consecutiveGap){
 
-	    var gapMessage = '<div class="alert alert-info durationCurveMessage" style="display: none;"><button type="button" class="close" data-dismiss="alert">×</button>Data are missing for ' + gapMinutesPercent + '% of the requested period.  The longest consecutive period of missing data is ' + consecutiveGap.gapTime + ' ' + consecutiveGap.gapUnit + ' in duration.</div>';
+	    var gapMessage = '<div class="alert alert-info durationCurveMessage" style="display: none;"><button type="button" class="close" data-dismiss="alert">×</button>Data are missing for ' + cumulativeGap.gapMinutesPercent + '% of the requested period.  The longest consecutive period of missing data is ' + consecutiveGap.gapTime + ' ' + consecutiveGap.gapUnit + ' in duration.</div>';
 	    
 	    return gapMessage;
 	};
@@ -717,8 +713,7 @@ GCMRC.Graphing = function(hoursOffset) {
 			durationCurves[config.divId] = {
 				log: {},
 				lin: {},
-				gapMinutesPercent: {},
-				gapMinutes: {},
+				cumulativeGap: {},
 				consecutiveGap: {}
 			};
 			durationCurveConfiguration = {};

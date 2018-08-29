@@ -449,7 +449,7 @@
 				   )
 				   ORDER BY BIN_NUMBER
 	</select>	
-        <select id="getDurationCurveGapMinutesPercent" parameterType="map" resultMap="durationCurveGapMinutesResult">	
+        <select id="getDurationCurveCumulativeGap" parameterType="map" resultMap="durationCurveGapMinutesResult">	
             WITH
             <include refid="withGapData"/>
             select round(gaps.gap_minutes/duration.duration_minutes*100,0) as gap_minutes_percent, gaps.gap_minutes from

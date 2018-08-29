@@ -45,8 +45,8 @@ public class DurationCurveDAO {
 		
 		try (SqlSession session = sqlSessionFactory.openSession()) {
 			List<DurationCurvePoint> returnedPoints = session.selectList( queryPackage + ".DurationCurveMapper.getDurationCurve", params);
-			Double gapMinutes;
 			DurationCurveConsecutiveGap consecutiveGap;
+			DurationCurveCumulativeGap cumulativeGap;
 			//Log claculations will sometimes return an extra bin with the values that are <= 0 so check that points == binCount or binCount + 1
 			//Verify returned points are valid
 			boolean valid = returnedPoints.size() > 0;
@@ -58,12 +58,12 @@ public class DurationCurveDAO {
 					}
 				}
 			}
-			
-			gapMinutes = getDurationCurveGapMinutesPercent(siteName, startTime, endTime, groupId);
+		
 			consecutiveGap = getDurationCurveConsecutiveGap(siteName, startTime, endTime, groupId);
+			cumulativeGap = getDurationCurveCumulativeGap(siteName, startTime, endTime, groupId);
 			
 			if(valid){
-				result = new DurationCurve(returnedPoints, siteName, groupId, binType, Double.toString(gapMinutes), consecutiveGap);
+				result = new DurationCurve(returnedPoints, siteName, groupId, binType, consecutiveGap, cumulativeGap);
 			} else {
 				log.error("Duration curve query returned invalid data with parameters: [siteName: " + siteName + ", groupId: " + groupId + ", binType: " + binType + "]");
 				result = new DurationCurve(null, siteName, groupId, binType, null, null);

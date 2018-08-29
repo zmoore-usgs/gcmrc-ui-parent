@@ -3,6 +3,7 @@ package gov.usgs.cida.gcmrcservices.mb.dao;
 import gov.usgs.cida.gcmrcservices.mb.MyBatisConnectionFactory;
 import gov.usgs.cida.gcmrcservices.mb.model.DurationCurve;
 import gov.usgs.cida.gcmrcservices.mb.model.DurationCurveConsecutiveGap;
+import gov.usgs.cida.gcmrcservices.mb.model.DurationCurveCumulativeGap;
 import gov.usgs.cida.gcmrcservices.mb.model.DurationCurvePoint;
 import java.util.HashMap;
 import java.util.List;
@@ -44,8 +45,8 @@ public class DurationCurveDAO {
 		
 		try (SqlSession session = sqlSessionFactory.openSession()) {
 			List<DurationCurvePoint> returnedPoints = session.selectList( queryPackage + ".DurationCurveMapper.getDurationCurve", params);
-			Double gapMinutes;
 			DurationCurveConsecutiveGap consecutiveGap;
+			DurationCurveCumulativeGap cumulativeGap;
 			//Log claculations will sometimes return an extra bin with the values that are <= 0 so check that points == binCount or binCount + 1
 			//Verify returned points are valid
 			boolean valid = returnedPoints.size() > 0;
@@ -57,12 +58,12 @@ public class DurationCurveDAO {
 					}
 				}
 			}
-			
-			gapMinutes = getDurationCurveGapMinutesPercent(siteName, startTime, endTime, groupId);
+		
 			consecutiveGap = getDurationCurveConsecutiveGap(siteName, startTime, endTime, groupId);
+			cumulativeGap = getDurationCurveCumulativeGap(siteName, startTime, endTime, groupId);
 			
 			if(valid){
-				result = new DurationCurve(returnedPoints, siteName, groupId, binType, Double.toString(gapMinutes), consecutiveGap);
+				result = new DurationCurve(returnedPoints, siteName, groupId, binType, consecutiveGap, cumulativeGap);
 			} else {
 				log.error("Duration curve query returned invalid data with parameters: [siteName: " + siteName + ", groupId: " + groupId + ", binType: " + binType + "]");
 				result = new DurationCurve(null, siteName, groupId, binType, null, null);
@@ -116,6 +117,29 @@ public class DurationCurveDAO {
 			
 		} catch (Exception e) {
 			log.error("Could not get duration curve consecutive gaps with parameters: [siteName: " + siteName + ", groupId: " + groupId + "] Error: " + e.getMessage());
+			result = null;
+		}
+				
+		return result;
+	}
+	
+	public DurationCurveCumulativeGap getDurationCurveCumulativeGap(String siteName, String startTime, String endTime, int groupId) {		
+	    DurationCurveCumulativeGap returnedCumulativeGap;
+	    DurationCurveCumulativeGap result;
+		
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("siteName", siteName);
+		params.put("startTime", startTime);
+		params.put("endTime", endTime);
+		params.put("groupId", groupId);
+		
+		try (SqlSession session = sqlSessionFactory.openSession()) {
+			returnedCumulativeGap = session.selectOne( queryPackage + ".DurationCurveMapper.getDurationCurveCumulativeGap", params);
+			
+			result = returnedCumulativeGap;
+			
+		} catch (Exception e) {
+			log.error("Could not get duration curve cumulative gaps with parameters: [siteName: " + siteName + ", groupId: " + groupId + "] Error: " + e.getMessage());
 			result = null;
 		}
 				

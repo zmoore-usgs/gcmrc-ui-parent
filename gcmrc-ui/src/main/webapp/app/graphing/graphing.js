@@ -679,8 +679,8 @@ GCMRC.Graphing = function(hoursOffset) {
 		return toReturn;
 	};
 	
-	var createDurationCurveToggles = function(chartId, hasLin, hasLog, gapMinutesPercent, consecutiveGapMinutes){
-		return createDurationCurveToggle(chartId) + createDurationCurveScaleToggle(chartId, hasLin, hasLog, gapMinutesPercent, consecutiveGapMinutes);
+	var createDurationCurveToggles = function(chartId, hasLin, hasLog, cumulativeGapMinutes, consecutiveGapMinutes){
+		return createDurationCurveToggle(chartId) + createDurationCurveScaleToggle(chartId, hasLin, hasLog, cumulativeGapMinutes, consecutiveGapMinutes);
 	};
 	
 	return {

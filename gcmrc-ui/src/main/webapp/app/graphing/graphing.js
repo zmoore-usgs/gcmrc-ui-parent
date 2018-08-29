@@ -585,7 +585,7 @@ GCMRC.Graphing = function(hoursOffset) {
 								}
 								
 								if(hasLin || hasLog){
-									if (GCMRC.Graphing.durationCurves[config.divId]['consecutiveGap'][id]['gapTime'] > 0) {
+									if (GCMRC.Graphing.durationCurves[config.divId]['consecutiveGap'][id]) {
 									    $(createDurationCurveGapMessage(GCMRC.Graphing.durationCurves[config.divId]['gapMinutesPercent'][id], GCMRC.Graphing.durationCurves[config.divId]['consecutiveGap'][id])).prependTo(div);
 									}
 									$(createDurationCurveToggles(id, hasLin, hasLog)).prependTo(div);

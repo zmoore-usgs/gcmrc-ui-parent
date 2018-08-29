@@ -3,6 +3,7 @@ package gov.usgs.cida.gcmrcservices.mb.dao;
 import gov.usgs.cida.gcmrcservices.mb.MyBatisConnectionFactory;
 import gov.usgs.cida.gcmrcservices.mb.model.DurationCurve;
 import gov.usgs.cida.gcmrcservices.mb.model.DurationCurveConsecutiveGap;
+import gov.usgs.cida.gcmrcservices.mb.model.DurationCurveCumulativeGap;
 import gov.usgs.cida.gcmrcservices.mb.model.DurationCurvePoint;
 import java.util.HashMap;
 import java.util.List;
@@ -116,6 +117,29 @@ public class DurationCurveDAO {
 			
 		} catch (Exception e) {
 			log.error("Could not get duration curve consecutive gaps with parameters: [siteName: " + siteName + ", groupId: " + groupId + "] Error: " + e.getMessage());
+			result = null;
+		}
+				
+		return result;
+	}
+	
+	public DurationCurveCumulativeGap getDurationCurveCumulativeGap(String siteName, String startTime, String endTime, int groupId) {		
+	    DurationCurveCumulativeGap returnedCumulativeGap;
+	    DurationCurveCumulativeGap result;
+		
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("siteName", siteName);
+		params.put("startTime", startTime);
+		params.put("endTime", endTime);
+		params.put("groupId", groupId);
+		
+		try (SqlSession session = sqlSessionFactory.openSession()) {
+			returnedCumulativeGap = session.selectOne( queryPackage + ".DurationCurveMapper.getDurationCurveCumulativeGap", params);
+			
+			result = returnedCumulativeGap;
+			
+		} catch (Exception e) {
+			log.error("Could not get duration curve cumulative gaps with parameters: [siteName: " + siteName + ", groupId: " + groupId + "] Error: " + e.getMessage());
 			result = null;
 		}
 				

@@ -15,8 +15,9 @@
 		<result property="highBound" column="HIGH_BOUND"/>
 	</resultMap>
         
-        <resultMap id="durationCurveGapMinutesResult" type="Double">
+        <resultMap id="durationCurveGapMinutesResult" type="DurationCurveCumulativeGap">
 		<result property="gapMinutesPercent" column="GAP_MINUTES_PERCENT"/>
+		<result property="gapMinutes" column="GAP_MINUTES"/>
 	</resultMap>
         <resultMap id="durationCurveConsecutiveGapResult" type="DurationCurveConsecutiveGap">
 		<result property="gapTime" column="GAP_TIME"/>
@@ -451,7 +452,7 @@
         <select id="getDurationCurveGapMinutesPercent" parameterType="map" resultMap="durationCurveGapMinutesResult">	
             WITH
             <include refid="withGapData"/>
-            select round(gaps.gap_minutes/duration.duration_minutes*100,0) as gap_minutes_percent from
+            select round(gaps.gap_minutes/duration.duration_minutes*100,0) as gap_minutes_percent, gaps.gap_minutes from
             (select
             (extract(DAY from (max(start_time) - min(start_time))) * 24 * 60 * 60 +
              extract(HOUR from (max(start_time) - min(start_time))) * 60 * 60 +

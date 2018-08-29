@@ -558,11 +558,13 @@ GCMRC.Graphing = function(hoursOffset) {
 					}	
 					//has valid data
 					if (data.success && data.success.data && $.isArray(data.success.data)) {
+					    var gapMinutes;
 					    var gapMinutesPercent;
 					    var consecutiveGap;
 						//Build plots
 						data.success.data.forEach(function(graph) {
 							dealWithDurationCurveResponse(graph.groupId, graph, config, buildDurationCurve);
+							GCMRC.Graphing.durationCurves[config.divId]['gapMinutes'][graph.groupId] = graph.gapMinutes;
 							GCMRC.Graphing.durationCurves[config.divId]['gapMinutesPercent'][graph.groupId] = graph.gapMinutesPercent;
 							GCMRC.Graphing.durationCurves[config.divId]['consecutiveGap'][graph.groupId] = graph.consecutiveGap;
 						});
@@ -716,6 +718,7 @@ GCMRC.Graphing = function(hoursOffset) {
 				log: {},
 				lin: {},
 				gapMinutesPercent: {},
+				gapMinutes: {},
 				consecutiveGap: {}
 			};
 			durationCurveConfiguration = {};

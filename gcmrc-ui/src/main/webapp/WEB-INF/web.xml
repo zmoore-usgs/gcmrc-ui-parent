@@ -146,23 +146,6 @@
         <url-pattern>/img</url-pattern>
     </servlet-mapping>-->
 
-	<servlet>
-		<servlet-name>GeoserverServlet</servlet-name>
-		<servlet-class>gov.usgs.cida.proxy.AlternateProxyServlet</servlet-class>
-		<init-param>
-			<param-name>forward-url-param</param-name>
-			<param-value>gcmrc.geoserver-url</param-value>
-		</init-param>
-		<init-param>
-			<param-name>forward-url</param-name>
-			<param-value>http://137.227.237.231:8081/geoserver/</param-value>
-		</init-param>
-	</servlet>
-	<servlet-mapping>
-		<servlet-name>GeoserverServlet</servlet-name>
-		<url-pattern>/geoserver/*</url-pattern>
-	</servlet-mapping>
-
 	<session-config>
 		<session-timeout>
 			2

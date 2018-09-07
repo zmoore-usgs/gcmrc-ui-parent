@@ -896,8 +896,12 @@ GCMRC.Page = {
 	}),
 	sliderConfig: GCMRC.Reaches.sliderConfig,
 	resetSliders: function() {
-		GCMRC.Page.sliderConfig.values(function(el) {
-			$('div[name=' + el.name + ']').slider("option", "value", el.adjustDefault);
-		});
+		var params = GCMRC.Page.sliderConfig.values();
+		for (var dIdx = 0; dIdx < params.length; dIdx ++) {
+		    var param = params[dIdx];
+		    var elName = param.name;
+		    var elAdjustDefault = param.adjustDefault;
+			$('div[name=' + elName + ']').slider("option", "value", elAdjustDefault);
+		};
 	}
 };

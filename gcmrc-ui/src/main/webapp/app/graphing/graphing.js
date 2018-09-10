@@ -639,7 +639,11 @@ GCMRC.Graphing = function(hoursOffset) {
 	};
 
 	var createDurationCurveGapMessage = function(cumulativeGap, consecutiveGap){
-
+	    
+	    //put a preceding 0 on percents under 1 eg 0.1 instead of .1
+	    if (cumulativeGap.gapMinutesPercent < 1) {
+		cumulativeGap.gapMinutesPercent = "0" + cumulativeGap.gapMinutesPercent;
+	    }
 	    var gapMessage = '<div class="alert alert-info durationCurveMessage" style="display: none;"><button type="button" class="close" data-dismiss="alert">×</button>Data are missing for ' + cumulativeGap.gapMinutesPercent + '% of the requested period.  The longest consecutive period of missing data is ' + consecutiveGap.gapTime + ' ' + consecutiveGap.gapUnit + ' in duration.</div>';
 	    
 	    return gapMessage;

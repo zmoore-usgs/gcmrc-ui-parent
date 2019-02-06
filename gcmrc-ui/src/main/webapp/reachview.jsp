@@ -171,7 +171,6 @@
 				<jsp:param name="relPath" value="${relativePath}" />
 				<jsp:param name="header-class" value="" />
 			</jsp:include>
-			<jsp:include page="template/GCMRCTopMenu.jsp"></jsp:include>
 			<div>
 				<!--				<div class="clear">-->
 				<!--				</div>-->

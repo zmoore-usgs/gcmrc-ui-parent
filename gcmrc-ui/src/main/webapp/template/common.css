@@ -132,6 +132,7 @@ footer.footer .footer-doi ul.menu li a {
     color: #ffffff;
     float: left;
     font-size: 12px;
+    background-color: transparent;
 }
 
 footer.footer .footer-doi ul.menu li:first-of-type {

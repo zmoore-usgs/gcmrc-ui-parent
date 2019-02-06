@@ -69,6 +69,7 @@
 			<jsp:param name="relPath" value="${relativePath}" />
 			<jsp:param name="pageName" value="${pageName}" />
 		</jsp:include>
+    
     </head>
     <body>
 		<div class="container-fluid">

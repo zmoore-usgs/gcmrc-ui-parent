@@ -77,7 +77,6 @@
 				<jsp:param name="relPath" value="${relativePath}" />
 				<jsp:param name="header-class" value="" />
 			</jsp:include>
-			<jsp:include page="template/GCMRCTopMenu.jsp"></jsp:include>
 				<!--[if lt IE 7]>
 				<p class="chromeframe">You are using an outdated browser. <a href="http://browsehappy.com/">Upgrade your browser today</a> or <a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a> to better experience this site.</p>
 				<![endif]-->
@@ -115,18 +114,6 @@
 													<li>USGS Southwest Biological Science Center</li>
 													<li>Grand Canyon Monitoring Research Center</li>
 													<li>Contact <a href="mailto:dtopping@usgs.gov">dtopping@usgs.gov</a> or (928)556-7396</li>
-												</ul>
-											</li>
-										</ul>
-									</div>
-								</div>
-								<div class="media">
-									<div class="media-body">
-										<h5 class="media-heading">Database Designer/Programmer</h5>
-										<ul class="unstyled">
-											<li>Brad Garner
-												<ul>
-													<li>USGS Water Mission Area</li>
 												</ul>
 											</li>
 										</ul>

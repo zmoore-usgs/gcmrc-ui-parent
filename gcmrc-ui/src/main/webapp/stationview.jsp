@@ -170,7 +170,6 @@
 				<jsp:param name="relPath" value="${relativePath}" />
 				<jsp:param name="header-class" value="" />
 			</jsp:include>
-			<jsp:include page="template/GCMRCTopMenu.jsp"></jsp:include>
 			<div>
 				<h2><span id="station-title"></span> <small>${stationName}</small></h2>
 				<div id="breadcrumbs">

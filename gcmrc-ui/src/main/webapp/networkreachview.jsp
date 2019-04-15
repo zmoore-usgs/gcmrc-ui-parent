@@ -86,7 +86,6 @@
 				<jsp:param name="relPath" value="${relativePath}" />
 				<jsp:param name="header-class" value="" />
 			</jsp:include>
-			<jsp:include page="template/GCMRCTopMenu.jsp"></jsp:include>
 			<!--[if lt IE 7]>
             <p class="chromeframe">You are using an outdated browser. <a href="http://browsehappy.com/">Upgrade your browser today</a> or <a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a> to better experience this site.</p>
 			<![endif]-->

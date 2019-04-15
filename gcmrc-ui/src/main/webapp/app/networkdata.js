@@ -17,6 +17,7 @@ GCMRC.Networks = function() {
 			photoItemId: '5ada096be4b0e2c2dd2894ed',
 			topoSurveyId: '594b0cd2e4b062508e36f798',
 			gisDataId: '5b33db2ce4b040769c173611',
+			rainGaugeId: '5caf7e47e4b0c3b00654e038',
 			bbox : {
 				"left": -114.003737,
 				"bottom": 35.130507,
@@ -25,7 +26,8 @@ GCMRC.Networks = function() {
 			},
 			reaches : true,
 			gis: true,
-			topo: true
+			topo: true,
+			rainGauge: true
 		},
 		"DINO" : {
 			displayName : 'Dinosaur',
@@ -39,7 +41,8 @@ GCMRC.Networks = function() {
 			},
 			reaches : true,
 			gis: false,
-			topo: false
+			topo: false,
+			rainGauge: false
 		},
 		"CL" : {
 			displayName : 'Canyonlands',
@@ -55,7 +58,8 @@ GCMRC.Networks = function() {
 			appFeatureId : "CANYONLANDS",
 			reaches:false,
 			gis: false,
-			topo: false
+			topo: false,
+			rainGauge: false
 		},
 		"CRD" : {
 			displayName : 'Colorado River Delta',
@@ -70,7 +74,8 @@ GCMRC.Networks = function() {
 			},
 			reaches : true,
 			gis: false,
-			topo: false
+			topo: false,
+			rainGauge: false
 		},
 		"URG" : {
 			displayName : 'Upper Rio Grande',
@@ -85,7 +90,8 @@ GCMRC.Networks = function() {
 			},
 			reaches: false,
 			gis: false,
-			topo: false
+			topo: false,
+			rainGauge: false
 		},
 		"BIBE" : {
 			displayName : 'Big Bend',
@@ -99,7 +105,8 @@ GCMRC.Networks = function() {
 			},
 			reaches : true,
 			gis: false,
-			topo: false
+			topo: false,
+			rainGauge: false
 		},
 		"CHIP" : {
 			displayName : 'Chippewa',
@@ -114,7 +121,8 @@ GCMRC.Networks = function() {
 			},
 			reaches: false,
 			gis: false,
-			topo: false
+			topo: false,
+			rainGauge: false
 		}
 	};
 }();

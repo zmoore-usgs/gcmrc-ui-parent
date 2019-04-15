@@ -41,6 +41,7 @@ GCMRC.Stations = {
 		"photoItemId" : "ERROR",
 		"topoSurveyId" : "ERROR",
 		"gisDataId" : "ERROR",
+		"rainGaugeId" : "ERROR",
 		"lat" : 43.0731,
 		"lon" : -89.4011
 	},

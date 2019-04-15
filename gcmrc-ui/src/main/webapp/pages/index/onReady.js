@@ -21,6 +21,9 @@ $(document).ready(function() {
 			if (GCMRC.Networks[key].photoItemId) {
 				networkDesc = networkDesc + '<li><a href="https://www.sciencebase.gov/catalog/item/'+ GCMRC.Networks[key].photoItemId +'">Historical Photographs</li>';
 			}
+			if (GCMRC.Networks[key].rainGaugeId) {
+				networkDesc = networkDesc + '<li><a href="https://www.sciencebase.gov/catalog/item/'+ GCMRC.Networks[key].rainGaugeId +'">Rain Gauge Network</li>';
+			}
 			networkDesc = networkDesc + '</ul>';
 			$networkList.append(networkDesc)
 		}

@@ -280,6 +280,7 @@
 								<li><a href="#" id="networkTopoSurveyFolder">Topographic Surveys</a></li>
 								<li><a href="#" id="networkGisFolder">GIS Data</a></li>
 								<li><a href="#" id="networkPhotoFolder">Historical Photographs</a></li>
+								<li><a href="#" id="networkRainGaugeFolder">Rain Gauge Network</a></li>
 							</ul>
 						</div>
 					</div>

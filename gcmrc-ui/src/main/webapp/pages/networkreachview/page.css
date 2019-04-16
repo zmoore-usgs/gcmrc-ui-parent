@@ -36,3 +36,8 @@ img { max-width: none; }
 .layersDiv label {
 	display : inline;
 }
+
+/* when OL encounters a 404, don't display the pink tile image */
+.olImageLoadError { 
+	display: none !important; 
+}

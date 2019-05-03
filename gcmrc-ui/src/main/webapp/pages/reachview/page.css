@@ -98,3 +98,8 @@ div[class^="plot-container-"] {
 div[class^="timeseries-plot-"], div[class^="duration-plot-"] {
 	width: 100%;
 }
+
+/* when OL encounters a 404, don't display the pink tile image */
+.olImageLoadError {  
+	display: none !important; 
+}

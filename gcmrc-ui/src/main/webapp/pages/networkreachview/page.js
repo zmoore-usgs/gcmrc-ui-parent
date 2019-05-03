@@ -11,6 +11,7 @@ GCMRC.Page = {
 		GCMRC.Mapping.maps[divId] = new OpenLayers.Map(divId, options);
 
 		var layersToAdd = [];
+		OpenLayers.IMAGE_RELOAD_ATTEMPTS = 5;
 		layersToAdd.push(GCMRC.Mapping.layers.esri.esriTopo);
 //		[].push.apply(layersToAdd, GCMRC.Mapping.layers.esri.values());
 		layersToAdd.push(GCMRC.Mapping.layers.flowlines.allzones);

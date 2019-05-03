@@ -77,6 +77,7 @@
 				<jsp:param name="relPath" value="${relativePath}" />
 				<jsp:param name="header-class" value="" />
 			</jsp:include>
+			<jsp:include page="template/GCMRCTopMenu.jsp"></jsp:include>
 				<!--[if lt IE 7]>
 				<p class="chromeframe">You are using an outdated browser. <a href="http://browsehappy.com/">Upgrade your browser today</a> or <a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a> to better experience this site.</p>
 				<![endif]-->
@@ -279,6 +280,7 @@
 								<li><a href="#" id="networkTopoSurveyFolder">Topographic Surveys</a></li>
 								<li><a href="#" id="networkGisFolder">GIS Data</a></li>
 								<li><a href="#" id="networkPhotoFolder">Historical Photographs</a></li>
+								<li><a href="#" id="networkRainGaugeFolder">Rain Gauge Network</a></li>
 							</ul>
 						</div>
 					</div>

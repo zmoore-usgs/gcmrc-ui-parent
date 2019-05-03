@@ -80,7 +80,6 @@ GCMRC.Features = {
 };
 GCMRC.doShowCalcSandBedload = function(netName) {
 	var CALC_SAND_BEDLOAD_NETWORKS = ['DINO'];
-
 	return netName != null && CALC_SAND_BEDLOAD_NETWORKS.includes(netName.toUpperCase());
 }
 

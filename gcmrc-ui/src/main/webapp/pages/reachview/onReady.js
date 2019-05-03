@@ -19,7 +19,7 @@ $(document).ready(function onReady() {
 	
 	GCMRC.Page.buildPORView($('#porContainer'), GCMRC.Page.earliestPositionISO, GCMRC.Page.latestPositionISO);
         
-        if (GCMRC.isDinoNetwork(CONFIG.networkName)) {
+        if (GCMRC.doShowCalcSandBedload(CONFIG.networkName)) {
 			$('#bedloadSlider').children().first().text('Sand Bedload Included in Sand Budget');
 			GCMRC.Page.buildRadioInfo($('#bedloadList'));
 			$("input[name=bedloadToggle][value=1]").prop('checked', true);

@@ -77,9 +77,12 @@ GCMRC.Features = {
 		return result;
 	}
 };
-GCMRC.isDinoNetwork = function(netName) {
-  return netName != null && 'DINO' == netName.toUpperCase();
+GCMRC.doShowCalcSandBedload = function(netName) {
+	var CALC_SAND_BEDLOAD_NETWORKS = ['DINO'];
+
+	return netName != null && CALC_SAND_BEDLOAD_NETWORKS.includes(netName.toUpperCase());
 }
+
 CONFIG.instColor = "#4DAF4A";
 CONFIG.instHiColor = "#FF0033";
 CONFIG.pumpColor = "#A6CEE3";

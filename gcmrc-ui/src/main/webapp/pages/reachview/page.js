@@ -175,7 +175,7 @@ GCMRC.Page = {
 					},
 			serviceOptions);
 
-			if (GCMRC.isDinoNetwork(CONFIG.networkName)) {
+			if (GCMRC.doShowCalcSandBedload(CONFIG.networkName)) {
 				GCMRC.Graphing.showInfoMsg("#infoMsg",'The sediment supplies from ungaged small tributaries are not included in these sediment budgets.  These tributaries transport relatively small amounts of silt and clay and negligible amounts of sand.  Not including the sediment supplied from these small tributaries therefore does not measurably affect the sand budgets, but does result in small negative step changes in the silt and clay budgets that are not the result of erosion.');
 				
 			}
@@ -611,8 +611,8 @@ GCMRC.Page = {
 			}));
 		}
 		
-		//Get special bedload coefficients for dinosaur network
-		if (GCMRC.isDinoNetwork(CONFIG.networkName)) {
+		//Get calculated sand bedload coefficients
+		if (GCMRC.doShowCalcSandBedload(CONFIG.networkName)) {
 			result.push(new GetBedloadCoeff());
 		}
 		

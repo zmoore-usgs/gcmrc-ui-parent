@@ -125,19 +125,19 @@ MatrixWorker.prototype.transformArray = function(config) {
 
 	var transformMatrix = (this.xformMatrices["sign"].multiply(1)).
 			add(this.xformMatrices["bedload"].multiply(percentages["bedload"])).
-			add(this.xformMatrices["river"].multiply(percentages["river"])).
+			add(this.xformMatrices["river"].multiply(percentages["river"] + percentages["river"] * percentages["bedload"])).
 			add(this.xformMatrices["minor"].multiply(percentages["minor"])).
 			add(this.xformMatrices["major"].multiply(percentages["major"]));
 	
 	var doubleTransformMatrix = (this.xformMatrices["sign"].multiply(1)).
 			add(this.xformMatrices["bedload"].multiply(percentages["bedload"])).
-			add(this.xformMatrices["river"].multiply(percentages["river"])).
+			add(this.xformMatrices["river"].multiply(percentages["river"] + percentages["river"] * percentages["bedload"])).
 			add(this.xformMatrices["minor"].multiply(percentages["minor"])).
 			add(this.xformMatrices["major"].multiply(percentages["major"] * 2));
 	
 	var quadTransformMatrix = (this.xformMatrices["sign"].multiply(1)).
 		add(this.xformMatrices["bedload"].multiply(percentages["bedload"])).
-		add(this.xformMatrices["river"].multiply(percentages["river"])).
+		add(this.xformMatrices["river"].multiply(percentages["river"] + percentages["river"] * percentages["bedload"])).
 		add(this.xformMatrices["minor"].multiply(percentages["minor"])).
 		add(this.xformMatrices["major"].multiply(percentages["major"] * 4));
 	

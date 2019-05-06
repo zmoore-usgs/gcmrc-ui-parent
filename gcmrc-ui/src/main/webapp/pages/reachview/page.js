@@ -176,7 +176,7 @@ GCMRC.Page = {
 					},
 			serviceOptions);
 
-			if (GCMRC.doShowCalcSandBedload(CONFIG.networkName)) {
+			if ('DINO' == CONFIG.networkName.toUpperCase()) {
 				GCMRC.Graphing.showInfoMsg("#infoMsg",'The sediment supplies from ungaged small tributaries are not included in these sediment budgets.  These tributaries transport relatively small amounts of silt and clay and negligible amounts of sand.  Not including the sediment supplied from these small tributaries therefore does not measurably affect the sand budgets, but does result in small negative step changes in the silt and clay budgets that are not the result of erosion.');
 				
 			}

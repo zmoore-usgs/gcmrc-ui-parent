@@ -1,18 +1,20 @@
-<div id="usgscolorband">
-	<div id="usgsbanner">
-		<div id="usgsidentifier">
-			<a href="https://www.usgs.gov/">
-				<img alt="USGS - science for a changing world" title="U.S. Geological Survey Home Page" src='${param['relPath']}template/images/usgs_logo.jpg' width="178" height="72" />
-			</a>
-		</div>
-		<div id="usgsccsabox">
-			<div id="usgsccsa">
-				<br />
-				<a href="https://www.usgs.gov/">USGS Home</a><br />
-				<a href="https://www.usgs.gov/ask/">Contact USGS</a><br />
-				<a href="https://search.usgs.gov/">Search USGS</a><br />
-			</div>
-		</div>
-	</div>
-</div>
-<div id="usgstitle"><p><a href="https://www.gcmrc.gov/gcmrc.aspx">Grand Canyon Monitoring and Research Center</a></p></div>
+<header id="navbar" class="header-nav"  role="banner">
+  <div class="tmp-container">
+      <!-- primary navigation bar -->
+  		<!-- search bar-->
+      <div class="header-search">
+       <a class="logo-header" href="https://www.usgs.gov/" title="Home">
+          <img class="img"  src="${param['relPath']}template/images/logo.png"  alt="Home" />
+        </a>
+        <form action="https://www.usgs.gov/science-explorer-results" method="GET" id="search-box">
+         <div class="fa-wrapper"><label for="se_search" class="only">Search</label>
+          <input id="se_search" type="search" name="es" placeholder="Search">
+          <button class="fa fa-search" type="submit">
+            <span class="only">Search</span>
+			 </button></div>
+        </form>
+      </div>
+      <!-- end search bar-->
+	</div> 
+	<!-- end header-container-->
+</header>

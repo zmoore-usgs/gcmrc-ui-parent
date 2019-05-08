@@ -171,12 +171,11 @@
 				<jsp:param name="relPath" value="${relativePath}" />
 				<jsp:param name="header-class" value="" />
 			</jsp:include>
-			<jsp:include page="template/GCMRCTopMenu.jsp"></jsp:include>
 			<div>
 				<!--				<div class="clear">-->
 				<!--				</div>-->
-
-				<h2><span id="station-title"></span> <small id="station-subtitle"></small></h2>
+				<h2>Grand Canyon Monitoring and Research Center</h2>
+				<h3><span id="station-title"></span> <small id="station-subtitle"></small></h3>
 				<div id="breadcrumbs">
 					<span>
 						<span><a href="https://www.gcmrc.gov/gcmrc.aspx">Home</a></span>

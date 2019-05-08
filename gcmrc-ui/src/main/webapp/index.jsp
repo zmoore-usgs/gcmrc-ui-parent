@@ -81,7 +81,8 @@
 				<p class="chromeframe">You are using an outdated browser. <a href="http://browsehappy.com/">Upgrade your browser today</a> or <a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a> to better experience this site.</p>
 				<![endif]-->
 				<div class="application-body">
-					<h2>Discharge, Sediment, and Water Quality Monitoring</h2>
+					<h2>Grand Canyon Monitoring and Research Center</h2>
+					<h3>Discharge, Sediment, and Water Quality Monitoring</h3>
 					<div id="breadcrumbs" class="row-fluid">
 						<span>
 							<span><a href="https://www.gcmrc.gov/gcmrc.aspx">Home</a></span>

@@ -10,7 +10,7 @@ $(document).ready(function() {
 				networkDesc = networkDesc + '<li><a href="' + CONFIG.relativePath + 'reaches/' + key +'">Sediment Budget Reaches</a></li>';
 			}
 			if (GCMRC.Networks[key].researchItemId) {
-				networkDesc = networkDesc + '<li><a href="https://www.sciencebase.gov/catalog/item/'+ GCMRC.Networks[key].researchItemId +'">Research Trip Data</li>';
+				networkDesc = networkDesc + '<li><a href="https://www.sciencebase.gov/catalog/item/'+ GCMRC.Networks[key].researchItemId +'">Ancillary Sediment Data</li>';
 			}
 			if (GCMRC.Networks[key].topoSurveyId) {
 				networkDesc = networkDesc + '<li><a href="https://www.sciencebase.gov/catalog/item/'+ GCMRC.Networks[key].topoSurveyId +'">Topographic Surveys</li>';

@@ -276,7 +276,7 @@
 							<ul>
 								<li><a href="#" id="networkStation">Monitoring Stations</a></li>
 								<li><a href="#" id="networkReach">Sediment Budget Reaches</a></li>
-								<li><a href="#" id="networkResearchFolder">Research Trip Data</a></li>
+								<li><a href="#" id="networkResearchFolder">Ancillary Sediment Data</a></li>
 								<li><a href="#" id="networkTopoSurveyFolder">Topographic Surveys</a></li>
 								<li><a href="#" id="networkGisFolder">GIS Data</a></li>
 								<li><a href="#" id="networkPhotoFolder">Historical Photographs</a></li>

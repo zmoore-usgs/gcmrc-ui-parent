@@ -5,6 +5,8 @@ import gov.usgs.cida.gcmrcservices.mb.endpoint.response.SuccessEnvelope;
 import gov.usgs.cida.gcmrcservices.mb.endpoint.response.GCMRCResponse;
 import gov.usgs.cida.gcmrcservices.mb.model.Reach;
 import gov.usgs.cida.gcmrcservices.mb.model.ReachDetail;
+import gov.usgs.cida.gcmrcservices.mb.model.ReachTrib;
+
 import java.util.ArrayList;
 import java.util.List;
 import javax.ws.rs.GET;
@@ -38,6 +40,25 @@ public class ReachEndpoint {
 		}
 		
 		result = new GCMRCResponse(new SuccessEnvelope<>(reaches));
+		
+		return result;
+	}
+	
+	@GET
+	@JSONP(queryParam="jsonp_callback")
+	@Path("trib/{station}")
+	@Produces("application/javascript")
+	public GCMRCResponse getReachTrib(@PathParam("station") String majorTribSite) {
+		GCMRCResponse result = null;
+		List<ReachTrib> reachTrib = new ArrayList<ReachTrib>();
+		
+		try {
+			reachTrib = new ReachDAO().getReachTrib(majorTribSite);
+		} catch (Exception e) {
+			log.error("Could not get reach trib!", e);
+		}
+		
+		result = new GCMRCResponse(new SuccessEnvelope<>(reachTrib));
 		
 		return result;
 	}

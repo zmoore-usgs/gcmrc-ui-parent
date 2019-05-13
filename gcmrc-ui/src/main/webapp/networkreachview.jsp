@@ -18,7 +18,7 @@
 	}
 	boolean development = Boolean.parseBoolean(props.getProperty("all.development")) || Boolean.parseBoolean(props.getProperty("${project.artifactId}.development"));
 	protected String warningMessage = props.getProperty("gcmrc.site.warning.message", "");
-	%>
+%>
 
 <%
 	request.setAttribute("development", development);

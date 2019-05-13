@@ -996,4 +996,8 @@ For simplification, search bar is visible on larger screens but is hidden on sma
 /* =============SOCIAL MEDIA===============*/ 
 /* If you would prefer not to have the social media links, you can remove the comment out slashes and astricks surrounding the content below */
  .footer-social-links { 
-	display: none} 
+    display: none} 
+    
+.site-alert {
+    font-size: 26px;
+}

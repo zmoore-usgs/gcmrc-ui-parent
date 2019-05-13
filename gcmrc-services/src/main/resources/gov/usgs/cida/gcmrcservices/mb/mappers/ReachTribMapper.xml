@@ -7,7 +7,6 @@
 	
 	<resultMap id="reachTribResult" type="ReachTrib">
 		<result property="reachName" column="REACH_NAME"/>
-		<result property="reachGroup" column="REACH_GROUP"/>
 		<result property="upstreamStation" column="SITE_UP"/>
 		<result property="upstreamDisplayName" column="DISPLAY_NAME_UP"/>
 		<result property="downstreamStation" column="SITE_DOWN"/>
@@ -19,11 +18,13 @@
 		<result property="minorGroup" column="MINOR_GROUP"/>
 		<result property="network" column="NETWORK_NAME"/>
 		<result property="displayOrder" column="DISPLAY_ORDER"/>
-		<result property="groupName" column="GROUP_NAME"/>
 		<result property="endStaticRec" column="END_STATIC_REC"/>
 		<result property="newestSuspSed" column="NEWEST_SUSPSED"/>
 		<result property="downstreamDischargeStation" column="DISCHARGE_SITE_DOWN"/>
 		<result property="downstreamDischargeName" column="DISCHARGE_DISPLAY_NAME_DOWN"/>
+		<collection property="groupName" ofType="string" javaType="List" column="reach_name" select="getByReachName">
+			<result column="group_name"/>
+		</collection>
 	</resultMap>
 	
 	<sql id="columns">
@@ -41,7 +42,6 @@
 		DISCHARGE_DISPLAY_NAME_DOWN,
 		NETWORK_NAME,
 		DISPLAY_ORDER,
-		GROUP_NAME,
 		END_STATIC_REC,
 		NEWEST_SUSPSED
 	</sql>
@@ -99,27 +99,29 @@
 			(select name
 				from group_name
 				where group_name.group_id = rtd.minor_group) minor_group,
-                 case
-                    when rtd.network_name = 'GCDAMP' then 'GCDAMP'
-                    when rtd.network_name = 'Dinosaur' then 'DINO'
-                    when rtd.network_name = 'BigBend' then 'BIBE'
-                    when rtd.network_name = 'Canyonlands' then 'CL'
-                    when rtd.network_name = 'RiverDelta' then 'CRD'
-                    else rtd.network_name
-                 end
-                    as network_name,
-                 rtd.display_order,
-                 (select name from group_name where group_name.group_id = rtd.reach_group) group_name
-                 to_char (end_static_rec, 'YYYY-MM-DD"T"HH24:MI:SS')
-                    end_static_rec,
-                 to_char (newest_suspsed, 'YYYY-MM-DD"T"HH24:MI:SS')
-                    newest_suspsed
-            from reach_display rtd) t_a_reaches
+				case
+					when rtd.network_name = 'GCDAMP' then 'GCDAMP'
+					when rtd.network_name = 'Dinosaur' then 'DINO'
+					when rtd.network_name = 'BigBend' then 'BIBE'
+					when rtd.network_name = 'Canyonlands' then 'CL'
+					when rtd.network_name = 'RiverDelta' then 'CRD'
+					else rtd.network_name
+				end as network_name,
+				rtd.display_order,
+				to_char (end_static_rec, 'YYYY-MM-DD"T"HH24:MI:SS') end_static_rec,
+				to_char (newest_suspsed, 'YYYY-MM-DD"T"HH24:MI:SS') newest_suspsed
+			from reach_display rtd) t_a_reaches
 		<where>
 			<if test="null != majorTribSite">
 				major_trib_site_name = #{majorTribSite}
 			</if>
 		</where>
 	</select>
-	
+
+	<select id="getByReachName" parameterType="String" resultType="String">
+		select distinct name group_name from group_name, reach_display rtd 
+			where group_name.group_id = rtd.reach_group
+			and rtd.reach_name = #{reach_name,jdbcType=VARCHAR}
+	</select>
+
 </mapper>

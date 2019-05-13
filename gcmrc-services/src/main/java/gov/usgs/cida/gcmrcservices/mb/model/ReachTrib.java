@@ -14,7 +14,6 @@ public class ReachTrib {
 	private static final Logger log = LoggerFactory.getLogger(ReachTrib.class);
 
 	protected final String reachName;
-	protected final String reachGroup;
 	protected final String upstreamStation;
 	protected final String upstreamDisplayName;
 	protected final String downstreamStation;
@@ -34,7 +33,6 @@ public class ReachTrib {
 
 	public ReachTrib() {
 		this.reachName = null;
-		this.reachGroup = null;
 		this.upstreamStation = null;
 		this.upstreamDisplayName = null;
 		this.downstreamStation = null;
@@ -54,7 +52,6 @@ public class ReachTrib {
 	}
 
 	public ReachTrib(String reachName
-			, String reachGroup
 			, String upstreamStation
 			, String upstreamDisplayName
 			, String downstreamStation
@@ -72,7 +69,6 @@ public class ReachTrib {
 			, String downstreamDischargeStation
 			, String downstreamDischargeName) {
 		this.reachName = reachName;
-		this.reachGroup = reachGroup;
 		this.upstreamStation = upstreamStation;
 		this.upstreamDisplayName = upstreamDisplayName;
 		this.downstreamStation = downstreamStation;
@@ -89,10 +85,6 @@ public class ReachTrib {
 		this.newestSuspSed = newestSuspSed;
 		this.downstreamDischargeStation = downstreamDischargeStation;
 		this.downstreamDischargeName = downstreamDischargeName;
-	}
-	
-	public String getReachGroup() {
-		return reachGroup;
 	}
 
 	public String getMajorGroup() {

@@ -17,6 +17,7 @@
 		}
 	}
 	boolean development = Boolean.parseBoolean(props.getProperty("all.development")) || Boolean.parseBoolean(props.getProperty("${project.artifactId}.development"));
+	protected String warningMessage = props.getProperty("gcmrc.site.warning.message", "");
 
 %>
 
@@ -176,6 +177,9 @@
 				<!--				</div>-->
 				<h2>Grand Canyon Monitoring and Research Center</h2>
 				<h3><span id="station-title"></span> <small id="station-subtitle"></small></h3>
+				<% if (!warningMessage.isEmpty()) { %>
+					<div class="alert alert-danger site-alert"><b>NOTICE:&nbsp;</b><%= warningMessage%></div>
+				<% } %>
 				<div id="breadcrumbs">
 					<span>
 						<span><a href="https://www.gcmrc.gov/gcmrc.aspx">Home</a></span>

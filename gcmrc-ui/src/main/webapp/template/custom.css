@@ -991,9 +991,14 @@ By default, USGS has set the font size, family, etc. in order to provide a consi
 /* THIS HIDES THE SEARCH BOX ON VERY SMALL DEVICES:
 For simplification, search bar is visible on larger screens but is hidden on small screens. If you would prefer not to have the search box at all, you can remove the "@media (max-width:500px) {" and the second closing "}". below */
 .header-search form { 
-	display: none}
+	display: none
 }
 /* =============SOCIAL MEDIA===============*/ 
 /* If you would prefer not to have the social media links, you can remove the comment out slashes and astricks surrounding the content below */
- .footer-social-links { 
-	display: none} 
+.footer-social-links { 
+    display: none
+} 
+    
+.site-alert {
+    font-size: 26px;
+}

@@ -116,7 +116,7 @@
 			<jsp:param name="relPath" value="${relativePath}" />
 			<jsp:param name="debug-qualifier" value="${development}" />
 		</jsp:include>
-		<script src="${relativePath}services/service/station/jsonp/allsite?network=${networkName}&jsonp_callback=GCMRC.StationLoad"></script>
+		<script src="${relativePath}services/rest/station/allsite/${networkName}?jsonp_callback=GCMRC.StationLoad"></script>
 		<jsp:include page="app/graphing/package.jsp">
 			<jsp:param name="relPath" value="${relativePath}" />
 			<jsp:param name="debug-qualifier" value="${development}" />
@@ -197,7 +197,7 @@
 							<div class="sectionTitle">Adjustable Uncertainty</div>
 							<div id="parameterLoading" class="ajaxLoading"><div class="alert alert-info">Loading...</div><div style="margin-bottom: 20px;"><img src="${relativePath}app/ajax-loader-trsp.gif" alt="Loading..." height="32px" width="32px"></div></div>
 							<div id="parameterList" class="rightSidebarText"></div>
-                                                        <div id="riverBedloadSlider" class="rightSidebarText"></div>
+							<div id="riverBedloadSlider" class="rightSidebarText"></div>
 						</div>
 						<div id="resetParametersDiv" style="text-align:center;">
 							<a href="#" class="buildButton" id="resetDefaults">Restore Defaults</a>

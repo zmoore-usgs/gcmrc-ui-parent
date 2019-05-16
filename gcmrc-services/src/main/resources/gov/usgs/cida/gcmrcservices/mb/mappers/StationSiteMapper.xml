@@ -74,6 +74,7 @@
 				network = #{net}
 			</if>
 		</where>
+		ORDER BY DISPLAY_ORDER, SITE_ID
 	</select>
 
 

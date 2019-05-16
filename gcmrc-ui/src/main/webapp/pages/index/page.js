@@ -130,7 +130,13 @@ GCMRC.Page = {
 				} else {
 					$('#networkGisFolder').parent().hide();
 				}
-				$('#networkPhotoFolder').attr('href', 'https://www.sciencebase.gov/catalog/item/' + vector.attributes.networkPhotoFolder);
+				
+				if (GCMRC.Networks[vector.attributes.networkName].historicalPhotos) {
+					$('#networkPhotoFolder').attr('href', 'https://www.sciencebase.gov/catalog/item/' + vector.attributes.networkPhotoFolder);
+					$('#networkPhotoFolder').parent().show();
+				} else {
+					$('#networkPhotoFolder').parent().hide();
+				}
 				if (GCMRC.Networks[vector.attributes.networkName].rainGauge) {
 					$('#networkRainGaugeFolder').attr('href', 'https://www.sciencebase.gov/catalog/item/' + vector.attributes.networkRainGaugeFolder);
 					$('#networkRainGaugeFolder').parent().show();

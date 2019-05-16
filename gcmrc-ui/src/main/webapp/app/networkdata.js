@@ -27,12 +27,12 @@ GCMRC.Networks = function() {
 			reaches : true,
 			gis: true,
 			topo: true,
-			rainGauge: true
+			rainGauge: true,
+			historicalPhotos: true
 		},
 		"DINO" : {
 			displayName : 'Dinosaur',
 			researchItemId: '56461a8be4b0e2669b30f2e1',
-			photoItemId: '5ada08bde4b0e2c2dd288ca3',
 			bbox : {
 				"left": -109.734,
 				"bottom": 39.98,
@@ -42,13 +42,13 @@ GCMRC.Networks = function() {
 			reaches : true,
 			gis: false,
 			topo: false,
-			rainGauge: false
+			rainGauge: false,
+			historicalPhotos: false
 		},
 		"CL" : {
 			displayName : 'Canyonlands',
 			researchItemId: '56461a7de4b0e2669b30f2df',
 			labelLoc: 'tl',
-			photoItemId: '5ada088ce4b0e2c2dd2889fc',
 			bbox: {
 				"left": -110.26759,
 				"bottom": 38.02643,
@@ -59,13 +59,13 @@ GCMRC.Networks = function() {
 			reaches:false,
 			gis: false,
 			topo: false,
-			rainGauge: false
+			rainGauge: false,
+			historicalPhotos: false
 		},
 		"CRD" : {
 			displayName : 'Colorado River Delta',
 			researchItemId: '56461a96e4b0e2669b30f2e4',
 			labelLoc: 'bl',
-			photoItemId: '5ada08a7e4b0e2c2dd288b70',
 			bbox : {
 				"left": -115.12630,
 				"bottom": 32.13372,
@@ -75,12 +75,12 @@ GCMRC.Networks = function() {
 			reaches : true,
 			gis: false,
 			topo: false,
-			rainGauge: false
+			rainGauge: false,
+			historicalPhotos: false
 		},
 		"URG" : {
 			displayName : 'Upper Rio Grande',
 			researchItemId: '5a8dc5f6e4b0699060596dc0',
-			photoItemId: '5ada097be4b0e2c2dd289599',
 			labelLoc: 'tl',
 			bbox : {
 				"left": -107.118,
@@ -91,12 +91,12 @@ GCMRC.Networks = function() {
 			reaches: false,
 			gis: false,
 			topo: false,
-			rainGauge: false
+			rainGauge: false,
+			historicalPhotos: false
 		},
 		"BIBE" : {
 			displayName : 'Big Bend',
 			researchItemId: '56461aa1e4b0e2669b30f2e6',
-			photoItemId: '5ada087ae4b0e2c2dd2888fd',
 			bbox : {
 				"left": -103.950969,
 				"bottom": 28.780138,
@@ -106,13 +106,13 @@ GCMRC.Networks = function() {
 			reaches : true,
 			gis: false,
 			topo: false,
-			rainGauge: false
+			rainGauge: false,
+			historicalPhotos: false
 		},
 		"CHIP" : {
 			displayName : 'Chippewa',
 			researchItemId: '5a0c952ae4b09af898cd417b',
 			labelLoc: 'bl',
-			photoItemId: '5ada089ae4b0e2c2dd288aad',
 			bbox: {
 				"left": -92.24,
 				"bottom": 44.383,
@@ -122,7 +122,8 @@ GCMRC.Networks = function() {
 			reaches: false,
 			gis: false,
 			topo: false,
-			rainGauge: false
+			rainGauge: false,
+			historicalPhotos: false
 		}
 	};
 }();

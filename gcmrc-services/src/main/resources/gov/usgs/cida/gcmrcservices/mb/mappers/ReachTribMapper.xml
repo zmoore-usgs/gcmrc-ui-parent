@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+ 
+<mapper namespace="gov.usgs.cida.gcmrcservices.mb.mappers.ReachTribMapper">
+	
+	<resultMap id="reachTribResult" type="ReachTrib">
+		<result property="reachName" column="REACH_NAME"/>
+		<result property="upstreamStation" column="SITE_UP"/>
+		<result property="upstreamDisplayName" column="DISPLAY_NAME_UP"/>
+		<result property="downstreamStation" column="SITE_DOWN"/>
+		<result property="downstreamDisplayName" column="DISPLAY_NAME_DOWN"/>
+		<result property="majorTribRiver" column="MAJOR_TRIB_RIVER"/>
+		<result property="majorTribSite" column="MAJOR_TRIB_SITE_NAME"/>
+		<result property="majorGroup" column="MAJOR_GROUP"/>
+		<result property="minorTribSite" column="MINOR_TRIB_SITE_NAME"/>
+		<result property="minorGroup" column="MINOR_GROUP"/>
+		<result property="network" column="NETWORK_NAME"/>
+		<result property="displayOrder" column="DISPLAY_ORDER"/>
+		<result property="endStaticRec" column="END_STATIC_REC"/>
+		<result property="newestSuspSed" column="NEWEST_SUSPSED"/>
+		<result property="downstreamDischargeStation" column="DISCHARGE_SITE_DOWN"/>
+		<result property="downstreamDischargeName" column="DISCHARGE_DISPLAY_NAME_DOWN"/>
+		<collection property="groupName" ofType="string" javaType="List" column="reach_name" select="getByReachName">
+			<result column="group_name"/>
+		</collection>
+	</resultMap>
+	
+	<sql id="columns">
+		REACH_NAME,
+		SITE_UP,
+		DISPLAY_NAME_UP,
+		SITE_DOWN,
+		DISPLAY_NAME_DOWN,
+		MAJOR_TRIB_RIVER,
+		MAJOR_TRIB_SITE_NAME,
+		MAJOR_GROUP,
+		MINOR_TRIB_SITE_NAME,
+		MINOR_GROUP,
+		DISCHARGE_SITE_DOWN,
+		DISCHARGE_DISPLAY_NAME_DOWN,
+		NETWORK_NAME,
+		DISPLAY_ORDER,
+		END_STATIC_REC,
+		NEWEST_SUSPSED
+	</sql>
+	
+	<select id="getReachTrib" parameterType="map" resultMap="reachTribResult">
+		SELECT
+		<include refid="columns"/>
+		from (select distinct
+			rtd.reach_name,
+			(select (case
+				when nwis_site_no is not null then nwis_site_no
+				else short_name
+				end) site_up
+				from site_star s
+					where s.site_id = rtd.site_id_up) site_up,
+			(select s.name
+				from site_star s
+					where s.site_id = rtd.site_id_up) display_name_up,
+			(select (case
+				when nwis_site_no is not null then nwis_site_no
+				else short_name
+				end)
+				from site_star s
+					where s.site_id = rtd.site_id_down) site_down,
+			(select s.name
+				from site_star s
+					where s.site_id = rtd.site_id_down) display_name_down,
+			(select (case
+				when nwis_site_no is not null then nwis_site_no
+				else short_name
+				end)
+				from site_star s
+					where s.site_id = rtd.discharge_down) discharge_site_down,
+			(select s.name
+				from site_star s
+					where s.site_id = rtd.discharge_down) discharge_display_name_down,
+			(select s.river_name
+				from site_star s
+					where rtd.major_site = s.site_id) as major_trib_river,
+			(select (case
+				when nwis_site_no is not null then nwis_site_no
+				else short_name
+				end)
+				from site_star s
+					where s.site_id = rtd.major_site) major_trib_site_name,
+			(select name
+				from group_name
+					where rtd.major_group = group_name.group_id) major_group,
+			(select (case
+				when nwis_site_no is not null then nwis_site_no
+				else short_name
+				end)
+				from site_star s
+					where s.site_id = rtd.minor_site) minor_trib_site_name,
+			(select name
+				from group_name
+				where group_name.group_id = rtd.minor_group) minor_group,
+				case
+					when rtd.network_name = 'GCDAMP' then 'GCDAMP'
+					when rtd.network_name = 'Dinosaur' then 'DINO'
+					when rtd.network_name = 'BigBend' then 'BIBE'
+					when rtd.network_name = 'Canyonlands' then 'CL'
+					when rtd.network_name = 'RiverDelta' then 'CRD'
+					else rtd.network_name
+				end as network_name,
+				rtd.display_order,
+				to_char (end_static_rec, 'YYYY-MM-DD"T"HH24:MI:SS') end_static_rec,
+				to_char (newest_suspsed, 'YYYY-MM-DD"T"HH24:MI:SS') newest_suspsed
+			from reach_display rtd) t_a_reaches
+		<where>
+			<if test="null != majorTribSite">
+				major_trib_site_name = #{majorTribSite}
+			</if>
+		</where>
+	</select>
+
+	<select id="getByReachName" parameterType="String" resultType="String">
+		select distinct name group_name from group_name, reach_display rtd 
+			where group_name.group_id = rtd.reach_group
+			and rtd.reach_name = #{reach_name,jdbcType=VARCHAR}
+	</select>
+
+</mapper>

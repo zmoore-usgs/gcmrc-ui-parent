@@ -3,6 +3,8 @@ package gov.usgs.cida.gcmrcservices.mb.dao;
 import gov.usgs.cida.gcmrcservices.mb.MyBatisConnectionFactory;
 import gov.usgs.cida.gcmrcservices.mb.model.Reach;
 import gov.usgs.cida.gcmrcservices.mb.model.ReachDetail;
+import gov.usgs.cida.gcmrcservices.mb.model.ReachTrib;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -70,6 +72,19 @@ public class ReachDAO {
 		
 		try (SqlSession session = sqlSessionFactory.openSession()) {
 			result = session.selectList(queryPackage + ".ReachDetailMapper.getReachDetails", params);
+		}
+		
+		return result;
+	}
+	
+	public List<ReachTrib> getReachTrib(String majorTribSite) {
+		List<ReachTrib> result = new ArrayList<ReachTrib>();
+		
+		Map<String, String> params = new HashMap<String, String>();
+		params.put("majorTribSite", majorTribSite);
+		
+		try (SqlSession session = sqlSessionFactory.openSession()) {
+			result = session.selectList(queryPackage + ".ReachTribMapper.getReachTrib", params);
 		}
 		
 		return result;

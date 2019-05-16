@@ -21,7 +21,6 @@ public class ReachService extends WebService {
 	private static final Logger log = LoggerFactory.getLogger(ReachService.class);
 
 	public ReachService() {
-		this.specMapping.put("trib", ReachTribSpec.class);
 		this.specMapping.put("por", ReachTribPORSpec.class);
 	}
 

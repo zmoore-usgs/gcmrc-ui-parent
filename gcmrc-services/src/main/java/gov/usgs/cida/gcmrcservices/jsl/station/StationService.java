@@ -25,8 +25,6 @@ public class StationService extends WebService {
 		this.specMapping.put("bs", StationBSSpec.class);
 		this.specMapping.put("qw", StationQWSpec.class);
 		this.specMapping.put("qwdownload", QWDownloadSpec.class);
-		this.specMapping.put("allsite", StationAllSiteSpec.class);
-		this.specMapping.put("site", StationSiteSpec.class);
 		this.specMapping.put("credit", StationCreditSpec.class);
 		this.specMapping.put("pubs", StationPubsSpec.class);
 	}

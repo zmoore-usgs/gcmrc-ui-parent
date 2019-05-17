@@ -117,7 +117,7 @@
 			<jsp:param name="relPath" value="${relativePath}" />
 			<jsp:param name="debug-qualifier" value="${development}" />
 		</jsp:include>
-		<script src="${relativePath}services/service/station/jsonp/allsite?network=${networkName}&jsonp_callback=GCMRC.StationLoad"></script>
+		<script src="${relativePath}services/rest/station/allsite/${networkName}?jsonp_callback=GCMRC.StationLoad"></script>
 		<jsp:include page="app/graphing/package.jsp">
 			<jsp:param name="relPath" value="${relativePath}" />
 			<jsp:param name="debug-qualifier" value="${development}" />
@@ -128,7 +128,6 @@
 		</jsp:include>
 		<script src="${relativePath}services/rest/reach/${networkName}/${upstreamStationName}/${downstreamStationName}?jsonp_callback=GCMRC.Page.reachLoad"></script>
 		<script src="${relativePath}services/rest/reach/detail/${networkName}/${upstreamStationName}/${downstreamStationName}?jsonp_callback=GCMRC.Page.reachDetailLoad"></script>
-<!--		<script src="${relativePath}services/service/reach/jsonp/trib?upstreamStation=${upstreamStationName}&jsonp_callback=GCMRC.Page.reachLoad"></script>-->
 		<script src="${relativePath}services/service/reach/jsonp/por?upstreamStation=${upstreamStationName}&jsonp_callback=GCMRC.Page.reachPORLoad"></script>
 		<script src="${relativePath}services/service/station/jsonp/credit?site=${upstreamStationName}&site=${downstreamStationName}&jsonp_callback=GCMRC.Page.creditLoad"></script>
 
@@ -201,7 +200,7 @@
 							<div class="sectionTitle">Adjustable Uncertainty</div>
 							<div id="parameterLoading" class="ajaxLoading"><div class="alert alert-info">Loading...</div><div style="margin-bottom: 20px;"><img src="${relativePath}app/ajax-loader-trsp.gif" alt="Loading..." height="32px" width="32px"></div></div>
 							<div id="parameterList" class="rightSidebarText"></div>
-                                                        <div id="riverBedloadSlider" class="rightSidebarText"></div>
+							<div id="riverBedloadSlider" class="rightSidebarText"></div>
 						</div>
 						<div id="resetParametersDiv" style="text-align:center;">
 							<a href="#" class="buildButton" id="resetDefaults">Restore Defaults</a>

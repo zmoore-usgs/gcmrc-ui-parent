@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+ 
+<mapper namespace="gov.usgs.cida.gcmrcservices.mb.mappers.StationSiteMapper">
+	
+	<resultMap id="siteResult" type="StationSite">
+		<result property="siteId" column="site_id"/>
+		<result property="siteName" column="site_name"/>
+		<result property="displayName" column="display_name"/>
+		<result property="lat" column="lat"/>
+		<result property="lon" column="lon"/>
+		<result property="network" column="network"/>
+		<result property="active" column="active"/>
+		<result property="displayOrder" column="display_order"/>
+	</resultMap>
+	
+	<sql id="columns">
+		site_id,
+		site_name,
+		display_name,
+		lat,
+		lon,
+		network,
+		active,
+		display_order
+	</sql>
+	
+	<select id="getSites" parameterType="map" resultMap="siteResult">
+		SELECT
+		<include refid="columns"/>
+		from (select distinct
+			<if test="sites == 'site'">
+				tsd.site_id,
+			</if>
+			<if test="sites == 'allsite'">
+				site_id,
+			</if>
+			case
+				when nwis_site_no is null then short_name
+				else nwis_site_no
+			end as site_name,
+			name as display_name,
+			decimal_latitude lat,
+			decimal_longitude lon,
+			case
+				when network_name = 'GCDAMP' then 'GCDAMP'
+				when network_name = 'Dinosaur' then 'DINO'
+				when network_name = 'BigBend' then 'BIBE'
+				when network_name = 'Canyonlands' then 'CL'
+				when network_name = 'RiverDelta' then 'CRD'
+				when network_name = 'Chippewa' then 'CHIP'
+				when network_name = 'UpperRioGrande' then 'URG'
+				else network_name
+			end as network,
+			active,
+			display_order
+			from 
+			<if test="sites == 'site'">
+				(select site_id, display from time_series_display
+				union
+				select distinct qwp.site_id, 'Y' as display
+				from qw_por_star qwp) tsd
+				left outer join site_star on tsd.site_id = site_star.site_id
+				where display = 'Y'
+			</if>
+			<if test="sites == 'allsite'">
+				site_star
+			</if>
+			) t_a_main
+		<where>
+			<if test="null != net">
+				network = #{net}
+			</if>
+		</where>
+		ORDER BY DISPLAY_ORDER, SITE_ID
+	</select>
+
+
+</mapper>

@@ -39,6 +39,13 @@
 		<result property="displayOrder" column="display_order"/>
 	</resultMap>
 	
+	<resultMap id="siteCreditsResult" type="StationCredits">
+		<result property="nwisSite" column="site_no"/>
+		<result property="shortName" column="short_nm"/>
+		<result property="orgCode" column="org_cd"/>
+		<result property="displayOrder" column="display_order"/>
+	</resultMap>
+	
 	<sql id="site-columns">
 		site_id,
 		site_name,
@@ -168,6 +175,30 @@
 			</if>
 		</where>
 		order by display_order, site_nm
+	</select>
+	
+	<sql id="site-credits-columns">
+		site_no,
+		short_nm,
+		org_cd,
+		display_order
+	</sql>
+	
+	<select id="getSiteCredits" parameterType="map" resultMap="siteCreditsResult">
+		SELECT
+		<include refid="site-credits-columns"/>
+		from (select s.nwis_site_no site_no,
+			s.short_name short_nm,
+			ccs.proto_org_cd org_cd,
+			ccs.priority_va display_order
+			from collection_cred_site ccs, site_star s
+				where ccs.site_id = s.site_id) t_a_credit
+		<where>
+			<if test="null != site">
+				(site_no = #{site} or short_nm = #{site})
+			</if>
+		</where>
+		order by display_order, site_no
 	</select>
 	
 </mapper>

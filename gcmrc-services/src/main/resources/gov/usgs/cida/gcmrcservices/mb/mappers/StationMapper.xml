@@ -197,6 +197,13 @@
 			<if test="null != site">
 				(site_no = #{site} or short_nm = #{site})
 			</if>
+			<if test="null != siteUp">
+				(site_no = #{siteUp} or short_nm = #{siteUp})
+				<if test="null != siteDown">
+				or (site_no = #{siteDown} or short_nm = #{siteDown})
+				</if>
+			</if>
+			
 		</where>
 		order by display_order, site_no
 	</select>

@@ -129,7 +129,7 @@
 		<script src="${relativePath}services/rest/reach/${networkName}/${upstreamStationName}/${downstreamStationName}?jsonp_callback=GCMRC.Page.reachLoad"></script>
 		<script src="${relativePath}services/rest/reach/detail/${networkName}/${upstreamStationName}/${downstreamStationName}?jsonp_callback=GCMRC.Page.reachDetailLoad"></script>
 		<script src="${relativePath}services/rest/reach/por/${upstreamStationName}?jsonp_callback=GCMRC.Page.reachPORLoad"></script>
-		<script src="${relativePath}services/service/station/jsonp/credit?site=${upstreamStationName}&site=${downstreamStationName}&jsonp_callback=GCMRC.Page.creditLoad"></script>
+		<script src="${relativePath}services/rest/reach/credit/${upstreamStationName}/${downstreamStationName}?jsonp_callback=GCMRC.Page.creditLoad"></script>
 
 		<style type="text/css">
 			.buildButton {

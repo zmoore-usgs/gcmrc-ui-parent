@@ -8,6 +8,7 @@
 	</settings>
     <typeAliases>
     	<typeAlias type='gov.usgs.cida.gcmrcservices.mb.model.StationSite' alias='StationSite'></typeAlias>
+    	<typeAlias type='gov.usgs.cida.gcmrcservices.mb.model.StationQW' alias='StationQW'></typeAlias>
         <typeAlias type='gov.usgs.cida.gcmrcservices.mb.model.Reach' alias='Reach'></typeAlias>
         <typeAlias type='gov.usgs.cida.gcmrcservices.mb.model.ReachDetail' alias='ReachDetail'></typeAlias>
         <typeAlias type='gov.usgs.cida.gcmrcservices.mb.model.ReachTrib' alias='ReachTrib'></typeAlias>

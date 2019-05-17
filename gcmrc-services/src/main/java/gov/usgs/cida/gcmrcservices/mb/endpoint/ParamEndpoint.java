@@ -20,44 +20,25 @@ import org.slf4j.LoggerFactory;
  *
  * @author kmschoep
  */
-@Path("station")
-public class StationEndpoint {
-	private static final Logger log = LoggerFactory.getLogger(StationEndpoint.class);
+@Path("param")
+public class ParamEndpoint {
+	private static final Logger log = LoggerFactory.getLogger(ParamEndpoint.class);
 	
 	@GET
 	@JSONP(queryParam="jsonp_callback")
-	@Path("site/{network}")
+	@Path("qw/{site}")
 	@Produces("application/javascript")
-	public GCMRCResponse getSites(@PathParam("network") String network) {
+	public GCMRCResponse getSiteQW(@PathParam("site") String site) {
 		GCMRCResponse result = null;
-		List<StationSite> sites = new ArrayList<StationSite>();
+		List<StationQW> sites = new ArrayList<StationQW>();
 		
 		try {
-			sites = new StationDAO().getSites(network, "site");
+			sites = new StationDAO().getSiteQW(site);
 		} catch (Exception e) {
-			log.error("Could not get sites!", e);
+			log.error("Could not get site QW!", e);
 		}
 		
 		result = new GCMRCResponse(new SuccessEnvelope<>(sites));
-		
-		return result;
-	}
-	
-	@GET
-	@JSONP(queryParam="jsonp_callback")
-	@Path("allsite/{network}")
-	@Produces("application/javascript")
-	public GCMRCResponse getAllSites(@PathParam("network") String network) {
-		GCMRCResponse result = null;
-		List<StationSite> allSites = new ArrayList<StationSite>();
-		
-		try {
-			allSites = new StationDAO().getSites(network, "allsite");
-		} catch (Exception e) {
-			log.error("Could not get all sites!", e);
-		}
-		
-		result = new GCMRCResponse(new SuccessEnvelope<>(allSites));
 		
 		return result;
 	}

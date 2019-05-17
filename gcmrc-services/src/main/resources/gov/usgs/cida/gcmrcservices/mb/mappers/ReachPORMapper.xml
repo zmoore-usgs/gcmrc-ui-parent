@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+ 
+<mapper namespace="gov.usgs.cida.gcmrcservices.mb.mappers.ReachPORMapper">
+	
+	<resultMap id="reachPORResult" type="ReachPOR">
+		<result property="upstreamStation" column="site_up"/>
+		<result property="downstreamStation" column="site_down"/>
+		<result property="groupName" column="group_name"/>
+		<result property="upstreamBeginPosition" column="up_earliest_dt"/>
+		<result property="upstreamEndPosition" column="up_latest_dt"/>
+		<result property="downstreamBeginPosition" column="down_earliest_dt"/>
+		<result property="downstreamEndPosition" column="down_latest_dt"/>
+		<result property="minorTribBeginPosition" column="earliest_dt_minor_trib"/>
+		<result property="minorTribEndPosition" column="latest_dt_minor_trib"/>
+	</resultMap>
+	
+	<sql id="columns">
+		site_up,
+		site_down,
+		group_name,
+		up_earliest_dt,
+		up_latest_dt,
+		down_earliest_dt,
+		down_latest_dt,
+		earliest_dt_minor_trib,
+		latest_dt_minor_trib
+	</sql>
+	
+	<select id="getReachPOR" parameterType="map" resultMap="reachPORResult">
+		SELECT
+		<include refid="columns"/>
+		from (select 
+				case
+					when ss_up.nwis_site_no is null then ss_up.short_name
+					else ss_up.nwis_site_no
+				end site_up,
+				to_char (tsp_up.earliest_dt, 'YYYY-MM-DD"T"HH24:MI:SS') up_earliest_dt,
+				to_char (tsp_up.latest_dt, 'YYYY-MM-DD"T"HH24:MI:SS') up_latest_dt,
+				case
+					when ss_down.nwis_site_no is null then ss_down.short_name
+					else ss_down.nwis_site_no
+				end site_down,
+				to_char (tsp_down.earliest_dt, 'YYYY-MM-DD"T"HH24:MI:SS') down_earliest_dt,
+				to_char (tsp_down.latest_dt, 'YYYY-MM-DD"T"HH24:MI:SS') down_latest_dt,
+				g.name group_name,
+				to_char (tsp_min_trib.earliest_dt, 'YYYY-MM-DD"T"HH24:MI:SS') earliest_dt_minor_trib,
+				to_char (tsp_min_trib.latest_dt, 'YYYY-MM-DD"T"HH24:MI:SS') latest_dt_minor_trib
+				from reach_display d
+				left join
+					time_series_por tsp_min_trib 
+						on d.minor_site = tsp_min_trib.site_id
+							and d.minor_group = tsp_min_trib.group_id
+				left join
+					time_series_por tsp_dis
+						on d.discharge_down = tsp_dis.site_id
+				left join 
+					time_series_por tsp_down
+						on d.site_id_down = tsp_down.site_id 
+							and d.reach_group = tsp_down.group_id 
+				left join 
+					time_series_por tsp_up 
+						on d.site_id_up = tsp_up.site_id
+							and d.reach_group = tsp_up.group_id
+				left join
+					site_star ss_dis_down 
+						on d.discharge_down = ss_dis_down.site_id 
+				left join
+					site_star ss_down 
+						on site_id_down = ss_down.site_id
+				left join
+					site_star ss_up
+						on site_id_up = ss_up.site_id 
+				join
+					group_name g on d.reach_group = g.group_id
+				where tsp_dis.group_id = 2 ) t_a_main
+		<where>
+			<if test="null != upstreamStation">
+				site_up = #{upstreamStation}
+			</if>
+		</where>
+	</select>
+
+</mapper>

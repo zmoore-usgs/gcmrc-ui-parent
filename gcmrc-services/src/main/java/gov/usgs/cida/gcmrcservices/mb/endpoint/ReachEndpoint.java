@@ -5,6 +5,7 @@ import gov.usgs.cida.gcmrcservices.mb.endpoint.response.SuccessEnvelope;
 import gov.usgs.cida.gcmrcservices.mb.endpoint.response.GCMRCResponse;
 import gov.usgs.cida.gcmrcservices.mb.model.Reach;
 import gov.usgs.cida.gcmrcservices.mb.model.ReachDetail;
+import gov.usgs.cida.gcmrcservices.mb.model.ReachPOR;
 import gov.usgs.cida.gcmrcservices.mb.model.ReachTrib;
 
 import java.util.ArrayList;
@@ -59,6 +60,25 @@ public class ReachEndpoint {
 		}
 		
 		result = new GCMRCResponse(new SuccessEnvelope<>(reachTrib));
+		
+		return result;
+	}
+	
+	@GET
+	@JSONP(queryParam="jsonp_callback")
+	@Path("por/{station}")
+	@Produces("application/javascript")
+	public GCMRCResponse getReachPOR(@PathParam("station") String upstreamStation) {
+		GCMRCResponse result = null;
+		List<ReachPOR> reachPOR = new ArrayList<ReachPOR>();
+		
+		try {
+			reachPOR = new ReachDAO().getReachPOR(upstreamStation);
+		} catch (Exception e) {
+			log.error("Could not get reach period of record!", e);
+		}
+		
+		result = new GCMRCResponse(new SuccessEnvelope<>(reachPOR));
 		
 		return result;
 	}

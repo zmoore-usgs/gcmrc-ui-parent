@@ -43,7 +43,7 @@ public class StationDAO {
 		params.put("sites", sites);
 		
 		try (SqlSession session = sqlSessionFactory.openSession()) {
-			result = session.selectList( queryPackage + ".StationSiteMapper.getSites", params);
+			result = session.selectList( queryPackage + ".StationMapper.getSites", params);
 		}
 		
 		return result;

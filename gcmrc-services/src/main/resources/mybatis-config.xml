@@ -25,7 +25,7 @@
         </environment>
     </environments>
     <mappers>
-    	<mapper resource='gov/usgs/cida/gcmrcservices/mb/mappers/StationSiteMapper.xml' />
+    	<mapper resource='gov/usgs/cida/gcmrcservices/mb/mappers/StationMapper.xml' />
         <mapper resource='gov/usgs/cida/gcmrcservices/mb/mappers/ReachMapper.xml' />
         <mapper resource='gov/usgs/cida/gcmrcservices/mb/mappers/ReachPORMapper.xml' />
         <mapper resource='gov/usgs/cida/gcmrcservices/mb/mappers/ReachDetailMapper.xml' />

@@ -1,12 +1,8 @@
 package gov.usgs.cida.gcmrcservices.mb.dao;
 
 import gov.usgs.cida.gcmrcservices.mb.MyBatisConnectionFactory;
-import gov.usgs.cida.gcmrcservices.mb.model.Reach;
-import gov.usgs.cida.gcmrcservices.mb.model.ReachDetail;
-import gov.usgs.cida.gcmrcservices.mb.model.ReachTrib;
 import gov.usgs.cida.gcmrcservices.mb.model.StationSite;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;

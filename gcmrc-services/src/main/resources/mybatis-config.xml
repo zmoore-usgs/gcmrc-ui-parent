@@ -11,6 +11,7 @@
         <typeAlias type='gov.usgs.cida.gcmrcservices.mb.model.Reach' alias='Reach'></typeAlias>
         <typeAlias type='gov.usgs.cida.gcmrcservices.mb.model.ReachDetail' alias='ReachDetail'></typeAlias>
         <typeAlias type='gov.usgs.cida.gcmrcservices.mb.model.ReachTrib' alias='ReachTrib'></typeAlias>
+        <typeAlias type='gov.usgs.cida.gcmrcservices.mb.model.ReachPOR' alias='ReachPOR'></typeAlias>
         <typeAlias type='gov.usgs.cida.gcmrcservices.mb.model.DurationCurvePoint' alias='DurationCurvePoint'></typeAlias>
         <typeAlias type='gov.usgs.cida.gcmrcservices.mb.model.DurationCurveConsecutiveGap' alias='DurationCurveConsecutiveGap'></typeAlias>
 	<typeAlias type='gov.usgs.cida.gcmrcservices.mb.model.DurationCurveCumulativeGap' alias='DurationCurveCumulativeGap'></typeAlias>
@@ -26,6 +27,7 @@
     <mappers>
     	<mapper resource='gov/usgs/cida/gcmrcservices/mb/mappers/StationSiteMapper.xml' />
         <mapper resource='gov/usgs/cida/gcmrcservices/mb/mappers/ReachMapper.xml' />
+        <mapper resource='gov/usgs/cida/gcmrcservices/mb/mappers/ReachPORMapper.xml' />
         <mapper resource='gov/usgs/cida/gcmrcservices/mb/mappers/ReachDetailMapper.xml' />
         <mapper resource='gov/usgs/cida/gcmrcservices/mb/mappers/ReachTribMapper.xml' />
         <mapper resource='gov/usgs/cida/gcmrcservices/mb/mappers/DurationCurveMapper.xml' />

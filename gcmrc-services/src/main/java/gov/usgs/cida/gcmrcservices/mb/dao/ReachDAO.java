@@ -3,6 +3,7 @@ package gov.usgs.cida.gcmrcservices.mb.dao;
 import gov.usgs.cida.gcmrcservices.mb.MyBatisConnectionFactory;
 import gov.usgs.cida.gcmrcservices.mb.model.Reach;
 import gov.usgs.cida.gcmrcservices.mb.model.ReachDetail;
+import gov.usgs.cida.gcmrcservices.mb.model.ReachPOR;
 import gov.usgs.cida.gcmrcservices.mb.model.ReachTrib;
 
 import java.util.ArrayList;
@@ -16,7 +17,7 @@ import org.slf4j.LoggerFactory;
 
 /**
  *
- * @author dmsibley
+ * @author dmsibley, kmschoep
  */
 public class ReachDAO {
 	@SuppressWarnings("unused")
@@ -85,6 +86,19 @@ public class ReachDAO {
 		
 		try (SqlSession session = sqlSessionFactory.openSession()) {
 			result = session.selectList(queryPackage + ".ReachTribMapper.getReachTrib", params);
+		}
+		
+		return result;
+	}
+	
+	public List<ReachPOR> getReachPOR(String upstreamStation) {
+		List<ReachPOR> result = new ArrayList<ReachPOR>();
+		
+		Map<String, String> params = new HashMap<String, String>();
+		params.put("upstreamStation", upstreamStation);
+		
+		try (SqlSession session = sqlSessionFactory.openSession()) {
+			result = session.selectList(queryPackage + ".ReachPORMapper.getReachPOR", params);
 		}
 		
 		return result;

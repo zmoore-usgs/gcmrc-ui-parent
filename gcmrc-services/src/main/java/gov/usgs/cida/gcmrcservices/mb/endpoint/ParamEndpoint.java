@@ -4,7 +4,6 @@ import gov.usgs.cida.gcmrcservices.mb.dao.StationDAO;
 import gov.usgs.cida.gcmrcservices.mb.endpoint.response.SuccessEnvelope;
 import gov.usgs.cida.gcmrcservices.mb.endpoint.response.GCMRCResponse;
 import gov.usgs.cida.gcmrcservices.mb.model.StationQW;
-import gov.usgs.cida.gcmrcservices.mb.model.StationSite;
 
 import java.util.ArrayList;
 import java.util.List;

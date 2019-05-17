@@ -32,6 +32,13 @@
 		<result property="isVisible" column="is_visible"/>
 	</resultMap>
 	
+	<resultMap id="sitePubsResult" type="StationPubs">
+		<result property="site" column="site_nm"/>
+		<result property="url" column="url"/>
+		<result property="displayName" column="display_name"/>
+		<result property="displayOrder" column="display_order"/>
+	</resultMap>
+	
 	<sql id="site-columns">
 		site_id,
 		site_name,
@@ -134,6 +141,33 @@
 			</if>
 		</where>
 		order by display_order, sample_method desc, group_id
+	</select>
+	
+	<sql id="site-pubs-columns">
+		site_nm,
+		url,
+		display_name,
+		display_order
+	</sql>
+	
+	<select id="getSitePubs" parameterType="map" resultMap="sitePubsResult">
+		SELECT
+		<include refid="site-pubs-columns"/>
+		from (select case
+			when s.nwis_site_no is not null then s.nwis_site_no
+			else s.short_name
+			end as site_nm,
+			p.pub_link url,
+			p.pub_nm display_name,
+			p.priority_va display_order
+			from pub_site p, site_star s
+				where p.site_id = s.site_id) t_a_pubs
+		<where>
+			<if test="null != site">
+				site_nm = #{site}
+			</if>
+		</where>
+		order by display_order, site_nm
 	</select>
 	
 </mapper>

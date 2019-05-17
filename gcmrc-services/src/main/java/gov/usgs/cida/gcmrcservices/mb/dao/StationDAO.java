@@ -1,6 +1,7 @@
 package gov.usgs.cida.gcmrcservices.mb.dao;
 
 import gov.usgs.cida.gcmrcservices.mb.MyBatisConnectionFactory;
+import gov.usgs.cida.gcmrcservices.mb.model.StationQW;
 import gov.usgs.cida.gcmrcservices.mb.model.StationSite;
 
 import java.util.HashMap;
@@ -39,7 +40,20 @@ public class StationDAO {
 		params.put("sites", sites);
 		
 		try (SqlSession session = sqlSessionFactory.openSession()) {
-			result = session.selectList( queryPackage + ".StationSiteMapper.getSites", params);
+			result = session.selectList( queryPackage + ".StationMapper.getSites", params);
+		}
+		
+		return result;
+	}
+	
+	public List<StationQW> getSiteQW(String site) {
+		List<StationQW> result = null;
+		
+		Map<String, String> params = new HashMap<String, String>();
+		params.put("site", site);
+		
+		try (SqlSession session = sqlSessionFactory.openSession()) {
+			result = session.selectList( queryPackage + ".StationMapper.getSiteQW", params);
 		}
 		
 		return result;

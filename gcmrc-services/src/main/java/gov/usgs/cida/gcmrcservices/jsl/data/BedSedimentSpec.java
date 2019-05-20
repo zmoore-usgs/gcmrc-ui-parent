@@ -2,7 +2,6 @@ package gov.usgs.cida.gcmrcservices.jsl.data;
 
 import static gov.usgs.cida.gcmrcservices.jsl.data.ParameterSpec.C_TSM_DT;
 import gov.usgs.cida.gcmrcservices.column.ColumnMetadata;
-import gov.usgs.cida.gcmrcservices.jsl.station.StationBSSpec;
 import gov.usgs.cida.gcmrcservices.nude.BedSedAverageResultSet;
 import gov.usgs.cida.gcmrcservices.nude.DBConnectorPlanStep;
 import gov.usgs.cida.gcmrcservices.nude.Endpoint;
@@ -95,7 +94,7 @@ public class BedSedimentSpec extends DataSpec {
 		result.append("        FROM BED_MATERIAL BM, SITE_STAR S, GROUP_NAME G");
 		result.append("        WHERE BM.SITE_ID = S.SITE_ID");
 		result.append("        AND BM.GROUP_ID = G.GROUP_ID");
-		result.append("        AND BM.GROUP_ID IN (").append(String.join(",",StationBSSpec.BS_GROUP_ID_LIST)).append(")");
+		result.append("        AND BM.GROUP_ID IN (15, 18)");
 
 		if(this.parameterCode != null && this.parameterCode.groupName != null) {
 			result.append("        AND G.NAME = '").append(cleanSql(this.parameterCode.groupName)).append("'");

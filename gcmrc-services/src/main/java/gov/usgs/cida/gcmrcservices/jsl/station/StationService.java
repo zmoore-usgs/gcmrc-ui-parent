@@ -21,7 +21,6 @@ public class StationService extends WebService {
 	private static final Logger log = LoggerFactory.getLogger(StationService.class);
 
 	public StationService() {
-		this.specMapping.put("bs", StationBSSpec.class);
 		this.specMapping.put("qwdownload", QWDownloadSpec.class);
 	}
 

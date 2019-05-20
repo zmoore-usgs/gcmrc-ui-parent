@@ -125,7 +125,7 @@
 		<script src="${relativePath}services/rest/reach/trib/${stationName}?jsonp_callback=GCMRC.Page.reachLoad"></script>
 		<script src="${relativePath}services/service/lookup/jsonp/ancillary?jsonp_callback=GCMRC.Page.ancillaryLoad"></script>
 		<script src="${relativePath}services/rest/station/param/${stationName}?jsonp_callback=GCMRC.Page.paramsLoad"></script>
-		<script src="${relativePath}services/service/param/jsonp/bs?site=${stationName}&jsonp_callback=GCMRC.Page.bsLoad"></script>
+		<script src="${relativePath}services/rest/param/bs/${stationName}?jsonp_callback=GCMRC.Page.bsLoad"></script>
 		<script src="${relativePath}services/rest/param/qw/${stationName}?jsonp_callback=GCMRC.Page.qwAndDiscMeasurementLoad"></script>
 		<script src="${relativePath}services/service/param/jsonp/dischargeError?site=${stationName}&jsonp_callback=GCMRC.Page.qwAndDiscMeasurementLoad&orderby=displayOrder, sampleMethod desc"></script>
 		<script src="${relativePath}services/rest/station/credit/${stationName}?jsonp_callback=GCMRC.Page.creditLoad"></script>

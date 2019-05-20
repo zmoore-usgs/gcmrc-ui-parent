@@ -63,6 +63,20 @@
 		<result property="ppq" column="description"/>
 	</resultMap>
 	
+	<resultMap id="siteBsResult" type="StationBs">
+		<result property="groupId" column="group_id"/>
+		<result property="groupName" column="group_name"/>
+		<result property="beginPosition" column="start_dt"/>
+		<result property="endPosition" column="end_dt"/>
+		<result property="site" column="site_name"/>
+		<result property="displayOrder" column="display_order"/>
+		<result property="displayName" column="display_name"/>
+		<result property="isVisible" column="is_visible"/>
+		<result property="units" column="units"/>
+		<result property="unitsShort" column="units_short"/>
+		<result property="decimalPlaces" column="decimal_places"/>
+	</resultMap>
+	
 	<sql id="site-columns">
 		site_id,
 		site_name,
@@ -286,6 +300,53 @@
 			left outer join time_series_display
 				on time_series_display.group_id = t_por.group_id
 					and time_series_display.site_id = t_por.site_id) t_a_main
+		<where>
+			<if test="null != site">
+				site_name = #{site}
+			</if>		
+		</where>
+		order by display_order, group_id
+	</select>
+	
+	<sql id="site-bs-columns">
+		group_id,
+		start_dt,
+		end_dt,
+		site_name,
+		group_name,
+		display_name,
+		units,
+		units_short,
+		decimal_places,
+		display_order,
+		is_visible
+	</sql>
+	
+	<select id="getSiteBs" parameterType="map" resultMap="siteBsResult">
+		SELECT
+		<include refid="site-bs-columns"/>
+		from (select bs.group_id,
+			to_char (earliest_dt, 'YYYY-MM-DD') start_dt,
+			to_char (latest_dt, 'YYYY-MM-DD') end_dt,
+			nvl (s.nwis_site_no, s.short_name) as site_name,
+			g.name_display display_name,
+			g.name group_name,
+			g.units_name units,
+			g.units_name_short units_short,
+			g.decimal_places,
+			g.display_order,
+			'Y' is_visible
+			from (  select site_id,
+				min (bed_meas_dt) earliest_dt,
+				max (bed_meas_dt) latest_dt,
+				group_id
+				from bed_material
+					group by site_id, group_id) bs,
+				site_star s,
+				group_name g
+				where bs.site_id = s.site_id
+					and bs.group_id = g.group_id
+					and bs.group_id in (15, 18)) t_a_bed_sediment
 		<where>
 			<if test="null != site">
 				site_name = #{site}

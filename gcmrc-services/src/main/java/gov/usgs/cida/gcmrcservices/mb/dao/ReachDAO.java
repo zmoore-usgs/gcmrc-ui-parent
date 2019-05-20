@@ -5,6 +5,7 @@ import gov.usgs.cida.gcmrcservices.mb.model.Reach;
 import gov.usgs.cida.gcmrcservices.mb.model.ReachDetail;
 import gov.usgs.cida.gcmrcservices.mb.model.ReachPOR;
 import gov.usgs.cida.gcmrcservices.mb.model.ReachTrib;
+import gov.usgs.cida.gcmrcservices.mb.model.StationCredits;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -99,6 +100,20 @@ public class ReachDAO {
 		
 		try (SqlSession session = sqlSessionFactory.openSession()) {
 			result = session.selectList(queryPackage + ".ReachPORMapper.getReachPOR", params);
+		}
+		
+		return result;
+	}
+	
+	public List<StationCredits> getSiteCredits(String siteUp, String siteDown) {
+		List<StationCredits> result = null;
+		
+		Map<String, String> params = new HashMap<String, String>();
+		params.put("siteUp", siteUp);
+		params.put("siteDown", siteDown);
+		
+		try (SqlSession session = sqlSessionFactory.openSession()) {
+			result = session.selectList( queryPackage + ".StationMapper.getSiteCredits", params);
 		}
 		
 		return result;

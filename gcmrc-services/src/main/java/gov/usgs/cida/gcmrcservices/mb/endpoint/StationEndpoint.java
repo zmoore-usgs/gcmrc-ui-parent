@@ -3,6 +3,7 @@ package gov.usgs.cida.gcmrcservices.mb.endpoint;
 import gov.usgs.cida.gcmrcservices.mb.dao.StationDAO;
 import gov.usgs.cida.gcmrcservices.mb.endpoint.response.SuccessEnvelope;
 import gov.usgs.cida.gcmrcservices.mb.endpoint.response.GCMRCResponse;
+import gov.usgs.cida.gcmrcservices.mb.model.StationCredits;
 import gov.usgs.cida.gcmrcservices.mb.model.StationPubs;
 import gov.usgs.cida.gcmrcservices.mb.model.StationSite;
 
@@ -77,6 +78,25 @@ public class StationEndpoint {
 		}
 		
 		result = new GCMRCResponse(new SuccessEnvelope<>(pubs));
+		
+		return result;
+	}
+	
+	@GET
+	@JSONP(queryParam="jsonp_callback")
+	@Path("credit/{site}")
+	@Produces("application/javascript")
+	public GCMRCResponse getSiteCredits(@PathParam("site") String site) {
+		GCMRCResponse result = null;
+		List<StationCredits> credits = new ArrayList<StationCredits>();
+		
+		try {
+			credits = new StationDAO().getSiteCredits(site);
+		} catch (Exception e) {
+			log.error("Could not get site credits!", e);
+		}
+		
+		result = new GCMRCResponse(new SuccessEnvelope<>(credits));
 		
 		return result;
 	}

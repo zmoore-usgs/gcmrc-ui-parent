@@ -7,6 +7,7 @@ import gov.usgs.cida.gcmrcservices.mb.model.Reach;
 import gov.usgs.cida.gcmrcservices.mb.model.ReachDetail;
 import gov.usgs.cida.gcmrcservices.mb.model.ReachPOR;
 import gov.usgs.cida.gcmrcservices.mb.model.ReachTrib;
+import gov.usgs.cida.gcmrcservices.mb.model.StationCredits;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -117,6 +118,25 @@ public class ReachEndpoint {
 		}
 		
 		result = new GCMRCResponse(new SuccessEnvelope<>(reachDetails));
+		
+		return result;
+	}
+	
+	@GET
+	@JSONP(queryParam="jsonp_callback")
+	@Path("credit/{siteUp}/{siteDown}")
+	@Produces("application/javascript")
+	public GCMRCResponse getSiteCredits(@PathParam("siteUp") String siteUp, @PathParam("siteDown") String siteDown) {
+		GCMRCResponse result = null;
+		List<StationCredits> credits = new ArrayList<StationCredits>();
+		
+		try {
+			credits = new ReachDAO().getSiteCredits(siteUp, siteDown);
+		} catch (Exception e) {
+			log.error("Could not get reach site credits!", e);
+		}
+		
+		result = new GCMRCResponse(new SuccessEnvelope<>(credits));
 		
 		return result;
 	}

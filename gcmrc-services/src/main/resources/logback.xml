@@ -34,7 +34,7 @@
 	Slow queries (queries that take over 30 seconds to return w/ init results)
 	will be logged by default at the WARN level, and will include full SQL and params.
 	-->
-	<!--<logger name="gov.usgs.webservices.jdbc.spec.Spec" level="TRACE"/>-->
+	<!-- <logger name="gov.usgs.webservices.jdbc.spec.Spec" level="TRACE"/>-->
 	<logger name="gov.usgs.webservices.jdbc.service" level="DEBUG"/>
 	<logger name="gov.usgs.cida.nude" level="DEBUG"/>
 	<logger name="gov.usgs.cida.nude.filter" level="INFO"/>

@@ -1,6 +1,5 @@
 package gov.usgs.cida.gcmrcservices.jsl.param;
 
-import gov.usgs.cida.gcmrcservices.jsl.station.StationBSSpec;
 import gov.usgs.cida.gcmrcservices.jsl.station.StationDischargeErrorSpec;
 import gov.usgs.cida.gcmrcservices.jsl.station.StationParamSpec;
 import gov.usgs.webservices.jdbc.routing.InvalidServiceException;
@@ -24,7 +23,6 @@ public class ParamService extends WebService {
 
 	public ParamService() {
 		this.specMapping.put("default", StationParamSpec.class);
-		this.specMapping.put("bs", StationBSSpec.class);
 		this.specMapping.put("dischargeError", StationDischargeErrorSpec.class);
 	}
 

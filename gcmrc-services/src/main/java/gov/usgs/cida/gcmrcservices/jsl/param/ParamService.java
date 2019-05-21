@@ -23,7 +23,7 @@ public class ParamService extends WebService {
 
 	public ParamService() {
 		this.specMapping.put("default", StationParamSpec.class);
-		this.specMapping.put("dischargeError", StationDischargeErrorSpec.class);
+		//this.specMapping.put("dischargeError", StationDischargeErrorSpec.class);
 	}
 
 	@Override

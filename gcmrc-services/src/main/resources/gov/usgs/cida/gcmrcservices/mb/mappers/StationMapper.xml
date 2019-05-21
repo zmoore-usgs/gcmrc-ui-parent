@@ -46,6 +46,23 @@
 		<result property="displayOrder" column="display_order"/>
 	</resultMap>
 	
+	<resultMap id="siteParamsResult" type="StationParam">
+		<result property="groupId" column="group_id"/>
+		<result property="groupName" column="group_name"/>
+		<result property="beginPosition" column="start_dt"/>
+		<result property="endPosition" column="end_dt"/>
+		<result property="site" column="site_name"/>
+		<result property="siteDisplayName" column="site_display_name"/>
+		<result property="displayOrder" column="display_order"/>
+		<result property="displayName" column="display_name"/>
+		<result property="isVisible" column="is_visible"/>
+		<result property="isDownloadable" column="is_downloadable"/>
+		<result property="units" column="units"/>
+		<result property="unitsShort" column="units_short"/>
+		<result property="decimalPlaces" column="decimal_places"/>
+		<result property="ppq" column="description"/>
+	</resultMap>
+	
 	<sql id="site-columns">
 		site_id,
 		site_name,
@@ -206,6 +223,75 @@
 			
 		</where>
 		order by display_order, site_no
+	</select>
+	
+	<sql id="site-params-columns">
+		group_id,
+		group_name,
+		start_dt,
+		end_dt,
+		site_name,
+		site_display_name,
+		display_order,
+		display_name,
+		is_visible,
+		is_downloadable,
+		units,
+		units_short,
+		decimal_places,
+		description
+	</sql>
+	
+	<select id="getSiteParams" parameterType="map" resultMap="siteParamsResult">
+		SELECT
+		<include refid="site-params-columns"/>
+		from (select t_por.group_id,
+			group_name,
+			site_name,
+			site_display_name,
+			to_char (earliest_dt, 'YYYY-MM-DD"T"HH24:MI:SS') as start_dt,
+			to_char (latest_dt, 'YYYY-MM-DD"T"HH24:MI:SS') as end_dt,
+			display_order,
+			display_name,
+			units,
+			units_short,
+			decimal_places,
+			display as is_visible,
+			downloadable as is_downloadable,
+			time_series_display.description
+			from (select site_id,
+				group_id,
+				earliest_dt,
+				latest_dt
+				from time_series_por) t_por
+			left outer join
+				(select site_id,
+					case
+						when nwis_site_no is null then short_name
+						else nwis_site_no
+					end as site_name,
+					name as site_display_name
+				from site_star) site
+					on t_por.site_id = site.site_id
+			left outer join
+				(select group_id,
+					name as group_name,
+					display_order,
+					name_display as display_name,
+					units_name as units,
+					units_name_short as units_short,
+					decimal_places
+					from group_name) t_group
+				on t_por.group_id = t_group.group_id
+			left outer join time_series_display
+				on time_series_display.group_id = t_por.group_id
+					and time_series_display.site_id = t_por.site_id) t_a_main
+		<where>
+			<if test="null != site">
+				site_name = #{site}
+			</if>		
+		</where>
+		order by display_order, group_id
 	</select>
 	
 </mapper>

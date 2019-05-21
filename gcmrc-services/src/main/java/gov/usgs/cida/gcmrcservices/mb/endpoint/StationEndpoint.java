@@ -4,6 +4,7 @@ import gov.usgs.cida.gcmrcservices.mb.dao.StationDAO;
 import gov.usgs.cida.gcmrcservices.mb.endpoint.response.SuccessEnvelope;
 import gov.usgs.cida.gcmrcservices.mb.endpoint.response.GCMRCResponse;
 import gov.usgs.cida.gcmrcservices.mb.model.StationCredits;
+import gov.usgs.cida.gcmrcservices.mb.model.StationParam;
 import gov.usgs.cida.gcmrcservices.mb.model.StationPubs;
 import gov.usgs.cida.gcmrcservices.mb.model.StationSite;
 
@@ -97,6 +98,25 @@ public class StationEndpoint {
 		}
 		
 		result = new GCMRCResponse(new SuccessEnvelope<>(credits));
+		
+		return result;
+	}
+	
+	@GET
+	@JSONP(queryParam="jsonp_callback")
+	@Path("param/{site}")
+	@Produces("application/javascript")
+	public GCMRCResponse getSiteParams(@PathParam("site") String site) {
+		GCMRCResponse result = null;
+		List<StationParam> params = new ArrayList<StationParam>();
+		
+		try {
+			params = new StationDAO().getSiteParams(site);
+		} catch (Exception e) {
+			log.error("Could not get site parameters!", e);
+		}
+		
+		result = new GCMRCResponse(new SuccessEnvelope<>(params));
 		
 		return result;
 	}

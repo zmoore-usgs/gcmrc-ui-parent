@@ -3,6 +3,7 @@ package gov.usgs.cida.gcmrcservices.mb.dao;
 import gov.usgs.cida.gcmrcservices.mb.MyBatisConnectionFactory;
 import gov.usgs.cida.gcmrcservices.mb.model.StationBs;
 import gov.usgs.cida.gcmrcservices.mb.model.StationCredits;
+import gov.usgs.cida.gcmrcservices.mb.model.StationDischargeError;
 import gov.usgs.cida.gcmrcservices.mb.model.StationParam;
 import gov.usgs.cida.gcmrcservices.mb.model.StationPubs;
 import gov.usgs.cida.gcmrcservices.mb.model.StationQW;
@@ -110,6 +111,19 @@ public class StationDAO {
 		
 		try (SqlSession session = sqlSessionFactory.openSession()) {
 			result = session.selectList( queryPackage + ".StationMapper.getSiteBs", params);
+		}
+		
+		return result;
+	}
+	
+	public List<StationDischargeError> getSiteDischargeError(String site) {
+		List<StationDischargeError> result = null;
+		
+		Map<String, String> params = new HashMap<String, String>();
+		params.put("site", site);
+		
+		try (SqlSession session = sqlSessionFactory.openSession()) {
+			result = session.selectList( queryPackage + ".StationMapper.getSiteDischargeError", params);
 		}
 		
 		return result;

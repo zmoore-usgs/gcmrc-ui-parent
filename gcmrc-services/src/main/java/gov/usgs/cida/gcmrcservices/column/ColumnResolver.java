@@ -14,7 +14,6 @@ import gov.usgs.cida.gcmrcservices.jsl.data.ParameterCode;
 import gov.usgs.cida.gcmrcservices.jsl.data.ParameterSpec;
 import gov.usgs.cida.gcmrcservices.jsl.data.QWDataSpec;
 import gov.usgs.cida.gcmrcservices.jsl.data.SpecOptions;
-import gov.usgs.cida.gcmrcservices.jsl.station.StationBSSpec;
 import gov.usgs.cida.nude.column.Column;
 import gov.usgs.cida.nude.column.SimpleColumn;
 import gov.usgs.cida.nude.out.Closers;
@@ -207,7 +206,7 @@ public class ColumnResolver {
 			ps.append("    UNITS_NAME,");
 			ps.append("    UNITS_NAME_SHORT");
 			ps.append("  FROM GROUP_NAME");
-			ps.append("  WHERE GROUP_ID IN (").append(String.join(",",StationBSSpec.BS_GROUP_ID_LIST)).append(")");
+			ps.append("  WHERE GROUP_ID IN (15,18)");
 			
 			rs = sqlProvider.getResults(null, ps);
 			while (rs.next()) {

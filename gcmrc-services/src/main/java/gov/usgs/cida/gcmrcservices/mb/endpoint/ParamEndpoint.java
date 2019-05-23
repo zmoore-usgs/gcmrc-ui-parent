@@ -4,6 +4,7 @@ import gov.usgs.cida.gcmrcservices.mb.dao.StationDAO;
 import gov.usgs.cida.gcmrcservices.mb.endpoint.response.SuccessEnvelope;
 import gov.usgs.cida.gcmrcservices.mb.endpoint.response.GCMRCResponse;
 import gov.usgs.cida.gcmrcservices.mb.model.StationBs;
+import gov.usgs.cida.gcmrcservices.mb.model.StationDischargeError;
 import gov.usgs.cida.gcmrcservices.mb.model.StationQW;
 
 import java.util.ArrayList;
@@ -53,6 +54,25 @@ public class ParamEndpoint {
 		
 		try {
 			sites = new StationDAO().getSiteBs(site);
+		} catch (Exception e) {
+			log.error("Could not get site QW!", e);
+		}
+		
+		result = new GCMRCResponse(new SuccessEnvelope<>(sites));
+		
+		return result;
+	}
+	
+	@GET
+	@JSONP(queryParam="jsonp_callback")
+	@Path("dischargeError/{site}")
+	@Produces("application/javascript")
+	public GCMRCResponse getSiteDischargeError(@PathParam("site") String site) {
+		GCMRCResponse result = null;
+		List<StationDischargeError> sites = new ArrayList<StationDischargeError>();
+		
+		try {
+			sites = new StationDAO().getSiteDischargeError(site);
 		} catch (Exception e) {
 			log.error("Could not get site QW!", e);
 		}

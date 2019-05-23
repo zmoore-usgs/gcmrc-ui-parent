@@ -13,6 +13,7 @@
     	<typeAlias type='gov.usgs.cida.gcmrcservices.mb.model.StationCredits' alias='StationCredits'></typeAlias>
     	<typeAlias type='gov.usgs.cida.gcmrcservices.mb.model.StationParam' alias='StationParam'></typeAlias>
     	<typeAlias type='gov.usgs.cida.gcmrcservices.mb.model.StationBs' alias='StationBs'></typeAlias>
+    	<typeAlias type='gov.usgs.cida.gcmrcservices.mb.model.StationDischargeError' alias='StationDischargeError'></typeAlias>
         <typeAlias type='gov.usgs.cida.gcmrcservices.mb.model.Reach' alias='Reach'></typeAlias>
         <typeAlias type='gov.usgs.cida.gcmrcservices.mb.model.ReachDetail' alias='ReachDetail'></typeAlias>
         <typeAlias type='gov.usgs.cida.gcmrcservices.mb.model.ReachTrib' alias='ReachTrib'></typeAlias>

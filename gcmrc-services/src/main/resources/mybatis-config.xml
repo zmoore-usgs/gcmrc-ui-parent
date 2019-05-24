@@ -7,6 +7,7 @@
 		<setting name="logImpl" value="SLF4J"/>
 	</settings>
     <typeAliases>
+    	<typeAlias type='gov.usgs.cida.gcmrcservices.mb.model.AncillaryData' alias='AncillaryData'></typeAlias>
     	<typeAlias type='gov.usgs.cida.gcmrcservices.mb.model.StationSite' alias='StationSite'></typeAlias>
     	<typeAlias type='gov.usgs.cida.gcmrcservices.mb.model.StationQW' alias='StationQW'></typeAlias>
     	<typeAlias type='gov.usgs.cida.gcmrcservices.mb.model.StationPubs' alias='StationPubs'></typeAlias>
@@ -31,6 +32,7 @@
         </environment>
     </environments>
     <mappers>
+    	<mapper resource='gov/usgs/cida/gcmrcservices/mb/mappers/LookupMapper.xml' />
     	<mapper resource='gov/usgs/cida/gcmrcservices/mb/mappers/StationMapper.xml' />
         <mapper resource='gov/usgs/cida/gcmrcservices/mb/mappers/ReachMapper.xml' />
         <mapper resource='gov/usgs/cida/gcmrcservices/mb/mappers/ReachPORMapper.xml' />

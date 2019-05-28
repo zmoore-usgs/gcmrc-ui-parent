@@ -17,7 +17,6 @@ import org.slf4j.LoggerFactory;
 public class BedSedimentDownloadService {
 	private static final Logger log = LoggerFactory.getLogger(BedSedimentDownloadService.class);
 	public static enum COLUMNS {STATION_NAME, STATION_NUM, BED_DT, BED_TM, SAMPLE_SET, NOTES, STATION_LOCATION, SAMPLE_WEIGHT, SAND_D50, FINES_D50, TOTAL_D50, PCT_BTWN_063_125, SIZE_DIST_LT_037, SIZE_DIST_LT_044, SIZE_DIST_LT_053, SIZE_DIST_LT_063, SIZE_DIST_LT_074, SIZE_DIST_LT_088, SIZE_DIST_LT_105, SIZE_DIST_LT_125, SIZE_DIST_LT_149, SIZE_DIST_LT_177, SIZE_DIST_LT_210, SIZE_DIST_LT_250, SIZE_DIST_LT_297, SIZE_DIST_LT_354, SIZE_DIST_LT_420, SIZE_DIST_LT_500, SIZE_DIST_LT_595, SIZE_DIST_LT_707, SIZE_DIST_LT_841, SIZE_DIST_LT_1_00, SIZE_DIST_LT_1_41, SIZE_DIST_LT_2_00, SIZE_DIST_LT_2_80, SIZE_DIST_LT_4_00, SIZE_DIST_LT_5_60, SIZE_DIST_LT_8_00, SIZE_DIST_LT_11_3, SIZE_DIST_LT_16_0, SIZE_DIST_LT_22_6, SIZE_DIST_LT_32_0, SIZE_DIST_LT_45_0, SIZE_DIST_LT_64_0, SIZE_DIST_LT_91_0, SIZE_DIST_LT_128_0};
-	//public static final String[] COLUMN_HEADERS = {"Bin Number", "Bin Value", "Percentage of Time Equaled or Exceeded", "In Bin Minutes", "Cumulative In Bin Minutes", "Low Bound", "High Bound"};
 	
 	private static HashMap getBedSedimentDownloadData(List<BedSedimentDownload> data, List<COLUMNS> outputColumns){
 		List<List<Object> > columns = new ArrayList<>();

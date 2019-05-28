@@ -1,0 +1,226 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+ 
+<mapper namespace="gov.usgs.cida.gcmrcservices.mb.mappers.BedSedimentDownloadMapper">
+	
+	<resultMap id="bedSedimentDownloadResult" type="BedSedimentDownload">
+		<result property="station_name" column="station_name"/>
+		<result property="station_num" column="station_num"/>
+		<result property="bed_dt" column="bed_dt"/>
+		<result property="bed_tm" column="bed_tm"/>
+		<result property="sample_set" column="sample_set"/>
+		<result property="notes" column="notes"/>
+		<result property="station_location" column="station_location"/>
+		<result property="sample_weight" column="sample_weight"/>
+		<result property="sand_d50" column="sand_d50"/>
+		<result property="fines_d50" column="fines_d50"/>
+		<result property="total_d50" column="total_d50"/>
+		<result property="pct_btwn_063_125" column="pct_btwn_063_125"/>
+		<result property="size_dist_lt_037" column="size_dist_lt_037"/>
+		<result property="size_dist_lt_044" column="size_dist_lt_044"/>
+		<result property="size_dist_lt_053" column="size_dist_lt_053"/>
+		<result property="size_dist_lt_063" column="size_dist_lt_063"/>
+		<result property="size_dist_lt_074" column="size_dist_lt_074"/>
+		<result property="size_dist_lt_088" column="size_dist_lt_088"/>
+		<result property="size_dist_lt_105" column="size_dist_lt_105"/>
+		<result property="size_dist_lt_125" column="size_dist_lt_125"/>
+		<result property="size_dist_lt_149" column="size_dist_lt_149"/>
+		<result property="size_dist_lt_177" column="size_dist_lt_177"/>
+		<result property="size_dist_lt_210" column="size_dist_lt_210"/>
+		<result property="size_dist_lt_250" column="size_dist_lt_250"/>
+		<result property="size_dist_lt_297" column="size_dist_lt_297"/>
+		<result property="size_dist_lt_354" column="size_dist_lt_354"/>
+		<result property="size_dist_lt_420" column="size_dist_lt_420"/>
+		<result property="size_dist_lt_500" column="size_dist_lt_500"/>
+		<result property="size_dist_lt_595" column="size_dist_lt_595"/>
+		<result property="size_dist_lt_707" column="size_dist_lt_707"/>
+		<result property="size_dist_lt_841" column="size_dist_lt_841"/>
+		<result property="size_dist_lt_1_00" column="size_dist_lt_1_00"/>
+		<result property="size_dist_lt_1_41" column="size_dist_lt_1_41"/>
+		<result property="size_dist_lt_2_00" column="size_dist_lt_2_00"/>
+		<result property="size_dist_lt_2_80" column="size_dist_lt_2_80"/>
+		<result property="size_dist_lt_4_00" column="size_dist_lt_4_00"/>
+		<result property="size_dist_lt_5_60" column="size_dist_lt_5_60"/>
+		<result property="size_dist_lt_8_00" column="size_dist_lt_8_00"/>
+		<result property="size_dist_lt_11_3" column="size_dist_lt_11_3"/>
+		<result property="size_dist_lt_16_0" column="size_dist_lt_16_0"/>
+		<result property="size_dist_lt_22_6" column="size_dist_lt_22_6"/>
+		<result property="size_dist_lt_32_0" column="size_dist_lt_32_0"/>
+		<result property="size_dist_lt_45_0" column="size_dist_lt_45_0"/>
+		<result property="size_dist_lt_64_0" column="size_dist_lt_64_0"/>
+		<result property="size_dist_lt_91_0" column="size_dist_lt_91_0"/>
+		<result property="size_dist_lt_128_0" column="size_dist_lt_128_0"/>
+	</resultMap>
+		
+	<sql id="columns">
+		station_name,
+		station_num,
+		to_char (bed_dt, 'YYYY-MM-DD') as bed_dt,
+		to_char (bed_tm, 'HH24:MI:SS') as bed_tm,
+		time_zone,
+		sample_set,
+		notes,
+		station_location,
+		sample_weight,
+		sand_d50,
+		fines_d50,
+		total_d50,
+		pct_btwn_063_125,
+		size_dist_lt_037,
+		size_dist_lt_044,
+		size_dist_lt_053,
+		size_dist_lt_063,
+		size_dist_lt_074,
+		size_dist_lt_088,
+		size_dist_lt_105,
+		size_dist_lt_125,
+		size_dist_lt_149,
+		size_dist_lt_177,
+		size_dist_lt_210,
+		size_dist_lt_250,
+		size_dist_lt_297,
+		size_dist_lt_354,
+		size_dist_lt_420,
+		size_dist_lt_500,
+		size_dist_lt_595,
+		size_dist_lt_707,
+		size_dist_lt_841,
+		size_dist_lt_1_00,
+		size_dist_lt_1_41,
+		size_dist_lt_2_00,
+		size_dist_lt_2_80,
+		size_dist_lt_4_00,
+		size_dist_lt_5_60,
+		size_dist_lt_8_00,
+		size_dist_lt_11_3,
+		size_dist_lt_16_0,
+		size_dist_lt_22_6,
+		size_dist_lt_32_0,
+		size_dist_lt_45_0,
+		size_dist_lt_64_0,
+		size_dist_lt_91_0,
+		size_dist_lt_128_0
+	</sql>
+	<select id="getBedSedimentDownloadResult" parameterType="map" resultMap="bedSedimentDownloadResult">
+		SELECT
+	<include refid="columns"/>
+	from (select s.name station_name,
+			case
+				when nwis_site_no is null then short_name
+				else nwis_site_no
+			end as station_num,
+			b.bed_meas_dt - n.offset_from_mst / 24 as bed_dt,
+			b.bed_meas_dt - n.offset_from_mst / 24 as bed_tm,
+			case n.offset_from_mst
+				when 0 then 'MST'
+				when -1 then 'CST'
+			end time_zone,
+			b.sample_set,
+			b.notes,
+			b.station_location,
+			b.sample_weight,
+			b.sand_d50,
+			b.fines_d50,
+			b.total_d50,
+			b.pct_btwn_063_125,
+			b.size_dist_lt_037,
+			b.size_dist_lt_044,
+			b.size_dist_lt_053,
+			b.size_dist_lt_063,
+			b.size_dist_lt_074,
+			b.size_dist_lt_088,
+			b.size_dist_lt_105,
+			b.size_dist_lt_125,
+			b.size_dist_lt_149,
+			b.size_dist_lt_177,
+			b.size_dist_lt_210,
+			b.size_dist_lt_250,
+			b.size_dist_lt_297,
+			b.size_dist_lt_354,
+			b.size_dist_lt_420,
+			b.size_dist_lt_500,
+			b.size_dist_lt_595,
+			b.size_dist_lt_707,
+			b.size_dist_lt_841,
+			b.size_dist_lt_1_00,
+			b.size_dist_lt_1_41,
+			b.size_dist_lt_2_00,
+			b.size_dist_lt_2_80,
+			b.size_dist_lt_4_00,
+			b.size_dist_lt_5_60,
+			b.size_dist_lt_8_00,
+			b.size_dist_lt_11_3,
+			b.size_dist_lt_16_0,
+			b.size_dist_lt_22_6,
+			b.size_dist_lt_32_0,
+			b.size_dist_lt_45_0,
+			b.size_dist_lt_64_0,
+			b.size_dist_lt_91_0,
+			b.size_dist_lt_128_0
+			from (select b.site_id,
+				b.bed_meas_dt,
+				b.group_id,
+				nvl(b.sample_set,0) sample_set,
+				b.notes,
+				nvl(b.station_location, 0) station_location,
+				b.bed_value
+				from bed_material b)
+					pivot
+						(max (bed_value)
+						for group_id
+						in (14 as sample_weight,
+							15 as sand_d50,
+							16 as fines_d50,
+							17 as total_d50,
+							18 as pct_btwn_063_125,
+							19 as size_dist_lt_037,
+							20 as size_dist_lt_044,
+							21 as size_dist_lt_053,
+							22 as size_dist_lt_063,
+							23 as size_dist_lt_074,
+							24 as size_dist_lt_088,
+							25 as size_dist_lt_105,
+							26 as size_dist_lt_125,
+							27 as size_dist_lt_149,
+							28 as size_dist_lt_177,
+							29 as size_dist_lt_210,
+							30 as size_dist_lt_250,
+							31 as size_dist_lt_297,
+							32 as size_dist_lt_354,
+							33 as size_dist_lt_420,
+							34 as size_dist_lt_500,
+							35 as size_dist_lt_595,
+							36 as size_dist_lt_707,
+							37 as size_dist_lt_841,
+							38 as size_dist_lt_1_00,
+							39 as size_dist_lt_1_41,
+							40 as size_dist_lt_2_00,
+							41 as size_dist_lt_2_80,
+							42 as size_dist_lt_4_00,
+							43 as size_dist_lt_5_60,
+							44 as size_dist_lt_8_00,
+							45 as size_dist_lt_11_3,
+							46 as size_dist_lt_16_0,
+							47 as size_dist_lt_22_6,
+							48 as size_dist_lt_32_0,
+							49 as size_dist_lt_45_0,
+							50 as size_dist_lt_64_0,
+							51 as size_dist_lt_91_0,
+							52 as size_dist_lt_128_0)) b,
+							site_star s, network n
+						where b.site_id = s.site_id and s.network_name = n.network_nm) t_a_bed_sediment
+		<where>
+			<if test="null != site">
+				station_num = #{site}
+				<if test="null != beginDate and null != endDate">
+					and bed_dt &gt;= to_date (#{beginDate}, 'YYYY-MM-DD"T"HH24:MI:SS')
+					and bed_dt &lt;= to_date (#{endDate}, 'YYYY-MM-DD"T"HH24:MI:SS')
+				</if>
+			</if>
+		</where>
+			order by bed_dt, bed_tm, station_name
+	</select>
+</mapper>
+

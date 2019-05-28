@@ -57,7 +57,7 @@ public class BedSedimentDownloadService {
 					break;
 				case NOTES:
 					columns.add(data.stream()
-							.map(BedSedimentDownload::getNotes)
+							.map(e -> (e.getNotes() == null ? "" : e.getNotes() ))
 							.collect(Collectors.toList()));
 					break;
 				case STATION_LOCATION:
@@ -276,11 +276,9 @@ public class BedSedimentDownloadService {
 		String output;
 		
 		//Get all necessary data
-		for(int i = 0; i < data.size(); i++){
-			HashMap<String, List> result = getBedSedimentDownloadData(data, outputColumns);
-			columns.addAll(result.get("columns"));			
-			headers.addAll(result.get("headers"));
-		}
+		HashMap<String, List> result = getBedSedimentDownloadData(data, outputColumns);
+		columns.addAll(result.get("columns"));			
+		headers.addAll(result.get("headers"));
 						
 		//Verify Data
 		if(columns.size() > 0 && headers.size() > 0){

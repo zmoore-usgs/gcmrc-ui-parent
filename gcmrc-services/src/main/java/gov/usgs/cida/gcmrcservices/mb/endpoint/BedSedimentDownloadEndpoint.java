@@ -43,7 +43,7 @@ public class BedSedimentDownloadEndpoint {
 	@Produces("application/tsv")
 	public void getBedSedimentDownload(@QueryParam("stationNum") String siteName, @QueryParam("beginPosition") String beginDate, @QueryParam("endPosition") String endDate, @Context HttpServletResponse response) {
 		try {
-			//Get Duration Cruve Data
+			//Get Bed Sediment Data
 			List<BedSedimentDownload> bedSedimentDownloadResults = new BedSedimentDownloadDAO().getBedSedimentDownloadResult(siteName, beginDate, endDate);
 						
 			//Create output file

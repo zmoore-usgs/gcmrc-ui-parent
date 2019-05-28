@@ -7,12 +7,14 @@
 		<setting name="logImpl" value="SLF4J"/>
 	</settings>
     <typeAliases>
+    	<typeAlias type='gov.usgs.cida.gcmrcservices.mb.model.AncillaryData' alias='AncillaryData'></typeAlias>
     	<typeAlias type='gov.usgs.cida.gcmrcservices.mb.model.StationSite' alias='StationSite'></typeAlias>
     	<typeAlias type='gov.usgs.cida.gcmrcservices.mb.model.StationQW' alias='StationQW'></typeAlias>
     	<typeAlias type='gov.usgs.cida.gcmrcservices.mb.model.StationPubs' alias='StationPubs'></typeAlias>
     	<typeAlias type='gov.usgs.cida.gcmrcservices.mb.model.StationCredits' alias='StationCredits'></typeAlias>
     	<typeAlias type='gov.usgs.cida.gcmrcservices.mb.model.StationParam' alias='StationParam'></typeAlias>
     	<typeAlias type='gov.usgs.cida.gcmrcservices.mb.model.StationBs' alias='StationBs'></typeAlias>
+    	<typeAlias type='gov.usgs.cida.gcmrcservices.mb.model.StationDischargeError' alias='StationDischargeError'></typeAlias>
         <typeAlias type='gov.usgs.cida.gcmrcservices.mb.model.Reach' alias='Reach'></typeAlias>
         <typeAlias type='gov.usgs.cida.gcmrcservices.mb.model.ReachDetail' alias='ReachDetail'></typeAlias>
         <typeAlias type='gov.usgs.cida.gcmrcservices.mb.model.ReachTrib' alias='ReachTrib'></typeAlias>
@@ -31,6 +33,7 @@
         </environment>
     </environments>
     <mappers>
+    	<mapper resource='gov/usgs/cida/gcmrcservices/mb/mappers/LookupMapper.xml' />
     	<mapper resource='gov/usgs/cida/gcmrcservices/mb/mappers/StationMapper.xml' />
         <mapper resource='gov/usgs/cida/gcmrcservices/mb/mappers/ReachMapper.xml' />
         <mapper resource='gov/usgs/cida/gcmrcservices/mb/mappers/ReachPORMapper.xml' />

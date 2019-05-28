@@ -7,24 +7,34 @@
 	
 	<resultMap id="reachPORResult" type="ReachPOR">
 		<result property="upstreamStation" column="site_up"/>
+		<result property="upstreamSecondaryStation" column="site_up_sec"/>
 		<result property="downstreamStation" column="site_down"/>
 		<result property="groupName" column="group_name"/>
 		<result property="upstreamBeginPosition" column="up_earliest_dt"/>
 		<result property="upstreamEndPosition" column="up_latest_dt"/>
+		<result property="upstreamSecondaryBeginPosition" column="up_sec_earliest_dt"/>
+		<result property="upstreamSecondaryEndPosition" column="up_sec_latest_dt"/>
 		<result property="downstreamBeginPosition" column="down_earliest_dt"/>
 		<result property="downstreamEndPosition" column="down_latest_dt"/>
+		<result property="majorTribBeginPosition" column="earliest_dt_major_trib"/>
+		<result property="majorTribEndPosition" column="latest_dt_major_trib"/>
 		<result property="minorTribBeginPosition" column="earliest_dt_minor_trib"/>
 		<result property="minorTribEndPosition" column="latest_dt_minor_trib"/>
 	</resultMap>
 	
 	<sql id="columns">
 		site_up,
+		site_up_sec,
 		site_down,
 		group_name,
 		up_earliest_dt,
 		up_latest_dt,
+		up_sec_earliest_dt,
+		up_sec_latest_dt,
 		down_earliest_dt,
 		down_latest_dt,
+		earliest_dt_major_trib,
+		latest_dt_major_trib,
 		earliest_dt_minor_trib,
 		latest_dt_minor_trib
 	</sql>
@@ -37,15 +47,26 @@
 					when ss_up.nwis_site_no is null then ss_up.short_name
 					else ss_up.nwis_site_no
 				end site_up,
-				to_char (tsp_up.earliest_dt, 'YYYY-MM-DD"T"HH24:MI:SS') up_earliest_dt,
-				to_char (tsp_up.latest_dt, 'YYYY-MM-DD"T"HH24:MI:SS') up_latest_dt,
+				case
+					when ss_sec_up.nwis_site_no is null
+					then
+						ss_sec_up.short_name
+					else
+						ss_sec_up.nwis_site_no
+				end site_up_sec,
 				case
 					when ss_down.nwis_site_no is null then ss_down.short_name
 					else ss_down.nwis_site_no
 				end site_down,
+				g.name group_name,
+				to_char (tsp_up.earliest_dt, 'YYYY-MM-DD"T"HH24:MI:SS') up_earliest_dt,
+				to_char (tsp_up.latest_dt, 'YYYY-MM-DD"T"HH24:MI:SS') up_latest_dt,
+				to_char (tsp_sec.earliest_dt, 'YYYY-MM-DD"T"HH24:MI:SS') up_sec_earliest_dt,
+				to_char (tsp_sec.latest_dt, 'YYYY-MM-DD"T"HH24:MI:SS') up_sec_latest_dt,
 				to_char (tsp_down.earliest_dt, 'YYYY-MM-DD"T"HH24:MI:SS') down_earliest_dt,
 				to_char (tsp_down.latest_dt, 'YYYY-MM-DD"T"HH24:MI:SS') down_latest_dt,
-				g.name group_name,
+				to_char (tsp_maj_trib.earliest_dt, 'YYYY-MM-DD"T"HH24:MI:SS') earliest_dt_major_trib,
+				to_char (tsp_maj_trib.latest_dt, 'YYYY-MM-DD"T"HH24:MI:SS') latest_dt_major_trib,
 				to_char (tsp_min_trib.earliest_dt, 'YYYY-MM-DD"T"HH24:MI:SS') earliest_dt_minor_trib,
 				to_char (tsp_min_trib.latest_dt, 'YYYY-MM-DD"T"HH24:MI:SS') latest_dt_minor_trib
 				from reach_display d
@@ -54,8 +75,16 @@
 						on d.minor_site = tsp_min_trib.site_id
 							and d.minor_group = tsp_min_trib.group_id
 				left join
+					time_series_por tsp_maj_trib
+						on  d.major_site = tsp_maj_trib.site_id
+							and d.major_group = tsp_maj_trib.group_id 
+				left join
 					time_series_por tsp_dis
 						on d.discharge_down = tsp_dis.site_id
+				left join
+					time_series_por tsp_sec
+						on d.site_id_up_secondary = tsp_sec.site_id
+							and d.reach_group = tsp_sec.group_id
 				left join 
 					time_series_por tsp_down
 						on d.site_id_down = tsp_down.site_id 
@@ -64,6 +93,9 @@
 					time_series_por tsp_up 
 						on d.site_id_up = tsp_up.site_id
 							and d.reach_group = tsp_up.group_id
+				left join 
+					site_star ss_sec_up
+						on site_id_up_secondary = ss_sec_up.site_id
 				left join
 					site_star ss_dis_down 
 						on d.discharge_down = ss_dis_down.site_id 
@@ -81,6 +113,7 @@
 				site_up = #{upstreamStation}
 			</if>
 		</where>
+			order by site_up
 	</select>
 
 </mapper>

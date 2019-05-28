@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+ 
+<mapper namespace="gov.usgs.cida.gcmrcservices.mb.mappers.LookupMapper">
+	
+	<resultMap id="ancillaryDataResult" type="AncillaryData">
+		<result property="groupId" column="GROUP_ID"/>
+		<result property="ancillaryGroupId" column="ANCILLARY_GROUP_ID"/>
+		<result property="ancillaryName" column="ANCILLARY_NAME"/>
+		<result property="ancillaryColumn" column="ANCILLARY_SERVICE_COLUMN"/>
+	</resultMap>
+
+	<sql id="columns">
+		GROUP_ID,
+		ANCILLARY_GROUP_ID,
+		ANCILLARY_NAME,
+		ANCILLARY_SERVICE_COLUMN
+	</sql>
+	
+	<select id="getAncillaryData" parameterType="map" resultMap="ancillaryDataResult">
+		SELECT
+		<include refid="columns"/>
+		FROM ANCILLARY_COLUMN
+		ORDER BY GROUP_ID
+	</select>
+	
+</mapper>

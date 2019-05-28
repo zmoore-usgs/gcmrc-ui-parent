@@ -20,6 +20,7 @@
         <typeAlias type='gov.usgs.cida.gcmrcservices.mb.model.ReachTrib' alias='ReachTrib'></typeAlias>
         <typeAlias type='gov.usgs.cida.gcmrcservices.mb.model.ReachPOR' alias='ReachPOR'></typeAlias>
         <typeAlias type='gov.usgs.cida.gcmrcservices.mb.model.DurationCurvePoint' alias='DurationCurvePoint'></typeAlias>
+        <typeAlias type='gov.usgs.cida.gcmrcservices.mb.model.BedSedimentDownload' alias='BedSedimentDownload'></typeAlias>
         <typeAlias type='gov.usgs.cida.gcmrcservices.mb.model.DurationCurveConsecutiveGap' alias='DurationCurveConsecutiveGap'></typeAlias>
 	<typeAlias type='gov.usgs.cida.gcmrcservices.mb.model.DurationCurveCumulativeGap' alias='DurationCurveCumulativeGap'></typeAlias>
     </typeAliases>
@@ -39,5 +40,6 @@
         <mapper resource='gov/usgs/cida/gcmrcservices/mb/mappers/ReachDetailMapper.xml' />
         <mapper resource='gov/usgs/cida/gcmrcservices/mb/mappers/ReachTribMapper.xml' />
         <mapper resource='gov/usgs/cida/gcmrcservices/mb/mappers/DurationCurveMapper.xml' />
+        <mapper resource='gov/usgs/cida/gcmrcservices/mb/mappers/BedSedimentDownloadMapper.xml' />
     </mappers>
 </configuration>

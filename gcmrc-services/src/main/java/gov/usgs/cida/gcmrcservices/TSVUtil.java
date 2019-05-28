@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package gov.usgs.cida.gcmrcservices;
 
 import java.util.List;
@@ -17,10 +12,10 @@ import org.slf4j.LoggerFactory;
 public class TSVUtil {
 	private static final Logger log = LoggerFactory.getLogger(TSVUtil.class);
 	
-	public static String listToTSVRow(List data){
+	public static String listToTSVRow(List<String> data){
 		StringBuilder outputBuilder = new StringBuilder();
 		for(int i = 0; i < data.size(); i++){
-			outputBuilder.append(data.get(i).toString());
+			outputBuilder.append(data.get(i));
 			
 			if(i < data.size() - 1)	{			
 				outputBuilder.append("\t");
@@ -29,7 +24,7 @@ public class TSVUtil {
 		return outputBuilder.toString();
 	}
 	
-	public static String createTSV(List<String> headers, List<List<Object>> dataColumns, int rowCount, boolean dropEmptyColumns, boolean ignoreEmptyValues){
+	public static String createTSV(List<String> headers, List<List<String>> dataColumns, int rowCount, boolean dropEmptyColumns, boolean ignoreEmptyValues){
 		StringBuilder outputBuilder = new StringBuilder();
 				
 		//Verify Data

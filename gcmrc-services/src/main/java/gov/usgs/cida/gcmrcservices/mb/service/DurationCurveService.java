@@ -4,10 +4,12 @@ import gov.usgs.cida.gcmrcservices.TSVUtil;
 import gov.usgs.cida.gcmrcservices.mb.dao.DurationCurveDAO;
 import gov.usgs.cida.gcmrcservices.mb.model.DurationCurve;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import javax.ws.rs.BadRequestException;
 import javax.ws.rs.core.Response;
+
+import org.apache.commons.lang3.tuple.ImmutablePair;
+import org.apache.commons.lang3.tuple.Pair;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -74,10 +76,9 @@ public class DurationCurveService {
 		return durationCurves;
 	}
 	
-	private static HashMap getDurationCurveDownloadData(DurationCurve data, List<COLUMNS> outputColumns, String groupName){
-		List<List<Double> > columns = new ArrayList<>();
+	private static Pair<List<String>, List<List<String>>> getDurationCurveDownloadData(DurationCurve data, List<COLUMNS> outputColumns, String groupName){
+		List<List<String>> columns = new ArrayList<>();
 		List<String> headers = new ArrayList<>();
-		HashMap result = new HashMap<>();
 				
 		//Build headers and extract relevant data
 		for(int i = 0; i < outputColumns.size(); i++){
@@ -85,44 +86,54 @@ public class DurationCurveService {
 			
 			switch(outputColumns.get(i)){
 				case BIN_VALUE:
-					columns.add(data.extractBinValues());
+					columns.add(toStringList(data.extractBinValues()));
 					break;
 				case CUMULATIVE_BIN_PERC:
-					columns.add(data.extractCumulativeBinPercs());
+					columns.add(toStringList(data.extractCumulativeBinPercs()));
 					break;
 				case IN_BIN_MINUTES:
-					columns.add(data.extractInBinMinutes());
+					columns.add(toStringList(data.extractInBinMinutes()));
 					break;
 				case CUMULATIVE_IN_BIN_MINUTES:
-					columns.add(data.extractCumulativeInBinMinutes());
+					columns.add(toStringList(data.extractCumulativeInBinMinutes()));
 					break;
 				case LOW_BOUND: 
-					columns.add(data.extractLowBounds());
+					columns.add(toStringList(data.extractLowBounds()));
 					break;
 				case HIGH_BOUND:
-					columns.add(data.extractHighBounds());
+					columns.add(toStringList(data.extractHighBounds()));
+					break;
+				default:
 					break;
 			}
 		}
 		
 		//Build output
-		result.put("headers", headers);
-		result.put("columns", columns);
 						
+		return new ImmutablePair<List<String>, List<List<String>>>(headers, columns);
+	}
+
+	private static List<String> toStringList(List<Double> input) {
+		List<String> result = new ArrayList<>();
+
+		for(Double v : input) {
+			result.add(v.toString());
+		}
+
 		return result;
 	}
 	
 	public static String getTSVForDurationCurves(List<DurationCurve> data, List<COLUMNS> outputColumns, List<Integer> groupIds, List<String> groupNames, int binCount) {		
-		List<List<Object> > columns = new ArrayList<>();
+		List<List<String>> columns = new ArrayList<>();
 		List<String> headers = new ArrayList<>();
 		String output;
 		
 		//Get all necessary data
 		for(int i = 0; i < data.size(); i++){
 			String groupName = groupNames.get(groupIds.indexOf(data.get(i).getGroupId()));
-			HashMap<String, List> result = getDurationCurveDownloadData(data.get(i), outputColumns, groupName);			
-			columns.addAll(result.get("columns"));			
-			headers.addAll(result.get("headers"));
+			Pair<List<String>, List<List<String>>> result = getDurationCurveDownloadData(data.get(i), outputColumns, groupName);			
+			columns.addAll(result.getRight());			
+			headers.addAll(result.getLeft());
 		}
 						
 		//Verify Data

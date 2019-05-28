@@ -16,6 +16,9 @@ import org.slf4j.LoggerFactory;
  * @author dmsibley
  */
 public class StationService extends WebService {
+
+	public static final String S_DISPLAY_ORDER = "displayOrder";
+
 	private static final long serialVersionUID = 1L;
 	@SuppressWarnings("unused")
 	private static final Logger log = LoggerFactory.getLogger(StationService.class);
@@ -31,7 +34,7 @@ public class StationService extends WebService {
 		result.putAll(super.defineParameters(req, router, params));
 		
 		if (!result.containsKey(Spec.ORDER_BY_PARAM)) {
-			result.put(Spec.ORDER_BY_PARAM, new String[] {StationParamSpec.S_DISPLAY_ORDER});
+			result.put(Spec.ORDER_BY_PARAM, new String[] {S_DISPLAY_ORDER});
 		}
 		
 		return result;

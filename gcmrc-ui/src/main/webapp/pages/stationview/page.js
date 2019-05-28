@@ -684,7 +684,7 @@ GCMRC.Page = {
 			stationNum : CONFIG.stationName
 		};
 		
-		document.location = document.location.href.first(document.location.href.lastIndexOf('/') + 1) + CONFIG.relativePath + 'services/service/download/tab/' + CONFIG.networkName + "bedSediment?" + $.param(serviceOptions);
+		document.location = document.location.href.first(document.location.href.lastIndexOf('/') + 1) + CONFIG.relativePath + 'services/rest/bedsediment/download/?' + $.param(serviceOptions);
 	},
 	downloadDurationCurvesClicked : function() {
 		//TODO refactor copy paste code

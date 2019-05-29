@@ -277,8 +277,8 @@ public class BedSedimentDownloadService {
 		
 		//Get all necessary data
 		HashMap<String, List> result = getBedSedimentDownloadData(data, outputColumns);
-		columns.addAll(result.get("columns"));			
-		headers.addAll(result.get("headers"));
+		columns = result.get("columns");			
+		headers = result.get("headers");
 						
 		//Verify Data
 		if(columns.size() > 0 && headers.size() > 0){

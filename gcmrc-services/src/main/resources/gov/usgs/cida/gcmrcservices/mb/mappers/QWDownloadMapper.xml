@@ -1,0 +1,446 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+ 
+<mapper namespace="gov.usgs.cida.gcmrcservices.mb.mappers.QWDownloadMapper">
+	
+	<resultMap id="qwDownloadResult" type="QWDownload">
+		<result property="sample_id" column="sample_id"/>
+		<result property="station_name" column="station_name"/>      
+		<result property="station_num" column="station_num"/> 
+		<result property="start_dt" column="start_dt"/>
+		<result property="mean_dt" column="mean_dt"/>  
+		<result property="end_dt" column="end_dt"/>    
+		<result property="time_zone" column="time_zone"/>     
+		<result property="usgs_data_lead" column="usgs_data_lead"/>  
+		<result property="sample_method" column="sample_method"/>    
+		<result property="sample_location" column="sample_location"/>
+		<result property="sampler_name" column="sampler_name"/>      
+		<result property="nozzle" column="nozzle"/>    
+		<result property="num_verticals" column="num_verticals"/>    
+		<result property="transits_each_vertical" column="transits_each_vertical"/>     
+		<result property="cableway_station_loc" column="cableway_station_loc"/>  
+		<result property="water_depth" column="water_depth"/> 
+		<result property="elevation_above_bed" column="elevation_above_bed"/>    
+		<result property="sampling_duration" column="sampling_duration"/> 
+		<result property="pump_sampler" column="pump_sampler"/>      
+		<result property="pump_carousel_num" column="pump_carousel_num"/> 
+		<result property="dataset_complete" column="dataset_complete"/>   
+		<result property="cross_sect_calib_req" column="cross_sect_calib_req"/>  
+		<result property="use_for_load_calc" column="use_for_load_calc"/> 
+		<result property="notes" column="notes"/> 
+		<result property="air_temp" column="air_temp"/>
+		<result property="water_temp" column="water_temp"/>   
+		<result property="spec_cond" column="spec_cond"/>     
+		<result property="tds" column="tds"/>     
+		<result property="silt_clay_color" column="silt_clay_color"/>
+		<result property="conc_laboratory" column="conc_laboratory"/>
+		<result property="grain_size_laboratory" column="grain_size_laboratory"/>
+		<result property="lab_notes" column="lab_notes"/>     
+		<result property="lab_method" column="lab_method"/>   
+		<result property="silt_clay_conc_xs" column="silt_clay_conc_xs"/> 
+		<result property="sand_conc_xs" column="sand_conc_xs"/>      
+		<result property="sand_d16_xs" column="sand_d16_xs"/> 
+		<result property="sand_d50_xs" column="sand_d50_xs"/> 
+		<result property="sand_d84_xs" column="sand_d84_xs"/> 
+		<result property="sand_pct_lt_074_xs" column="sand_pct_lt_074_xs"/>      
+		<result property="sand_pct_lt_088_xs" column="sand_pct_lt_088_xs"/>      
+		<result property="sand_pct_lt_105_xs" column="sand_pct_lt_105_xs"/>      
+		<result property="sand_pct_lt_125_xs" column="sand_pct_lt_125_xs"/>      
+		<result property="sand_pct_lt_149_xs" column="sand_pct_lt_149_xs"/>      
+		<result property="sand_pct_lt_177_xs" column="sand_pct_lt_177_xs"/>      
+		<result property="sand_pct_lt_210_xs" column="sand_pct_lt_210_xs"/>      
+		<result property="sand_pct_lt_250_xs" column="sand_pct_lt_250_xs"/>      
+		<result property="sand_pct_lt_297_xs" column="sand_pct_lt_297_xs"/>      
+		<result property="sand_pct_lt_354_xs" column="sand_pct_lt_354_xs"/>      
+		<result property="sand_pct_lt_420_xs" column="sand_pct_lt_420_xs"/>      
+		<result property="sand_pct_lt_500_xs" column="sand_pct_lt_500_xs"/>      
+		<result property="sand_pct_lt_595_xs" column="sand_pct_lt_595_xs"/>      
+		<result property="sand_pct_lt_707_xs" column="sand_pct_lt_707_xs"/>      
+		<result property="sand_pct_lt_841_xs" column="sand_pct_lt_841_xs"/>      
+		<result property="sand_pct_lt_1000_xs" column="sand_pct_lt_1000_xs"/>    
+		<result property="sample_mass" column="sample_mass"/> 
+		<result property="mass_le_63" column="mass_le_63"/>   
+		<result property="mass_gt_63" column="mass_gt_63"/>   
+		<result property="conc_le_63" column="conc_le_63"/>   
+		<result property="conc_gt_63" column="conc_gt_63"/>   
+		<result property="silt_clay_conc_lab" column="silt_clay_conc_lab"/>      
+		<result property="sand_conc_lab" column="sand_conc_lab"/>    
+		<result property="sand_d16_lab" column="sand_d16_lab"/>      
+		<result property="sand_d50_lab" column="sand_d50_lab"/>      
+		<result property="sand_d84_lab" column="sand_d84_lab"/>      
+		<result property="sand_pct_lt_074_lab" column="sand_pct_lt_074_lab"/>    
+		<result property="sand_pct_lt_088_lab" column="sand_pct_lt_088_lab"/>    
+		<result property="sand_pct_lt_105_lab" column="sand_pct_lt_105_lab"/>    
+		<result property="sand_pct_lt_125_lab" column="sand_pct_lt_125_lab"/>    
+		<result property="sand_pct_lt_149_lab" column="sand_pct_lt_149_lab"/>    
+		<result property="sand_pct_lt_177_lab" column="sand_pct_lt_177_lab"/>    
+		<result property="sand_pct_lt_210_lab" column="sand_pct_lt_210_lab"/>    
+		<result property="sand_pct_lt_250_lab" column="sand_pct_lt_250_lab"/>    
+		<result property="sand_pct_lt_297_lab" column="sand_pct_lt_297_lab"/>    
+		<result property="sand_pct_lt_354_lab" column="sand_pct_lt_354_lab"/>    
+		<result property="sand_pct_lt_420_lab" column="sand_pct_lt_420_lab"/>    
+		<result property="sand_pct_lt_500_lab" column="sand_pct_lt_500_lab"/>    
+		<result property="sand_pct_lt_595_lab" column="sand_pct_lt_595_lab"/>    
+		<result property="sand_pct_lt_707_lab" column="sand_pct_lt_707_lab"/>    
+		<result property="sand_pct_lt_841_lab" column="sand_pct_lt_841_lab"/>    
+		<result property="sand_pct_lt_1000_lab" column="sand_pct_lt_1000_lab"/>  
+		<result property="silt_clay_field_95er" column="silt_clay_field_95er"/>  
+		<result property="sand_field_95er" column="sand_field_95er"/>
+		<result property="sand_d50_field_95er" column="sand_d50_field_95er"/>    
+		<result property="silt_clay_lab_bias_cor" column="silt_clay_lab_bias_cor"/>     
+		<result property="silt_clay_lab_95er" column="silt_clay_lab_95er"/>      
+		<result property="sand_lab_95er" column="sand_lab_95er"/>    
+		<result property="sand_d50_lab_95er" column="sand_d50_lab_95er"/> 
+		<result property="silt_clay_tot_95er" column="silt_clay_tot_95er"/>      
+		<result property="sand_tot_95er" column="sand_tot_95er"/>    
+		<result property="sand_d50_tot_95er" column="sand_d50_tot_95er"/> 
+	</resultMap>
+		
+	<sql id="columns">
+		sample_id,
+		station_name,
+		station_num,
+		to_char (start_dt, 'YYYY-MM-DD" "HH24:MI:SS') as start_dt,
+		to_char (mean_dt, 'YYYY-MM-DD" "HH24:MI:SS') as mean_dt,
+		to_char (end_dt, 'YYYY-MM-DD" "HH24:MI:SS') as end_dt,
+		time_zone,
+		usgs_data_lead,
+		sample_method,
+		sample_location,
+		sampler_name,
+		nozzle,
+		num_verticals,
+		transits_each_vertical,
+		cableway_station_loc,
+		water_depth,
+		elevation_above_bed,
+		sampling_duration,
+		pump_sampler,
+		pump_carousel_num,
+		dataset_complete,
+		cross_sect_calib_req,
+		use_for_load_calc,
+		notes,
+		air_temp,
+		water_temp,
+		spec_cond,
+		tds,
+		silt_clay_color,
+		conc_laboratory,
+		grain_size_laboratory,
+		lab_notes,
+		lab_method,
+		silt_clay_conc_xs,
+		sand_conc_xs,
+		sand_d16_xs,
+		sand_d50_xs,
+		sand_d84_xs,
+		sand_pct_lt_074_xs,
+		sand_pct_lt_088_xs,
+		sand_pct_lt_105_xs,
+		sand_pct_lt_125_xs,
+		sand_pct_lt_149_xs,
+		sand_pct_lt_177_xs,
+		sand_pct_lt_210_xs,
+		sand_pct_lt_250_xs,
+		sand_pct_lt_297_xs,
+		sand_pct_lt_354_xs,
+		sand_pct_lt_420_xs,
+		sand_pct_lt_500_xs,
+		sand_pct_lt_595_xs,
+		sand_pct_lt_707_xs,
+		sand_pct_lt_841_xs,
+		sand_pct_lt_1000_xs,
+		sample_mass,
+		mass_le_63,
+		mass_gt_63,
+		conc_le_63,
+		conc_gt_63,
+		silt_clay_conc_lab,
+		sand_conc_lab,
+		sand_d16_lab,
+		sand_d50_lab,
+		sand_d84_lab,
+		sand_pct_lt_074_lab,
+		sand_pct_lt_088_lab,
+		sand_pct_lt_105_lab,
+		sand_pct_lt_125_lab,
+		sand_pct_lt_149_lab,
+		sand_pct_lt_177_lab,
+		sand_pct_lt_210_lab,
+		sand_pct_lt_250_lab,
+		sand_pct_lt_297_lab,
+		sand_pct_lt_354_lab,
+		sand_pct_lt_420_lab,
+		sand_pct_lt_500_lab,
+		sand_pct_lt_595_lab,
+		sand_pct_lt_707_lab,
+		sand_pct_lt_841_lab,
+		sand_pct_lt_1000_lab,
+		silt_clay_field_95er,
+		sand_field_95er,
+		sand_d50_field_95er,
+		silt_clay_lab_bias_cor,
+		silt_clay_lab_95er,
+		sand_lab_95er,
+		sand_d50_lab_95er,
+		silt_clay_tot_95er,
+		sand_tot_95er,
+		sand_d50_tot_95er
+	</sql>
+	<select id="getQWDownloadResult" parameterType="map" resultMap="qwDownloadResult">
+		SELECT
+	<include refid="columns"/>
+	from (select s.sample_id,
+		si.name station_name,
+		nvl2 (si.nwis_site_no, si.nwis_site_no, si.short_name)
+		   station_num,
+		s.start_date - n.offset_from_mst / 24  as start_dt,
+		s.average_date - n.offset_from_mst / 24  as mean_dt,
+		s.end_date - n.offset_from_mst / 24  as end_dt,
+				 case n.offset_from_mst
+					when 0 then 'MST'
+					when -1 then 'CST'
+				 end time_zone,
+		d.name usgs_data_lead,
+		sm.sample_method,
+		sub.name sample_location,
+		sa.sampler_name,
+		s.nozzle,
+		s.num_verticals,
+		s.transits_each_vertical,
+		s.cableway_station_loc,
+		s.water_depth,
+		s.elevation_above_bed,
+		s.sampling_duration,
+		s.pump_sampler,
+		s.pump_carousel_num,
+		s.dataset_complete,
+		s.cross_sect_calib_req,
+		s.use_for_load_calc,
+		s.serve,
+		s.notes,
+		f.fines_color silt_clay_color,
+		lc.code conc_laboratory,
+		gs.code grain_size_laboratory,
+		s.lab_notes,
+		lm.lab_method,
+		r.spec_cond,
+		r.air_temp,
+		r.water_temp,
+		r.silt_clay_conc_lab,
+		r.sand_conc_lab,
+		r.sample_mass,
+		r.mass_le_63,
+		r.mass_gt_63,
+		r.conc_le_63,
+		r.conc_gt_63,
+		r.tds,
+		r.sand_d16_lab,
+		r.sand_d50_lab,
+		r.sand_d84_lab,
+		r.sand_pct_lt_074_lab,
+		r.sand_pct_lt_088_lab,
+		r.sand_pct_lt_105_lab,
+		r.sand_pct_lt_125_lab,
+		r.sand_pct_lt_149_lab,
+		r.sand_pct_lt_177_lab,
+		r.sand_pct_lt_210_lab,
+		r.sand_pct_lt_250_lab,
+		r.sand_pct_lt_297_lab,
+		r.sand_pct_lt_354_lab,
+		r.sand_pct_lt_420_lab,
+		r.sand_pct_lt_500_lab,
+		r.sand_pct_lt_595_lab,
+		r.sand_pct_lt_707_lab,
+		r.sand_pct_lt_841_lab,
+		r.sand_pct_lt_1000_lab,
+		r.silt_clay_conc_xs,
+		r.sand_conc_xs,
+		r.sand_d16_xs,
+		r.sand_d50_xs,
+		r.sand_d84_xs,
+		r.sand_pct_lt_074_xs,
+		r.sand_pct_lt_088_xs,
+		r.sand_pct_lt_105_xs,
+		r.sand_pct_lt_125_xs,
+		r.sand_pct_lt_149_xs,
+		r.sand_pct_lt_177_xs,
+		r.sand_pct_lt_210_xs,
+		r.sand_pct_lt_250_xs,
+		r.sand_pct_lt_297_xs,
+		r.sand_pct_lt_354_xs,
+		r.sand_pct_lt_420_xs,
+		r.sand_pct_lt_500_xs,
+		r.sand_pct_lt_595_xs,
+		r.sand_pct_lt_707_xs,
+		r.sand_pct_lt_841_xs,
+		r.sand_pct_lt_1000_xs,
+		rs.silt_clay_field_95er,
+		rs.sand_field_95er,
+		rs.sand_d50_field_95er,
+		rs.silt_clay_lab_bias_cor,
+		rs.silt_clay_lab_95er,
+		rs.sand_lab_95er,
+		rs.sand_d50_lab_95er,
+		rs.silt_clay_tot_95er,
+		rs.sand_tot_95er,
+		rs.sand_d50_tot_95er
+		from (select sample_id, group_id, suspsed_value from result_star)
+		pivot
+			(avg (suspsed_value)
+			for group_id in (
+				110 as spec_cond,
+				112 as air_temp,
+				113 as water_temp,
+				63 as silt_clay_conc_lab,
+				64 as sand_conc_lab,
+				84 as sample_mass,
+				85 as mass_le_63,
+				86 as mass_gt_63,
+				87 as conc_le_63,
+				88 as conc_gt_63,
+				111 as tds,
+				65 as sand_d16_lab,
+				66 as sand_d50_lab,
+				67 as sand_d84_lab,
+				68 as sand_pct_lt_074_lab,
+				69 as sand_pct_lt_088_lab,
+				70 as sand_pct_lt_105_lab,
+				71 as sand_pct_lt_125_lab,
+				72 as sand_pct_lt_149_lab,
+				73 as sand_pct_lt_177_lab,
+				74 as sand_pct_lt_210_lab,
+				75 as sand_pct_lt_250_lab,
+				76 as sand_pct_lt_297_lab,
+				77 as sand_pct_lt_354_lab,
+				78 as sand_pct_lt_420_lab,
+				79 as sand_pct_lt_500_lab,
+				80 as sand_pct_lt_595_lab,
+				81 as sand_pct_lt_707_lab,
+				82 as sand_pct_lt_841_lab,
+				83 as sand_pct_lt_1000_lab,
+				89 as silt_clay_conc_xs,
+				90 as sand_conc_xs,
+				91 as sand_d16_xs,
+				92 as sand_d50_xs,
+				93 as sand_d84_xs,
+				94 as sand_pct_lt_074_xs,
+				95 as sand_pct_lt_088_xs,
+				96 as sand_pct_lt_105_xs,
+				97 as sand_pct_lt_125_xs,
+				98 as sand_pct_lt_149_xs,
+				99 as sand_pct_lt_177_xs,
+				100 as sand_pct_lt_210_xs,
+				101 as sand_pct_lt_250_xs,
+				102 as sand_pct_lt_297_xs,
+				103 as sand_pct_lt_354_xs,
+				104 as sand_pct_lt_420_xs,
+				105 as sand_pct_lt_500_xs,
+				106 as sand_pct_lt_595_xs,
+				107 as sand_pct_lt_707_xs,
+				108 as sand_pct_lt_841_xs,
+				109 as sand_pct_lt_1000_xs)) r
+					left join sample_star s
+						on r.sample_id = s.sample_id
+					join site_star si
+						on s.site_id = si.site_id
+					join network n
+						on si.network_name = n.network_nm
+					left join data_lead_star d
+						on d.data_lead_id = s.data_lead_id
+					left join sample_method_star sm
+						on sm.sample_method_id = s.sample_method_id
+					left join subsite_star sub
+						on sub.subsite_id = s.subsite_id
+					left join sampler_star sa
+						on sa.sampler_id = s.sampler_id
+					left join fines_color_star f
+						on f.fines_color_id = s.fines_color_id
+					left join laboratory_star lc
+						on lc.laboratory_id = s.concentration_lab_id
+					left join laboratory_star gs
+						on gs.laboratory_id = s.grain_size_lab_id
+					left join lab_method_star lm
+						on lm.lab_method_id = s.lab_method_id
+					left join
+					(select r.sample_id,
+						max (
+							case
+								when r.group_id = 89 then r.field_95conf
+								else null
+							end)
+							silt_clay_field_95er,
+						max (
+							case
+								when r.group_id = 90 then r.field_95conf
+								else null
+							end)
+							sand_field_95er,
+						max (
+							case
+								when r.group_id = 92 then r.field_95conf
+								else null
+							end)
+							sand_d50_field_95er,
+						max (
+							case
+								when r.group_id = 89 then r.bias_correction
+								else null
+							end)
+							silt_clay_lab_bias_cor,
+						max (
+							case
+								when r.group_id = 89 then r.lab_95conf
+								else null
+							end)
+							silt_clay_lab_95er,
+						max (
+							case
+								when r.group_id = 90 then r.lab_95conf
+								else null
+							end)
+							sand_lab_95er,
+						max (
+							case
+								when r.group_id = 92 then r.lab_95conf
+								else null
+							end)
+							sand_d50_lab_95er,
+						max (
+							case
+								when r.group_id = 89 then r.total_95conf
+								else null
+							end)
+							silt_clay_tot_95er,
+						max (
+							case
+								when r.group_id = 90 then r.total_95conf
+								else null
+							end)
+							sand_tot_95er,
+						max (
+							case
+								when r.group_id = 92 then r.total_95conf
+								else null
+							end)
+							sand_d50_tot_95er
+					from result_star r
+						group by r.sample_id) rs
+						on rs.sample_id = s.sample_id
+					where s.serve = 'YES') t_a_inner
+		<where>
+			<if test="null != site">
+				station_num = #{site}
+				<if test="null != beginDate and null != endDate">
+					and start_dt &gt;= to_date (#{beginDate}, 'YYYY-MM-DD"T"HH24:MI:SS')
+					and start_dt &lt;= to_date (#{endDate}, 'YYYY-MM-DD"T"HH24:MI:SS')
+				</if>
+			</if>
+		</where>
+			order by start_dt, sample_id
+	</select>
+</mapper>
+

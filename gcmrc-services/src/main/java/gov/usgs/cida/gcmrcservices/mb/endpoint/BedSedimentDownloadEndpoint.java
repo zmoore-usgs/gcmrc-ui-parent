@@ -1,8 +1,6 @@
 package gov.usgs.cida.gcmrcservices.mb.endpoint;
 
 import java.io.OutputStream;
-import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -16,18 +14,12 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
-import org.glassfish.jersey.server.JSONP;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import gov.usgs.cida.gcmrcservices.mb.dao.BedSedimentDownloadDAO;
-import gov.usgs.cida.gcmrcservices.mb.endpoint.response.FailureEnvelope;
-import gov.usgs.cida.gcmrcservices.mb.endpoint.response.GCMRCResponse;
-import gov.usgs.cida.gcmrcservices.mb.endpoint.response.SuccessEnvelope;
 import gov.usgs.cida.gcmrcservices.mb.model.BedSedimentDownload;
-import gov.usgs.cida.gcmrcservices.mb.model.DurationCurve;
 import gov.usgs.cida.gcmrcservices.mb.service.BedSedimentDownloadService;
-import gov.usgs.cida.gcmrcservices.mb.service.DurationCurveService;
 
 /**
  *

@@ -131,7 +131,7 @@ public class InterpolatingFilterResultSet extends PeekingResultSet {
 								TableRow itTR = null;
 								Long itPk = null;
 								boolean isDone = false;
-								LinkedList<TableRow> q = (LinkedList<TableRow>)this.queuedRows.clone();
+								LinkedList<TableRow> q = new LinkedList<TableRow>(this.queuedRows);
 								while (!isDone && 0 < q.size()) {
 									itTR = q.pollLast();
 									itPk = new Long(itTR.getValue(pkCol));

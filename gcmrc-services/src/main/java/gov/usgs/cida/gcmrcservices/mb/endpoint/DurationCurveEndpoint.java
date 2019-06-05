@@ -63,6 +63,7 @@ public class DurationCurveEndpoint {
 				result = new GCMRCResponse(new SuccessEnvelope<>(durationCurves));
 			}
 		} catch (Exception e) {
+			log.error("Could not download bed sediment data. Error: ", e);
 			result = new GCMRCResponse(new FailureEnvelope(e.getMessage(), 500));
 		}
 		
@@ -90,6 +91,7 @@ public class DurationCurveEndpoint {
 			out.write(result.getBytes());
 			out.flush();
 		} catch (Exception e) {
+			log.error("Could not download bed sediment data. Error: ", e);
 			throw new WebApplicationException(Response.status(Status.INTERNAL_SERVER_ERROR).type("text/plain").entity("Could not download duration curve data. Error: " + e.getMessage()).build());
 		}
 	}

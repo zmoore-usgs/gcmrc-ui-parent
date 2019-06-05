@@ -11,9 +11,9 @@ public class BedSedimentDownload {
 	private String bed_dt;
 	private String bed_tm;
 	private String time_zone;
-	private int sample_set;
+	private Integer sample_set;
 	private String notes;
-	private int station_location;
+	private Integer station_location;
 	private Double sample_weight;
 	private Double sand_d50;
 	private Double fines_d50;

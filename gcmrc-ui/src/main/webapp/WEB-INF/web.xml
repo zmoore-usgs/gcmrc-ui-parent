@@ -1,22 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <web-app version="2.5" xmlns="http://java.sun.com/xml/ns/javaee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd">
-	<display-name>gcmrc-ui</display-name>
-<!--	<listener>
-        <listener-class>
-            gov.usgs.cida.gcmrc.ApplicationInitializer
-        </listener-class>
-    </listener>-->
-    
-<!--	We don't need this because we're not deployed on CIDA's stuff-->
-<!--	<filter>
-		<filter-name>TomcatFilter</filter-name>
-		<filter-class>gov.usgs.cida.tomcatfilters.RequestFilter</filter-class>
-	</filter>
-	<filter-mapping>
-		<filter-name>TomcatFilter</filter-name>
-		<url-pattern>/*</url-pattern>
-	</filter-mapping>-->
-	
+	<display-name>gcmrc-ui</display-name>	
 	<servlet>
 		<servlet-name>ExportServlet</servlet-name>
 		<servlet-class>gov.usgs.cida.export.Export</servlet-class>
@@ -94,31 +78,6 @@
 		<servlet-name>GCMRCServicesServlet</servlet-name>
 		<url-pattern>/services/*</url-pattern>
 	</servlet-mapping>
-	
-<!--	<security-constraint>
-		<web-resource-collection>
-			<web-resource-name>services basic auth</web-resource-name>
-			<url-pattern>/services/*</url-pattern>
-			<http-method>GET</http-method>
-			<http-method>POST</http-method>
-		</web-resource-collection>
-		<auth-constraint>
-			<role-name>testbasicauth</role-name>
-		</auth-constraint>
-
-		<user-data-constraint>
-			 transport-guarantee can be CONFIDENTIAL, INTEGRAL, or NONE 
-			<transport-guarantee>NONE</transport-guarantee>
-		</user-data-constraint>
-	</security-constraint>
-	
-	<security-role>
-		<role-name>testbasicauth</role-name>
-	</security-role>
-	
-	<login-config>
-		<auth-method>BASIC</auth-method>
-	</login-config>-->
 
 	<servlet>
 		<servlet-name>StationPhotoServlet</servlet-name>
@@ -136,15 +95,6 @@
 		<servlet-name>StationPhotoServlet</servlet-name>
 		<url-pattern>/photo/*</url-pattern>
 	</servlet-mapping>
-	
-<!--	<servlet>
-        <servlet-name>ImageProxyServlet</servlet-name>
-        <servlet-class>gov.usgs.cida.gcmrc.StationPhotoServlet</servlet-class>
-    </servlet>
-    <servlet-mapping>
-        <servlet-name>ImageProxyServlet</servlet-name>
-        <url-pattern>/img</url-pattern>
-    </servlet-mapping>-->
 
 	<session-config>
 		<session-timeout>

@@ -51,6 +51,7 @@ public class QWDownloadEndpoint {
 			out.write(result.getBytes());
 			out.flush();
 		} catch (Exception e) {
+			log.error("Could not download bed sediment data. Error: ", e);
 			throw new WebApplicationException(Response.status(Status.INTERNAL_SERVER_ERROR).type("text/plain").entity("Could not download water quality data. Error: " + e.getMessage()).build());
 		}
 	}

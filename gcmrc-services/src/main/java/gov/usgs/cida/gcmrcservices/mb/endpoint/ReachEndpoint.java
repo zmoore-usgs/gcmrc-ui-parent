@@ -3,11 +3,7 @@ package gov.usgs.cida.gcmrcservices.mb.endpoint;
 import gov.usgs.cida.gcmrcservices.mb.dao.ReachDAO;
 import gov.usgs.cida.gcmrcservices.mb.endpoint.response.SuccessEnvelope;
 import gov.usgs.cida.gcmrcservices.mb.endpoint.response.GCMRCResponse;
-import gov.usgs.cida.gcmrcservices.mb.model.Reach;
-import gov.usgs.cida.gcmrcservices.mb.model.ReachDetail;
-import gov.usgs.cida.gcmrcservices.mb.model.ReachPOR;
 import gov.usgs.cida.gcmrcservices.mb.model.ReachTrib;
-import gov.usgs.cida.gcmrcservices.mb.model.StationCredits;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,7 +17,7 @@ import org.slf4j.LoggerFactory;
 
 /**
  *
- * @author dmsibley
+ * @author dmsibley, kmschoep
  */
 @Path("reach")
 public class ReachEndpoint {
@@ -33,7 +29,7 @@ public class ReachEndpoint {
 	@Produces("application/javascript")
 	public GCMRCResponse getReaches(@PathParam("network") String network) {
 		GCMRCResponse result = null;
-		List<Reach> reaches = new ArrayList<Reach>();
+		List<Object> reaches = new ArrayList<Object>();
 		
 		try {
 			reaches = new ReachDAO().getReaches(network);
@@ -71,7 +67,7 @@ public class ReachEndpoint {
 	@Produces("application/javascript")
 	public GCMRCResponse getReachPOR(@PathParam("station") String upstreamStation) {
 		GCMRCResponse result = null;
-		List<ReachPOR> reachPOR = new ArrayList<ReachPOR>();
+		List<Object> reachPOR = new ArrayList<Object>();
 		
 		try {
 			reachPOR = new ReachDAO().getReachPOR(upstreamStation);
@@ -90,7 +86,7 @@ public class ReachEndpoint {
 	@Produces("application/javascript")
 	public GCMRCResponse getReach(@PathParam("network") String network, @PathParam("upstream") String upstreamStation, @PathParam("downstream") String downstreamStation) {
 		GCMRCResponse result = null;
-		List<Reach> reaches = new ArrayList<Reach>();
+		List<Object> reaches = new ArrayList<Object>();
 		
 		try {
 			reaches = new ReachDAO().getReach(network, upstreamStation, downstreamStation);
@@ -109,7 +105,7 @@ public class ReachEndpoint {
 	@Produces("application/javascript")
 	public GCMRCResponse getReachDetails(@PathParam("network") String network, @PathParam("upstream") String upstreamStation, @PathParam("downstream") String downstreamStation) {
 		GCMRCResponse result = null;
-		List<ReachDetail> reachDetails = new ArrayList<>();
+		List<Object> reachDetails = new ArrayList<>();
 		
 		try {
 			reachDetails = new ReachDAO().getReachDetails(network, upstreamStation, downstreamStation);
@@ -128,7 +124,7 @@ public class ReachEndpoint {
 	@Produces("application/javascript")
 	public GCMRCResponse getSiteCredits(@PathParam("siteUp") String siteUp, @PathParam("siteDown") String siteDown) {
 		GCMRCResponse result = null;
-		List<StationCredits> credits = new ArrayList<StationCredits>();
+		List<Object> credits = new ArrayList<Object>();
 		
 		try {
 			credits = new ReachDAO().getSiteCredits(siteUp, siteDown);

@@ -3,9 +3,6 @@ package gov.usgs.cida.gcmrcservices.mb.endpoint;
 import gov.usgs.cida.gcmrcservices.mb.dao.StationDAO;
 import gov.usgs.cida.gcmrcservices.mb.endpoint.response.SuccessEnvelope;
 import gov.usgs.cida.gcmrcservices.mb.endpoint.response.GCMRCResponse;
-import gov.usgs.cida.gcmrcservices.mb.model.StationBs;
-import gov.usgs.cida.gcmrcservices.mb.model.StationDischargeError;
-import gov.usgs.cida.gcmrcservices.mb.model.StationQW;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,7 +28,7 @@ public class ParamEndpoint {
 	@Produces("application/javascript")
 	public GCMRCResponse getSiteQW(@PathParam("site") String site) {
 		GCMRCResponse result = null;
-		List<StationQW> sites = new ArrayList<StationQW>();
+		List<Object> sites = new ArrayList<Object>();
 		
 		try {
 			sites = new StationDAO().getSiteQW(site);
@@ -50,7 +47,7 @@ public class ParamEndpoint {
 	@Produces("application/javascript")
 	public GCMRCResponse getSiteBs(@PathParam("site") String site) {
 		GCMRCResponse result = null;
-		List<StationBs> sites = new ArrayList<StationBs>();
+		List<Object> sites = new ArrayList<Object>();
 		
 		try {
 			sites = new StationDAO().getSiteBs(site);
@@ -69,7 +66,7 @@ public class ParamEndpoint {
 	@Produces("application/javascript")
 	public GCMRCResponse getSiteDischargeError(@PathParam("site") String site) {
 		GCMRCResponse result = null;
-		List<StationDischargeError> sites = new ArrayList<StationDischargeError>();
+		List<Object> sites = new ArrayList<Object>();
 		
 		try {
 			sites = new StationDAO().getSiteDischargeError(site);

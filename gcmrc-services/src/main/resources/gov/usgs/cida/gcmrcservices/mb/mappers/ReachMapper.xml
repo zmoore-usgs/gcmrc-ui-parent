@@ -5,7 +5,7 @@
  
 <mapper namespace="gov.usgs.cida.gcmrcservices.mb.mappers.ReachMapper">
 	
-	<resultMap id="reachResult" type="Reach">
+	<resultMap id="reachResult" type="map">
 		<result property="reachName" column="REACH_NAME"/>
 		<result property="upstreamStation" column="SITE_UP"/>
 		<result property="upstreamDisplayName" column="DISPLAY_NAME_UP"/>
@@ -20,6 +20,54 @@
 		<result property="endStaticRec" column="END_STATIC_REC"/>
 		<result property="newestSuspSed" column="NEWEST_SUSPSED"/>
 		<result property="majorTribRiver" column="MAJOR_TRIB_RIVER"/>
+	</resultMap>
+	
+	<resultMap id="reachPORResult" type="map">
+		<result property="upstreamStation" column="site_up"/>
+		<result property="upstreamSecondaryStation" column="site_up_sec"/>
+		<result property="downstreamStation" column="site_down"/>
+		<result property="groupName" column="group_name"/>
+		<result property="upstreamBeginPosition" column="up_earliest_dt"/>
+		<result property="upstreamEndPosition" column="up_latest_dt"/>
+		<result property="upstreamSecondaryBeginPosition" column="up_sec_earliest_dt"/>
+		<result property="upstreamSecondaryEndPosition" column="up_sec_latest_dt"/>
+		<result property="downstreamBeginPosition" column="down_earliest_dt"/>
+		<result property="downstreamEndPosition" column="down_latest_dt"/>
+		<result property="majorTribBeginPosition" column="earliest_dt_major_trib"/>
+		<result property="majorTribEndPosition" column="latest_dt_major_trib"/>
+		<result property="minorTribBeginPosition" column="earliest_dt_minor_trib"/>
+		<result property="minorTribEndPosition" column="latest_dt_minor_trib"/>
+	</resultMap>
+	
+	<resultMap id="reachTribResult" type="ReachTrib">
+		<result property="reachName" column="REACH_NAME"/>
+		<result property="upstreamStation" column="SITE_UP"/>
+		<result property="upstreamDisplayName" column="DISPLAY_NAME_UP"/>
+		<result property="downstreamStation" column="SITE_DOWN"/>
+		<result property="downstreamDisplayName" column="DISPLAY_NAME_DOWN"/>
+		<result property="majorTribRiver" column="MAJOR_TRIB_RIVER"/>
+		<result property="majorTribSite" column="MAJOR_TRIB_SITE_NAME"/>
+		<result property="majorGroup" column="MAJOR_GROUP"/>
+		<result property="minorTribSite" column="MINOR_TRIB_SITE_NAME"/>
+		<result property="minorGroup" column="MINOR_GROUP"/>
+		<result property="network" column="NETWORK_NAME"/>
+		<result property="displayOrder" column="DISPLAY_ORDER"/>
+		<result property="endStaticRec" column="END_STATIC_REC"/>
+		<result property="newestSuspSed" column="NEWEST_SUSPSED"/>
+		<result property="downstreamDischargeStation" column="DISCHARGE_SITE_DOWN"/>
+		<result property="downstreamDischargeName" column="DISCHARGE_DISPLAY_NAME_DOWN"/>
+		<collection property="groupName" ofType="string" javaType="List" column="reach_name" select="getByReachName">
+			<result column="group_name"/>
+		</collection>
+	</resultMap>
+	
+	<resultMap id="reachDetailResult" type="map">
+		<result property="upstreamStation" column="UPSTREAM_STATION"/>
+		<result property="reachGroup" column="REACH_GROUP"/>
+		<result property="majorGroup" column="MAJOR_GROUP"/>
+		<result property="majorStation" column="MAJOR_SITE"/>
+		<result property="minorGroup" column="MINOR_GROUP"/>
+		<result property="minorStation" column="MINOR_SITE"/>
 	</resultMap>
 	
 	<sql id="columns">
@@ -121,6 +169,246 @@
 			</if>
 		</where>
 	ORDER BY DISPLAY_ORDER ASC
+	</select>
+	
+	<sql id="por-columns">
+		site_up,
+		site_up_sec,
+		site_down,
+		group_name,
+		up_earliest_dt,
+		up_latest_dt,
+		up_sec_earliest_dt,
+		up_sec_latest_dt,
+		down_earliest_dt,
+		down_latest_dt,
+		earliest_dt_major_trib,
+		latest_dt_major_trib,
+		earliest_dt_minor_trib,
+		latest_dt_minor_trib
+	</sql>
+	
+	<select id="getReachPOR" parameterType="map" resultMap="reachPORResult">
+		SELECT
+		<include refid="por-columns"/>
+		from (select 
+				case
+					when ss_up.nwis_site_no is null then ss_up.short_name
+					else ss_up.nwis_site_no
+				end site_up,
+				case
+					when ss_sec_up.nwis_site_no is null
+					then
+						ss_sec_up.short_name
+					else
+						ss_sec_up.nwis_site_no
+				end site_up_sec,
+				case
+					when ss_down.nwis_site_no is null then ss_down.short_name
+					else ss_down.nwis_site_no
+				end site_down,
+				g.name group_name,
+				to_char (tsp_up.earliest_dt, 'YYYY-MM-DD"T"HH24:MI:SS') up_earliest_dt,
+				to_char (tsp_up.latest_dt, 'YYYY-MM-DD"T"HH24:MI:SS') up_latest_dt,
+				to_char (tsp_sec.earliest_dt, 'YYYY-MM-DD"T"HH24:MI:SS') up_sec_earliest_dt,
+				to_char (tsp_sec.latest_dt, 'YYYY-MM-DD"T"HH24:MI:SS') up_sec_latest_dt,
+				to_char (tsp_down.earliest_dt, 'YYYY-MM-DD"T"HH24:MI:SS') down_earliest_dt,
+				to_char (tsp_down.latest_dt, 'YYYY-MM-DD"T"HH24:MI:SS') down_latest_dt,
+				to_char (tsp_maj_trib.earliest_dt, 'YYYY-MM-DD"T"HH24:MI:SS') earliest_dt_major_trib,
+				to_char (tsp_maj_trib.latest_dt, 'YYYY-MM-DD"T"HH24:MI:SS') latest_dt_major_trib,
+				to_char (tsp_min_trib.earliest_dt, 'YYYY-MM-DD"T"HH24:MI:SS') earliest_dt_minor_trib,
+				to_char (tsp_min_trib.latest_dt, 'YYYY-MM-DD"T"HH24:MI:SS') latest_dt_minor_trib
+				from reach_display d
+				left join
+					time_series_por tsp_min_trib 
+						on d.minor_site = tsp_min_trib.site_id
+							and d.minor_group = tsp_min_trib.group_id
+				left join
+					time_series_por tsp_maj_trib
+						on  d.major_site = tsp_maj_trib.site_id
+							and d.major_group = tsp_maj_trib.group_id 
+				left join
+					time_series_por tsp_dis
+						on d.discharge_down = tsp_dis.site_id
+				left join
+					time_series_por tsp_sec
+						on d.site_id_up_secondary = tsp_sec.site_id
+							and d.reach_group = tsp_sec.group_id
+				left join 
+					time_series_por tsp_down
+						on d.site_id_down = tsp_down.site_id 
+							and d.reach_group = tsp_down.group_id 
+				left join 
+					time_series_por tsp_up 
+						on d.site_id_up = tsp_up.site_id
+							and d.reach_group = tsp_up.group_id
+				left join 
+					site_star ss_sec_up
+						on site_id_up_secondary = ss_sec_up.site_id
+				left join
+					site_star ss_dis_down 
+						on d.discharge_down = ss_dis_down.site_id 
+				left join
+					site_star ss_down 
+						on site_id_down = ss_down.site_id
+				left join
+					site_star ss_up
+						on site_id_up = ss_up.site_id 
+				join
+					group_name g on d.reach_group = g.group_id
+				where tsp_dis.group_id = 2 ) t_a_main
+		<where>
+			<if test="null != upstreamStation">
+				site_up = #{upstreamStation}
+			</if>
+		</where>
+			order by site_up
+	</select>
+	
+	<sql id="trib-columns">
+		REACH_NAME,
+		SITE_UP,
+		DISPLAY_NAME_UP,
+		SITE_DOWN,
+		DISPLAY_NAME_DOWN,
+		MAJOR_TRIB_RIVER,
+		MAJOR_TRIB_SITE_NAME,
+		MAJOR_GROUP,
+		MINOR_TRIB_SITE_NAME,
+		MINOR_GROUP,
+		DISCHARGE_SITE_DOWN,
+		DISCHARGE_DISPLAY_NAME_DOWN,
+		NETWORK_NAME,
+		DISPLAY_ORDER,
+		END_STATIC_REC,
+		NEWEST_SUSPSED
+	</sql>
+	
+	<select id="getReachTrib" parameterType="map" resultMap="reachTribResult">
+		SELECT
+		<include refid="trib-columns"/>
+		from (select distinct
+			rtd.reach_name,
+			(select (case
+				when nwis_site_no is not null then nwis_site_no
+				else short_name
+				end) site_up
+				from site_star s
+					where s.site_id = rtd.site_id_up) site_up,
+			(select s.name
+				from site_star s
+					where s.site_id = rtd.site_id_up) display_name_up,
+			(select (case
+				when nwis_site_no is not null then nwis_site_no
+				else short_name
+				end)
+				from site_star s
+					where s.site_id = rtd.site_id_down) site_down,
+			(select s.name
+				from site_star s
+					where s.site_id = rtd.site_id_down) display_name_down,
+			(select (case
+				when nwis_site_no is not null then nwis_site_no
+				else short_name
+				end)
+				from site_star s
+					where s.site_id = rtd.discharge_down) discharge_site_down,
+			(select s.name
+				from site_star s
+					where s.site_id = rtd.discharge_down) discharge_display_name_down,
+			(select s.river_name
+				from site_star s
+					where rtd.major_site = s.site_id) as major_trib_river,
+			(select (case
+				when nwis_site_no is not null then nwis_site_no
+				else short_name
+				end)
+				from site_star s
+					where s.site_id = rtd.major_site) major_trib_site_name,
+			(select name
+				from group_name
+					where rtd.major_group = group_name.group_id) major_group,
+			(select (case
+				when nwis_site_no is not null then nwis_site_no
+				else short_name
+				end)
+				from site_star s
+					where s.site_id = rtd.minor_site) minor_trib_site_name,
+			(select name
+				from group_name
+				where group_name.group_id = rtd.minor_group) minor_group,
+				case
+					when rtd.network_name = 'GCDAMP' then 'GCDAMP'
+					when rtd.network_name = 'Dinosaur' then 'DINO'
+					when rtd.network_name = 'BigBend' then 'BIBE'
+					when rtd.network_name = 'Canyonlands' then 'CL'
+					when rtd.network_name = 'RiverDelta' then 'CRD'
+					else rtd.network_name
+				end as network_name,
+				rtd.display_order,
+				to_char (end_static_rec, 'YYYY-MM-DD"T"HH24:MI:SS') end_static_rec,
+				to_char (newest_suspsed, 'YYYY-MM-DD"T"HH24:MI:SS') newest_suspsed
+			from reach_display rtd) t_a_reaches
+		<where>
+			<if test="null != majorTribSite">
+				major_trib_site_name = #{majorTribSite}
+			</if>
+		</where>
+	</select>
+
+	<select id="getByReachName" parameterType="String" resultType="String">
+		select distinct name group_name from group_name, reach_display rtd 
+			where group_name.group_id = rtd.reach_group
+			and rtd.reach_name = #{reach_name,jdbcType=VARCHAR}
+	</select>
+	
+	<sql id="detail-columns">
+		UPSTREAM_STATION,
+		REACH_GROUP,
+		MAJOR_GROUP,
+		MAJOR_SITE,
+		MINOR_GROUP,
+		MINOR_SITE
+	</sql>
+	
+	<select id="getReachDetails" parameterType="map" resultMap="reachDetailResult">
+		SELECT
+		<include refid="detail-columns"/>
+		FROM
+			(SELECT DISTINCT
+			(SELECT (CASE
+						WHEN NWIS_SITE_NO IS NOT NULL
+						THEN NWIS_SITE_NO
+						ELSE SHORT_NAME
+					END) FROM SITE_STAR WHERE SITE_STAR.SITE_ID = SITE_ID_UP) UPSTREAM_STATION,
+			(SELECT NAME FROM GROUP_NAME WHERE GROUP_NAME.GROUP_ID = RTD.REACH_GROUP) REACH_GROUP,
+			(SELECT NAME FROM GROUP_NAME WHERE GROUP_NAME.GROUP_ID = RTD.MAJOR_GROUP) MAJOR_GROUP,
+			(SELECT (
+      CASE
+        WHEN NWIS_SITE_NO IS NOT NULL
+        THEN NWIS_SITE_NO
+        ELSE SHORT_NAME
+      END) SITE_UP
+    FROM SITE_STAR S
+    WHERE S.SITE_ID = RTD.MAJOR_SITE
+    ) MAJOR_SITE,
+			(SELECT NAME FROM GROUP_NAME WHERE GROUP_NAME.GROUP_ID = RTD.MINOR_GROUP) MINOR_GROUP,
+		(SELECT (
+      CASE
+        WHEN NWIS_SITE_NO IS NOT NULL
+        THEN NWIS_SITE_NO
+        ELSE SHORT_NAME
+      END) SITE_UP
+    FROM SITE_STAR S
+    WHERE S.SITE_ID = RTD.MINOR_SITE
+    ) MINOR_SITE
+			FROM
+			REACH_DISPLAY RTD) T_A_INNER
+		<where>
+			<if test="null != upstream">
+				AND UPSTREAM_STATION = #{upstream}
+			</if>
+		</where>
 	</select>
 	
 </mapper>

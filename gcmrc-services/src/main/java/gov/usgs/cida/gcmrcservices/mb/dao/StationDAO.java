@@ -1,13 +1,6 @@
 package gov.usgs.cida.gcmrcservices.mb.dao;
 
 import gov.usgs.cida.gcmrcservices.mb.MyBatisConnectionFactory;
-import gov.usgs.cida.gcmrcservices.mb.model.StationBs;
-import gov.usgs.cida.gcmrcservices.mb.model.StationCredits;
-import gov.usgs.cida.gcmrcservices.mb.model.StationDischargeError;
-import gov.usgs.cida.gcmrcservices.mb.model.StationParam;
-import gov.usgs.cida.gcmrcservices.mb.model.StationPubs;
-import gov.usgs.cida.gcmrcservices.mb.model.StationQW;
-import gov.usgs.cida.gcmrcservices.mb.model.StationSite;
 
 import java.util.HashMap;
 import java.util.List;
@@ -37,8 +30,8 @@ public class StationDAO {
 	
 	public static final String queryPackage = "gov.usgs.cida.gcmrcservices.mb.mappers";
 	
-	public List<StationSite> getSites(String network, String sites) {
-		List<StationSite> result = null;
+	public List<Object> getSites(String network, String sites) {
+		List<Object> result = null;
 		
 		Map<String, String> params = new HashMap<String, String>();
 		params.put("net", network);
@@ -51,8 +44,8 @@ public class StationDAO {
 		return result;
 	}
 	
-	public List<StationQW> getSiteQW(String site) {
-		List<StationQW> result = null;
+	public List<Object> getSiteQW(String site) {
+		List<Object> result = null;
 		
 		Map<String, String> params = new HashMap<String, String>();
 		params.put("site", site);
@@ -64,8 +57,8 @@ public class StationDAO {
 		return result;
 	}
 	
-	public List<StationPubs> getSitePubs(String site) {
-		List<StationPubs> result = null;
+	public List<Object> getSitePubs(String site) {
+		List<Object> result = null;
 		
 		Map<String, String> params = new HashMap<String, String>();
 		params.put("site", site);
@@ -77,8 +70,8 @@ public class StationDAO {
 		return result;
 	}
 	
-	public List<StationCredits> getSiteCredits(String site) {
-		List<StationCredits> result = null;
+	public List<Object> getSiteCredits(String site) {
+		List<Object> result = null;
 		
 		Map<String, String> params = new HashMap<String, String>();
 		params.put("site", site);
@@ -90,8 +83,8 @@ public class StationDAO {
 		return result;
 	}
 	
-	public List<StationParam> getSiteParams(String site) {
-		List<StationParam> result = null;
+	public List<Object> getSiteParams(String site) {
+		List<Object> result = null;
 		
 		Map<String, String> params = new HashMap<String, String>();
 		params.put("site", site);
@@ -103,8 +96,8 @@ public class StationDAO {
 		return result;
 	}
 	
-	public List<StationBs> getSiteBs(String site) {
-		List<StationBs> result = null;
+	public List<Object> getSiteBs(String site) {
+		List<Object> result = null;
 		
 		Map<String, String> params = new HashMap<String, String>();
 		params.put("site", site);
@@ -116,8 +109,8 @@ public class StationDAO {
 		return result;
 	}
 	
-	public List<StationDischargeError> getSiteDischargeError(String site) {
-		List<StationDischargeError> result = null;
+	public List<Object> getSiteDischargeError(String site) {
+		List<Object> result = null;
 		
 		Map<String, String> params = new HashMap<String, String>();
 		params.put("site", site);

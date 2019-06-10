@@ -1,11 +1,7 @@
 package gov.usgs.cida.gcmrcservices.mb.dao;
 
 import gov.usgs.cida.gcmrcservices.mb.MyBatisConnectionFactory;
-import gov.usgs.cida.gcmrcservices.mb.model.Reach;
-import gov.usgs.cida.gcmrcservices.mb.model.ReachDetail;
-import gov.usgs.cida.gcmrcservices.mb.model.ReachPOR;
 import gov.usgs.cida.gcmrcservices.mb.model.ReachTrib;
-import gov.usgs.cida.gcmrcservices.mb.model.StationCredits;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -36,8 +32,8 @@ public class ReachDAO {
 	
 	public static final String queryPackage = "gov.usgs.cida.gcmrcservices.mb.mappers";
 	
-	public List<Reach> getReaches(String network) {
-		List<Reach> result = null;
+	public List<Object> getReaches(String network) {
+		List<Object> result = null;
 		
 		Map<String, String> params = new HashMap<String, String>();
 		params.put("network", network);
@@ -49,8 +45,8 @@ public class ReachDAO {
 		return result;
 	}
 	
-	public List<Reach> getReach(String network, String upstreamStation, String downstreamStation) {
-		List<Reach> result = null;
+	public List<Object> getReach(String network, String upstreamStation, String downstreamStation) {
+		List<Object> result = null;
 		
 		Map<String, String> params = new HashMap<String, String>();
 		params.put("network", network);
@@ -64,8 +60,8 @@ public class ReachDAO {
 		return result;
 	}
 	
-	public List<ReachDetail> getReachDetails(String network, String upstreamStation, String downstreamStation) {
-		List<ReachDetail> result = new ArrayList<ReachDetail>();
+	public List<Object> getReachDetails(String network, String upstreamStation, String downstreamStation) {
+		List<Object> result = new ArrayList<Object>();
 		
 		Map<String, String> params = new HashMap<String, String>();
 		params.put("network", network);
@@ -73,7 +69,7 @@ public class ReachDAO {
 		params.put("downstream", downstreamStation);
 		
 		try (SqlSession session = sqlSessionFactory.openSession()) {
-			result = session.selectList(queryPackage + ".ReachDetailMapper.getReachDetails", params);
+			result = session.selectList(queryPackage + ".ReachMapper.getReachDetails", params);
 		}
 		
 		return result;
@@ -86,27 +82,27 @@ public class ReachDAO {
 		params.put("majorTribSite", majorTribSite);
 		
 		try (SqlSession session = sqlSessionFactory.openSession()) {
-			result = session.selectList(queryPackage + ".ReachTribMapper.getReachTrib", params);
+			result = session.selectList(queryPackage + ".ReachMapper.getReachTrib", params);
 		}
 		
 		return result;
 	}
 	
-	public List<ReachPOR> getReachPOR(String upstreamStation) {
-		List<ReachPOR> result = new ArrayList<ReachPOR>();
+	public List<Object> getReachPOR(String upstreamStation) {
+		List<Object> result = new ArrayList<Object>();
 		
 		Map<String, String> params = new HashMap<String, String>();
 		params.put("upstreamStation", upstreamStation);
 		
 		try (SqlSession session = sqlSessionFactory.openSession()) {
-			result = session.selectList(queryPackage + ".ReachPORMapper.getReachPOR", params);
+			result = session.selectList(queryPackage + ".ReachMapper.getReachPOR", params);
 		}
 		
 		return result;
 	}
 	
-	public List<StationCredits> getSiteCredits(String siteUp, String siteDown) {
-		List<StationCredits> result = null;
+	public List<Object> getSiteCredits(String siteUp, String siteDown) {
+		List<Object> result = null;
 		
 		Map<String, String> params = new HashMap<String, String>();
 		params.put("siteUp", siteUp);

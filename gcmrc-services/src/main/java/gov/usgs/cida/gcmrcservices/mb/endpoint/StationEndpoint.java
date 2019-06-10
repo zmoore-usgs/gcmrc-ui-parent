@@ -3,10 +3,6 @@ package gov.usgs.cida.gcmrcservices.mb.endpoint;
 import gov.usgs.cida.gcmrcservices.mb.dao.StationDAO;
 import gov.usgs.cida.gcmrcservices.mb.endpoint.response.SuccessEnvelope;
 import gov.usgs.cida.gcmrcservices.mb.endpoint.response.GCMRCResponse;
-import gov.usgs.cida.gcmrcservices.mb.model.StationCredits;
-import gov.usgs.cida.gcmrcservices.mb.model.StationParam;
-import gov.usgs.cida.gcmrcservices.mb.model.StationPubs;
-import gov.usgs.cida.gcmrcservices.mb.model.StationSite;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,7 +28,7 @@ public class StationEndpoint {
 	@Produces("application/javascript")
 	public GCMRCResponse getSites(@PathParam("network") String network) {
 		GCMRCResponse result = null;
-		List<StationSite> sites = new ArrayList<StationSite>();
+		List<Object> sites = new ArrayList<Object>();
 		
 		try {
 			sites = new StationDAO().getSites(network, "site");
@@ -51,7 +47,7 @@ public class StationEndpoint {
 	@Produces("application/javascript")
 	public GCMRCResponse getAllSites(@PathParam("network") String network) {
 		GCMRCResponse result = null;
-		List<StationSite> allSites = new ArrayList<StationSite>();
+		List<Object> allSites = new ArrayList<Object>();
 		
 		try {
 			allSites = new StationDAO().getSites(network, "allsite");
@@ -70,7 +66,7 @@ public class StationEndpoint {
 	@Produces("application/javascript")
 	public GCMRCResponse getSitePubs(@PathParam("site") String site) {
 		GCMRCResponse result = null;
-		List<StationPubs> pubs = new ArrayList<StationPubs>();
+		List<Object> pubs = new ArrayList<Object>();
 		
 		try {
 			pubs = new StationDAO().getSitePubs(site);
@@ -89,7 +85,7 @@ public class StationEndpoint {
 	@Produces("application/javascript")
 	public GCMRCResponse getSiteCredits(@PathParam("site") String site) {
 		GCMRCResponse result = null;
-		List<StationCredits> credits = new ArrayList<StationCredits>();
+		List<Object> credits = new ArrayList<Object>();
 		
 		try {
 			credits = new StationDAO().getSiteCredits(site);
@@ -108,7 +104,7 @@ public class StationEndpoint {
 	@Produces("application/javascript")
 	public GCMRCResponse getSiteParams(@PathParam("site") String site) {
 		GCMRCResponse result = null;
-		List<StationParam> params = new ArrayList<StationParam>();
+		List<Object> params = new ArrayList<Object>();
 		
 		try {
 			params = new StationDAO().getSiteParams(site);

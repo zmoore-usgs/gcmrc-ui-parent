@@ -18,12 +18,12 @@ import org.slf4j.LoggerFactory;
  */
 public class QWDownloadService {
 	private static final Logger log = LoggerFactory.getLogger(QWDownloadService.class);
-	public static enum COLUMNS {STATION_NAME, STATION_NUM, START_DT, MEAN_DT, END_DT, USGS_DATA_LEAD, SAMPLE_METHOD, SAMPLE_LOCATION, SAMPLER_NAME, NOZZLE, NUM_VERTICALS, TRANSITS_EACH_VERTICAL, CABLEWAY_STATION_LOC, WATER_DEPTH, ELEVATION_ABOVE_BED, SAMPLING_DURATION, PUMP_SAMPLER, PUMP_CAROUSEL_NUM, DATASET_COMPLETE, CROSS_SECT_CALIB_REQ, USE_FOR_LOAD_CALC, NOTES, AIR_TEMP, WATER_TEMP, SPEC_COND, TDS, SILT_CLAY_COLOR, CONC_LABORATORY, GRAIN_SIZE_LABORATORY, LAB_NOTES, LAB_METHOD, SILT_CLAY_CONC_XS, SAND_CONC_XS, SAND_D16_XS, SAND_D50_XS, SAND_D84_XS, SAND_PCT_LT_074_XS, SAND_PCT_LT_088_XS, SAND_PCT_LT_105_XS, SAND_PCT_LT_125_XS, SAND_PCT_LT_149_XS, SAND_PCT_LT_177_XS, SAND_PCT_LT_210_XS, SAND_PCT_LT_250_XS, SAND_PCT_LT_297_XS, SAND_PCT_LT_354_XS, SAND_PCT_LT_420_XS, SAND_PCT_LT_500_XS, SAND_PCT_LT_595_XS, SAND_PCT_LT_707_XS, SAND_PCT_LT_841_XS, SAND_PCT_LT_1000_XS, SAMPLE_MASS, MASS_LE_63, MASS_GT_63, CONC_LE_63, CONC_GT_63, SILT_CLAY_CONC_LAB, SAND_CONC_LAB, SAND_D16_LAB, SAND_D50_LAB, SAND_D84_LAB, SAND_PCT_LT_074_LAB, SAND_PCT_LT_088_LAB, SAND_PCT_LT_105_LAB, SAND_PCT_LT_125_LAB, SAND_PCT_LT_149_LAB, SAND_PCT_LT_177_LAB, SAND_PCT_LT_210_LAB, SAND_PCT_LT_250_LAB, SAND_PCT_LT_297_LAB, SAND_PCT_LT_354_LAB, SAND_PCT_LT_420_LAB, SAND_PCT_LT_500_LAB, SAND_PCT_LT_595_LAB, SAND_PCT_LT_707_LAB, SAND_PCT_LT_841_LAB, SAND_PCT_LT_1000_LAB, SILT_CLAY_FIELD_95ER, SAND_FIELD_95ER, SAND_D50_FIELD_95ER, SILT_CLAY_LAB_BIAS_COR, SILT_CLAY_LAB_95ER, SAND_LAB_95ER, SAND_D50_LAB_95ER, SILT_CLAY_TOT_95ER, SAND_TOT_95ER, SAND_D50_TOT_95ER};
+	public static enum COLUMNS {STATION_NAME, STATION_NUM, START_DT, MEAN_DT, END_DT, USGS_DATA_LEAD, SAMPLE_METHOD, SAMPLE_LOCATION, SAMPLER_NAME, NOZZLE, NUM_VERTICALS, TRANSITS_EACH_VERTICAL, CABLEWAY_STATION_LOC, WATER_DEPTH, ELEVATION_ABOVE_BED, SAMPLING_DURATION, PUMP_SAMPLER, PUMP_CAROUSEL_NUM, DATASET_COMPLETE, CROSS_SECT_CALIB_REQ, USE_FOR_LOAD_CALC, NOTES, AIR_TEMP, WATER_TEMP, SPEC_COND, TDS, SILT_CLAY_COLOR, CONC_LABORATORY, GRAIN_SIZE_LABORATORY, LAB_NOTES, LAB_METHOD, SED_CONC_XS, SILT_CLAY_CONC_XS, SAND_CONC_XS, SAND_D16_XS, SAND_D50_XS, SAND_D84_XS, SAND_PCT_LT_074_XS, SAND_PCT_LT_088_XS, SAND_PCT_LT_105_XS, SAND_PCT_LT_125_XS, SAND_PCT_LT_149_XS, SAND_PCT_LT_177_XS, SAND_PCT_LT_210_XS, SAND_PCT_LT_250_XS, SAND_PCT_LT_297_XS, SAND_PCT_LT_354_XS, SAND_PCT_LT_420_XS, SAND_PCT_LT_500_XS, SAND_PCT_LT_595_XS, SAND_PCT_LT_707_XS, SAND_PCT_LT_841_XS, SAND_PCT_LT_1000_XS, SEDIMENT_MASS, SAMPLE_MASS, MASS_LE_63, MASS_GT_63, CONC_LE_63, CONC_GT_63, SED_CONC_LAB, SILT_CLAY_CONC_LAB, SAND_CONC_LAB, SAND_D16_LAB, SAND_D50_LAB, SAND_D84_LAB, SAND_PCT_LT_074_LAB, SAND_PCT_LT_088_LAB, SAND_PCT_LT_105_LAB, SAND_PCT_LT_125_LAB, SAND_PCT_LT_149_LAB, SAND_PCT_LT_177_LAB, SAND_PCT_LT_210_LAB, SAND_PCT_LT_250_LAB, SAND_PCT_LT_297_LAB, SAND_PCT_LT_354_LAB, SAND_PCT_LT_420_LAB, SAND_PCT_LT_500_LAB, SAND_PCT_LT_595_LAB, SAND_PCT_LT_707_LAB, SAND_PCT_LT_841_LAB, SAND_PCT_LT_1000_LAB, SILT_CLAY_FIELD_95ER, SAND_FIELD_95ER, SAND_D50_FIELD_95ER, SILT_CLAY_LAB_BIAS_COR, SILT_CLAY_LAB_95ER, SAND_LAB_95ER, SAND_D50_LAB_95ER, SED_TOT_95ER, SILT_CLAY_TOT_95ER, SAND_TOT_95ER, SAND_D50_TOT_95ER};
 	
 	private static Pair<List<String>, List<List<String>>> getQWDownloadData(List<QWDownload> data, List<COLUMNS> outputColumns){
 		List<List<String>> columns = new ArrayList<>();
 		List<String> headers = new ArrayList<>();
-		String[] COLUMN_HEADERS = {"Station name", "USGS Station #", "start time (" + data.get(0).getTime_zone() + ")", "mean time (" + data.get(0).getTime_zone() + ")", "end time (" + data.get(0).getTime_zone() + ")", "USGS data lead", "Sampling method", "Location", "Sampler", "Nozzle", "Verticals", "Transits at each vertical", "Cableway station location (ft)", "Water depth (m)", "Sample elevation above bed (m)", "Sampling duration (s)", "Pump sampler A or B", "Pump carousel number", "Dataset complete through this sample", "Cross-section calibration applied", "Use in load calculations", "Notes", "Air temp (deg C)", "Water temp (deg C)", "Specific conductance (microsiemens/cm at 25 deg. C)", "TDS (mg/L)", "Color of silt&clay", "Concentration analysis laboratory", "Grain-size analysis laboratory", "Lab notes", "Method used for determining sand/fines break and sand grain-size distribution", "Cross-section silt&clay concentration (mg/L)", "Cross-section sand concentration (mg/L)", "Cross-section sand D16(mm)", "Cross-section sand D50(mm)", "Cross-section sand D84(mm)", "Cross-section sand %< 0.074 mm", "Cross-section sand %< 0.088 mm", "Cross-section sand %< 0.105 mm", "Cross-section sand %< 0.125 mm", "Cross-section sand %< 0.149 mm", "Cross-section sand %< 0.177 mm", "Cross-section sand %< 0.210 mm", "Cross-section sand %< 0.250 mm", "Cross-section sand %< 0.297 mm", "Cross-section sand %< 0.354 mm", "Cross-section sand %< 0.420 mm", "Cross-section sand %< 0.500 mm", "Cross-section sand %< 0.595 mm", "Cross-section sand %< 0.707 mm", "Cross-section sand %< 0.841 mm", "Cross-section sand %< 1.0 mm", "Sample Mass (g)", "Mass passing through 63 micron sieve (g)", "Mass retained on 63 micron sieve (g)", "Concentration <63 micron sieve (mg/L)", "Concentration >63 micron sieve (mg/L)", "Laboratory silt&clay concentration (mg/L)", "Laboratory sand concentration (mg/L)", "Raw lab sand D16(mm)", "Raw lab sand D50(mm)", "Raw lab sand D84(mm)", "Raw lab sand %< 0.074 mm", "Raw lab sand %< 0.088 mm", "Raw lab sand %< 0.105 mm", "Raw lab sand %< 0.125 mm", "Raw lab sand %< 0.149 mm", "Raw lab sand %< 0.177 mm", "Raw lab sand %< 0.210 mm", "Raw lab sand %< 0.250 mm", "Raw lab sand %< 0.297 mm", "Raw lab sand %< 0.354 mm", "Raw lab sand %< 0.420 mm", "Raw lab sand %< 0.500 mm", "Raw lab sand %< 0.595 mm", "Raw lab sand %< 0.707 mm", "Raw lab sand %< 0.841 mm", "Raw lab sand %< 1.0 mm", "95%-confidence-level field error in silt&clay concentration (mg/L)", "95%-confidence-level field error in sand concentration (mg/L)", "95%-confidence-level field error in sand D50 (mm)", "Correction for negative laboratory bias in silt&clay conc. (mg/L)", "95%-confidence-level lab error in bias-corr. silt&clay concentration (mg/L)", "95%-confidence-level lab error in sand concentration (mg/L)", "95%-confidence-level lab error in sand D50 (mm)", "95%-confidence-level total error in bias-corr. silt&clay concentration (mg/L)", "95%-confidence-level total error in sand concentration (mg/L)", "95%-confidence-level total error in sand D50(mm)"};
+		String[] COLUMN_HEADERS = {"Station name", "USGS Station #", "start time (" + data.get(0).getTime_zone() + ")", "mean time (" + data.get(0).getTime_zone() + ")", "end time (" + data.get(0).getTime_zone() + ")", "USGS data lead", "Sampling method", "Location", "Sampler", "Nozzle", "Verticals", "Transits at each vertical", "Cableway station location (ft)", "Water depth (m)", "Sample elevation above bed (m)", "Sampling duration (s)", "Pump sampler A or B", "Pump carousel number", "Dataset complete through this sample", "Cross-section calibration applied", "Use in load calculations", "Notes", "Air temp (deg C)", "Water temp (deg C)", "Specific conductance (microsiemens/cm at 25 deg. C)", "TDS (mg/L)", "Color of silt&clay", "Concentration analysis laboratory", "Grain-size analysis laboratory", "Lab notes", "Method used for determining sand/fines break and sand grain-size distribution", "Cross-section total sediment concentration (mg/L)", "Cross-section silt&clay concentration (mg/L)", "Cross-section sand concentration (mg/L)", "Cross-section sand D16(mm)", "Cross-section sand D50(mm)", "Cross-section sand D84(mm)", "Cross-section sand %< 0.074 mm", "Cross-section sand %< 0.088 mm", "Cross-section sand %< 0.105 mm", "Cross-section sand %< 0.125 mm", "Cross-section sand %< 0.149 mm", "Cross-section sand %< 0.177 mm", "Cross-section sand %< 0.210 mm", "Cross-section sand %< 0.250 mm", "Cross-section sand %< 0.297 mm", "Cross-section sand %< 0.354 mm", "Cross-section sand %< 0.420 mm", "Cross-section sand %< 0.500 mm", "Cross-section sand %< 0.595 mm", "Cross-section sand %< 0.707 mm", "Cross-section sand %< 0.841 mm", "Cross-section sand %< 1.0 mm", "Sediment mass (g)", "Sample Mass (g)", "Mass passing through 63 micron sieve (g)", "Mass retained on 63 micron sieve (g)", "Concentration <63 micron sieve (mg/L)", "Concentration >63 micron sieve (mg/L)", "Laboratory total sediment concentration (mg/L)", "Laboratory silt&clay concentration (mg/L)", "Laboratory sand concentration (mg/L)", "Raw lab sand D16(mm)", "Raw lab sand D50(mm)", "Raw lab sand D84(mm)", "Raw lab sand %< 0.074 mm", "Raw lab sand %< 0.088 mm", "Raw lab sand %< 0.105 mm", "Raw lab sand %< 0.125 mm", "Raw lab sand %< 0.149 mm", "Raw lab sand %< 0.177 mm", "Raw lab sand %< 0.210 mm", "Raw lab sand %< 0.250 mm", "Raw lab sand %< 0.297 mm", "Raw lab sand %< 0.354 mm", "Raw lab sand %< 0.420 mm", "Raw lab sand %< 0.500 mm", "Raw lab sand %< 0.595 mm", "Raw lab sand %< 0.707 mm", "Raw lab sand %< 0.841 mm", "Raw lab sand %< 1.0 mm", "95%-confidence-level field error in silt&clay concentration (mg/L)", "95%-confidence-level field error in sand concentration (mg/L)", "95%-confidence-level field error in sand D50 (mm)", "Correction for negative laboratory bias in silt&clay conc. (mg/L)", "95%-confidence-level lab error in bias-corr. silt&clay concentration (mg/L)", "95%-confidence-level lab error in sand concentration (mg/L)", "95%-confidence-level lab error in sand D50 (mm)", "95%-confidence-level total error in total sediment concentration (mg/L)", "95%-confidence-level total error in bias-corr. silt&clay concentration (mg/L)", "95%-confidence-level total error in sand concentration (mg/L)", "95%-confidence-level total error in sand D50(mm)"};
 		
 		//Build headers and extract relevant data
 		for(int i = 0; i < outputColumns.size(); i++){
@@ -217,6 +217,12 @@ public class QWDownloadService {
 					.map(e -> (e.getLab_method() == null ? "" : e.getLab_method() ))
 					.collect(Collectors.toList()));
 				break;
+				
+			case SED_CONC_XS:
+				columns.add(data.stream()
+					.map(e -> (e.getSed_conc_xs() == null ? "" : e.getSed_conc_xs() ))
+					.collect(Collectors.toList()));
+				break;
 
 			case SILT_CLAY_CONC_XS:
 				columns.add(data.stream()
@@ -344,6 +350,12 @@ public class QWDownloadService {
 					.collect(Collectors.toList()));
 				break;
 
+			case SEDIMENT_MASS:
+				columns.add(data.stream()
+					.map(e -> (e.getSediment_mass() == null ? "" : e.getSediment_mass() ))
+					.collect(Collectors.toList()));
+				break;
+				
 			case SAMPLE_MASS:
 				columns.add(data.stream()
 					.map(e -> (e.getSample_mass() == null ? "" : e.getSample_mass() ))
@@ -371,6 +383,12 @@ public class QWDownloadService {
 			case CONC_GT_63:
 				columns.add(data.stream()
 					.map(e -> (e.getConc_gt_63() == null ? "" : e.getConc_gt_63() ))
+					.collect(Collectors.toList()));
+				break;
+				
+			case SED_CONC_LAB:
+				columns.add(data.stream()
+					.map(e -> (e.getSed_conc_lab() == null ? "" : e.getSed_conc_lab() ))
 					.collect(Collectors.toList()));
 				break;
 
@@ -542,6 +560,12 @@ public class QWDownloadService {
 					.collect(Collectors.toList()));
 				break;
 
+			case SED_TOT_95ER:
+				columns.add(data.stream()
+					.map(e -> (e.getSed_tot_95er() == null ? "" : e.getSed_tot_95er() ))
+					.collect(Collectors.toList()));
+				break;
+				
 			case SILT_CLAY_TOT_95ER:
 				columns.add(data.stream()
 					.map(e -> (e.getSilt_clay_tot_95er() == null ? "" : e.getSilt_clay_tot_95er()))

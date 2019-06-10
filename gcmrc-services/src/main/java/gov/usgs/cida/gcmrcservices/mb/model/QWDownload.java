@@ -39,6 +39,7 @@ public class QWDownload {
 	private String grain_size_laboratory;   
 	private String lab_notes;   
 	private String lab_method;  
+	private String sed_conc_xs;
 	private String silt_clay_conc_xs;   
 	private String sand_conc_xs;
 	private String sand_d16_xs; 
@@ -61,10 +62,12 @@ public class QWDownload {
 	private String sand_pct_lt_841_xs;  
 	private String sand_pct_lt_1000_xs; 
 	private String sample_mass; 
+	private String sediment_mass;
 	private String mass_le_63;  
 	private String mass_gt_63;  
 	private String conc_le_63;  
-	private String conc_gt_63;  
+	private String conc_gt_63;
+	private String sed_conc_lab;
 	private String silt_clay_conc_lab;  
 	private String sand_conc_lab;   
 	private String sand_d16_lab;
@@ -96,11 +99,12 @@ public class QWDownload {
 	private String silt_clay_tot_95er;  
 	private String sand_tot_95er;   
 	private String sand_d50_tot_95er;
+	private String sed_tot_95er;
 
 	public QWDownload() {
 	}
 
-	public QWDownload(String sample_id, String station_name, String station_num, String start_dt, String mean_dt, String end_dt, String time_zone, String usgs_data_lead, String sample_method, String sample_location, String sampler_name, String nozzle, String num_verticals, String transits_each_vertical, String cableway_station_loc, String water_depth, String elevation_above_bed, String sampling_duration, String pump_sampler, String pump_carousel_num, String dataset_complete, String cross_sect_calib_req, String use_for_load_calc, String notes, String air_temp, String water_temp, String spec_cond, String tds, String silt_clay_color, String conc_laboratory, String grain_size_laboratory, String lab_notes, String lab_method, String silt_clay_conc_xs, String sand_conc_xs, String sand_d16_xs, String sand_d50_xs, String sand_d84_xs, String sand_pct_lt_074_xs, String sand_pct_lt_088_xs, String sand_pct_lt_105_xs, String sand_pct_lt_125_xs, String sand_pct_lt_149_xs, String sand_pct_lt_177_xs, String sand_pct_lt_210_xs, String sand_pct_lt_250_xs, String sand_pct_lt_297_xs, String sand_pct_lt_354_xs, String sand_pct_lt_420_xs, String sand_pct_lt_500_xs, String sand_pct_lt_595_xs, String sand_pct_lt_707_xs, String sand_pct_lt_841_xs, String sand_pct_lt_1000_xs, String sample_mass, String mass_le_63, String mass_gt_63, String conc_le_63, String conc_gt_63, String silt_clay_conc_lab, String sand_conc_lab, String sand_d16_lab, String sand_d50_lab, String sand_d84_lab, String sand_pct_lt_074_lab, String sand_pct_lt_088_lab, String sand_pct_lt_105_lab, String sand_pct_lt_125_lab, String sand_pct_lt_149_lab, String sand_pct_lt_177_lab, String sand_pct_lt_210_lab, String sand_pct_lt_250_lab, String sand_pct_lt_297_lab, String sand_pct_lt_354_lab, String sand_pct_lt_420_lab, String sand_pct_lt_500_lab, String sand_pct_lt_595_lab, String sand_pct_lt_707_lab, String sand_pct_lt_841_lab, String sand_pct_lt_1000_lab, String silt_clay_field_95er, String sand_field_95er, String sand_d50_field_95er, String silt_clay_lab_bias_cor, String silt_clay_lab_95er, String sand_lab_95er, String sand_d50_lab_95er, String silt_clay_tot_95er, String sand_tot_95er, String sand_d50_tot_95er) {
+	public QWDownload(String sample_id, String station_name, String station_num, String start_dt, String mean_dt, String end_dt, String time_zone, String usgs_data_lead, String sample_method, String sample_location, String sampler_name, String nozzle, String num_verticals, String transits_each_vertical, String cableway_station_loc, String water_depth, String elevation_above_bed, String sampling_duration, String pump_sampler, String pump_carousel_num, String dataset_complete, String cross_sect_calib_req, String use_for_load_calc, String notes, String air_temp, String water_temp, String spec_cond, String tds, String silt_clay_color, String conc_laboratory, String grain_size_laboratory, String lab_notes, String lab_method, String sed_conc_xs, String silt_clay_conc_xs, String sand_conc_xs, String sand_d16_xs, String sand_d50_xs, String sand_d84_xs, String sand_pct_lt_074_xs, String sand_pct_lt_088_xs, String sand_pct_lt_105_xs, String sand_pct_lt_125_xs, String sand_pct_lt_149_xs, String sand_pct_lt_177_xs, String sand_pct_lt_210_xs, String sand_pct_lt_250_xs, String sand_pct_lt_297_xs, String sand_pct_lt_354_xs, String sand_pct_lt_420_xs, String sand_pct_lt_500_xs, String sand_pct_lt_595_xs, String sand_pct_lt_707_xs, String sand_pct_lt_841_xs, String sand_pct_lt_1000_xs, String sediment_mass, String sample_mass, String mass_le_63, String mass_gt_63, String conc_le_63, String conc_gt_63, String sed_conc_lab, String silt_clay_conc_lab, String sand_conc_lab, String sand_d16_lab, String sand_d50_lab, String sand_d84_lab, String sand_pct_lt_074_lab, String sand_pct_lt_088_lab, String sand_pct_lt_105_lab, String sand_pct_lt_125_lab, String sand_pct_lt_149_lab, String sand_pct_lt_177_lab, String sand_pct_lt_210_lab, String sand_pct_lt_250_lab, String sand_pct_lt_297_lab, String sand_pct_lt_354_lab, String sand_pct_lt_420_lab, String sand_pct_lt_500_lab, String sand_pct_lt_595_lab, String sand_pct_lt_707_lab, String sand_pct_lt_841_lab, String sand_pct_lt_1000_lab, String silt_clay_field_95er, String sand_field_95er, String sand_d50_field_95er, String silt_clay_lab_bias_cor, String sed_tot_95er, String silt_clay_lab_95er, String sand_lab_95er, String sand_d50_lab_95er, String silt_clay_tot_95er, String sand_tot_95er, String sand_d50_tot_95er) {
 		this.sample_id = sample_id; 
 		this.station_name = station_name;
 		this.station_num = station_num;  
@@ -134,6 +138,7 @@ public class QWDownload {
 		this.grain_size_laboratory = grain_size_laboratory; 
 		this.lab_notes = lab_notes; 
 		this.lab_method = lab_method;    
+		this.sed_conc_xs = sed_conc_xs;
 		this.silt_clay_conc_xs = silt_clay_conc_xs;    
 		this.sand_conc_xs = sand_conc_xs;
 		this.sand_d16_xs = sand_d16_xs;  
@@ -155,11 +160,13 @@ public class QWDownload {
 		this.sand_pct_lt_707_xs = sand_pct_lt_707_xs;  
 		this.sand_pct_lt_841_xs = sand_pct_lt_841_xs;  
 		this.sand_pct_lt_1000_xs = sand_pct_lt_1000_xs;
+		this.sediment_mass = sediment_mass; 
 		this.sample_mass = sample_mass;  
 		this.mass_le_63 = mass_le_63;    
 		this.mass_gt_63 = mass_gt_63;    
 		this.conc_le_63 = conc_le_63;    
-		this.conc_gt_63 = conc_gt_63;    
+		this.conc_gt_63 = conc_gt_63;  
+		this.sed_conc_lab = sed_conc_lab;
 		this.silt_clay_conc_lab = silt_clay_conc_lab;  
 		this.sand_conc_lab = sand_conc_lab;   
 		this.sand_d16_lab = sand_d16_lab;
@@ -180,7 +187,8 @@ public class QWDownload {
 		this.sand_pct_lt_595_lab = sand_pct_lt_595_lab;
 		this.sand_pct_lt_707_lab = sand_pct_lt_707_lab;
 		this.sand_pct_lt_841_lab = sand_pct_lt_841_lab;
-		this.sand_pct_lt_1000_lab = sand_pct_lt_1000_lab;   
+		this.sand_pct_lt_1000_lab = sand_pct_lt_1000_lab;
+		this.sed_tot_95er = sed_tot_95er;
 		this.silt_clay_field_95er = silt_clay_field_95er;   
 		this.sand_field_95er = sand_field_95er;   
 		this.sand_d50_field_95er = sand_d50_field_95er;
@@ -191,6 +199,38 @@ public class QWDownload {
 		this.silt_clay_tot_95er = silt_clay_tot_95er;  
 		this.sand_tot_95er = sand_tot_95er;   
 		this.sand_d50_tot_95er = sand_d50_tot_95er;
+	}
+
+	public String getSed_conc_xs() {
+		return sed_conc_xs;
+	}
+
+	public void setSed_conc_xs(String sed_conc_xs) {
+		this.sed_conc_xs = sed_conc_xs;
+	}
+
+	public String getSediment_mass() {
+		return sediment_mass;
+	}
+
+	public void setSediment_mass(String sediment_mass) {
+		this.sediment_mass = sediment_mass;
+	}
+
+	public String getSed_conc_lab() {
+		return sed_conc_lab;
+	}
+
+	public void setSed_conc_lab(String sed_conc_lab) {
+		this.sed_conc_lab = sed_conc_lab;
+	}
+
+	public String getSed_tot_95er() {
+		return sed_tot_95er;
+	}
+
+	public void setSed_tot_95er(String sed_tot_95er) {
+		this.sed_tot_95er = sed_tot_95er;
 	}
 
 	public String getSample_id() {

@@ -3,7 +3,6 @@ package gov.usgs.cida.gcmrcservices.mb.endpoint;
 import gov.usgs.cida.gcmrcservices.mb.dao.LookupDAO;
 import gov.usgs.cida.gcmrcservices.mb.endpoint.response.SuccessEnvelope;
 import gov.usgs.cida.gcmrcservices.mb.endpoint.response.GCMRCResponse;
-import gov.usgs.cida.gcmrcservices.mb.model.AncillaryData;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,7 +27,7 @@ public class LookupEndpoint {
 	@Produces("application/javascript")
 	public GCMRCResponse getAncilliaryData() {
 		GCMRCResponse result = null;
-		List<AncillaryData> data = new ArrayList<AncillaryData>();
+		List<Object> data = new ArrayList<Object>();
 		
 		try {
 			data = new LookupDAO().getAncilliaryData();

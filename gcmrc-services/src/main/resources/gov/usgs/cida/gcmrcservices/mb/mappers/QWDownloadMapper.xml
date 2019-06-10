@@ -38,7 +38,8 @@
 		<result property="conc_laboratory" column="conc_laboratory"/>
 		<result property="grain_size_laboratory" column="grain_size_laboratory"/>
 		<result property="lab_notes" column="lab_notes"/>     
-		<result property="lab_method" column="lab_method"/>   
+		<result property="lab_method" column="lab_method"/>
+		<result property="sed_conc_xs" column="sed_conc_xs"/>
 		<result property="silt_clay_conc_xs" column="silt_clay_conc_xs"/> 
 		<result property="sand_conc_xs" column="sand_conc_xs"/>      
 		<result property="sand_d16_xs" column="sand_d16_xs"/> 
@@ -61,10 +62,12 @@
 		<result property="sand_pct_lt_841_xs" column="sand_pct_lt_841_xs"/>      
 		<result property="sand_pct_lt_1000_xs" column="sand_pct_lt_1000_xs"/>    
 		<result property="sample_mass" column="sample_mass"/> 
+		<result property="sediment_mass" column="sediment_mass"/> 
 		<result property="mass_le_63" column="mass_le_63"/>   
 		<result property="mass_gt_63" column="mass_gt_63"/>   
 		<result property="conc_le_63" column="conc_le_63"/>   
-		<result property="conc_gt_63" column="conc_gt_63"/>   
+		<result property="conc_gt_63" column="conc_gt_63"/>
+		<result property="sed_conc_lab" column="sed_conc_lab"/>
 		<result property="silt_clay_conc_lab" column="silt_clay_conc_lab"/>      
 		<result property="sand_conc_lab" column="sand_conc_lab"/>    
 		<result property="sand_d16_lab" column="sand_d16_lab"/>      
@@ -96,6 +99,7 @@
 		<result property="silt_clay_tot_95er" column="silt_clay_tot_95er"/>      
 		<result property="sand_tot_95er" column="sand_tot_95er"/>    
 		<result property="sand_d50_tot_95er" column="sand_d50_tot_95er"/> 
+		<result property="sed_tot_95er" column="sed_tot_95er"/> 
 	</resultMap>
 		
 	<sql id="columns">
@@ -132,6 +136,7 @@
 		grain_size_laboratory,
 		lab_notes,
 		lab_method,
+		sed_conc_xs,
 		silt_clay_conc_xs,
 		sand_conc_xs,
 		sand_d16_xs,
@@ -154,10 +159,12 @@
 		sand_pct_lt_841_xs,
 		sand_pct_lt_1000_xs,
 		sample_mass,
+		sediment_mass,
 		mass_le_63,
 		mass_gt_63,
 		conc_le_63,
 		conc_gt_63,
+		sed_conc_lab,
 		silt_clay_conc_lab,
 		sand_conc_lab,
 		sand_d16_lab,
@@ -188,7 +195,8 @@
 		sand_d50_lab_95er,
 		silt_clay_tot_95er,
 		sand_tot_95er,
-		sand_d50_tot_95er
+		sand_d50_tot_95er,
+		sed_tot_95er
 	</sql>
 	<select id="getQWDownloadResult" parameterType="map" resultMap="qwDownloadResult">
 		SELECT
@@ -230,9 +238,11 @@
 		r.spec_cond,
 		r.air_temp,
 		r.water_temp,
+		r.sed_conc_lab,
 		r.silt_clay_conc_lab,
 		r.sand_conc_lab,
 		r.sample_mass,
+		r.sediment_mass,
 		r.mass_le_63,
 		r.mass_gt_63,
 		r.conc_le_63,
@@ -257,6 +267,7 @@
 		r.sand_pct_lt_707_lab,
 		r.sand_pct_lt_841_lab,
 		r.sand_pct_lt_1000_lab,
+		r.sed_conc_xs,
 		r.silt_clay_conc_xs,
 		r.sand_conc_xs,
 		r.sand_d16_xs,
@@ -287,7 +298,8 @@
 		rs.sand_d50_lab_95er,
 		rs.silt_clay_tot_95er,
 		rs.sand_tot_95er,
-		rs.sand_d50_tot_95er
+		rs.sand_d50_tot_95er,
+		rs.sed_tot_95er
 		from (select sample_id, group_id, suspsed_value from result_star)
 		pivot
 			(avg (suspsed_value)
@@ -295,9 +307,11 @@
 				110 as spec_cond,
 				112 as air_temp,
 				113 as water_temp,
+				119 as sed_conc_lab,
 				63 as silt_clay_conc_lab,
 				64 as sand_conc_lab,
 				84 as sample_mass,
+				120 as sediment_mass,
 				85 as mass_le_63,
 				86 as mass_gt_63,
 				87 as conc_le_63,
@@ -322,6 +336,7 @@
 				81 as sand_pct_lt_707_lab,
 				82 as sand_pct_lt_841_lab,
 				83 as sand_pct_lt_1000_lab,
+				121 as sed_conc_xs,
 				89 as silt_clay_conc_xs,
 				90 as sand_conc_xs,
 				91 as sand_d16_xs,
@@ -426,7 +441,13 @@
 								when r.group_id = 92 then r.total_95conf
 								else null
 							end)
-							sand_d50_tot_95er
+							sand_d50_tot_95er,
+						max (
+							case
+								when r.group_id = 121 then r.total_95conf
+								else null
+							end)
+							sed_tot_95er
 					from result_star r
 						group by r.sample_id) rs
 						on rs.sample_id = s.sample_id

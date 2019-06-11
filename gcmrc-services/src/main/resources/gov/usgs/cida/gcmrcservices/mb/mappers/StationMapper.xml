@@ -342,7 +342,11 @@
 		from (select bs.group_id,
 			to_char (earliest_dt, 'YYYY-MM-DD') start_dt,
 			to_char (latest_dt, 'YYYY-MM-DD') end_dt,
-			nvl (s.nwis_site_no, s.short_name) as site_name,
+			case 
+				when s.nwis_site_no is null 
+				then s.short_name 
+				else s.nwis_site_no 
+			end site_name,
 			g.name_display display_name,
 			g.name group_name,
 			g.units_name units,

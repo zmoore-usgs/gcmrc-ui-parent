@@ -103,7 +103,7 @@ public class BedSedimentSpec extends DataSpec {
 		result.append("    ) VALUE_TABLE ");
 		result.append("    INNER JOIN (  SELECT");
 		result.append("        BM.BED_MEAS_DT,");
-		result.append("        NVL(S.NWIS_SITE_NO, S.SHORT_NAME) AS SITE_NAME,");
+		result.append("        coalesce(S.NWIS_SITE_NO, S.SHORT_NAME) AS SITE_NAME,");
 		result.append("        BM.BED_VALUE AS SAMPLE_MASS,");
 		result.append("        BM.SAMPLE_SET");
 		result.append("        FROM BED_MATERIAL BM, SITE_STAR S, GROUP_NAME G");

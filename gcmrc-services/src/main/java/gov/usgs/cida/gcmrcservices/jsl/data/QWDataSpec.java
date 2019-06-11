@@ -32,7 +32,7 @@ public class QWDataSpec extends DataSpec {
 			result = new ColumnMapping[] {
 				new ColumnMapping(C_SAMPLE_ID, S_SAMPLE_ID),
 				new ColumnMapping(ParameterSpec.C_TSM_DT, ParameterSpec.S_TSM_DT, ASCENDING_ORDER, ParameterSpec.S_TSM_DT, null, null, null, "CASE WHEN USE_LAGGED = 'true' THEN TO_CHAR(" + C_LAGGED_SAMPLE_START_DT + ", 'YYYY-MM-DD\"T\"HH24:MI:SS') ELSE TO_CHAR(" + C_SAMPLE_START_DT + ", 'YYYY-MM-DD\"T\"HH24:MI:SS') END", null, null),
-				new ColumnMapping(ColumnMetadata.createColumnName(this.stationName, this.parameterCode), S_RESULT_VA, ASCENDING_ORDER, S_RESULT_VA, null, null, null, "CASE WHEN TOTAL_95CONF IS NOT NULL THEN (CASE WHEN ERRORBAR_LOWER_VA < 0 THEN 0 ELSE ERRORBAR_LOWER_VA END) || ';' || RESULT_VA || ';' || ERRORBAR_UPPER_VA ELSE TO_CHAR(RESULT_VA) END", null, null),
+				new ColumnMapping(ColumnMetadata.createColumnName(this.stationName, this.parameterCode), S_RESULT_VA, ASCENDING_ORDER, S_RESULT_VA, null, null, null, "CASE WHEN TOTAL_95CONF IS NOT NULL THEN (CASE WHEN ERRORBAR_LOWER_VA < 0 THEN 0 ELSE ERRORBAR_LOWER_VA END) || ';' || RESULT_VA || ';' || ERRORBAR_UPPER_VA ELSE RESULT_VA::character END", null, null),
 				new ColumnMapping(C_SITE_NAME, S_SITE_NAME),
 				new ColumnMapping(C_SAMPLE_METHOD, S_SAMPLE_METHOD),
 				new ColumnMapping(C_GROUP_NAME, S_GROUP_NAME)
@@ -63,9 +63,9 @@ public class QWDataSpec extends DataSpec {
 
 		result.append("(");
 		result.append("  SELECT QWS.SAMPLE_ID,");
-		result.append("  NVL(S.nwis_site_no, S.short_name) site_name,");
+		result.append("  coalesce(S.nwis_site_no, S.short_name) site_name,");
 		result.append("  QWS.AVERAGE_DATE AS SAMP_START_DT,");
-		result.append("  QWS.AVERAGE_DATE + NUMTODSINTERVAL(SS.TIME_LAG_SECONDS, 'second') AS LAGGED_SAMP_START_DT,");
+		result.append("  QWS.AVERAGE_DATE + format('%s %s',SS.TIME_LAG_SECONDS,'seconds')::interval AS LAGGED_SAMP_START_DT,");
 		result.append("  'true' AS USE_LAGGED,");
 		result.append("  QWR.SUSPSED_VALUE RESULT_VA,");
 		result.append("  CASE");

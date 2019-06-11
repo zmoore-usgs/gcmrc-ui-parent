@@ -1,6 +1,8 @@
 package gov.usgs.cida.gcmrcservices.jsl.data;
 
 import gov.usgs.webservices.jdbc.spec.GCMRCSpec;
+import gov.usgs.webservices.jdbc.spec.Spec;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -8,7 +10,7 @@ import org.slf4j.LoggerFactory;
  *
  * @author dmsibley
  */
-public abstract class DataSpec extends GCMRCSpec {
+public abstract class DataSpec extends Spec {
 	private static final long serialVersionUID = 1L;
 	@SuppressWarnings("unused")
 	private static final Logger log = LoggerFactory.getLogger(DataSpec.class);

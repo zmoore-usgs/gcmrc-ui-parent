@@ -32,7 +32,7 @@ public class DischargeErrorSpec extends DataSpec {
 		if (null != this.stationName && null != this.parameterCode) {
 			result = new ColumnMapping[] {
 				new ColumnMapping(ParameterSpec.C_TSM_DT, ParameterSpec.S_TSM_DT, ASCENDING_ORDER, ParameterSpec.S_TSM_DT, null, null, null, "CASE WHEN USE_LAGGED = 'true' THEN TO_CHAR(" + C_LAGGED_SAMPLE_START_DT + ", 'YYYY-MM-DD\"T\"HH24:MI:SS') ELSE TO_CHAR(" + C_SAMPLE_START_DT + ", 'YYYY-MM-DD\"T\"HH24:MI:SS') END", null, null),
-				new ColumnMapping(ColumnMetadata.createColumnName(this.stationName, this.parameterCode), C_FINAL_VALUE_NAME, ASCENDING_ORDER, C_FINAL_VALUE_NAME, null, null, null, "CASE WHEN ERROR_PERCENT IS NOT NULL THEN (CASE WHEN ERRORBAR_LOWER_VA < 0 THEN 0 ELSE ERRORBAR_LOWER_VA END) || ';' || RESULT_VA || ';' || ERRORBAR_UPPER_VA ELSE TO_CHAR(RESULT_VA) END", null, null),
+				new ColumnMapping(ColumnMetadata.createColumnName(this.stationName, this.parameterCode), C_FINAL_VALUE_NAME, ASCENDING_ORDER, C_FINAL_VALUE_NAME, null, null, null, "CASE WHEN ERROR_PERCENT IS NOT NULL THEN (CASE WHEN ERRORBAR_LOWER_VA < 0 THEN 0 ELSE ERRORBAR_LOWER_VA END) || ';' || RESULT_VA || ';' || ERRORBAR_UPPER_VA ELSE RESULT_VA::character END", null, null),
 				new ColumnMapping(C_SITE_NAME, S_SITE_NAME),
 				new ColumnMapping(C_GROUP_NAME, S_GROUP_NAME),
 				new ColumnMapping(C_METHOD_NAME, S_METHOD_NAME),
@@ -68,7 +68,7 @@ public class DischargeErrorSpec extends DataSpec {
 		result.append("  SELECT");
 		result.append("  NVL(S.nwis_site_no, S.short_name) site_name,");
 		result.append("  DED.AVERAGE_MEASUREMENT_DATE AS SAMP_START_DT,");
-		result.append("  DED.AVERAGE_MEASUREMENT_DATE + NUMTODSINTERVAL(SS.TIME_LAG_SECONDS, 'second') AS LAGGED_SAMP_START_DT,");
+		result.append("  DED.AVERAGE_MEASUREMENT_DATE + format('%s %s',SS.TIME_LAG_SECONDS,'seconds')::interval AS LAGGED_SAMP_START_DT,");
 		result.append("  'false' AS USE_LAGGED,"); //Hack? I don't know why the query is generated wanting these columns
 		result.append("  DED.RAW_VALUE RAW_VALUE,");
 		result.append("  DED.FINAL_VALUE RESULT_VA,");

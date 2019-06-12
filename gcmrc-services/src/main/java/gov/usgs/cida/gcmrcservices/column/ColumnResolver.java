@@ -1,7 +1,6 @@
 package gov.usgs.cida.gcmrcservices.column;
 
 import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -16,7 +15,6 @@ import gov.usgs.cida.gcmrcservices.jsl.data.ParameterSpec;
 import gov.usgs.cida.gcmrcservices.jsl.data.QWDataSpec;
 import gov.usgs.cida.gcmrcservices.jsl.data.SpecOptions;
 import gov.usgs.cida.nude.column.Column;
-import gov.usgs.cida.nude.column.ColumnGrouping;
 import gov.usgs.cida.nude.column.SimpleColumn;
 import gov.usgs.cida.nude.out.Closers;
 import gov.usgs.cida.nude.provider.sql.ParameterizedString;
@@ -104,7 +102,6 @@ public class ColumnResolver {
 	public ColumnMetadata resolveColumn(String uncleanName) {
 		ColumnMetadata result = null;
 		String cleanName = stripColName(uncleanName);
-		Map<String, ColumnMetadata> inCols = columns;
 		if (null != cleanName) {
 			result = columns.get(cleanName);
 		}

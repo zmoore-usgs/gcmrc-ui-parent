@@ -1,6 +1,5 @@
 package gov.usgs.cida.gcmrcservices.jsl.data;
 
-import gov.usgs.webservices.jdbc.spec.GCMRCSpec;
 import gov.usgs.webservices.jdbc.spec.Spec;
 
 import org.slf4j.Logger;

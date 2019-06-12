@@ -16,7 +16,7 @@
 		<result property="downstreamDischargeStation" column="DISCHARGE_SITE_DOWN"/>
 		<result property="downstreamDischargeName" column="DISCHARGE_DISPLAY_NAME_DOWN"/>
 		<result property="network" column="NETWORK_NAME"/>
-		<result property="displayOrder" column="DISPLAY_ORDER"/>
+		<result property="displayOrder" column="DISPLAY_ORDER" javaType="String"/>
 		<result property="endStaticRec" column="END_STATIC_REC"/>
 		<result property="newestSuspSed" column="NEWEST_SUSPSED"/>
 		<result property="majorTribRiver" column="MAJOR_TRIB_RIVER"/>

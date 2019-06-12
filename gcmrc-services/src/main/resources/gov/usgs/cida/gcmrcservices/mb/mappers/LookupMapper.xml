@@ -6,8 +6,8 @@
 <mapper namespace="gov.usgs.cida.gcmrcservices.mb.mappers.LookupMapper">
 	
 	<resultMap id="ancillaryDataResult" type="map">
-		<result property="groupId" column="GROUP_ID"/>
-		<result property="ancillaryGroupId" column="ANCILLARY_GROUP_ID"/>
+		<result property="groupId" column="GROUP_ID" javaType="String"/>
+		<result property="ancillaryGroupId" column="ANCILLARY_GROUP_ID" javaType="String"/>
 		<result property="ancillaryName" column="ANCILLARY_NAME"/>
 		<result property="ancillaryColumn" column="ANCILLARY_SERVICE_COLUMN"/>
 	</resultMap>

@@ -6,30 +6,30 @@
 <mapper namespace="gov.usgs.cida.gcmrcservices.mb.mappers.StationMapper">
 	
 	<resultMap id="siteResult" type="map">
-		<result property="siteId" column="site_id"/>
-		<result property="siteName" column="site_name"/>
-		<result property="displayName" column="display_name"/>
-		<result property="lat" column="lat"/>
-		<result property="lon" column="lon"/>
-		<result property="network" column="network"/>
-		<result property="active" column="active"/>
-		<result property="displayOrder" column="display_order"/>
+		<result property="siteId"  column="site_id"/>
+		<result property="siteName"  column="site_name"/>
+		<result property="displayName"  column="display_name"/>
+		<result property="lat"  column="lat" javaType="String"/>
+		<result property="lon"  column="lon" javaType="String"/>
+		<result property="network"  column="network"/>
+		<result property="active"  column="active"/>
+		<result property="displayOrder"  column="display_order" javaType="String"/>
 	</resultMap>
 	
 	<resultMap id="siteQWResult" type="map">
-		<result property="groupId" column="group_id"/>
-		<result property="beginPosition" column="start_dt"/>
-		<result property="endPosition" column="end_dt"/>
-		<result property="site" column="site_name"/>
-		<result property="sampleMethod" column="SAMPLE_METHOD"/>
-		<result property="usePumpColoring" column="use_pump_coloring"/>
-		<result property="displayName" column="display_name"/>
-		<result property="groupName" column="group_name"/>
-		<result property="units" column="units"/>
-		<result property="unitsShort" column="units_short"/>
-		<result property="decimalPlaces" column="decimal_places"/>
-		<result property="displayOrder" column="display_order"/>
-		<result property="isVisible" column="is_visible"/>
+		<result property="groupId"  column="group_id" javaType="String"/>
+		<result property="beginPosition"  column="start_dt"/>
+		<result property="endPosition"  column="end_dt"/>
+		<result property="site"  column="site_name"/>
+		<result property="sampleMethod"  column="sample_method"/>
+		<result property="usePumpColoring"  column="use_pump_coloring"/>
+		<result property="displayName"  column="display_name"/>
+		<result property="groupName"  column="group_name"/>
+		<result property="units"  column="units"/>
+		<result property="unitsShort"  column="units_short"/>
+		<result property="decimalPlaces"  column="decimal_places" javaType="String"/>
+		<result property="displayOrder"  column="display_order" javaType="String"/>
+		<result property="isVisible"  column="is_visible"/>
 	</resultMap>
 	
 	<resultMap id="sitePubsResult" type="map">
@@ -40,45 +40,45 @@
 	</resultMap>
 	
 	<resultMap id="siteCreditsResult" type="map">
-		<result property="nwisSite" column="site_no"/>
-		<result property="shortName" column="short_nm"/>
-		<result property="orgCode" column="org_cd"/>
-		<result property="displayOrder" column="display_order"/>
+		<result property="nwisSite"  column="site_no"/>
+		<result property="shortName"  column="short_nm"/>
+		<result property="orgCode"  column="org_cd"/>
+		<result property="displayOrder"  column="display_order"/>
 	</resultMap>
 	
 	<resultMap id="siteParamsResult" type="map">
-		<result property="groupId" column="group_id"/>
-		<result property="groupName" column="group_name"/>
-		<result property="beginPosition" column="start_dt"/>
-		<result property="endPosition" column="end_dt"/>
-		<result property="site" column="site_name"/>
-		<result property="siteDisplayName" column="site_display_name"/>
-		<result property="displayOrder" column="display_order"/>
-		<result property="displayName" column="display_name"/>
-		<result property="isVisible" column="is_visible"/>
-		<result property="isDownloadable" column="is_downloadable"/>
-		<result property="units" column="units"/>
-		<result property="unitsShort" column="units_short"/>
-		<result property="decimalPlaces" column="decimal_places"/>
-		<result property="ppq" column="description"/>
+		<result property="groupId"  column="group_id" javaType="String"/>
+		<result property="groupName"  column="group_name"/>
+		<result property="beginPosition"  column="start_dt"/>
+		<result property="endPosition"  column="end_dt"/>
+		<result property="site"  column="site_name"/>
+		<result property="siteDisplayName"  column="site_display_name"/>
+		<result property="displayOrder"  column="display_order" javaType="String"/>
+		<result property="displayName"  column="display_name"/>
+		<result property="isVisible"  column="is_visible"/>
+		<result property="isDownloadable"  column="is_downloadable"/>
+		<result property="units"  column="units"/>
+		<result property="unitsShort"  column="units_short"/>
+		<result property="decimalPlaces"  column="decimal_places" javaType="String"/>
+		<result property="ppq"  column="description"/>
 	</resultMap>
 	
 	<resultMap id="siteBsResult" type="map">
-		<result property="groupId" column="group_id"/>
+		<result property="groupId"  column="group_id" javaType="String"/>
 		<result property="groupName" column="group_name"/>
-		<result property="beginPosition" column="start_dt"/>
-		<result property="endPosition" column="end_dt"/>
+		<result property="beginPosition"  column="start_dt"/>
+		<result property="endPosition"  column="end_dt"/>
 		<result property="site" column="site_name"/>
-		<result property="displayOrder" column="display_order"/>
+		<result property="displayOrder"  column="display_order" javaType="String"/>
 		<result property="displayName" column="display_name"/>
 		<result property="isVisible" column="is_visible"/>
 		<result property="units" column="units"/>
 		<result property="unitsShort" column="units_short"/>
-		<result property="decimalPlaces" column="decimal_places"/>
+		<result property="decimalPlaces"  column="decimal_places" javaType="String"/>
 	</resultMap>
 	
 	<resultMap id="siteDischargeErrorResult" type="map">
-		<result property="groupId" column="group_id"/>
+		<result property="groupId"  column="group_id" javaType="String"/>
 		<result property="site" column="site_name"/>
 		<result property="sampleMethod" column="sample_method"/>
 		<result property="usePumpColoring" column="use_pump_coloring"/>
@@ -86,8 +86,8 @@
 		<result property="groupName" column="group_name"/>
 		<result property="units" column="units"/>
 		<result property="unitsShort" column="units_short"/>
-		<result property="decimalPlaces" column="decimal_places"/>
-		<result property="displayOrder" column="display_order"/>
+		<result property="decimalPlaces" column="decimal_places" javaType="String"/>
+		<result property="displayOrder" column="display_order" javaType="String"/>
 		<result property="isVisible" column="is_visible"/>
 	</resultMap>
 	

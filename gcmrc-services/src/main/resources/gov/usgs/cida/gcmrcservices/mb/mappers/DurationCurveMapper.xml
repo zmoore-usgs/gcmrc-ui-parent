@@ -25,7 +25,7 @@
 	</resultMap>
         
         <sql id="withConstants">
-            CONST (ONE_DAY_OF_MINUTES, DATA_GAP_MARKER, MAX_GAP_MINUTES, MAX_INTERPOLATION_DAYS, MIN_LOG_BIN_VALUE, INPUT_START_DATE, INPUT_END_DATE, SITE_ID, GROUP_ID) AS
+            const (one_hour_of_minutes, one_day_of_minutes, data_gap_marker, max_gap_minutes, max_interpolation_days, min_log_bin_value, input_start_date, input_end_date, site_id, group_id) as
 				(
 				   <!-- CONSTANTS
 
@@ -44,35 +44,35 @@
 					ASSUMPTION:  THE DB CONTAINS NO DATA WITH -999 VALUES THAT ARE NOT CONSECUTIVE.
 
 					-->
-					 SELECT
-					   60*24 ONE_DAY_OF_MINUTES,
-					   -999 DATA_GAP_MARKER, <!-- Known value in the db used to mark the start and end of a timespan for which we do not have data. -->
-					   60 MAX_GAP_MINUTES, <!-- Max single invalid timespan that interpolation is allowed through. -->
+					 select
+					   60 one_hour_of_minutes,
+					   60*24 one_day_of_minutes,
+					   60 one_hour_of_minutes,
+					   -999 data_gap_marker, <!-- Known value in the db used to mark the start and end of a timespan for which we do not have data. -->
+					   60 max_gap_minutes, <!-- Max single invalid timespan that interpolation is allowed through. -->
 					   <!-- Max days for which interpolation is allowed between two measured values. -->
-					   60 MAX_INTERPOLATION_DAYS,
-					   0.1 MIN_LOG_BIN_VALUE, <!-- Min value to use for bins.  Log bins don't allow zeros and low values are basically noise -->
-                                           to_timestamp(#{startTime, jdbcType=CHAR}, 'YYYY-MM-DD"T"HH24:MI:SS') INPUT_START_DATE, <!-- Makes for easier debugging when you can just substitute the date in one place -->
-                                           to_timestamp(#{endTime, jdbcType=CHAR}, 'YYYY-MM-DD"T"HH24:MI:SS') INPUT_END_DATE,
-					 (SELECT 
-                                            SITE_ID
-                                            FROM 
-                                              (SELECT 
-                                                  SITE_ID,
-                                                  CASE WHEN NWIS_SITE_NO IS NULL
-                                                       THEN SHORT_NAME
-                                                       ELSE NWIS_SITE_NO
-                                                  END AS SITE_NAME
-                                                  FROM 
-                                                    SITE_STAR)
-                                               WHERE 
-                                                  SITE_NAME = #{siteName, jdbcType=CHAR}) SITE_ID,
-                                            #{groupId, jdbcType=NUMERIC} GROUP_ID
-                                            FROM DUAL
-            )
+					   60 max_interpolation_days,
+					   0.1 min_log_bin_value, <!-- Min value to use for bins.  Log bins don't allow zeros and low values are basically noise -->
+					   to_timestamp(#{starttime, jdbctype=char}, 'YYYY-MM-DD"T"HH24:MI:SS') input_start_date, <!-- Makes for easier debugging when you can just substitute the date in one place -->
+					   to_timestamp(#{endtime, jdbctype=char}, 'YYYY-MM-DD"T"HH24:MI:SS') input_end_date,
+					 (select 
+						site_id
+						from 
+							(select 
+								site_id,
+								case when nwis_site_no is null
+								then short_name
+								else nwis_site_no
+								end as site_name
+								from 
+								site_star) a
+						where 
+							site_name = #{sitename, jdbctype=char}) site_id,
+						#{groupid, jdbctype=numeric}::numeric group_id)
         </sql>
         <sql id="withRawMtiData">
             <include refid="withConstants"/>,
-            RAW_MTI_DATA (GROUP_ID, START_VALUE, END_VALUE, START_TIME, END_TIME, GAP_MINUTES) AS (
+            raw_mti_data (group_id, start_value, end_value, start_time, end_time, gap_minutes) as (
 
 					 <!-- Create a coarsely filtered set of data where each row is a Measured Time Interval (MTI).
 					   The rows returned from this query will span slightly beyond the fromTime and toTime (MAX_INTERPOLATION_DAYS
@@ -95,7 +95,8 @@
 						MTI3:  Will have a null End_Time and End_Value
 					 -->
 
-					 SELECT
+					 select
+
 					   <!-- Bridge invalid data gaps w/o consideration for the gap duration or the time b/t good values.
 					   We've already filtered out the blocks that begin AND end w/ -999, so we are left
 					   with consecutive rows that look like this:
@@ -111,51 +112,51 @@
 					   _____________________
 					   The 2nd row is unmodified here (its removed in the outer select).
 					   -->
-					   GROUP_ID,
-                                           START_VALUE,
-					   CASE WHEN END_VALUE = (SELECT DATA_GAP_MARKER FROM CONST) THEN LEAD(END_VALUE) OVER (ORDER BY START_TIME) ELSE END_VALUE END as END_VALUE,
-					   START_TIME,
-					   CASE WHEN END_VALUE = (SELECT DATA_GAP_MARKER FROM CONST) THEN LEAD(END_TIME) OVER (ORDER BY START_TIME) ELSE END_TIME END AS END_TIME,
-					   GAP_MINUTES <!-- How many minutes in the gap (if any) in the following bin -->
-					 FROM (
-					   SELECT * FROM ( <!-- WHERE removes invalid data rows (start and end values = DATA_GAP_MARKER -->
-						 SELECT
+					   group_id,
+					   start_value,
+					   case when end_value = (select data_gap_marker from const) then lead(end_value) over (order by start_time) else end_value end as end_value,
+					   start_time,
+					   case when end_value = (select data_gap_marker from const) then lead(end_time) over (order by start_time) else end_time end as end_time,
+					   gap_minutes <!-- How many minutes in the gap (if any) in the following bin -->
+					 from (
+					   select * from ( <!-- WHERE removes invalid data rows (start and end values = DATA_GAP_MARKER -->
+						 select
 						   <!-- Record data gap durations into the row before the gap (gaps removed in outer query) -->
-						   GROUP_ID,
-                                                   START_VALUE,
-						   END_VALUE,
-						   START_TIME, <!-- Can we be sure there are no duplicate date entries for a site? Yes. -->
-						   END_TIME,
+						   group_id,
+						   start_value,
+						   end_value,
+						   start_time, <!-- Can we be sure there are no duplicate date entries for a site? Yes. -->
+						   end_time,
 						   <!-- If the row after this one is a data gap, record the duration of the gap in this row -->
-						   CASE
-							 WHEN LEAD(START_VALUE) OVER (ORDER BY START_TIME) = (SELECT DATA_GAP_MARKER FROM CONST) AND LEAD(END_VALUE) OVER (ORDER BY START_TIME) = (SELECT DATA_GAP_MARKER FROM CONST)
-							   THEN EXTRACT(DAY FROM ((LEAD(END_TIME) OVER (ORDER BY START_TIME) - START_TIME)*60*24))
-							 ELSE 0
-						   END AS GAP_MINUTES
-						 FROM (
-						   Select
+						   case
+							 when lead(start_value) over (order by start_time) = (select data_gap_marker from const) and lead(end_value) over (order by start_time) = (select data_gap_marker from const)
+							   then (extract(epoch from ((lead(end_time) over (order by start_time) - start_time)))/(select one_hour_of_minutes from const))::numeric
+							 else 0
+						   end as gap_minutes
+						 from (
+						   select
 							 <!-- Selects the measured values at the site, creating a start/end time/value for each row
-							 from the db rows, which just contain a single measurement at a single time.  Thus
+							 from the db rows, which just contain a single measurement at a single time.  thus
 							 one resulting row contains the start and end times and values of the two
 							 db rows that bound it.
 
-							 The coarse time filter keeps only rows in the specified range + the max interpolation time period. -->
-							 GROUP_ID,
-                                                         FINAL_VALUE AS START_VALUE,
-							 LEAD(FINAL_VALUE) OVER (ORDER BY MEASUREMENT_DATE) AS END_VALUE,
-							 MEASUREMENT_DATE AS START_TIME, <!-- Can we be sure there are no duplicate date entries for a site? Yes. -->
-							 LEAD(MEASUREMENT_DATE) OVER (ORDER BY MEASUREMENT_DATE) AS END_TIME
-						   From TIME_SERIES_STAR
-						   Where 
-                                                    <!-- Only this site and selected parameter -->
-                                                   (SITE_ID, GROUP_ID) IN (SELECT SITE_ID, GROUP_ID FROM CONST)
+							 the coarse time filter keeps only rows in the specified range + the max interpolation time period. -->
+							 group_id,
+							 final_value as start_value,
+							 lead(final_value) over (order by measurement_date) as end_value,
+							 measurement_date as start_time, <!-- Can we be sure there are no duplicate date entries for a site? Yes. -->
+							 lead(measurement_date) over (order by measurement_date) as end_time
+						   from time_series_star
+						   where 
+							<!-- Only this site and selected parameter -->
+							(site_id, group_id) in (select site_id, group_id from const)
 							 <!-- Filter the time window to the specified range + the max interpolation time period -->
-							 AND MEASUREMENT_DATE > ((SELECT INPUT_START_DATE FROM CONST) - (SELECT MAX_INTERPOLATION_DAYS FROM CONST))
-							 AND MEASUREMENT_DATE &lt; ((SELECT INPUT_END_DATE FROM CONST) + (SELECT MAX_INTERPOLATION_DAYS FROM CONST))
+							 and measurement_date > ((select input_start_date from const) - cast((select max_interpolation_days from const) || 'D' as interval))
+							 and measurement_date &lt; ((select input_end_date from const) + cast((select max_interpolation_days from const) || 'D' as interval))
 						 )
-					   ) WHERE
-						 NOT (START_VALUE = (SELECT DATA_GAP_MARKER FROM CONST) AND END_VALUE = (SELECT DATA_GAP_MARKER FROM CONST)) 
-					 )
+					   ) where
+						 not (start_value = (select data_gap_marker from const) and end_value = (select data_gap_marker from const)) 
+					 ) d
 				   )
         </sql>
         <sql id="withRawGapData">
@@ -167,7 +168,7 @@
                 site_id,
                 group_id,
                 greatest(measurement_date, (select input_start_date from const)) start_time,
-                case when nvl(lag(final_value) over (order by measurement_date), 0) != (SELECT DATA_GAP_MARKER FROM CONST) and final_value = (SELECT DATA_GAP_MARKER FROM CONST) then 'gap starts'
+                case when coalesce(lag(final_value) over (order by measurement_date), 0) != (SELECT DATA_GAP_MARKER FROM CONST) and final_value = (SELECT DATA_GAP_MARKER FROM CONST) then 'gap starts'
                      when lag(final_value) over (order by measurement_date) = (SELECT DATA_GAP_MARKER FROM CONST) and final_value != (SELECT DATA_GAP_MARKER FROM CONST) then 'gap ends'
                 end gap_status
                 from
@@ -209,8 +210,7 @@
         </sql>
         <sql id="withCleanMtiData">
             <include refid="withRawMtiData"/>,
-            CLEAN_MTI_DATA (GROUP_ID, START_VALUE, END_VALUE, MIN_VALUE, MAX_VALUE, START_TIME, END_TIME, DURATION_MINUTES, GAP_MINUTES, IS_START_INTERPOLATED, IS_END_INTERPOLATED) AS (
-
+            clean_mti_data (group_id, start_value, end_value, min_value, max_value, start_time, end_time, duration_minutes, gap_minutes, is_start_interpolated, is_end_interpolated) as (
 					 <!-- Further clean Measured Time Intervals (MTI) to remove interpolation ranges that are either too
 					   long or contain gaps that are too long.  Some other useful columns are added.
 
@@ -221,73 +221,73 @@
 					   they will be trimmed to exactly match the time range and their start or end
 					   values interpolated to the new start or end time.
 					 -->
-
-					 SELECT
-					   GROUP_ID,
-                                           START_VALUE, END_VALUE, 
-					   LEAST(START_VALUE, END_VALUE) AS MIN_VALUE,
-					   GREATEST(START_VALUE, END_VALUE) AS MAX_VALUE,
-					   START_TIME,
-					   END_TIME,
-					   EXTRACT(DAY FROM ((END_TIME - START_TIME)*60*24)) AS DURATION_MINUTES,
-					   GAP_MINUTES, IS_START_INTERPOLATED, IS_END_INTERPOLATED <!-- These are all for debugging -->
-					 FROM (
-					   SELECT
-                                                 GROUP_ID,
+					 select
+					   group_id,
+					   start_value, end_value, 
+					   least(start_value, end_value) as min_value,
+					   greatest(start_value, end_value) as max_value,
+					   start_time,
+					   end_time,
+					   (extract(epoch from ((end_time - start_time)))/(select one_hour_of_minutes from const))::numeric as duration_minutes,
+					   gap_minutes, is_start_interpolated, is_end_interpolated <!-- These are all for debugging -->
+					 from (
+					   select
+					   group_id,
 						 <!--
 						 Interpolation of the start value (applied to the single row which would have a start time b/f the user spec'ed start time.
 						 V1 = START_VALUE, V2 = END_VALUE, T1 = START_TIME, T2 = END_TIME, Ts = User Spec'ed fromTime.
 						 Vs = Interpolated value at Ts:
 						 Vs = V1 + (Tx - T1) * ((V2 - V1) / (T2 - T1))
 						 -->
-						 CASE
-						   WHEN START_TIME &lt; (SELECT INPUT_START_DATE FROM CONST) THEN
-						   START_VALUE + (EXTRACT(DAY FROM (((SELECT INPUT_START_DATE FROM CONST) - START_TIME) * (SELECT ONE_DAY_OF_MINUTES FROM CONST)))) * ((END_VALUE - START_VALUE)/(EXTRACT(DAY FROM ((END_TIME - START_TIME) * (SELECT ONE_DAY_OF_MINUTES FROM CONST)))))
-						   ELSE START_VALUE
-						 END AS START_VALUE,
+						case
+						when start_time &lt; (select input_start_date from const) 
+						then start_value + ((extract(epoch from ((( select input_start_date from const) - start_time)))/(select one_hour_of_minutes from const))::numeric) 
+							* ((end_value - start_value)/((extract(epoch from ((end_time - start_time)))/(select one_hour_of_minutes from const))::numeric))
+						else start_value
+						end as start_value,
 						 <!--
 						 Interpolation of the end value (applied to the single row which would have a end time after the user spec'ed end time.
 						 Same equation as above, but Ts is the user spec'ed toTime.
 						 -->
-						 CASE
-						   WHEN END_TIME > (SELECT INPUT_END_DATE FROM CONST) THEN
-						   START_VALUE + (EXTRACT(DAY FROM (((SELECT INPUT_END_DATE FROM CONST) - START_TIME) * (SELECT ONE_DAY_OF_MINUTES FROM CONST)))) * ((END_VALUE - START_VALUE)/(EXTRACT(DAY FROM ((END_TIME - START_TIME) * (SELECT ONE_DAY_OF_MINUTES FROM CONST)))))
-						   ELSE END_VALUE
-						 END AS END_VALUE,
+						 case
+						when end_time > (select input_end_date from const) then 
+						start_value + ((extract(epoch from (((select input_end_date from const) - start_time)))/(select one_hour_of_minutes from const))::numeric) * ((end_value - start_value)/((extract(epoch from ((end_time - start_time)))/(select one_hour_of_minutes from const))::numeric))
+						else end_value
+						end as end_value,
 						 <!-- Adjust start and end times to be the spec'ed from/to times if they fall outside the spec'ed range -->
-						 CASE WHEN START_TIME &lt; (SELECT INPUT_START_DATE FROM CONST) THEN (SELECT INPUT_START_DATE FROM CONST) ELSE START_TIME END AS START_TIME,
-						 CASE WHEN END_TIME > (SELECT INPUT_END_DATE FROM CONST) THEN (SELECT INPUT_END_DATE FROM CONST) ELSE END_TIME END AS END_TIME,
-						 GAP_MINUTES,
-						 CASE WHEN START_TIME &lt; (SELECT INPUT_START_DATE FROM CONST) THEN 1 ELSE 0 END AS IS_START_INTERPOLATED,
-						 CASE WHEN END_TIME > (SELECT INPUT_END_DATE FROM CONST) THEN 1 ELSE 0 END AS IS_END_INTERPOLATED
-					   FROM RAW_MTI_DATA
-					   WHERE
-						 START_VALUE != (SELECT DATA_GAP_MARKER FROM CONST) <!-- Already filtered out end value and double values - this is the only case left -->
-						 AND END_TIME > (SELECT INPUT_START_DATE FROM CONST)
-						 AND START_TIME &lt; (SELECT INPUT_END_DATE FROM CONST)
-						 AND NOT GAP_MINUTES > (SELECT MAX_GAP_MINUTES FROM CONST)
-						 AND NOT EXTRACT(DAY FROM (END_TIME - START_TIME)) > (SELECT MAX_INTERPOLATION_DAYS FROM CONST)
-					   Order by START_TIME <!-- Used for debugging -->
-					 ) Order by START_TIME <!-- Used for debugging -->
+						 case when start_time &lt; (select input_start_date from const) then (select input_start_date from const) else start_time end as start_time,
+						 case when end_time > (select input_end_date from const) then (select input_end_date from const) else end_time end as end_time,
+						 gap_minutes,
+						 case when start_time &lt; (select input_start_date from const) then 1 else 0 end as is_start_interpolated,
+						 case when end_time > (select input_end_date from const) then 1 else 0 end as is_end_interpolated
+					   from raw_mti_data
+					   where
+						 start_value != (select data_gap_marker from const) <!-- Already filtered out end value and double values - this is the only case left -->
+						 and end_time > (select input_start_date from const)
+						 and start_time &lt; (select input_end_date from const)
+						 and not gap_minutes > (select max_gap_minutes from const)
+						 and not extract(day from (end_time - start_time)) > (select max_interpolation_days from const)
+					   order by start_time <!-- Used for debugging -->
+					 ) e order by start_time <!-- Used for debugging -->
 				   )
         </sql>
         <sql id="withData">
             <include refid="withCleanMtiData"/>,
-            CONST_DATA (GROUP_ID, GAP_MINUTES, FIRST_MEASURE_DATE, LAST_MEASURE_DATE, OVERALL_DURATION_MINUTES, USER_DURATION_MINUTES, OVERALL_MIN_VALUE, OVERALL_MAX_VALUE, OVERALL_VALUE_RANGE, MEASUREMENT_COUNT) AS
+            const_data (group_id, gap_minutes, first_measure_date, last_measure_date, overall_duration_minutes, user_duration_minutes, overall_min_value, overall_max_value, overall_value_range, measurement_count) as
 					(
-					 SELECT
-					   GROUP_ID,
-                                           SUM(GAP_MINUTES) GAP_MINUTES,
-                                           MIN(START_TIME) as FIRST_MEASURE_DATE,
-					   MAX(END_TIME) as LAST_MEASURE_DATE,
-					   SUM(DURATION_MINUTES) as OVERALL_DURATION_MINUTES,
-					   EXTRACT(DAY FROM ((SELECT INPUT_END_DATE FROM CONST) - (SELECT INPUT_START_DATE FROM CONST))*60*24) as USER_DURATION_MINUTES,
-					   MIN(MIN_VALUE) AS OVERALL_MIN_VALUE,
-					   MAX(MAX_VALUE) AS OVERALL_MAX_VALUE,
-					   MAX(MAX_VALUE) - MIN(MIN_VALUE) AS OVERALL_VALUE_RANGE,
-					   COUNT(*) AS MEASUREMENT_COUNT
-					 From CLEAN_MTI_DATA
-                                            GROUP BY GROUP_ID
+					 select
+					   group_id,
+					   sum(gap_minutes) gap_minutes,
+					   min(start_time) as first_measure_date,
+					   max(end_time) as last_measure_date,
+					   sum(duration_minutes) as overall_duration_minutes,
+					   (extract(epoch from ((select input_end_date from const) - (select input_start_date from const)))/(select one_hour_of_minutes from const))::numeric as user_duration_minutes,
+					   min(min_value) as overall_min_value,
+					   max(max_value) as overall_max_value,
+					   max(max_value) - min(min_value) as overall_value_range,
+					   count(*) as measurement_count
+					 from clean_mti_data
+					group by group_id
             )
         </sql> 
         <sql id="withGapData">
@@ -305,10 +305,10 @@
                group_id,
                gap_start_time,
                gap_end_time,
-               (extract(DAY from (gap_end_time - gap_start_time)) * 24 * 60 * 60 +
+               ((extract(DAY from (gap_end_time - gap_start_time)) * 24 * 60 * 60 +
                extract(HOUR from (gap_end_time - gap_start_time)) * 60 * 60 +
                extract(MINUTE from (gap_end_time - gap_start_time)) * 60 +
-               extract(SECOND from (gap_end_time - gap_start_time)))/60 gap_minutes,
+               extract(SECOND from (gap_end_time - gap_start_time)))/60)::numeric gap_minutes,
                row_number() over (order by 
                   extract(DAY from (gap_end_time - gap_start_time)) * 24 * 60 * 60 +
                   extract(HOUR from (gap_end_time - gap_start_time)) * 60 * 60 +
@@ -321,77 +321,74 @@
            )
         </sql>
         <sql id="withIntBins">
-            INT_BINS (BIN_NUMBER) AS
+            int_bins (bin_number) as
 				   (
-					 SELECT level BIN_NUMBER   
-					 FROM DUAL   
-					 CONNECT BY level &lt;=#{binCount, jdbcType=NUMERIC}
+					 select generate_series(1,#{bincount, jdbctype=numeric}::numeric) bin_number
 				   )
         </sql>
         <sql id="withLinBins">
-            LIN_BINS (BIN_NUMBER, LOW_BOUND, HIGH_BOUND) AS (
+            lin_bins (bin_number, low_bound, high_bound) as (
 				   <!-- Linear spaced bins -->
-					 SELECT
-					   BIN_NUMBER,
-					   (SELECT ((OVERALL_VALUE_RANGE / #{binCount, jdbcType=NUMERIC}) * (BIN_NUMBER - 1)) + OVERALL_MIN_VALUE FROM CONST_DATA) AS LOW_BOUND,
-					   CASE
-					   WHEN BIN_NUMBER = #{binCount, jdbcType=NUMERIC} THEN (SELECT OVERALL_MAX_VALUE FROM CONST_DATA) <!-- For the last bin, use the actual high value to prevent rounding errors -->
-					   ELSE (SELECT ((OVERALL_VALUE_RANGE / #{binCount, jdbcType=NUMERIC}) * BIN_NUMBER) + OVERALL_MIN_VALUE FROM CONST_DATA) 
-					   END AS HIGH_BOUND
-					 FROM INT_BINS
-					 ORDER BY BIN_NUMBER
+					 select
+					   bin_number,
+					   (select ((overall_value_range / #{bincount, jdbctype=numeric}::numeric) * (bin_number - 1)) + overall_min_value from const_data) as low_bound,
+					   case
+					   when bin_number = #{bincount, jdbctype=numeric}::numeric then (select overall_max_value from const_data) <!-- For the last bin, use the actual high value to prevent rounding errors -->
+					   else (select ((overall_value_range / #{bincount, jdbctype=numeric}::numeric) * bin_number) + overall_min_value from const_data) 
+					   end as high_bound
+					 from int_bins
+					 order by bin_number
 				   )
         </sql> 
         <sql id="withLogBins">
-            LOG_BINS (BIN_NUMBER, LOW_BOUND, HIGH_BOUND) AS (
+            log_bins (bin_number, low_bound, high_bound) as (
 				   <!-- Log spaced bins
-					 Log bins may include a zero bin that goes from the lowest measured value to the min_log_bin value, since we
+					 log bins may include a zero bin that goes from the lowest measured value to the min_log_bin value, since we
 					 can't do log calcs on zero.  This only occurs when the lowest value is below the MIN_LOG_BIN_VALUE. -->
-					SELECT 
-						0 BIN_NUMBER, (SELECT OVERALL_MIN_VALUE FROM CONST_DATA) LOW_BOUND, (SELECT MIN_LOG_BIN_VALUE FROM CONST) HIGH_BOUND
-					FROM DUAL
-					WHERE (SELECT OVERALL_MIN_VALUE FROM CONST_DATA) &lt; (SELECT MIN_LOG_BIN_VALUE FROM CONST)
-					UNION ALL
-					SELECT
-						BIN_NUMBER,
-						CASE WHEN BIN_NUMBER = 1 THEN (SELECT GREATEST(OVERALL_MIN_VALUE, (SELECT MIN_LOG_BIN_VALUE FROM CONST)) FROM CONST_DATA) ELSE POWER(10, LOG_LOW_BOUND) END AS LOW_BOUND,
-						CASE WHEN BIN_NUMBER = #{binCount, jdbcType=NUMERIC} THEN (SELECT OVERALL_MAX_VALUE FROM CONST_DATA) ELSE POWER(10, LOG_HIGH_BOUND) END AS HIGH_BOUND
-					FROM (
-						SELECT
-							BIN_NUMBER,
-							(SELECT (((LOG(10, OVERALL_MAX_VALUE) - LOG(10, GREATEST(OVERALL_MIN_VALUE, (SELECT MIN_LOG_BIN_VALUE FROM CONST)))) / #{binCount, jdbcType=NUMERIC}) * (BIN_NUMBER - 1)) + LOG(10, GREATEST(OVERALL_MIN_VALUE, (SELECT MIN_LOG_BIN_VALUE FROM CONST))) FROM CONST_DATA) AS LOG_LOW_BOUND,
-							(SELECT (((LOG(10, OVERALL_MAX_VALUE) - LOG(10, GREATEST(OVERALL_MIN_VALUE, (SELECT MIN_LOG_BIN_VALUE FROM CONST)))) / #{binCount, jdbcType=NUMERIC}) * BIN_NUMBER) + LOG(10, GREATEST(OVERALL_MIN_VALUE, (SELECT MIN_LOG_BIN_VALUE FROM CONST))) FROM CONST_DATA) AS LOG_HIGH_BOUND
-						FROM INT_BINS
-						ORDER BY BIN_NUMBER
-					)
+					select 
+						0 bin_number, (select overall_min_value from const_data) low_bound, (select min_log_bin_value from const) high_bound
+					where (select overall_min_value from const_data) &lt; (select min_log_bin_value from const)
+					union all
+					select
+						bin_number,
+						case when bin_number = 1 then (select greatest(overall_min_value, (select min_log_bin_value from const)) from const_data) else power(10, log_low_bound) end as low_bound,
+						case when bin_number = #{bincount, jdbctype=numeric}::numeric then (select overall_max_value from const_data) else power(10, log_high_bound) end as high_bound
+					from (
+						select
+							bin_number,
+							(select (((log(10, overall_max_value::numeric) - log(10, greatest(overall_min_value, (select min_log_bin_value from const))::numeric)) / #{bincount, jdbctype=numeric}::numeric) * (bin_number - 1)) + log(10, greatest(overall_min_value, (select min_log_bin_value from const))::numeric) from const_data) as log_low_bound,
+							(select (((log(10, overall_max_value::numeric) - log(10, greatest(overall_min_value, (select min_log_bin_value from const))::numeric)) / #{bincount, jdbctype=numeric}::numeric) * bin_number) + log(10, greatest(overall_min_value, (select min_log_bin_value from const))::numeric) from const_data) as log_high_bound
+						from int_bins
+						order by bin_number
+					) f
 				)
         </sql>
 	<select id="getDurationCurve" parameterType="map" resultMap="durationCurveResult">	
-            WITH
+            with
             <include refid="withData"/>,
             <include refid="withIntBins"/>,
             <include refid="withLinBins"/>,
             <include refid="withLogBins"/> 
-				   SELECT 
-					 BIN_NUMBER,
-					 SUM(IN_BIN_MINUTES) OVER (ORDER BY BIN_NUMBER DESC ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW) /
-					   (SELECT OVERALL_DURATION_MINUTES FROM CONST_DATA) * 100 AS CUMULATIVE_BIN_PERC,
-					 CASE
-					   WHEN BIN_NUMBER = 1 THEN LOW_BOUND
-					   WHEN BIN_NUMBER = #{binCount, jdbcType=NUMERIC} THEN HIGH_BOUND
-					   ELSE (LOW_BOUND + HIGH_BOUND) / 2
-					 END AS BIN_VALUE,
-					 IN_BIN_MINUTES,
-					 SUM(IN_BIN_MINUTES) OVER (ORDER BY BIN_NUMBER DESC ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW) AS CUMULATIVE_IN_BIN_MINUTES,
-					 LOW_BOUND,
-					 HIGH_BOUND
-				   FROM (
-					 SELECT
-					   SUM(IN_BIN_MINUTES) AS IN_BIN_MINUTES,
-					   BIN_NUMBER,
-					   MAX(LOW_BOUND) AS LOW_BOUND,
-					   MAX(HIGH_BOUND) AS HIGH_BOUND
-					 FROM (
+				   select 
+					 bin_number,
+					 sum(in_bin_minutes) over (order by bin_number desc rows between unbounded preceding and current row) /
+					   (select overall_duration_minutes from const_data) * 100 as cumulative_bin_perc,
+					 case
+					   when bin_number = 1 then low_bound
+					   when bin_number = #{bincount, jdbctype=numeric}::numeric then high_bound
+					   else (low_bound + high_bound) / 2
+					 end as bin_value,
+					 in_bin_minutes,
+					 sum(in_bin_minutes) over (order by bin_number desc rows between unbounded preceding and current row) as cumulative_in_bin_minutes,
+					 low_bound,
+					 high_bound
+				   from (
+					 select
+					   sum(in_bin_minutes) as in_bin_minutes,
+					   bin_number,
+					   max(low_bound) as low_bound,
+					   max(high_bound) as high_bound
+					 from (
 
 				   <!-- POSSIBLE PERFORMANCE OPTIMIZATION:
 					 Rather than join all possible data-bin combinations and then use CASE to
@@ -401,8 +398,8 @@
 					 relation would be known.  The down side would that that multiple passes through
 					 the dataset would be required, so its not clear that it would be faster.
 				   -->
-					   SELECT
-						 CASE
+					   select
+						 case
 						   <!--
 							All these CASE statements deal w/ handling 4 possible cases for a Measured
 							Data Chunk (MTI).  A MTI block of known time and values and it occurs between
@@ -425,34 +422,34 @@
 							-->
 
 						   <!-- Case 1: Time in bin is related to the ratio of bin_range to data_range.  Time in bin = (bin_range / data_range) X MTI duration -->
-						   WHEN data.MIN_VALUE &lt; bin.LOW_BOUND AND data.MAX_VALUE > bin.HIGH_BOUND THEN ((bin.HIGH_BOUND - bin.LOW_BOUND) / (data.MAX_VALUE - data.MIN_VALUE)) * data.DURATION_MINUTES
+						   when data.min_value &lt; bin.low_bound and data.max_value > bin.high_bound then ((bin.high_bound - bin.low_bound) / (data.max_value - data.min_value)) * data.duration_minutes
 
 						   <!-- Case 2: Time in bin is related to the ratio of the data range withing the bin to the entire data_range. -->
-						   WHEN data.MIN_VALUE &lt; bin.LOW_BOUND AND data.MAX_VALUE &lt;= bin.HIGH_BOUND THEN ((data.MAX_VALUE - bin.LOW_BOUND) / (data.MAX_VALUE - data.MIN_VALUE)) * data.DURATION_MINUTES
+						   when data.min_value &lt; bin.low_bound and data.max_value &lt;= bin.high_bound then ((data.max_value - bin.low_bound) / (data.max_value - data.min_value)) * data.duration_minutes
 
 						   <!-- Case 3: similar to case 3, just calc from the upper bin bound -->
-						   WHEN data.MIN_VALUE &lt; bin.HIGH_BOUND AND data.MAX_VALUE > bin.HIGH_BOUND THEN ((bin.HIGH_BOUND - data.MIN_VALUE) / (data.MAX_VALUE - data.MIN_VALUE)) * data.DURATION_MINUTES
+						   when data.min_value &lt; bin.high_bound and data.max_value > bin.high_bound then ((bin.high_bound - data.min_value) / (data.max_value - data.min_value)) * data.duration_minutes
 
 						   <!-- Case 4:  The entire duration of the MTI is spend in the bin -->
-						   ELSE data.DURATION_MINUTES
-						 END AS IN_BIN_MINUTES,
-						 MIN_VALUE, MAX_VALUE, LOW_BOUND, HIGH_BOUND, DURATION_MINUTES,
-						 START_VALUE, END_VALUE, START_TIME, END_TIME, BIN_NUMBER, GAP_MINUTES
-					   FROM ${binType} bin INNER JOIN CLEAN_MTI_DATA data ON
-						 (data.MIN_VALUE &lt; bin.HIGH_BOUND AND data.MAX_VALUE > bin.LOW_BOUND) <!-- Std case where data values do not fall on bin boundaries -->
-						 OR (data.MIN_VALUE = data.MAX_VALUE AND data.MIN_VALUE = bin.LOW_BOUND) <!-- Single value case that falls on a bin bondaries (goes w/ the bin above that value) -->
-						 OR (data.MIN_VALUE = bin.HIGH_BOUND AND bin.BIN_NUMBER = #{binCount, jdbcType=NUMERIC}) <!-- Single values falling on a bin boundary go in the bin above it, however, a single value that falls on the top bin's upper bound goes in that bin. -->
-					   ORDER BY bin.BIN_NUMBER, START_TIME
-					 ) 
-					 GROUP BY BIN_NUMBER
-					 ORDER BY BIN_NUMBER <!-- debug -->
-				   )
-				   ORDER BY BIN_NUMBER
+						   else data.duration_minutes
+						 end as in_bin_minutes,
+						 min_value, max_value, low_bound, high_bound, duration_minutes,
+						 start_value, end_value, start_time, end_time, bin_number, gap_minutes
+					   from ${bintype} bin inner join clean_mti_data data on
+						 (data.min_value &lt; bin.high_bound and data.max_value > bin.low_bound) <!-- Std case where data values do not fall on bin boundaries -->
+						 or (data.min_value = data.max_value and data.min_value = bin.low_bound) <!-- Single value case that falls on a bin bondaries (goes w/ the bin above that value) -->
+						 or (data.min_value = bin.high_bound and bin.bin_number = #{bincount, jdbctype=numeric}::numeric) <!-- Single values falling on a bin boundary go in the bin above it, however, a single value that falls on the top bin's upper bound goes in that bin. -->
+					   order by bin.bin_number, start_time
+					 ) g
+					 group by bin_number
+					 order by bin_number <!-- debug -->
+				   ) h
+				   order by bin_number
 	</select>	
         <select id="getDurationCurveCumulativeGap" parameterType="map" resultMap="durationCurveGapMinutesResult">	
-            WITH
+            with
             <include refid="withGapData"/>
-            select round(gaps.gap_minutes/duration.duration_minutes*100,1) as gap_minutes_percent, gaps.gap_minutes from
+            select round((gaps.gap_minutes/duration.duration_minutes*100)::numeric,1) as gap_minutes_percent, gaps.gap_minutes from
             (select
             (extract(DAY from (max(start_time) - min(start_time))) * 24 * 60 * 60 +
              extract(HOUR from (max(start_time) - min(start_time))) * 60 * 60 +
@@ -467,12 +464,12 @@
             <include refid="withGapData"/>
             select 
                 case 
-                when round(gap_minutes/60,2) &lt; 24 then to_char(round(gap_minutes/60,2)) 
-                when round(gap_minutes/60,2) >= 24 then to_char(round(gap_minutes/60/24,2))
+                when round((gap_minutes/60)::numeric,2) &lt; 24 then to_char(round((gap_minutes/60)::numeric,2)) 
+                when round((gap_minutes/60)::numeric,2) >= 24 then to_char(round((gap_minutes/60/24)::numeric,2))
                 end gap_time,
                 case 
-                when round(gap_minutes/60,2) &lt; 24 then 'hours'
-                when round(gap_minutes/60,2) >=24 then 'days'
+                when round((gap_minutes/60)::numeric,2) &lt; 24 then 'hours'
+                when round((gap_minutes/60)::numeric,2) >=24 then 'days'
                 end gap_unit
            from const_gap_data
            where rn = 1

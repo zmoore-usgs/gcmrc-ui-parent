@@ -15,13 +15,14 @@
 		<result property="highBound" column="HIGH_BOUND"/>
 	</resultMap>
         
-        <resultMap id="durationCurveGapMinutesResult" type="DurationCurveCumulativeGap">
+	<resultMap id="durationCurveGapMinutesResult" type="DurationCurveCumulativeGap">
 		<result property="gapMinutesPercent" column="GAP_MINUTES_PERCENT"/>
 		<result property="gapMinutes" column="GAP_MINUTES"/>
 	</resultMap>
-        <resultMap id="durationCurveConsecutiveGapResult" type="DurationCurveConsecutiveGap">
+
+	<resultMap id="durationCurveConsecutiveGapResult" type="DurationCurveConsecutiveGap">
 		<result property="gapTime" column="GAP_TIME"/>
-                <result property="gapUnit" column="GAP_UNIT"/>
+		<result property="gapUnit" column="GAP_UNIT"/>
 	</resultMap>
         
         <sql id="withConstants">
@@ -47,7 +48,6 @@
 					 select
 					   60 one_hour_of_minutes,
 					   60*24 one_day_of_minutes,
-					   60 one_hour_of_minutes,
 					   -999 data_gap_marker, <!-- Known value in the db used to mark the start and end of a timespan for which we do not have data. -->
 					   60 max_gap_minutes, <!-- Max single invalid timespan that interpolation is allowed through. -->
 					   <!-- Max days for which interpolation is allowed between two measured values. -->
@@ -168,8 +168,8 @@
                 site_id,
                 group_id,
                 greatest(measurement_date, (select input_start_date from const)) start_time,
-                case when coalesce(lag(final_value) over (order by measurement_date), 0) != (SELECT DATA_GAP_MARKER FROM CONST) and final_value = (SELECT DATA_GAP_MARKER FROM CONST) then 'gap starts'
-                     when lag(final_value) over (order by measurement_date) = (SELECT DATA_GAP_MARKER FROM CONST) and final_value != (SELECT DATA_GAP_MARKER FROM CONST) then 'gap ends'
+                case when coalesce(lag(final_value) over (order by measurement_date), 0) != (select data_gap_marker from const) and final_value = (select data_gap_marker from const) then 'gap starts'
+                     when lag(final_value) over (order by measurement_date) = (select data_gap_marker from const) and final_value != (select data_gap_marker from const) then 'gap ends'
                 end gap_status
                 from
                   time_series_star

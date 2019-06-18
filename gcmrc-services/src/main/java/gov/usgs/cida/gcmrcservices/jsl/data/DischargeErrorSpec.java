@@ -66,9 +66,9 @@ public class DischargeErrorSpec extends DataSpec {
 
 		result.append("(");
 		result.append("  SELECT");
-		result.append("  NVL(S.nwis_site_no, S.short_name) site_name,");
-		result.append("  DED.AVERAGE_MEASUREMENT_DATE AS SAMP_START_DT,");
-		result.append("  DED.AVERAGE_MEASUREMENT_DATE + format('%s %s',SS.TIME_LAG_SECONDS,'seconds')::interval AS LAGGED_SAMP_START_DT,");
+		result.append("  coalesce(S.nwis_site_no, S.short_name) site_name,");
+		result.append("  DED.AVERAGE_DATE AS SAMP_START_DT,");
+		result.append("  DED.AVERAGE_DATE + format('%s %s',SS.TIME_LAG_SECONDS,'seconds')::interval AS LAGGED_SAMP_START_DT,");
 		result.append("  'false' AS USE_LAGGED,"); //Hack? I don't know why the query is generated wanting these columns
 		result.append("  DED.RAW_VALUE RAW_VALUE,");
 		result.append("  DED.FINAL_VALUE RESULT_VA,");
@@ -86,17 +86,18 @@ public class DischargeErrorSpec extends DataSpec {
 		result.append("  DED.METHOD,");
 		result.append("  DED.GROUP_ID,");
 		result.append("  G.NAME AS GROUP_NAME");
-		result.append(" FROM DISCHARGE_ERROR_DATA DED,");
-		result.append("  SITE_STAR S,");
-		result.append("  SUBSITE_STAR SS,");
-		result.append("  GROUP_NAME G");
-		result.append(" WHERE DED.SITE_ID          = S.SITE_ID(+)");
-		result.append("  AND DED.GROUP_ID         = G.GROUP_ID(+)");
-		result.append("  AND SS.SITE_ID         = S.SITE_ID(+)");
-		
+		result.append(" FROM DISCHARGE_ERROR_DATA DED");
+		result.append("   left join site_star s");
+		result.append("     on DED.site_id = s.site_id");
+		result.append("   left join group_name g");
+		result.append("     on DED.group_id = g.group_id");
+		result.append("   left join subsite_star ss");
+		result.append("     on ss.site_id = s.site_id");
+
 		if(this.parameterCode != null && this.parameterCode.sampleMethod != null) {
 			String sqlCleanMethod = cleanSql(this.parameterCode.sampleMethod);
-			result.append("  AND DED.METHOD = '" + sqlCleanMethod + "'");
+			result.append(" where");
+			result.append("   DED.METHOD = '" + sqlCleanMethod + "'");
 		}
 			
 		result.append(") T_A_INNER");

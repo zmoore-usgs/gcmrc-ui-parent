@@ -200,258 +200,262 @@
 	</sql>
 	<select id="getQWDownloadResult" parameterType="map" resultMap="qwDownloadResult">
 		SELECT
-	<include refid="columns"/>
-	from (select s.sample_id,
-		si.name station_name,
-		nvl2 (si.nwis_site_no, si.nwis_site_no, si.short_name)
-		   station_num,
-		s.start_date - n.offset_from_mst / 24  as start_dt,
-		s.average_date - n.offset_from_mst / 24  as mean_dt,
-		s.end_date - n.offset_from_mst / 24  as end_dt,
-				 case n.offset_from_mst
-					when 0 then 'MST'
-					when -1 then 'CST'
-				 end time_zone,
-		d.name usgs_data_lead,
-		sm.sample_method,
-		sub.name sample_location,
-		sa.sampler_name,
-		s.nozzle,
-		s.num_verticals,
-		s.transits_each_vertical,
-		s.cableway_station_loc,
-		s.water_depth,
-		s.elevation_above_bed,
-		s.sampling_duration,
-		s.pump_sampler,
-		s.pump_carousel_num,
-		s.dataset_complete,
-		s.cross_sect_calib_req,
-		s.use_for_load_calc,
-		s.serve,
-		s.notes,
-		f.fines_color silt_clay_color,
-		lc.code conc_laboratory,
-		gs.code grain_size_laboratory,
-		s.lab_notes,
-		lm.lab_method,
-		r.spec_cond,
-		r.air_temp,
-		r.water_temp,
-		r.sed_conc_lab,
-		r.silt_clay_conc_lab,
-		r.sand_conc_lab,
-		r.sample_mass,
-		r.sediment_mass,
-		r.mass_le_63,
-		r.mass_gt_63,
-		r.conc_le_63,
-		r.conc_gt_63,
-		r.tds,
-		r.sand_d16_lab,
-		r.sand_d50_lab,
-		r.sand_d84_lab,
-		r.sand_pct_lt_074_lab,
-		r.sand_pct_lt_088_lab,
-		r.sand_pct_lt_105_lab,
-		r.sand_pct_lt_125_lab,
-		r.sand_pct_lt_149_lab,
-		r.sand_pct_lt_177_lab,
-		r.sand_pct_lt_210_lab,
-		r.sand_pct_lt_250_lab,
-		r.sand_pct_lt_297_lab,
-		r.sand_pct_lt_354_lab,
-		r.sand_pct_lt_420_lab,
-		r.sand_pct_lt_500_lab,
-		r.sand_pct_lt_595_lab,
-		r.sand_pct_lt_707_lab,
-		r.sand_pct_lt_841_lab,
-		r.sand_pct_lt_1000_lab,
-		r.sed_conc_xs,
-		r.silt_clay_conc_xs,
-		r.sand_conc_xs,
-		r.sand_d16_xs,
-		r.sand_d50_xs,
-		r.sand_d84_xs,
-		r.sand_pct_lt_074_xs,
-		r.sand_pct_lt_088_xs,
-		r.sand_pct_lt_105_xs,
-		r.sand_pct_lt_125_xs,
-		r.sand_pct_lt_149_xs,
-		r.sand_pct_lt_177_xs,
-		r.sand_pct_lt_210_xs,
-		r.sand_pct_lt_250_xs,
-		r.sand_pct_lt_297_xs,
-		r.sand_pct_lt_354_xs,
-		r.sand_pct_lt_420_xs,
-		r.sand_pct_lt_500_xs,
-		r.sand_pct_lt_595_xs,
-		r.sand_pct_lt_707_xs,
-		r.sand_pct_lt_841_xs,
-		r.sand_pct_lt_1000_xs,
-		rs.silt_clay_field_95er,
-		rs.sand_field_95er,
-		rs.sand_d50_field_95er,
-		rs.silt_clay_lab_bias_cor,
-		rs.silt_clay_lab_95er,
-		rs.sand_lab_95er,
-		rs.sand_d50_lab_95er,
-		rs.silt_clay_tot_95er,
-		rs.sand_tot_95er,
-		rs.sand_d50_tot_95er,
-		rs.sed_tot_95er
-		from (select sample_id, group_id, suspsed_value from result_star)
-		pivot
-			(avg (suspsed_value)
-			for group_id in (
-				110 as spec_cond,
-				112 as air_temp,
-				113 as water_temp,
-				119 as sed_conc_lab,
-				63 as silt_clay_conc_lab,
-				64 as sand_conc_lab,
-				84 as sample_mass,
-				120 as sediment_mass,
-				85 as mass_le_63,
-				86 as mass_gt_63,
-				87 as conc_le_63,
-				88 as conc_gt_63,
-				111 as tds,
-				65 as sand_d16_lab,
-				66 as sand_d50_lab,
-				67 as sand_d84_lab,
-				68 as sand_pct_lt_074_lab,
-				69 as sand_pct_lt_088_lab,
-				70 as sand_pct_lt_105_lab,
-				71 as sand_pct_lt_125_lab,
-				72 as sand_pct_lt_149_lab,
-				73 as sand_pct_lt_177_lab,
-				74 as sand_pct_lt_210_lab,
-				75 as sand_pct_lt_250_lab,
-				76 as sand_pct_lt_297_lab,
-				77 as sand_pct_lt_354_lab,
-				78 as sand_pct_lt_420_lab,
-				79 as sand_pct_lt_500_lab,
-				80 as sand_pct_lt_595_lab,
-				81 as sand_pct_lt_707_lab,
-				82 as sand_pct_lt_841_lab,
-				83 as sand_pct_lt_1000_lab,
-				121 as sed_conc_xs,
-				89 as silt_clay_conc_xs,
-				90 as sand_conc_xs,
-				91 as sand_d16_xs,
-				92 as sand_d50_xs,
-				93 as sand_d84_xs,
-				94 as sand_pct_lt_074_xs,
-				95 as sand_pct_lt_088_xs,
-				96 as sand_pct_lt_105_xs,
-				97 as sand_pct_lt_125_xs,
-				98 as sand_pct_lt_149_xs,
-				99 as sand_pct_lt_177_xs,
-				100 as sand_pct_lt_210_xs,
-				101 as sand_pct_lt_250_xs,
-				102 as sand_pct_lt_297_xs,
-				103 as sand_pct_lt_354_xs,
-				104 as sand_pct_lt_420_xs,
-				105 as sand_pct_lt_500_xs,
-				106 as sand_pct_lt_595_xs,
-				107 as sand_pct_lt_707_xs,
-				108 as sand_pct_lt_841_xs,
-				109 as sand_pct_lt_1000_xs)) r
-					left join sample_star s
-						on r.sample_id = s.sample_id
-					join site_star si
-						on s.site_id = si.site_id
-					join network n
-						on si.network_name = n.network_nm
-					left join data_lead_star d
-						on d.data_lead_id = s.data_lead_id
-					left join sample_method_star sm
-						on sm.sample_method_id = s.sample_method_id
-					left join subsite_star sub
-						on sub.subsite_id = s.subsite_id
-					left join sampler_star sa
-						on sa.sampler_id = s.sampler_id
-					left join fines_color_star f
-						on f.fines_color_id = s.fines_color_id
-					left join laboratory_star lc
-						on lc.laboratory_id = s.concentration_lab_id
-					left join laboratory_star gs
-						on gs.laboratory_id = s.grain_size_lab_id
-					left join lab_method_star lm
-						on lm.lab_method_id = s.lab_method_id
-					left join
-					(select r.sample_id,
-						max (
-							case
-								when r.group_id = 89 then r.field_95conf
-								else null
-							end)
-							silt_clay_field_95er,
-						max (
-							case
-								when r.group_id = 90 then r.field_95conf
-								else null
-							end)
-							sand_field_95er,
-						max (
-							case
-								when r.group_id = 92 then r.field_95conf
-								else null
-							end)
-							sand_d50_field_95er,
-						max (
-							case
-								when r.group_id = 89 then r.bias_correction
-								else null
-							end)
-							silt_clay_lab_bias_cor,
-						max (
-							case
-								when r.group_id = 89 then r.lab_95conf
-								else null
-							end)
-							silt_clay_lab_95er,
-						max (
-							case
-								when r.group_id = 90 then r.lab_95conf
-								else null
-							end)
-							sand_lab_95er,
-						max (
-							case
-								when r.group_id = 92 then r.lab_95conf
-								else null
-							end)
-							sand_d50_lab_95er,
-						max (
-							case
-								when r.group_id = 89 then r.total_95conf
-								else null
-							end)
-							silt_clay_tot_95er,
-						max (
-							case
-								when r.group_id = 90 then r.total_95conf
-								else null
-							end)
-							sand_tot_95er,
-						max (
-							case
-								when r.group_id = 92 then r.total_95conf
-								else null
-							end)
-							sand_d50_tot_95er,
-						max (
-							case
-								when r.group_id = 121 then r.total_95conf
-								else null
-							end)
-							sed_tot_95er
-					from result_star r
-						group by r.sample_id) rs
-						on rs.sample_id = s.sample_id
-					where s.serve = 'YES') t_a_inner
+		<include refid="columns"/>
+		from (select s.sample_id,
+			si.name station_name,
+			coalesce (si.nwis_site_no, si.nwis_site_no, si.short_name)
+				station_num,
+			s.start_date - concat(n.offset_from_mst/24, 'hours')::interval  as start_dt,
+			s.average_date - concat(n.offset_from_mst/24, 'hours')::interval  as mean_dt,
+			s.end_date - concat(n.offset_from_mst/24, 'hours')::interval  as end_dt,
+					case n.offset_from_mst
+						when 0 then 'MST'
+						when -1 then 'CST'
+					end time_zone,
+			d.name usgs_data_lead,
+			sm.sample_method,
+			sub.name sample_location,
+			sa.sampler_name,
+			s.nozzle,
+			s.num_verticals,
+			s.transits_each_vertical,
+			s.cableway_station_loc,
+			s.water_depth,
+			s.elevation_above_bed,
+			s.sampling_duration,
+			s.pump_sampler,
+			s.pump_carousel_num,
+			s.dataset_complete,
+			s.cross_sect_calib_req,
+			s.use_for_load_calc,
+			s.serve,
+			s.notes,
+			f.fines_color silt_clay_color,
+			lc.code conc_laboratory,
+			gs.code grain_size_laboratory,
+			s.lab_notes,
+			lm.lab_method,
+			r.spec_cond,
+			r.air_temp,
+			r.water_temp,
+			r.sed_conc_lab,
+			r.silt_clay_conc_lab,
+			r.sand_conc_lab,
+			r.sample_mass,
+			r.sediment_mass,
+			r.mass_le_63,
+			r.mass_gt_63,
+			r.conc_le_63,
+			r.conc_gt_63,
+			r.tds,
+			r.sand_d16_lab,
+			r.sand_d50_lab,
+			r.sand_d84_lab,
+			r.sand_pct_lt_074_lab,
+			r.sand_pct_lt_088_lab,
+			r.sand_pct_lt_105_lab,
+			r.sand_pct_lt_125_lab,
+			r.sand_pct_lt_149_lab,
+			r.sand_pct_lt_177_lab,
+			r.sand_pct_lt_210_lab,
+			r.sand_pct_lt_250_lab,
+			r.sand_pct_lt_297_lab,
+			r.sand_pct_lt_354_lab,
+			r.sand_pct_lt_420_lab,
+			r.sand_pct_lt_500_lab,
+			r.sand_pct_lt_595_lab,
+			r.sand_pct_lt_707_lab,
+			r.sand_pct_lt_841_lab,
+			r.sand_pct_lt_1000_lab,
+			r.sed_conc_xs,
+			r.silt_clay_conc_xs,
+			r.sand_conc_xs,
+			r.sand_d16_xs,
+			r.sand_d50_xs,
+			r.sand_d84_xs,
+			r.sand_pct_lt_074_xs,
+			r.sand_pct_lt_088_xs,
+			r.sand_pct_lt_105_xs,
+			r.sand_pct_lt_125_xs,
+			r.sand_pct_lt_149_xs,
+			r.sand_pct_lt_177_xs,
+			r.sand_pct_lt_210_xs,
+			r.sand_pct_lt_250_xs,
+			r.sand_pct_lt_297_xs,
+			r.sand_pct_lt_354_xs,
+			r.sand_pct_lt_420_xs,
+			r.sand_pct_lt_500_xs,
+			r.sand_pct_lt_595_xs,
+			r.sand_pct_lt_707_xs,
+			r.sand_pct_lt_841_xs,
+			r.sand_pct_lt_1000_xs,
+			rs.silt_clay_field_95er,
+			rs.sand_field_95er,
+			rs.sand_d50_field_95er,
+			rs.silt_clay_lab_bias_cor,
+			rs.silt_clay_lab_95er,
+			rs.sand_lab_95er,
+			rs.sand_d50_lab_95er,
+			rs.silt_clay_tot_95er,
+			rs.sand_tot_95er,
+			rs.sand_d50_tot_95er,
+			rs.sed_tot_95er
+			from (
+				select
+					sample_id,
+					AVG(case when group_id = 110 then suspsed_value else null end) spec_cond,
+					AVG(case when group_id = 112 then suspsed_value else null end) air_temp,
+					AVG(case when group_id = 113 then suspsed_value else null end) water_temp,
+					AVG(case when group_id = 119 then suspsed_value else null end) sed_conc_lab,
+					AVG(case when group_id = 63 then suspsed_value else null end) silt_clay_conc_lab,
+					AVG(case when group_id = 64 then suspsed_value else null end) sand_conc_lab,
+					AVG(case when group_id = 84 then suspsed_value else null end) sample_mass,
+					AVG(case when group_id = 120 then suspsed_value else null end) sediment_mass,
+					AVG(case when group_id = 85 then suspsed_value else null end) mass_le_63,
+					AVG(case when group_id = 86 then suspsed_value else null end) mass_gt_63,
+					AVG(case when group_id = 87 then suspsed_value else null end) conc_le_63,
+					AVG(case when group_id = 88 then suspsed_value else null end) conc_gt_63,
+					AVG(case when group_id = 111 then suspsed_value else null end) tds,
+					AVG(case when group_id = 65 then suspsed_value else null end) sand_d16_lab,
+					AVG(case when group_id = 66 then suspsed_value else null end) sand_d50_lab,
+					AVG(case when group_id = 67 then suspsed_value else null end) sand_d84_lab,
+					AVG(case when group_id = 68 then suspsed_value else null end) sand_pct_lt_074_lab,
+					AVG(case when group_id = 69 then suspsed_value else null end) sand_pct_lt_088_lab,
+					AVG(case when group_id = 70 then suspsed_value else null end) sand_pct_lt_105_lab,
+					AVG(case when group_id = 71 then suspsed_value else null end) sand_pct_lt_125_lab,
+					AVG(case when group_id = 72 then suspsed_value else null end) sand_pct_lt_149_lab,
+					AVG(case when group_id = 73 then suspsed_value else null end) sand_pct_lt_177_lab,
+					AVG(case when group_id = 74 then suspsed_value else null end) sand_pct_lt_210_lab,
+					AVG(case when group_id = 75 then suspsed_value else null end) sand_pct_lt_250_lab,
+					AVG(case when group_id = 76 then suspsed_value else null end) sand_pct_lt_297_lab,
+					AVG(case when group_id = 77 then suspsed_value else null end) sand_pct_lt_354_lab,
+					AVG(case when group_id = 78 then suspsed_value else null end) sand_pct_lt_420_lab,
+					AVG(case when group_id = 79 then suspsed_value else null end) sand_pct_lt_500_lab,
+					AVG(case when group_id = 80 then suspsed_value else null end) sand_pct_lt_595_lab,
+					AVG(case when group_id = 81 then suspsed_value else null end) sand_pct_lt_707_lab,
+					AVG(case when group_id = 82 then suspsed_value else null end) sand_pct_lt_841_lab,
+					AVG(case when group_id = 83 then suspsed_value else null end) sand_pct_lt_1000_lab,
+					AVG(case when group_id = 120 then suspsed_value else null end) sed_conc_xs,
+					AVG(case when group_id = 89 then suspsed_value else null end) silt_clay_conc_xs,
+					AVG(case when group_id = 90 then suspsed_value else null end) sand_conc_xs,
+					AVG(case when group_id = 91 then suspsed_value else null end) sand_d16_xs,
+					AVG(case when group_id = 92 then suspsed_value else null end) sand_d50_xs,
+					AVG(case when group_id = 93 then suspsed_value else null end) sand_d84_xs,
+					AVG(case when group_id = 94 then suspsed_value else null end) sand_pct_lt_074_xs,
+					AVG(case when group_id = 95 then suspsed_value else null end) sand_pct_lt_088_xs,
+					AVG(case when group_id = 96 then suspsed_value else null end) sand_pct_lt_105_xs,
+					AVG(case when group_id = 97 then suspsed_value else null end) sand_pct_lt_125_xs,
+					AVG(case when group_id = 98 then suspsed_value else null end) sand_pct_lt_149_xs,
+					AVG(case when group_id = 99 then suspsed_value else null end) sand_pct_lt_177_xs,
+					AVG(case when group_id = 100 then suspsed_value else null end) sand_pct_lt_210_xs,
+					AVG(case when group_id = 101 then suspsed_value else null end) sand_pct_lt_250_xs,
+					AVG(case when group_id = 102 then suspsed_value else null end) sand_pct_lt_297_xs,
+					AVG(case when group_id = 103 then suspsed_value else null end) sand_pct_lt_354_xs,
+					AVG(case when group_id = 104 then suspsed_value else null end) sand_pct_lt_420_xs,
+					AVG(case when group_id = 105 then suspsed_value else null end) sand_pct_lt_500_xs,
+					AVG(case when group_id = 106 then suspsed_value else null end) sand_pct_lt_595_xs,
+					AVG(case when group_id = 107 then suspsed_value else null end) sand_pct_lt_707_xs,
+					AVG(case when group_id = 108 then suspsed_value else null end) sand_pct_lt_841_xs,
+					AVG(case when group_id = 109 then suspsed_value else null end) sand_pct_lt_1000_xs
+				from result_star
+				group by sample_id
+			) as r
+			left join sample_star s
+				on r.sample_id = s.sample_id
+			join site_star si
+				on s.site_id = si.site_id
+			join network n
+				on si.network_name = n.network_nm
+			left join data_lead_star d
+				on d.data_lead_id = s.data_lead_id
+			left join sample_method_star sm
+				on sm.sample_method_id = s.sample_method_id
+			left join subsite_star sub
+				on sub.subsite_id = s.subsite_id
+			left join sampler_star sa
+				on sa.sampler_id = s.sampler_id
+			left join fines_color_star f
+				on f.fines_color_id = s.fines_color_id
+			left join laboratory_star lc
+				on lc.laboratory_id = s.concentration_lab_id
+			left join laboratory_star gs
+				on gs.laboratory_id = s.grain_size_lab_id
+			left join lab_method_star lm
+				on lm.lab_method_id = s.lab_method_id
+			left join (
+				select r.sample_id,
+					max (
+						case
+							when r.group_id = 89 then r.field_95conf
+							else null
+						end)
+						silt_clay_field_95er,
+					max (
+						case
+							when r.group_id = 90 then r.field_95conf
+							else null
+						end)
+						sand_field_95er,
+					max (
+						case
+							when r.group_id = 92 then r.field_95conf
+							else null
+						end)
+						sand_d50_field_95er,
+					max (
+						case
+							when r.group_id = 89 then r.bias_correction
+							else null
+						end)
+						silt_clay_lab_bias_cor,
+					max (
+						case
+							when r.group_id = 89 then r.lab_95conf
+							else null
+						end)
+						silt_clay_lab_95er,
+					max (
+						case
+							when r.group_id = 90 then r.lab_95conf
+							else null
+						end)
+						sand_lab_95er,
+					max (
+						case
+							when r.group_id = 92 then r.lab_95conf
+							else null
+						end)
+						sand_d50_lab_95er,
+					max (
+						case
+							when r.group_id = 89 then r.total_95conf
+							else null
+						end)
+						silt_clay_tot_95er,
+					max (
+						case
+							when r.group_id = 90 then r.total_95conf
+							else null
+						end)
+						sand_tot_95er,
+					max (
+						case
+							when r.group_id = 92 then r.total_95conf
+							else null
+						end)
+						sand_d50_tot_95er,
+					max (
+						case
+							when r.group_id = 121 then r.total_95conf
+							else null
+						end)
+						sed_tot_95er
+				from result_star r
+				group by r.sample_id
+			) rs
+				on rs.sample_id = s.sample_id
+			where s.serve = 'YES'
+		) t_a_inner
 		<where>
 			<if test="null != site">
 				station_num = #{site}
@@ -461,7 +465,7 @@
 				</if>
 			</if>
 		</where>
-			order by start_dt, sample_id
+		order by start_dt, sample_id
 	</select>
 </mapper>
 

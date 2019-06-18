@@ -33,277 +33,277 @@ public class BedSedimentDownloadService {
 				case STATION_NAME:
 					columns.add(data.stream()
 							.map(BedSedimentDownload::getStation_name)
-							.map(r -> r.toString())
+							.map(r ->  (r != null ? r.toString() : ""))
 							.collect(Collectors.toList()));
 					break;
 				case STATION_NUM:
 					columns.add(data.stream()
 							.map(BedSedimentDownload::getStation_num)
-							.map(r -> r.toString())
+							.map(r ->  (r != null ? r.toString() : ""))
 							.collect(Collectors.toList()));
 					break;
 				case BED_DT:
 					columns.add(data.stream()
 							.map(BedSedimentDownload::getBed_dt)
-							.map(r -> r.toString())
+							.map(r ->  (r != null ? r.toString() : ""))
 							.collect(Collectors.toList()));
 					break;
 				case BED_TM:
 					columns.add(data.stream()
 							.map(BedSedimentDownload::getBed_tm)
-							.map(r -> r.toString())
+							.map(r ->  (r != null ? r.toString() : ""))
 							.collect(Collectors.toList()));
 					break;
 				case SAMPLE_SET: 
 					columns.add(data.stream()
 							.map(BedSedimentDownload::getSample_set)
-							.map(r -> r.toString())
+							.map(r ->  (r != null ? r.toString() : ""))
 							.collect(Collectors.toList()));
 					break;
 				case NOTES:
 					columns.add(data.stream()
 							.map(e -> (e.getNotes() == null ? "" : e.getNotes() ))
-							.map(r -> r.toString())
+							.map(r ->  (r != null ? r.toString() : ""))
 							.collect(Collectors.toList()));
 					break;
 				case STATION_LOCATION:
 					columns.add(data.stream()
 							.map(BedSedimentDownload::getStation_location)
-							.map(r -> r.toString())
+							.map(r ->  (r != null ? r.toString() : ""))
 							.collect(Collectors.toList()));
 					break;
 				case SAMPLE_WEIGHT:
 					columns.add(data.stream()
 							.map(BedSedimentDownload::getSample_weight)
-							.map(r -> r.toString())
+							.map(r ->  (r != null ? r.toString() : ""))
 							.collect(Collectors.toList()));
 					break;
 				case SAND_D50:
 					columns.add(data.stream()
 							.map(BedSedimentDownload::getSand_d50)
-							.map(r -> r.toString())
+							.map(r ->  (r != null ? r.toString() : ""))
 							.collect(Collectors.toList()));
 					break;
 				case FINES_D50:
 					columns.add(data.stream()
 							.map(BedSedimentDownload::getFines_d50)
-							.map(r -> r.toString())
+							.map(r ->  (r != null ? r.toString() : ""))
 							.collect(Collectors.toList()));
 					break;
 				case TOTAL_D50:
 					columns.add(data.stream()
 							.map(BedSedimentDownload::getTotal_d50)
-							.map(r -> r.toString())
+							.map(r ->  (r != null ? r.toString() : ""))
 							.collect(Collectors.toList()));
 					break;
 				case PCT_BTWN_063_125: 
 					columns.add(data.stream()
 							.map(BedSedimentDownload::getPct_btwn_063_125)
-							.map(r -> r.toString())
+							.map(r ->  (r != null ? r.toString() : ""))
 							.collect(Collectors.toList()));
 					break;
 				case SIZE_DIST_LT_037:
 					columns.add(data.stream()
 							.map(BedSedimentDownload::getSize_dist_lt_037)
-							.map(r -> r.toString())
+							.map(r ->  (r != null ? r.toString() : ""))
 							.collect(Collectors.toList()));
 					break;
 				case SIZE_DIST_LT_044:
 					columns.add(data.stream()
 							.map(BedSedimentDownload::getSize_dist_lt_044)
-							.map(r -> r.toString())
+							.map(r ->  (r != null ? r.toString() : ""))
 							.collect(Collectors.toList()));
 					break;
 				case SIZE_DIST_LT_053:
 					columns.add(data.stream()
 							.map(BedSedimentDownload::getSize_dist_lt_053)
-							.map(r -> r.toString())
+							.map(r ->  (r != null ? r.toString() : ""))
 							.collect(Collectors.toList()));
 					break;
 				case SIZE_DIST_LT_063:
 					columns.add(data.stream()
 							.map(BedSedimentDownload::getSize_dist_lt_063)
-							.map(r -> r.toString())
+							.map(r ->  (r != null ? r.toString() : ""))
 							.collect(Collectors.toList()));
 					break;
 				case SIZE_DIST_LT_074:
 					columns.add(data.stream()
 							.map(BedSedimentDownload::getSize_dist_lt_074)
-							.map(r -> r.toString())
+							.map(r ->  (r != null ? r.toString() : ""))
 							.collect(Collectors.toList()));
 					break;
 				case SIZE_DIST_LT_088:
 					columns.add(data.stream()
 							.map(BedSedimentDownload::getSize_dist_lt_088)
-							.map(r -> r.toString())
+							.map(r ->  (r != null ? r.toString() : ""))
 							.collect(Collectors.toList()));
 					break;
 				case SIZE_DIST_LT_105:
 					columns.add(data.stream()
 							.map(BedSedimentDownload::getSize_dist_lt_105)
-							.map(r -> r.toString())
+							.map(r ->  (r != null ? r.toString() : ""))
 							.collect(Collectors.toList()));
 					break;
 				case SIZE_DIST_LT_125:
 					columns.add(data.stream()
 							.map(BedSedimentDownload::getSize_dist_lt_125)
-							.map(r -> r.toString())
+							.map(r ->  (r != null ? r.toString() : ""))
 							.collect(Collectors.toList()));
 					break;
 				case SIZE_DIST_LT_149:
 					columns.add(data.stream()
 							.map(BedSedimentDownload::getSize_dist_lt_149)
-							.map(r -> r.toString())
+							.map(r ->  (r != null ? r.toString() : ""))
 							.collect(Collectors.toList()));
 					break;
 				case SIZE_DIST_LT_177:
 					columns.add(data.stream()
 							.map(BedSedimentDownload::getSize_dist_lt_177)
-							.map(r -> r.toString())
+							.map(r ->  (r != null ? r.toString() : ""))
 							.collect(Collectors.toList()));
 					break;
 				case SIZE_DIST_LT_210:
 					columns.add(data.stream()
 							.map(BedSedimentDownload::getSize_dist_lt_210)
-							.map(r -> r.toString())
+							.map(r ->  (r != null ? r.toString() : ""))
 							.collect(Collectors.toList()));
 					break;
 				case SIZE_DIST_LT_250:
 					columns.add(data.stream()
 							.map(BedSedimentDownload::getSize_dist_lt_250)
-							.map(r -> r.toString())
+							.map(r ->  (r != null ? r.toString() : ""))
 							.collect(Collectors.toList()));
 					break;
 				case SIZE_DIST_LT_297:
 					columns.add(data.stream()
 							.map(BedSedimentDownload::getSize_dist_lt_297)
-							.map(r -> r.toString())
+							.map(r ->  (r != null ? r.toString() : ""))
 							.collect(Collectors.toList()));
 					break;
 				case SIZE_DIST_LT_354:
 					columns.add(data.stream()
 							.map(BedSedimentDownload::getSize_dist_lt_354)
-							.map(r -> r.toString())
+							.map(r ->  (r != null ? r.toString() : ""))
 							.collect(Collectors.toList()));
 					break;
 				case SIZE_DIST_LT_420:
 					columns.add(data.stream()
 							.map(BedSedimentDownload::getSize_dist_lt_420)
-							.map(r -> r.toString())
+							.map(r ->  (r != null ? r.toString() : ""))
 							.collect(Collectors.toList()));
 					break;
 				case SIZE_DIST_LT_500:
 					columns.add(data.stream()
 							.map(BedSedimentDownload::getSize_dist_lt_500)
-							.map(r -> r.toString())
+							.map(r ->  (r != null ? r.toString() : ""))
 							.collect(Collectors.toList()));
 					break;
 				case SIZE_DIST_LT_595:
 					columns.add(data.stream()
 							.map(BedSedimentDownload::getSize_dist_lt_595)
-							.map(r -> r.toString())
+							.map(r ->  (r != null ? r.toString() : ""))
 							.collect(Collectors.toList()));
 					break;
 				case SIZE_DIST_LT_707:
 					columns.add(data.stream()
 							.map(BedSedimentDownload::getSize_dist_lt_707)
-							.map(r -> r.toString())
+							.map(r ->  (r != null ? r.toString() : ""))
 							.collect(Collectors.toList()));
 					break;
 				case SIZE_DIST_LT_841:
 					columns.add(data.stream()
 							.map(BedSedimentDownload::getSize_dist_lt_841)
-							.map(r -> r.toString())
+							.map(r ->  (r != null ? r.toString() : ""))
 							.collect(Collectors.toList()));
 					break;
 				case SIZE_DIST_LT_1_00:
 					columns.add(data.stream()
 							.map(BedSedimentDownload::getSize_dist_lt_1_00)
-							.map(r -> r.toString())
+							.map(r ->  (r != null ? r.toString() : ""))
 							.collect(Collectors.toList()));
 					break;
 				case SIZE_DIST_LT_1_41:
 					columns.add(data.stream()
 							.map(BedSedimentDownload::getSize_dist_lt_1_41)
-							.map(r -> r.toString())
+							.map(r ->  (r != null ? r.toString() : ""))
 							.collect(Collectors.toList()));
 					break;
 				case SIZE_DIST_LT_2_00:
 					columns.add(data.stream()
 							.map(BedSedimentDownload::getSize_dist_lt_2_00)
-							.map(r -> r.toString())
+							.map(r ->  (r != null ? r.toString() : ""))
 							.collect(Collectors.toList()));
 					break;
 				case SIZE_DIST_LT_2_80:
 					columns.add(data.stream()
 							.map(BedSedimentDownload::getSize_dist_lt_2_80)
-							.map(r -> r.toString())
+							.map(r ->  (r != null ? r.toString() : ""))
 							.collect(Collectors.toList()));
 					break;
 				case SIZE_DIST_LT_4_00:
 					columns.add(data.stream()
 							.map(BedSedimentDownload::getSize_dist_lt_4_00)
-							.map(r -> r.toString())
+							.map(r ->  (r != null ? r.toString() : ""))
 							.collect(Collectors.toList()));
 					break;
 				case SIZE_DIST_LT_5_60:
 					columns.add(data.stream()
 							.map(BedSedimentDownload::getSize_dist_lt_5_60)
-							.map(r -> r.toString())
+							.map(r ->  (r != null ? r.toString() : ""))
 							.collect(Collectors.toList()));
 					break;
 				case SIZE_DIST_LT_8_00:
 					columns.add(data.stream()
 							.map(BedSedimentDownload::getSize_dist_lt_8_00)
-							.map(r -> r.toString())
+							.map(r ->  (r != null ? r.toString() : ""))
 							.collect(Collectors.toList()));
 					break;
 				case SIZE_DIST_LT_11_3:
 					columns.add(data.stream()
 							.map(BedSedimentDownload::getSize_dist_lt_11_3)
-							.map(r -> r.toString())
+							.map(r ->  (r != null ? r.toString() : ""))
 							.collect(Collectors.toList()));
 					break;
 				case SIZE_DIST_LT_16_0:
 					columns.add(data.stream()
 							.map(BedSedimentDownload::getSize_dist_lt_16_0)
-							.map(r -> r.toString())
+							.map(r ->  (r != null ? r.toString() : ""))
 							.collect(Collectors.toList()));
 					break;
 				case SIZE_DIST_LT_22_6:
 					columns.add(data.stream()
 							.map(BedSedimentDownload::getSize_dist_lt_22_6)
-							.map(r -> r.toString())
+							.map(r ->  (r != null ? r.toString() : ""))
 							.collect(Collectors.toList()));
 					break;
 				case SIZE_DIST_LT_32_0:
 					columns.add(data.stream()
 							.map(BedSedimentDownload::getSize_dist_lt_32_0)
-							.map(r -> r.toString())
+							.map(r ->  (r != null ? r.toString() : ""))
 							.collect(Collectors.toList()));
 					break;
 				case SIZE_DIST_LT_45_0:
 					columns.add(data.stream()
 							.map(BedSedimentDownload::getSize_dist_lt_45_0)
-							.map(r -> r.toString())
+							.map(r ->  (r != null ? r.toString() : ""))
 							.collect(Collectors.toList()));
 					break;
 				case SIZE_DIST_LT_64_0:
 					columns.add(data.stream()
 							.map(BedSedimentDownload::getSize_dist_lt_64_0)
-							.map(r -> r.toString())
+							.map(r ->  (r != null ? r.toString() : ""))
 							.collect(Collectors.toList()));
 					break;
 				case SIZE_DIST_LT_91_0:
 					columns.add(data.stream()
 							.map(BedSedimentDownload::getSize_dist_lt_91_0)
-							.map(r -> r.toString())
+							.map(r ->  (r != null ? r.toString() : ""))
 							.collect(Collectors.toList()));
 					break;
 				case SIZE_DIST_LT_128_0:
 					columns.add(data.stream()
 							.map(BedSedimentDownload::getSize_dist_lt_128_0)
-							.map(r -> r.toString())
+							.map(r ->  (r != null ? r.toString() : ""))
 							.collect(Collectors.toList()));
 					break;
 				default:

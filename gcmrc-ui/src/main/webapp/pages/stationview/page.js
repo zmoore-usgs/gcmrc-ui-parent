@@ -831,6 +831,9 @@ GCMRC.Page = {
 		} else if ("92" === identifier) {
 			identifier = "8";
 			el.groupId = "8";
+		} else if ("121" === identifier) {
+			identifier = "118";
+			el.groupId = "118";
 		} 
 		
 		if (!GCMRC.Page.params[identifier]) {

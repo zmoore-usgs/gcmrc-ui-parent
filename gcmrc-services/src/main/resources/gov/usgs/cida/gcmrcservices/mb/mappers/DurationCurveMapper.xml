@@ -53,8 +53,8 @@
 					   <!-- Max days for which interpolation is allowed between two measured values. -->
 					   60 max_interpolation_days,
 					   0.1 min_log_bin_value, <!-- Min value to use for bins.  Log bins don't allow zeros and low values are basically noise -->
-					   to_timestamp(#{starttime, jdbcType=char}, 'YYYY-MM-DD"T"HH24:MI:SS') input_start_date, <!-- Makes for easier debugging when you can just substitute the date in one place -->
-					   to_timestamp(#{endtime, jdbcType=char}, 'YYYY-MM-DD"T"HH24:MI:SS') input_end_date,
+					   to_timestamp(#{starttime, jdbcType=CHAR}, 'YYYY-MM-DD"T"HH24:MI:SS') input_start_date, <!-- Makes for easier debugging when you can just substitute the date in one place -->
+					   to_timestamp(#{endtime, jdbcType=CHAR}, 'YYYY-MM-DD"T"HH24:MI:SS') input_end_date,
 					 (select 
 						site_id
 						from 
@@ -67,8 +67,8 @@
 								from 
 								site_star) a
 						where 
-							site_name = #{sitename, jdbcType=char}) site_id,
-						#{groupid, jdbcType=numeric}::numeric group_id)
+							site_name = #{sitename, jdbcType=CHAR}) site_id,
+						#{groupid, jdbcType=NUMERIC}::numeric group_id)
         </sql>
         <sql id="withRawMtiData">
             <include refid="withConstants"/>,
@@ -323,7 +323,7 @@
         <sql id="withIntBins">
             int_bins (bin_number) as
 				   (
-					 select generate_series(1,#{bincount, jdbcType=numeric}::numeric) bin_number
+					 select generate_series(1,#{bincount, jdbcType=NUMERIC}::numeric) bin_number
 				   )
         </sql>
         <sql id="withLinBins">
@@ -331,10 +331,10 @@
 				   <!-- Linear spaced bins -->
 					 select
 					   bin_number,
-					   (select ((overall_value_range / #{bincount, jdbcType=numeric}::numeric) * (bin_number - 1)) + overall_min_value from const_data) as low_bound,
+					   (select ((overall_value_range / #{bincount, jdbcType=NUMERIC}::numeric) * (bin_number - 1)) + overall_min_value from const_data) as low_bound,
 					   case
-					   when bin_number = #{bincount, jdbcType=numeric}::numeric then (select overall_max_value from const_data) <!-- For the last bin, use the actual high value to prevent rounding errors -->
-					   else (select ((overall_value_range / #{bincount, jdbcType=numeric}::numeric) * bin_number) + overall_min_value from const_data) 
+					   when bin_number = #{bincount, jdbcType=NUMERIC}::numeric then (select overall_max_value from const_data) <!-- For the last bin, use the actual high value to prevent rounding errors -->
+					   else (select ((overall_value_range / #{bincount, jdbcType=NUMERIC}::numeric) * bin_number) + overall_min_value from const_data) 
 					   end as high_bound
 					 from int_bins
 					 order by bin_number
@@ -352,12 +352,12 @@
 					select
 						bin_number,
 						case when bin_number = 1 then (select greatest(overall_min_value, (select min_log_bin_value from const)) from const_data) else power(10, log_low_bound) end as low_bound,
-						case when bin_number = #{bincount, jdbcType=numeric}::numeric then (select overall_max_value from const_data) else power(10, log_high_bound) end as high_bound
+						case when bin_number = #{bincount, jdbcType=NUMERIC}::numeric then (select overall_max_value from const_data) else power(10, log_high_bound) end as high_bound
 					from (
 						select
 							bin_number,
-							(select (((log(10, overall_max_value::numeric) - log(10, greatest(overall_min_value, (select min_log_bin_value from const))::numeric)) / #{bincount, jdbcType=numeric}::numeric) * (bin_number - 1)) + log(10, greatest(overall_min_value, (select min_log_bin_value from const))::numeric) from const_data) as log_low_bound,
-							(select (((log(10, overall_max_value::numeric) - log(10, greatest(overall_min_value, (select min_log_bin_value from const))::numeric)) / #{bincount, jdbcType=numeric}::numeric) * bin_number) + log(10, greatest(overall_min_value, (select min_log_bin_value from const))::numeric) from const_data) as log_high_bound
+							(select (((log(10, overall_max_value::numeric) - log(10, greatest(overall_min_value, (select min_log_bin_value from const))::numeric)) / #{bincount, jdbcType=NUMERIC}::numeric) * (bin_number - 1)) + log(10, greatest(overall_min_value, (select min_log_bin_value from const))::numeric) from const_data) as log_low_bound,
+							(select (((log(10, overall_max_value::numeric) - log(10, greatest(overall_min_value, (select min_log_bin_value from const))::numeric)) / #{bincount, jdbcType=NUMERIC}::numeric) * bin_number) + log(10, greatest(overall_min_value, (select min_log_bin_value from const))::numeric) from const_data) as log_high_bound
 						from int_bins
 						order by bin_number
 					) f
@@ -375,7 +375,7 @@
 					   (select overall_duration_minutes from const_data) * 100 as cumulative_bin_perc,
 					 case
 					   when bin_number = 1 then low_bound
-					   when bin_number = #{bincount, jdbcType=numeric}::numeric then high_bound
+					   when bin_number = #{bincount, jdbcType=NUMERIC}::numeric then high_bound
 					   else (low_bound + high_bound) / 2
 					 end as bin_value,
 					 in_bin_minutes,
@@ -438,7 +438,7 @@
 					   from ${bintype} bin inner join clean_mti_data data on
 						 (data.min_value &lt; bin.high_bound and data.max_value > bin.low_bound) <!-- Std case where data values do not fall on bin boundaries -->
 						 or (data.min_value = data.max_value and data.min_value = bin.low_bound) <!-- Single value case that falls on a bin bondaries (goes w/ the bin above that value) -->
-						 or (data.min_value = bin.high_bound and bin.bin_number = #{bincount, jdbcType=numeric}::numeric) <!-- Single values falling on a bin boundary go in the bin above it, however, a single value that falls on the top bin's upper bound goes in that bin. -->
+						 or (data.min_value = bin.high_bound and bin.bin_number = #{bincount, jdbcType=NUMERIC}::numeric) <!-- Single values falling on a bin boundary go in the bin above it, however, a single value that falls on the top bin's upper bound goes in that bin. -->
 					   order by bin.bin_number, start_time
 					 ) g
 					 group by bin_number

@@ -60,7 +60,7 @@
 						from 
 							(select 
 								site_id,
-								case when nwis_site_no is null
+								case when nwis_site_no = ''
 								then short_name
 								else nwis_site_no
 								end as site_name
@@ -153,8 +153,8 @@
 							 <!-- Filter the time window to the specified range + the max interpolation time period -->
 							 and measurement_date > ((select input_start_date from const) - cast((select max_interpolation_days from const) || 'D' as interval))
 							 and measurement_date &lt; ((select input_end_date from const) + cast((select max_interpolation_days from const) || 'D' as interval))
-						 )
-					   ) where
+						 ) ab
+					   ) abc where
 						 not (start_value = (select data_gap_marker from const) and end_value = (select data_gap_marker from const)) 
 					 ) d
 				   )
@@ -176,7 +176,7 @@
                 where     
                   (site_id, group_id) in (select site_id, group_id from const) and
                    measurement_date between 
-                      nvl(
+                      coalesce(
                           (select 
                               /* determine most recent measurement_date for site/group preceding INPUT_START_DATE */
                               max(measurement_date)
@@ -435,7 +435,7 @@
 						 end as in_bin_minutes,
 						 min_value, max_value, low_bound, high_bound, duration_minutes,
 						 start_value, end_value, start_time, end_time, bin_number, gap_minutes
-					   from ${bintype} bin inner join clean_mti_data data on
+					   from ${binType} bin inner join clean_mti_data data on
 						 (data.min_value &lt; bin.high_bound and data.max_value > bin.low_bound) <!-- Std case where data values do not fall on bin boundaries -->
 						 or (data.min_value = data.max_value and data.min_value = bin.low_bound) <!-- Single value case that falls on a bin bondaries (goes w/ the bin above that value) -->
 						 or (data.min_value = bin.high_bound and bin.bin_number = #{bincount, jdbcType=NUMERIC}::numeric) <!-- Single values falling on a bin boundary go in the bin above it, however, a single value that falls on the top bin's upper bound goes in that bin. -->
@@ -464,8 +464,8 @@
             <include refid="withGapData"/>
             select 
                 case 
-                when round((gap_minutes/60)::numeric,2) &lt; 24 then to_char(round((gap_minutes/60)::numeric,2)) 
-                when round((gap_minutes/60)::numeric,2) >= 24 then to_char(round((gap_minutes/60/24)::numeric,2))
+                when round((gap_minutes/60)::numeric,2) &lt; 24 then to_char(round((gap_minutes/60)::numeric,2),'999D99') 
+                when round((gap_minutes/60)::numeric,2) >= 24 then to_char(round((gap_minutes/60/24)::numeric,2),'999D99')
                 end gap_time,
                 case 
                 when round((gap_minutes/60)::numeric,2) &lt; 24 then 'hours'

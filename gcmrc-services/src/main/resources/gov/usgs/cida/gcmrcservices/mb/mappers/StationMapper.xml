@@ -113,7 +113,7 @@
 				site_id,
 			</if>
 			case
-				when nwis_site_no is null then short_name
+				when nwis_site_no = '' then short_name
 				else nwis_site_no
 			end as site_name,
 			name as display_name,
@@ -206,7 +206,7 @@
 		SELECT
 		<include refid="site-pubs-columns"/>
 		from (select case
-			when s.nwis_site_no is not null then s.nwis_site_no
+			when s.nwis_site_no != '' then s.nwis_site_no
 			else s.short_name
 			end as site_nm,
 			p.pub_link url,
@@ -295,7 +295,7 @@
 			left outer join
 				(select site_id,
 					case
-						when nwis_site_no is null then short_name
+						when nwis_site_no = '' then short_name
 						else nwis_site_no
 					end as site_name,
 					name as site_display_name
@@ -343,7 +343,7 @@
 			to_char (earliest_dt, 'YYYY-MM-DD') start_dt,
 			to_char (latest_dt, 'YYYY-MM-DD') end_dt,
 			case 
-				when s.nwis_site_no is null 
+				when s.nwis_site_no = '' 
 				then s.short_name 
 				else s.nwis_site_no 
 			end site_name,
@@ -398,7 +398,7 @@
 				when lower (ded.method) = 'observation'
 					or lower (ded.method) = 'estimate'
 				then 'Y'
-				else null
+				else ''
 			end as use_pump_coloring,
 			method as display_name,
 			g.name group_name,

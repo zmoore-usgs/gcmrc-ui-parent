@@ -94,7 +94,7 @@
   (SELECT DISTINCT RTD.REACH_NAME,
     (SELECT (
       CASE
-        WHEN NWIS_SITE_NO IS NOT NULL
+        WHEN NWIS_SITE_NO != ''
         THEN NWIS_SITE_NO
         ELSE SHORT_NAME
       END) SITE_UP
@@ -105,7 +105,7 @@
     ) DISPLAY_NAME_UP,
     (SELECT (
       CASE
-        WHEN NWIS_SITE_NO IS NOT NULL
+        WHEN NWIS_SITE_NO != ''
         THEN NWIS_SITE_NO
         ELSE SHORT_NAME
       END) SITE_UP_SECONDARY
@@ -116,7 +116,7 @@
     ) DISPLAY_NAME_UP_SECONDARY,
     (SELECT (
       CASE
-        WHEN NWIS_SITE_NO IS NOT NULL
+        WHEN NWIS_SITE_NO != ''
         THEN NWIS_SITE_NO
         ELSE SHORT_NAME
       END)
@@ -127,7 +127,7 @@
     ) DISPLAY_NAME_DOWN,
     (SELECT (
       CASE
-        WHEN NWIS_SITE_NO IS NOT NULL
+        WHEN NWIS_SITE_NO != ''
         THEN NWIS_SITE_NO
         ELSE SHORT_NAME
       END)
@@ -193,18 +193,18 @@
 		<include refid="por-columns"/>
 		from (select 
 				case
-					when ss_up.nwis_site_no is null then ss_up.short_name
+					when ss_up.nwis_site_no = '' then ss_up.short_name
 					else ss_up.nwis_site_no
 				end site_up,
 				case
-					when ss_sec_up.nwis_site_no is null
+					when ss_sec_up.nwis_site_no = ''
 					then
 						ss_sec_up.short_name
 					else
 						ss_sec_up.nwis_site_no
 				end site_up_sec,
 				case
-					when ss_down.nwis_site_no is null then ss_down.short_name
+					when ss_down.nwis_site_no = '' then ss_down.short_name
 					else ss_down.nwis_site_no
 				end site_down,
 				g.name group_name,
@@ -290,7 +290,7 @@
 		from (select distinct
 			rtd.reach_name,
 			(select (case
-				when nwis_site_no is not null then nwis_site_no
+				when nwis_site_no != '' then nwis_site_no
 				else short_name
 				end) site_up
 				from site_star s
@@ -299,7 +299,7 @@
 				from site_star s
 					where s.site_id = rtd.site_id_up) display_name_up,
 			(select (case
-				when nwis_site_no is not null then nwis_site_no
+				when nwis_site_no != '' then nwis_site_no
 				else short_name
 				end)
 				from site_star s
@@ -308,7 +308,7 @@
 				from site_star s
 					where s.site_id = rtd.site_id_down) display_name_down,
 			(select (case
-				when nwis_site_no is not null then nwis_site_no
+				when nwis_site_no != '' then nwis_site_no
 				else short_name
 				end)
 				from site_star s
@@ -320,7 +320,7 @@
 				from site_star s
 					where rtd.major_site = s.site_id) as major_trib_river,
 			(select (case
-				when nwis_site_no is not null then nwis_site_no
+				when nwis_site_no != '' then nwis_site_no
 				else short_name
 				end)
 				from site_star s
@@ -329,7 +329,7 @@
 				from group_name
 					where rtd.major_group = group_name.group_id) major_group,
 			(select (case
-				when nwis_site_no is not null then nwis_site_no
+				when nwis_site_no != '' then nwis_site_no
 				else short_name
 				end)
 				from site_star s
@@ -377,7 +377,7 @@
 		FROM
 			(SELECT DISTINCT
 			(SELECT (CASE
-						WHEN NWIS_SITE_NO IS NOT NULL
+						WHEN NWIS_SITE_NO != ''
 						THEN NWIS_SITE_NO
 						ELSE SHORT_NAME
 					END) FROM SITE_STAR WHERE SITE_STAR.SITE_ID = SITE_ID_UP) UPSTREAM_STATION,
@@ -385,7 +385,7 @@
 			(SELECT NAME FROM GROUP_NAME WHERE GROUP_NAME.GROUP_ID = RTD.MAJOR_GROUP) MAJOR_GROUP,
 			(SELECT (
       CASE
-        WHEN NWIS_SITE_NO IS NOT NULL
+        WHEN NWIS_SITE_NO != ''
         THEN NWIS_SITE_NO
         ELSE SHORT_NAME
       END) SITE_UP
@@ -395,7 +395,7 @@
 			(SELECT NAME FROM GROUP_NAME WHERE GROUP_NAME.GROUP_ID = RTD.MINOR_GROUP) MINOR_GROUP,
 		(SELECT (
       CASE
-        WHEN NWIS_SITE_NO IS NOT NULL
+        WHEN NWIS_SITE_NO != ''
         THEN NWIS_SITE_NO
         ELSE SHORT_NAME
       END) SITE_UP

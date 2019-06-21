@@ -147,7 +147,7 @@ public class ParameterSpec extends DataSpec {
 		result.append("  LEFT OUTER JOIN");
 		result.append("    (SELECT SITE_ID,");
 		result.append("      CASE");
-		result.append("        WHEN NWIS_SITE_NO IS NULL");
+		result.append("        WHEN NWIS_SITE_NO = ''");
 		result.append("        THEN SHORT_NAME");
 		result.append("        ELSE NWIS_SITE_NO");
 		result.append("      END AS SITE_NAME");

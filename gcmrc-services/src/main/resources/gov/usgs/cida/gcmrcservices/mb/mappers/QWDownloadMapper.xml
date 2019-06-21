@@ -203,7 +203,7 @@
 		<include refid="columns"/>
 		from (select s.sample_id,
 			si.name station_name,
-			coalesce (si.nwis_site_no, si.nwis_site_no, si.short_name)
+			case when si.nwis_site_no = '' then si.short_name else si.nwis_site_no end
 				station_num,
 			s.start_date - concat(n.offset_from_mst/24, 'hours')::interval  as start_dt,
 			s.average_date - concat(n.offset_from_mst/24, 'hours')::interval  as mean_dt,

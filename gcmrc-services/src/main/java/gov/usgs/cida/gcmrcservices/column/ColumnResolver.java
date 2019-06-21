@@ -156,9 +156,9 @@ public class ColumnResolver {
 		Map<String, ColumnMetadata> result = new HashMap<String, ColumnMetadata>();
 		ResultSet rs = null;
 		try {
-			Column tsGrpNm = new SimpleColumn("NAME");
-			Column displayName = new SimpleColumn("NAME_DISPLAY");
-			Column unitsShort = new SimpleColumn("UNITS_NAME_SHORT");
+			Column tsGrpNm = new SimpleColumn("name");
+			Column displayName = new SimpleColumn("name_display");
+			Column unitsShort = new SimpleColumn("units_name_short");
 			
 			ParameterizedString ps = new ParameterizedString();
 			ps.append("  SELECT DISTINCT GROUP_ID,");
@@ -196,9 +196,9 @@ public class ColumnResolver {
 		ResultSet rs = null;
 
 		try {
-			Column tsGrpNm = new SimpleColumn("NAME");
-			Column displayName = new SimpleColumn("NAME_DISPLAY");
-			Column unitsShort = new SimpleColumn("UNITS_NAME_SHORT");
+			Column tsGrpNm = new SimpleColumn("name");
+			Column displayName = new SimpleColumn("name_display");
+			Column unitsShort = new SimpleColumn("units_name_short");
 			
 			ParameterizedString ps = new ParameterizedString();
 			ps.append("  SELECT DISTINCT GROUP_ID,");
@@ -236,10 +236,10 @@ public class ColumnResolver {
 		Map<String, ColumnMetadata> result = new HashMap<String, ColumnMetadata>();
 		ResultSet rs = null;
 		try {
-			Column sampleMethod = new SimpleColumn("SAMPLE_METHOD");
-			Column pCode = new SimpleColumn("NAME");
-			Column displayName = new SimpleColumn("NAME_DISPLAY");
-			Column unitsShort = new SimpleColumn("UNITS_NAME_SHORT");
+			Column sampleMethod = new SimpleColumn("sample_method");
+			Column pCode = new SimpleColumn("name");
+			Column displayName = new SimpleColumn("name_display");
+			Column unitsShort = new SimpleColumn("units_name_short");
 			
 			ParameterizedString ps = new ParameterizedString();
 			ps.append("SELECT");
@@ -281,8 +281,8 @@ public class ColumnResolver {
 		Map<String, ColumnMetadata> result = new HashMap<String, ColumnMetadata>();
 		ResultSet rs = null;
 		try {
-			Column displayName = new SimpleColumn("ANCILLARY_NAME");
-			Column serviceName = new SimpleColumn("ANCILLARY_SERVICE_COLUMN");
+			Column displayName = new SimpleColumn("ancillary_name");
+			Column serviceName = new SimpleColumn("ancillary_service_column");
 			
 			ParameterizedString ps = new ParameterizedString();
 			ps.append("SELECT");
@@ -320,7 +320,7 @@ public class ColumnResolver {
 	public Map<String, ColumnMetadata> buildQErrorCols() {
 		Map<String, ColumnMetadata> result = new HashMap<String, ColumnMetadata>();
 		
-		Column methodCol = new SimpleColumn("METHOD");
+		Column methodCol = new SimpleColumn("method");
 		ResultSet rs = null;
 		try {
 			ParameterizedString ps = new ParameterizedString();

@@ -120,7 +120,7 @@ public class ColumnMetadata {
 			result = "S" + hashString(station, 5) + "P" + hashString(tempParameterCode.toString(), 5) + ancillaryColumn;			
 		}
 		
-		return result;
+		return result.toLowerCase();
 	}
 	
 	

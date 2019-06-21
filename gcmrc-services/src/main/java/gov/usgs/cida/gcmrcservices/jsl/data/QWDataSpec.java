@@ -31,8 +31,8 @@ public class QWDataSpec extends DataSpec {
 		if (null != this.stationName && null != this.parameterCode) {
 			result = new ColumnMapping[] {
 				new ColumnMapping(C_SAMPLE_ID, S_SAMPLE_ID),
-				new ColumnMapping(ParameterSpec.C_TSM_DT, ParameterSpec.S_TSM_DT, ASCENDING_ORDER, ParameterSpec.S_TSM_DT, null, null, null, "CASE WHEN USE_LAGGED = 'true' THEN TO_CHAR(" + C_LAGGED_SAMPLE_START_DT + ", 'YYYY-MM-DD\"T\"HH24:MI:SS') ELSE TO_CHAR(" + C_SAMPLE_START_DT + ", 'YYYY-MM-DD\"T\"HH24:MI:SS') END", null, null),
-				new ColumnMapping(ColumnMetadata.createColumnName(this.stationName, this.parameterCode), S_RESULT_VA, ASCENDING_ORDER, S_RESULT_VA, null, null, null, "CASE WHEN TOTAL_95CONF IS NOT NULL THEN (CASE WHEN ERRORBAR_LOWER_VA < 0 THEN 0 ELSE ERRORBAR_LOWER_VA END) || ';' || RESULT_VA || ';' || ERRORBAR_UPPER_VA ELSE RESULT_VA::character END", null, null),
+				new ColumnMapping(ParameterSpec.C_TSM_DT, ParameterSpec.C_TSM_DT, ASCENDING_ORDER, ParameterSpec.S_TSM_DT, null, null, null, "CASE WHEN USE_LAGGED = 'true' THEN TO_CHAR(" + C_LAGGED_SAMPLE_START_DT + ", 'YYYY-MM-DD\"T\"HH24:MI:SS') ELSE TO_CHAR(" + C_SAMPLE_START_DT + ", 'YYYY-MM-DD\"T\"HH24:MI:SS') END", null, null),
+				new ColumnMapping(ColumnMetadata.createColumnName(this.stationName, this.parameterCode), C_RESULT_VA, ASCENDING_ORDER, S_RESULT_VA, null, null, null, "CASE WHEN TOTAL_95CONF IS NOT NULL THEN (CASE WHEN ERRORBAR_LOWER_VA < 0 THEN 0 ELSE ERRORBAR_LOWER_VA END) || ';' || RESULT_VA || ';' || ERRORBAR_UPPER_VA ELSE RESULT_VA::character END", null, null),
 				new ColumnMapping(C_SITE_NAME, S_SITE_NAME),
 				new ColumnMapping(C_SAMPLE_METHOD, S_SAMPLE_METHOD),
 				new ColumnMapping(C_GROUP_NAME, S_GROUP_NAME)
@@ -121,10 +121,10 @@ public class QWDataSpec extends DataSpec {
 		return false;
 	}
 	
-	public static final String C_SAMPLE_ID = "SAMPLE_ID";
-	public static final String C_SAMPLE_START_DT = "SAMP_START_DT";
-	public static final String C_LAGGED_SAMPLE_START_DT = "LAGGED_SAMP_START_DT";
-	public static final String C_RESULT_VA = "RESULT_VA";
+	public static final String C_SAMPLE_ID = "sample_id";
+	public static final String C_SAMPLE_START_DT = "samp_start_dt";
+	public static final String C_LAGGED_SAMPLE_START_DT = "lagged_samp_start_dt";
+	public static final String C_RESULT_VA = "result_va";
 	
 	public static final String S_SAMPLE_ID = "SAMPLE_ID";
 	public static final String S_SAMPLE_START_DT = "SAMP_START_DT";
@@ -132,9 +132,9 @@ public class QWDataSpec extends DataSpec {
 	public static final String S_RESULT_VA = "RESULT_VA";
 	
 	public static final String S_SITE_NAME = "site";
-	public static final String C_SITE_NAME = "SITE_NAME";
+	public static final String C_SITE_NAME = "site_name";
 	public static final String S_SAMPLE_METHOD = "sampleMethod";
-	public static final String C_SAMPLE_METHOD = "SAMPLE_METHOD";
+	public static final String C_SAMPLE_METHOD = "sample_method";
 	public static final String S_GROUP_NAME = "groupName";
-	public static final String C_GROUP_NAME = "GROUP_NAME";
+	public static final String C_GROUP_NAME = "group_name";
 }

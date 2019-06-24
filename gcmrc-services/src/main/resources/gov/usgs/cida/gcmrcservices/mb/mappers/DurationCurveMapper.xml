@@ -60,10 +60,7 @@
 						from 
 							(select 
 								site_id,
-								case when nwis_site_no = ''
-								then short_name
-								else nwis_site_no
-								end as site_name
+								coalesce(nwis_site_no, short_name) site_name
 								from 
 								site_star) a
 						where 

@@ -109,10 +109,7 @@
 		from (
 			select
 				s.name station_name,
-				case
-					when nwis_site_no = '' then short_name
-					else nwis_site_no
-				end as station_num,
+				coalesce(nwis_site_no, short_name) station_num,
 				b.bed_meas_dt - concat(n.offset_from_mst / 24, 'hours')::interval as bed_dt,
 				b.bed_meas_dt - concat(n.offset_from_mst / 24, 'hours')::interval as bed_tm,
 				case

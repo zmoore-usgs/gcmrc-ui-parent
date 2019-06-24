@@ -70,12 +70,16 @@
 		<result property="minorStation" column="MINOR_SITE"/>
 	</resultMap>
 	
+	<sql id="site_name">
+	coalesce(nwis_site_no, short_name)
+	</sql>
+	
 	<sql id="columns">
 		REACH_NAME,
 		SITE_UP,
 		DISPLAY_NAME_UP,
-	        SITE_UP_SECONDARY,
-	        DISPLAY_NAME_UP_SECONDARY,
+		SITE_UP_SECONDARY,
+		DISPLAY_NAME_UP_SECONDARY,
 		SITE_DOWN,
 		DISPLAY_NAME_DOWN,
 		DISCHARGE_SITE_DOWN,
@@ -92,45 +96,25 @@
 		<include refid="columns"/>
 		FROM
   (SELECT DISTINCT RTD.REACH_NAME,
-    (SELECT (
-      CASE
-        WHEN NWIS_SITE_NO != ''
-        THEN NWIS_SITE_NO
-        ELSE SHORT_NAME
-      END) SITE_UP
+    (SELECT <include refid="site_name"/> SITE_UP
     FROM SITE_STAR S
     WHERE S.SITE_ID = RTD.SITE_ID_UP
     ) SITE_UP,
     (SELECT S.NAME FROM SITE_STAR S WHERE S.SITE_ID = RTD.SITE_ID_UP
     ) DISPLAY_NAME_UP,
-    (SELECT (
-      CASE
-        WHEN NWIS_SITE_NO != ''
-        THEN NWIS_SITE_NO
-        ELSE SHORT_NAME
-      END) SITE_UP_SECONDARY
+    (SELECT <include refid="site_name"/> SITE_UP_SECONDARY
     FROM SITE_STAR S
     WHERE S.SITE_ID = RTD.SITE_ID_UP_SECONDARY
     ) SITE_UP_SECONDARY,
     (SELECT S.NAME FROM SITE_STAR S WHERE S.SITE_ID = RTD.SITE_ID_UP_SECONDARY
     ) DISPLAY_NAME_UP_SECONDARY,
-    (SELECT (
-      CASE
-        WHEN NWIS_SITE_NO != ''
-        THEN NWIS_SITE_NO
-        ELSE SHORT_NAME
-      END)
+    (SELECT <include refid="site_name"/>
     FROM SITE_STAR S
     WHERE S.SITE_ID = RTD.SITE_ID_DOWN
     ) SITE_DOWN,
     (SELECT S.NAME FROM SITE_STAR S WHERE S.SITE_ID = RTD.SITE_ID_DOWN
     ) DISPLAY_NAME_DOWN,
-    (SELECT (
-      CASE
-        WHEN NWIS_SITE_NO != ''
-        THEN NWIS_SITE_NO
-        ELSE SHORT_NAME
-      END)
+    (SELECT <include refid="site_name"/>
     FROM SITE_STAR S
     WHERE S.SITE_ID = RTD.DISCHARGE_DOWN
     ) DISCHARGE_SITE_DOWN,
@@ -192,21 +176,9 @@
 		SELECT
 		<include refid="por-columns"/>
 		from (select 
-				case
-					when ss_up.nwis_site_no = '' then ss_up.short_name
-					else ss_up.nwis_site_no
-				end site_up,
-				case
-					when ss_sec_up.nwis_site_no = ''
-					then
-						ss_sec_up.short_name
-					else
-						ss_sec_up.nwis_site_no
-				end site_up_sec,
-				case
-					when ss_down.nwis_site_no = '' then ss_down.short_name
-					else ss_down.nwis_site_no
-				end site_down,
+			coalesce(ss_up.nwis_site_no, ss_up.short_name) site_up,
+			coalesce(ss_sec_up.nwis_site_no, ss_sec_up.short_name) site_up_sec,
+			coalesce(ss_down.nwis_site_no, ss_down.short_name) site_down,
 				g.name group_name,
 				to_char (tsp_up.earliest_dt, 'YYYY-MM-DD"T"HH24:MI:SS') up_earliest_dt,
 				to_char (tsp_up.latest_dt, 'YYYY-MM-DD"T"HH24:MI:SS') up_latest_dt,
@@ -289,28 +261,19 @@
 		<include refid="trib-columns"/>
 		from (select distinct
 			rtd.reach_name,
-			(select (case
-				when nwis_site_no != '' then nwis_site_no
-				else short_name
-				end) site_up
+			(select <include refid="site_name"/> site_up
 				from site_star s
 					where s.site_id = rtd.site_id_up) site_up,
 			(select s.name
 				from site_star s
 					where s.site_id = rtd.site_id_up) display_name_up,
-			(select (case
-				when nwis_site_no != '' then nwis_site_no
-				else short_name
-				end)
+			(select <include refid="site_name"/>
 				from site_star s
 					where s.site_id = rtd.site_id_down) site_down,
 			(select s.name
 				from site_star s
 					where s.site_id = rtd.site_id_down) display_name_down,
-			(select (case
-				when nwis_site_no != '' then nwis_site_no
-				else short_name
-				end)
+			(select <include refid="site_name"/>
 				from site_star s
 					where s.site_id = rtd.discharge_down) discharge_site_down,
 			(select s.name
@@ -319,19 +282,13 @@
 			(select s.river_name
 				from site_star s
 					where rtd.major_site = s.site_id) as major_trib_river,
-			(select (case
-				when nwis_site_no != '' then nwis_site_no
-				else short_name
-				end)
+			(select <include refid="site_name"/>
 				from site_star s
 					where s.site_id = rtd.major_site) major_trib_site_name,
 			(select name
 				from group_name
 					where rtd.major_group = group_name.group_id) major_group,
-			(select (case
-				when nwis_site_no != '' then nwis_site_no
-				else short_name
-				end)
+			(select <include refid="site_name"/>
 				from site_star s
 					where s.site_id = rtd.minor_site) minor_trib_site_name,
 			(select name
@@ -376,16 +333,12 @@
 		<include refid="detail-columns"/>
 		FROM
 			(SELECT DISTINCT
-			(SELECT (CASE
-						WHEN NWIS_SITE_NO != ''
-						THEN NWIS_SITE_NO
-						ELSE SHORT_NAME
-					END) FROM SITE_STAR WHERE SITE_STAR.SITE_ID = SITE_ID_UP) UPSTREAM_STATION,
+			(SELECT <include refid="site_name"/> FROM SITE_STAR WHERE SITE_STAR.SITE_ID = SITE_ID_UP) UPSTREAM_STATION,
 			(SELECT NAME FROM GROUP_NAME WHERE GROUP_NAME.GROUP_ID = RTD.REACH_GROUP) REACH_GROUP,
 			(SELECT NAME FROM GROUP_NAME WHERE GROUP_NAME.GROUP_ID = RTD.MAJOR_GROUP) MAJOR_GROUP,
 			(SELECT (
       CASE
-        WHEN NWIS_SITE_NO != ''
+        WHEN NWIS_SITE_NO is not null
         THEN NWIS_SITE_NO
         ELSE SHORT_NAME
       END) SITE_UP
@@ -393,12 +346,7 @@
     WHERE S.SITE_ID = RTD.MAJOR_SITE
     ) MAJOR_SITE,
 			(SELECT NAME FROM GROUP_NAME WHERE GROUP_NAME.GROUP_ID = RTD.MINOR_GROUP) MINOR_GROUP,
-		(SELECT (
-      CASE
-        WHEN NWIS_SITE_NO != ''
-        THEN NWIS_SITE_NO
-        ELSE SHORT_NAME
-      END) SITE_UP
+		(SELECT <include refid="site_name"/> SITE_UP
     FROM SITE_STAR S
     WHERE S.SITE_ID = RTD.MINOR_SITE
     ) MINOR_SITE

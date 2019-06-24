@@ -203,15 +203,14 @@
 		<include refid="columns"/>
 		from (select s.sample_id,
 			si.name station_name,
-			case when si.nwis_site_no = '' then si.short_name else si.nwis_site_no end
-				station_num,
+			coalesce(si.nwis_site_no, si.short_name) station_num,
 			s.start_date - concat(n.offset_from_mst/24, 'hours')::interval  as start_dt,
 			s.average_date - concat(n.offset_from_mst/24, 'hours')::interval  as mean_dt,
 			s.end_date - concat(n.offset_from_mst/24, 'hours')::interval  as end_dt,
-					case n.offset_from_mst
-						when 0 then 'MST'
-						when -1 then 'CST'
-					end time_zone,
+			case n.offset_from_mst
+				when 0 then 'MST'
+				when -1 then 'CST'
+			end time_zone,
 			d.name usgs_data_lead,
 			sm.sample_method,
 			sub.name sample_location,

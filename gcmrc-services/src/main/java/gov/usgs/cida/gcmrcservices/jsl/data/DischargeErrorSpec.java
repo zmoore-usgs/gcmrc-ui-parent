@@ -66,7 +66,7 @@ public class DischargeErrorSpec extends DataSpec {
 
 		result.append("(");
 		result.append("  SELECT");
-		result.append("  coalesce(S.nwis_site_no, S.short_name) site_name,");
+		result.append("  coalesce(s.nwis_site_no, s.short_name) SITE_NAME,");
 		result.append("  DED.AVERAGE_DATE AS SAMP_START_DT,");
 		result.append("  DED.AVERAGE_DATE + format('%s %s',SS.TIME_LAG_SECONDS,'seconds')::interval AS LAGGED_SAMP_START_DT,");
 		result.append("  'false' AS USE_LAGGED,"); //Hack? I don't know why the query is generated wanting these columns

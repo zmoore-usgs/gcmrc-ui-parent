@@ -63,7 +63,7 @@ public class QWDataSpec extends DataSpec {
 
 		result.append("(");
 		result.append("  SELECT QWS.SAMPLE_ID,");
-		result.append("  coalesce(S.nwis_site_no, S.short_name) site_name,");
+		result.append("  coalesce(s.nwis_site_no, s.short_name) site_name,");
 		result.append("  QWS.AVERAGE_DATE AS SAMP_START_DT,");
 		result.append("  QWS.AVERAGE_DATE + format('%s %s',SS.TIME_LAG_SECONDS,'seconds')::interval AS LAGGED_SAMP_START_DT,");
 		result.append("  'true' AS USE_LAGGED,");

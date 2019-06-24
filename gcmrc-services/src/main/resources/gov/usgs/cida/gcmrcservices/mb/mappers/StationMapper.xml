@@ -112,10 +112,7 @@
 			<if test="sites == 'allsite'">
 				site_id,
 			</if>
-			case
-				when nwis_site_no is null then short_name
-				else nwis_site_no
-			end as site_name,
+			coalesce(nwis_site_no, short_name) site_name,
 			name as display_name,
 			decimal_latitude lat,
 			decimal_longitude lon,
@@ -205,10 +202,8 @@
 	<select id="getSitePubs" parameterType="map" resultMap="sitePubsResult">
 		SELECT
 		<include refid="site-pubs-columns"/>
-		from (select case
-			when s.nwis_site_no is not null then s.nwis_site_no
-			else s.short_name
-			end as site_nm,
+		from (select 
+		coalesce(s.nwis_site_no, s.short_name) site_nm,
 			p.pub_link url,
 			p.pub_nm display_name,
 			p.priority_va display_order
@@ -294,10 +289,7 @@
 				from time_series_por) t_por
 			left outer join
 				(select site_id,
-					case
-						when nwis_site_no is null then short_name
-						else nwis_site_no
-					end as site_name,
+					coalesce(nwis_site_no, short_name) site_name,
 					name as site_display_name
 				from site_star) site
 					on t_por.site_id = site.site_id
@@ -342,11 +334,7 @@
 		from (select bs.group_id,
 			to_char (earliest_dt, 'YYYY-MM-DD') start_dt,
 			to_char (latest_dt, 'YYYY-MM-DD') end_dt,
-			case 
-				when s.nwis_site_no is null 
-				then s.short_name 
-				else s.nwis_site_no 
-			end site_name,
+			coalesce(s.nwis_site_no, s.short_name) site_name,
 			g.name_display display_name,
 			g.name group_name,
 			g.units_name units,
@@ -398,7 +386,7 @@
 				when lower (ded.method) = 'observation'
 					or lower (ded.method) = 'estimate'
 				then 'Y'
-				else null
+				else ''
 			end as use_pump_coloring,
 			method as display_name,
 			g.name group_name,

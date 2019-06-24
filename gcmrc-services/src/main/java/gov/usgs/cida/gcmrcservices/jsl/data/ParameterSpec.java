@@ -146,11 +146,7 @@ public class ParameterSpec extends DataSpec {
 		result.append("  ON TIME_SERIES_STAR.SOURCE_ID = T_SOURCE.SOURCE_ID");
 		result.append("  LEFT OUTER JOIN");
 		result.append("    (SELECT SITE_ID,");
-		result.append("      CASE");
-		result.append("        WHEN NWIS_SITE_NO IS NULL");
-		result.append("        THEN SHORT_NAME");
-		result.append("        ELSE NWIS_SITE_NO");
-		result.append("      END AS SITE_NAME");
+		result.append("      coalesce(nwis_site_no, short_name) SITE_NAME");
 		result.append("    FROM SITE_STAR");
 		result.append("    ) SITE");
 		result.append("  ON TIME_SERIES_STAR.SITE_ID = SITE.SITE_ID");

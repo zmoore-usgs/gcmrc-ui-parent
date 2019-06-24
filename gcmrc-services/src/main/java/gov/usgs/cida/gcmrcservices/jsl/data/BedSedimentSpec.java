@@ -88,7 +88,7 @@ public class BedSedimentSpec extends DataSpec {
 		result.append("    VALUE_TABLE.SAMPLE_SET AS ").append(ColumnMetadata.createColumnName(this.stationName, this.parameterCode)).append(C_SAMPLE_SET).append("");
 		result.append("    FROM ( SELECT");
 		result.append("        BM.BED_MEAS_DT,");
-		result.append("        coalesce(nwis_site_no, short_name) SITE_NAME,");
+		result.append("        coalesce(s.nwis_site_no, s.short_name) SITE_NAME,");
 		result.append("        BM.BED_VALUE,");
 		result.append("        BM.SAMPLE_SET");
 		result.append("        FROM BED_MATERIAL BM, SITE_STAR S, GROUP_NAME G");

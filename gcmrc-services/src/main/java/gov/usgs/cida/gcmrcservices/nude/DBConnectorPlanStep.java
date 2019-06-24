@@ -49,7 +49,7 @@ public class DBConnectorPlanStep implements PlanStep {
 				
 		Connection con = null;
 		try {
-			con = sqlProvider.getConnection(requestId);
+			con = sqlProvider.getHoldableConnection(requestId);
 		} catch (Exception e) {
 			log.trace("wah wahhhh.", e);
 		}
@@ -63,7 +63,7 @@ public class DBConnectorPlanStep implements PlanStep {
 				NudeFilterBuilder nfb = new NudeFilterBuilder(buildColumnGroupingFromSpec(spec, time));
 				NudeFilter nf = nfb.addFilterStage(new FilterStageBuilder(nfb.getCurrOutCols()).addTransform(time, new IntoMillisTransform(time))
 						.buildFilterStage()).buildFilter();
-				
+		
 				results.add(nf.filter(sr.rset));
 			}
 			

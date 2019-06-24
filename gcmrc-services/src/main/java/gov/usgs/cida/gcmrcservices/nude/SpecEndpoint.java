@@ -96,7 +96,7 @@ public abstract class SpecEndpoint extends Endpoint {
 	public Map<String, String[]> createSpecParameters(ListMultimap<String, String> params) {
 		Map<String, String[]> result = new HashMap<String, String[]>();
 
-		result.put(Spec.ORDER_BY_PARAM, new String[]{ParameterSpec.S_TSM_DT});
+		result.put(Spec.ORDER_BY_PARAM, new String[]{ParameterSpec.C_TSM_DT});
 
 		return result;
 	}

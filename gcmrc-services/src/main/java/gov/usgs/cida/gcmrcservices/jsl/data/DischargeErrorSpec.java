@@ -31,7 +31,7 @@ public class DischargeErrorSpec extends DataSpec {
 		
 		if (null != this.stationName && null != this.parameterCode) {
 			result = new ColumnMapping[] {
-				new ColumnMapping(ParameterSpec.C_TSM_DT, ParameterSpec.S_TSM_DT, ASCENDING_ORDER, ParameterSpec.S_TSM_DT, null, null, null, "CASE WHEN USE_LAGGED = 'true' THEN TO_CHAR(" + C_LAGGED_SAMPLE_START_DT + ", 'YYYY-MM-DD\"T\"HH24:MI:SS') ELSE TO_CHAR(" + C_SAMPLE_START_DT + ", 'YYYY-MM-DD\"T\"HH24:MI:SS') END", null, null),
+				new ColumnMapping(ParameterSpec.C_TSM_DT, ParameterSpec.C_TSM_DT, ASCENDING_ORDER, ParameterSpec.S_TSM_DT, null, null, null, "CASE WHEN USE_LAGGED = 'true' THEN TO_CHAR(" + C_LAGGED_SAMPLE_START_DT + ", 'YYYY-MM-DD\"T\"HH24:MI:SS') ELSE TO_CHAR(" + C_SAMPLE_START_DT + ", 'YYYY-MM-DD\"T\"HH24:MI:SS') END", null, null),
 				new ColumnMapping(ColumnMetadata.createColumnName(this.stationName, this.parameterCode), C_FINAL_VALUE_NAME, ASCENDING_ORDER, C_FINAL_VALUE_NAME, null, null, null, "CASE WHEN ERROR_PERCENT IS NOT NULL THEN (CASE WHEN ERRORBAR_LOWER_VA < 0 THEN 0 ELSE ERRORBAR_LOWER_VA END) || ';' || RESULT_VA || ';' || ERRORBAR_UPPER_VA ELSE RESULT_VA::character END", null, null),
 				new ColumnMapping(C_SITE_NAME, S_SITE_NAME),
 				new ColumnMapping(C_GROUP_NAME, S_GROUP_NAME),
@@ -126,12 +126,12 @@ public class DischargeErrorSpec extends DataSpec {
 		return false;
 	}
 	
-	public static final String C_SAMPLE_START_DT = "SAMP_START_DT";
-	public static final String C_LAGGED_SAMPLE_START_DT = "LAGGED_SAMP_START_DT";
-	public static final String C_METHOD_NAME = "METHOD";
-	public static final String C_FINAL_VALUE_NAME = "RESULT_VA";
-	public static final String C_UPPER_ERROR_NAME = "ERRORBAR_UPPER_VA";
-	public static final String C_LOWER_ERROR_NAME = "ERRORBAR_LOWER_VA";
+	public static final String C_SAMPLE_START_DT = "samp_start_dt";
+	public static final String C_LAGGED_SAMPLE_START_DT = "lagged_samp_start_dt";
+	public static final String C_METHOD_NAME = "method";
+	public static final String C_FINAL_VALUE_NAME = "result_va";
+	public static final String C_UPPER_ERROR_NAME = "errorbar_upper_va";
+	public static final String C_LOWER_ERROR_NAME = "errorbar_lower_va";
 	
 	public static final String S_SAMPLE_START_DT = "SAMP_START_DT";
 	public static final String S_LAGGED_SAMPLE_START_DT = "LAGGED_SAMP_START_DT";
@@ -139,9 +139,9 @@ public class DischargeErrorSpec extends DataSpec {
 	public static final String S_METHOD_NAME = "METHOD";
 	
 	public static final String S_SITE_NAME = "site";
-	public static final String C_SITE_NAME = "SITE_NAME";
+	public static final String C_SITE_NAME = "site_name";
 	public static final String S_GROUP_NAME = "groupName";
-	public static final String C_GROUP_NAME = "GROUP_NAME";
+	public static final String C_GROUP_NAME = "group_name";
 	
 	public static String cleanSql(String input) {
 		if (input == null) {

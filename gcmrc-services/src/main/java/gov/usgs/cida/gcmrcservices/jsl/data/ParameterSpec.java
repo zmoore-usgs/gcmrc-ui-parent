@@ -31,25 +31,25 @@ public class ParameterSpec extends DataSpec {
 		if (null != this.stationName && null != this.parameterCode) {
 			String parameterColumnName = ColumnMetadata.createColumnName(this.stationName, this.parameterCode);
 			result = new ColumnMapping[] {
-				new ColumnMapping(C_TSM_DT, S_TSM_DT, ASCENDING_ORDER, S_TSM_DT, null, null, null, "TO_CHAR(" + C_TSM_DT + ", 'YYYY-MM-DD\"T\"HH24:MI:SS')", null, null),
-				new ColumnMapping(parameterColumnName, S_FINAL_VALUE, ASCENDING_ORDER, S_FINAL_VALUE, null, null, null, C_FINAL_VALUE, null, null),
-				new ColumnMapping(parameterColumnName + C_RAW_VALUE, S_RAW_VALUE, ASCENDING_ORDER, S_RAW_VALUE, null, null, null, C_RAW_VALUE, null, null),
-				new ColumnMapping(parameterColumnName + C_MAIN_QUALIFIER, S_MAIN_QUALIFIER, ASCENDING_ORDER, S_MAIN_QUALIFIER, null, null, null, C_MAIN_QUALIFIER, null, null),
-				new ColumnMapping(parameterColumnName + C_DATA_APPROVAL, S_DATA_APPROVAL, ASCENDING_ORDER, S_DATA_APPROVAL, null, null, null, C_DATA_APPROVAL, null, null),
-				new ColumnMapping(parameterColumnName + C_MEASUREMENT_GRADE, S_MEASUREMENT_GRADE, ASCENDING_ORDER, S_MEASUREMENT_GRADE, null, null, null, C_MEASUREMENT_GRADE, null, null),
-				new ColumnMapping(parameterColumnName + C_DEPLOYMENT, S_DEPLOYMENT, ASCENDING_ORDER, S_DEPLOYMENT, null, null, null, C_DEPLOYMENT, null, null),
-				new ColumnMapping(parameterColumnName + C_ICE_AFFECTED, S_ICE_AFFECTED, ASCENDING_ORDER, S_ICE_AFFECTED, null, null, null, C_ICE_AFFECTED, null, null),
-				new ColumnMapping(parameterColumnName + C_TURBIDITY_PEGGED, S_TURBIDITY_PEGGED, ASCENDING_ORDER, S_TURBIDITY_PEGGED, null, null, null, C_TURBIDITY_PEGGED, null, null),
-				new ColumnMapping(parameterColumnName + C_PROBE_TYPE, S_PROBE_TYPE, ASCENDING_ORDER, S_PROBE_TYPE, null, null, null, C_PROBE_TYPE, null, null),
-				new ColumnMapping(parameterColumnName + C_INSTRUMENT, S_INSTRUMENT, ASCENDING_ORDER, S_INSTRUMENT, null, null, null, C_INSTRUMENT, null, null),
-				new ColumnMapping(parameterColumnName + C_DATA_LEAD, S_DATA_LEAD, ASCENDING_ORDER, S_DATA_LEAD, null, null, null, C_DATA_LEAD, null, null),
-				new ColumnMapping(parameterColumnName + C_RAW_FLAG, S_RAW_FLAG, ASCENDING_ORDER, S_RAW_FLAG, null, null, null, C_RAW_FLAG, null, null),
-				new ColumnMapping(parameterColumnName + C_DATA_QUALIFICATION, S_DATA_QUALIFICATION, ASCENDING_ORDER, S_DATA_QUALIFICATION, null, null, null, C_DATA_QUALIFICATION, null, null),
-				new ColumnMapping(parameterColumnName + C_ACCURACY_RATING, S_ACCURACY_RATING, ASCENDING_ORDER, S_ACCURACY_RATING, null, null, null, C_ACCURACY_RATING, null, null),
-				new ColumnMapping(parameterColumnName + C_SOURCE_FILE_NAME, S_SOURCE_FILE_NAME, ASCENDING_ORDER, S_SOURCE_FILE_NAME, null, null, null, C_SOURCE_FILE_NAME, null, null),
-				new ColumnMapping(parameterColumnName + C_SOURCE_UPLOAD_DATE, S_SOURCE_UPLOAD_DATE, ASCENDING_ORDER, S_SOURCE_UPLOAD_DATE, null, null, null, C_SOURCE_UPLOAD_DATE, null, null),
-				new ColumnMapping(parameterColumnName + C_NOTES, S_NOTES, ASCENDING_ORDER, S_NOTES, null, null, null, C_NOTES, null, null),
-				new ColumnMapping(parameterColumnName + C_ER_VALUE, S_ER_VALUE, ASCENDING_ORDER, S_ER_VALUE, null, null, null, C_ER_VALUE, null, null)
+				new ColumnMapping(C_TSM_DT, C_TSM_DT, ASCENDING_ORDER, S_TSM_DT, null, null, null, "TO_CHAR(" + C_TSM_DT + ", 'YYYY-MM-DD\"T\"HH24:MI:SS')", null, null),
+				new ColumnMapping(parameterColumnName, C_FINAL_VALUE, ASCENDING_ORDER, S_FINAL_VALUE, null, null, null, C_FINAL_VALUE, null, null),
+				new ColumnMapping(parameterColumnName + C_RAW_VALUE, C_RAW_VALUE, ASCENDING_ORDER, S_RAW_VALUE, null, null, null, C_RAW_VALUE, null, null),
+				new ColumnMapping(parameterColumnName + C_MAIN_QUALIFIER, C_MAIN_QUALIFIER, ASCENDING_ORDER, S_MAIN_QUALIFIER, null, null, null, C_MAIN_QUALIFIER, null, null),
+				new ColumnMapping(parameterColumnName + C_DATA_APPROVAL, C_DATA_APPROVAL, ASCENDING_ORDER, S_DATA_APPROVAL, null, null, null, C_DATA_APPROVAL, null, null),
+				new ColumnMapping(parameterColumnName + C_MEASUREMENT_GRADE, C_MEASUREMENT_GRADE, ASCENDING_ORDER, S_MEASUREMENT_GRADE, null, null, null, C_MEASUREMENT_GRADE, null, null),
+				new ColumnMapping(parameterColumnName + C_DEPLOYMENT, C_DEPLOYMENT, ASCENDING_ORDER, S_DEPLOYMENT, null, null, null, C_DEPLOYMENT, null, null),
+				new ColumnMapping(parameterColumnName + C_ICE_AFFECTED, C_ICE_AFFECTED, ASCENDING_ORDER, S_ICE_AFFECTED, null, null, null, C_ICE_AFFECTED, null, null),
+				new ColumnMapping(parameterColumnName + C_TURBIDITY_PEGGED, C_TURBIDITY_PEGGED, ASCENDING_ORDER, S_TURBIDITY_PEGGED, null, null, null, C_TURBIDITY_PEGGED, null, null),
+				new ColumnMapping(parameterColumnName + C_PROBE_TYPE, C_PROBE_TYPE, ASCENDING_ORDER, S_PROBE_TYPE, null, null, null, C_PROBE_TYPE, null, null),
+				new ColumnMapping(parameterColumnName + C_INSTRUMENT, C_INSTRUMENT, ASCENDING_ORDER, S_INSTRUMENT, null, null, null, C_INSTRUMENT, null, null),
+				new ColumnMapping(parameterColumnName + C_DATA_LEAD, C_DATA_LEAD, ASCENDING_ORDER, S_DATA_LEAD, null, null, null, C_DATA_LEAD, null, null),
+				new ColumnMapping(parameterColumnName + C_RAW_FLAG, C_RAW_FLAG, ASCENDING_ORDER, S_RAW_FLAG, null, null, null, C_RAW_FLAG, null, null),
+				new ColumnMapping(parameterColumnName + C_DATA_QUALIFICATION, C_DATA_QUALIFICATION, ASCENDING_ORDER, S_DATA_QUALIFICATION, null, null, null, C_DATA_QUALIFICATION, null, null),
+				new ColumnMapping(parameterColumnName + C_ACCURACY_RATING, C_ACCURACY_RATING, ASCENDING_ORDER, S_ACCURACY_RATING, null, null, null, C_ACCURACY_RATING, null, null),
+				new ColumnMapping(parameterColumnName + C_SOURCE_FILE_NAME, C_SOURCE_FILE_NAME, ASCENDING_ORDER, S_SOURCE_FILE_NAME, null, null, null, C_SOURCE_FILE_NAME, null, null),
+				new ColumnMapping(parameterColumnName + C_SOURCE_UPLOAD_DATE, C_SOURCE_UPLOAD_DATE, ASCENDING_ORDER, S_SOURCE_UPLOAD_DATE, null, null, null, C_SOURCE_UPLOAD_DATE, null, null),
+				new ColumnMapping(parameterColumnName + C_NOTES, C_NOTES, ASCENDING_ORDER, S_NOTES, null, null, null, C_NOTES, null, null),
+				new ColumnMapping(parameterColumnName + C_ER_VALUE, C_ER_VALUE, ASCENDING_ORDER, S_ER_VALUE, null, null, null, C_ER_VALUE, null, null)
 			};
 		} else {
 			log.trace("setupColumnMap stationName=" + this.stationName + " parameterCode=" + this.parameterCode);
@@ -181,47 +181,47 @@ public class ParameterSpec extends DataSpec {
 		return false;
 	}
 	
-	public static final String C_TSM_DT = "TSM_DT";
+	public static final String C_TSM_DT = "tsm_dt";
 	public static final String S_TSM_DT = "TSM_DT";
-	public static final String C_FINAL_VALUE = "FINAL_VALUE";
+	public static final String C_FINAL_VALUE = "final_value";
 	public static final String S_FINAL_VALUE = "FINAL_VALUE";
-	public static final String C_SITE_NAME = "SITE_NAME";
+	public static final String C_SITE_NAME = "site_name";
 	public static final String S_SITE_NAME = "SITE_NAME";
-	public static final String C_GROUP_NAME = "GROUP_NAME";
+	public static final String C_GROUP_NAME = "group_name";
 	public static final String S_GROUP_NAME = "GROUP_NAME";
 	
-	public static final String C_RAW_VALUE = "RAW_VALUE";
+	public static final String C_RAW_VALUE = "raw_value";
 	public static final String S_RAW_VALUE = "RAW_VALUE";
-	public static final String C_MAIN_QUALIFIER = "MAIN_QUALIFIER";
+	public static final String C_MAIN_QUALIFIER = "main_qualifier";
 	public static final String S_MAIN_QUALIFIER = "MAIN_QUALIFIER";
-	public static final String C_DATA_APPROVAL = "DATA_APPROVAL";
+	public static final String C_DATA_APPROVAL = "data_approval";
 	public static final String S_DATA_APPROVAL = "DATA_APPROVAL";
-	public static final String C_MEASUREMENT_GRADE = "MEASUREMENT_GRADE";
+	public static final String C_MEASUREMENT_GRADE = "measurement_grade";
 	public static final String S_MEASUREMENT_GRADE = "MEASUREMENT_GRADE";
-	public static final String C_DEPLOYMENT = "DEPLOYMENT";
+	public static final String C_DEPLOYMENT = "deployment";
 	public static final String S_DEPLOYMENT = "DEPLOYMENT";
-	public static final String C_ICE_AFFECTED = "ICE_AFFECTED";
+	public static final String C_ICE_AFFECTED = "ice_affected";
 	public static final String S_ICE_AFFECTED = "ICE_AFFECTED";
-	public static final String C_TURBIDITY_PEGGED = "TURBIDITY_PEGGED";
+	public static final String C_TURBIDITY_PEGGED = "turbidity_pegged";
 	public static final String S_TURBIDITY_PEGGED = "TURBIDITY_PEGGED";
-	public static final String C_PROBE_TYPE = "PROBE_TYPE";
+	public static final String C_PROBE_TYPE = "probe_type";
 	public static final String S_PROBE_TYPE = "PROBE_TYPE";
-	public static final String C_INSTRUMENT = "INSTRUMENT";
+	public static final String C_INSTRUMENT = "instrument";
 	public static final String S_INSTRUMENT = "INSTRUMENT";
-	public static final String C_DATA_LEAD = "DATA_LEAD";
+	public static final String C_DATA_LEAD = "data_lead";
 	public static final String S_DATA_LEAD = "DATA_LEAD";
-	public static final String C_RAW_FLAG = "RAW_FLAG";
+	public static final String C_RAW_FLAG = "raw_flag";
 	public static final String S_RAW_FLAG = "RAW_FLAG";
-	public static final String C_DATA_QUALIFICATION = "DATA_QUALIFICATION";
+	public static final String C_DATA_QUALIFICATION = "data_qualification";
 	public static final String S_DATA_QUALIFICATION = "DATA_QUALIFICATION";
-	public static final String C_ACCURACY_RATING = "ACCURACY_RATING";
+	public static final String C_ACCURACY_RATING = "accuracy_rating";
 	public static final String S_ACCURACY_RATING = "ACCURACY_RATING";
-	public static final String C_SOURCE_FILE_NAME = "SOURCE_FILE_NAME";
+	public static final String C_SOURCE_FILE_NAME = "source_file_name";
 	public static final String S_SOURCE_FILE_NAME = "SOURCE_FILE_NAME";
-	public static final String C_SOURCE_UPLOAD_DATE = "SOURCE_UPLOAD_DATE";
+	public static final String C_SOURCE_UPLOAD_DATE = "source_upload_date";
 	public static final String S_SOURCE_UPLOAD_DATE = "SOURCE_UPLOAD_DATE";
-	public static final String C_NOTES = "NOTES";
+	public static final String C_NOTES = "notes";
 	public static final String S_NOTES = "NOTES";
-	public static final String C_ER_VALUE = "ER_VALUE";
+	public static final String C_ER_VALUE = "er_value";
 	public static final String S_ER_VALUE = "ER_VALUE";
 }

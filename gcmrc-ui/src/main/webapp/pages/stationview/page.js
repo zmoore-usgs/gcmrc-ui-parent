@@ -148,7 +148,7 @@ GCMRC.Page = {
 	},
 	addParameters : function() {
 		GCMRC.Page.params.values().filter(function(n) {
-			return "Y" === n.description.isVisible;
+			return "Y" === n.description.isVisible && n.description.earliestMethod !== undefined && n.description.latestMethod !== undefined;
 		}).sortBy(function(n) {
 			return (n.description.displayOrder)?parseFloat(n.description.displayOrder):9999999;
 		}).map(function(n) {

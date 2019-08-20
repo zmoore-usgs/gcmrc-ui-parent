@@ -60,10 +60,6 @@
 		</jsp:include>
 		<jsp:include page="app/libs.jsp"></jsp:include>
 				
-		<jsp:include page="js/openlayers/openlayers.jsp">
-			<jsp:param name="relPath" value="${relativePath}" />
-			<jsp:param name="debug-qualifier" value="<%= development%>" />
-		</jsp:include>
 		<script src="${relativePath}js/openlayers/extension/Renderer/DeclusterCanvas.js" type="text/javascript"></script>
 		<script type="text/javascript">
 			var CONFIG = {};

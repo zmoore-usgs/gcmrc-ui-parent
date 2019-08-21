@@ -104,41 +104,40 @@
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-war-plugin</artifactId>
 			</plugin>
-			<plugin>
-				<groupId>com.github.searls</groupId>
-                <artifactId>jasmine-maven-plugin</artifactId>
-                <version>1.3.1.1</version>
-                <executions>
-                    <execution>
-						<phase>package</phase>
-                        <goals>
-                            <goal>test</goal>
-                        </goals>
-                    </execution>
-                </executions>
-				<configuration>
-					<jsSrcDir>${project.basedir}</jsSrcDir>
-					<haltOnFailure>false</haltOnFailure>
-					<sourceIncludes>
-						<include>**/target/**/js/closure-library/goog/base.js</include>
-						<include>**/target/**/js/closure-library/goog/debug/error.js</include>
-						<include>**/target/**/js/closure-library/goog/string/string.js</include>
-						<include>**/target/**/js/closure-library/goog/asserts/asserts.js</include>
-						<include>**/target/**/js/closure-library/goog/array/array.js</include>
-						<include>**/target/**/js/closure-library/goog/math/math.js</include>
-						<include>**/target/**/js/closure-library/goog/math/size.js</include>
-						<include>**/target/**/js/closure-library/goog/math/matrix.js</include>
-						<include>**/target/**/js/sugar/sugar-1.3.4.min.js</include>
-						<include>**/target/**/js/js-utils/binary-search.js</include>
-						
-						<include>**/target/**/app/graphing/MatrixWorker.js</include>
-<!--						<include>**/src/test/javascript/MatrixBuildResources.js</include>-->
-						<!--<include>**/src/test/javascript/MatrixUncertaintyResources.js</include>-->
-						
-						<include>**/target/**/app/jslResourceLoad.js</include>
-					</sourceIncludes>
-				</configuration>
-			</plugin>
+                        <plugin>
+                            <groupId>com.github.searls</groupId>
+                            <artifactId>jasmine-maven-plugin</artifactId>
+                            <version>2.2</version>
+                            <executions>
+                                <execution>
+                                    <phase>package</phase>
+                                    <goals>
+                                        <goal>test</goal>
+                                    </goals>
+                                </execution>
+                            </executions>
+                            <configuration>
+                                <jsSrcDir>${project.basedir}</jsSrcDir>
+                                <haltOnFailure>false</haltOnFailure>
+                                <preloadSources>
+                                    <source>classpath/META-INF/resources/webjars/closure-library/${version.closure}/goog/base.js</source>
+                                    <source>classpath/META-INF/resources/webjars/closure-library/${version.closure}/goog/debug/error.js</source>
+                                    <source>classpath/META-INF/resources/webjars/closure-library/${version.closure}/goog/string/string.js</source>
+                                    <source>classpath/META-INF/resources/webjars/closure-library/${version.closure}/goog/asserts/asserts.js</source>
+                                    <source>classpath/META-INF/resources/webjars/closure-library/${version.closure}/goog/array/array.js</source>
+                                    <source>classpath/META-INF/resources/webjars/closure-library/${version.closure}/goog/math/math.js</source>
+                                    <source>classpath/META-INF/resources/webjars/closure-library/${version.closure}/goog/math/size.js</source>
+                                    <source>classpath/META-INF/resources/webjars/closure-library/${version.closure}/goog/math/matrix.js</source>
+                                    <source>classpath/META-INF/resources/webjars/closure-library/${version.closure}/goog/math/matrix.js</source>
+                                    <source>classpath/META-INF/resources/webjars/sugar/${version.sugarjs}/sugar-full.min.js</source>
+                                </preloadSources>
+                                <sourceIncludes>
+                                    <include>**/target/**/js/js-utils/binary-search.js</include>
+                                    <include>**/target/**/app/graphing/MatrixWorker.js</include>
+                                    <include>**/target/**/app/jslResourceLoad.js</include>
+                                </sourceIncludes>
+                            </configuration>
+                        </plugin>
 		</plugins>
 	</build>
 </project>

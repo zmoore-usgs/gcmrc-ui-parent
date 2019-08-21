@@ -21,3 +21,4 @@
 /bin/
 .vscode/
 /nb-configuration.xml
+/phantomjsdriver.log

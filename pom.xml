@@ -105,6 +105,7 @@
                 <version.angular_ui_sortable>0.13.0</version.angular_ui_sortable>
                 <version.angular_ui_bootstrap>0.6.0</version.angular_ui_bootstrap>
                 <version.bootstrap_datepicker>1.9.0</version.bootstrap_datepicker>
+                <version.proj4js>2.2.1</version.proj4js>
 	</properties>
 	
 	<scm>
@@ -359,6 +360,11 @@
                                 <groupId>org.webjars</groupId>
                                 <artifactId>bootstrap-datepicker</artifactId>
                                 <version>${version.bootstrap_datepicker}</version>
+                        </dependency>
+                        <dependency>
+                                <groupId>org.webjars</groupId>
+                                <artifactId>proj4js</artifactId>
+                                <version>${version.proj4js}-1</version>
                         </dependency>
 			<dependency>
 				<groupId>gov.usgs.cida.jslibs</groupId>

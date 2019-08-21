@@ -30,10 +30,11 @@
         String vModernizr = getProp("version.modernizr");
         String vBootstrap = getProp("version.bootstrap");
         String vJqueryUi = getProp("version.jqueryui");
+        String vSugarJs = getProp("version.sugarjs");
         String relPath = request.getContextPath();
 %>
 
-
+<%-- Log4JavaScript --%>
 <script type="text/javascript" src="<%= relPath %>/webjars/log4javascript/<%=vLog4JavaScript%>/log4javascript<%= development ? "_uncompressed" : ""%>.js"></script>
 <script type="text/javascript">
     var LOG;
@@ -92,7 +93,9 @@
     }
 </script>
 
+<%-- Modernizr --%>
 <script type="text/javascript" src="<%= relPath %>/webjars/modernizr/<%=vModernizr%>/modernizr<%= development ? "" : ".min"%>.js"></script>
+
 
 <script type="text/javascript" src="<%= relPath %>/webjars/jquery/<%=vJquery%>/jquery<%= development ? "" : ".min"%>.js"></script>
 
@@ -102,15 +105,9 @@
 
 <link rel="stylesheet" href="<%= relPath %>/webjars/jquery-ui/<%=vJqueryUi%>/themes/base/<%= development ? "/" : "minified/"%>jquery-ui<%= development ? "" : ".min"%>.css"/>
 <script type="text/javascript" src="<%= relPath %>/webjars/jquery-ui/<%=vJqueryUi%>/ui/<%= development ? "/" : "minified/"%>jquery-ui<%= development ? "" : ".min"%>.js"></script>
-<%--<jsp:include page="../js/slider/package.jsp">
-	<jsp:param name="relPath" value="${relativePath}" />
-	<jsp:param name="debug-qualifier" value="${development}" />
-</jsp:include>--%>
 
-<jsp:include page="../js/sugar/package.jsp">
-	<jsp:param name="relPath" value="${relativePath}" />
-	<jsp:param name="debug-qualifier" value="${development}" />
-</jsp:include>
+<script type="text/javascript" src="<%= relPath %>/webjars/sugar/<%=vSugarJs%>/sugar-full<%= development ? "" : ".min"%>.js"></script>
+
 <script type="text/javascript">
 	Object.extend();
 </script>

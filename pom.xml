@@ -99,6 +99,7 @@
                 <version.openlayers>2.13</version.openlayers>
                 <version.modernizr>2.6.2</version.modernizr>
                 <version.bootstrap>2.2.1</version.bootstrap>
+                <version.sugarjs>1.4.1</version.sugarjs>
 	</properties>
 	
 	<scm>
@@ -293,7 +294,6 @@
                                 I don't think this needs to happen for any other
                                 version webjars.
                                 -->
-                                
                         </dependency>
                         <dependency>
                                 <groupId>org.webjars</groupId>
@@ -313,6 +313,11 @@
                                 <groupId>org.webjars</groupId>
                                 <artifactId>openlayers</artifactId>
                                 <version>${version.openlayers}</version>
+                        </dependency>
+                        <dependency>
+                                <groupId>org.webjars</groupId>
+                                <artifactId>sugar</artifactId>
+                                <version>${version.sugarjs}</version>
                         </dependency>
 			<dependency>
 				<groupId>gov.usgs.cida.jslibs</groupId>

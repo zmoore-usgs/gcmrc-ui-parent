@@ -96,6 +96,7 @@
                 <version.jquery>1.7.2</version.jquery>
                 <version.log4javascript>1.4.13</version.log4javascript>
                 <version.openlayers>2.13</version.openlayers>
+                <version.modernizr>2.6.2</version.modernizr>
 	</properties>
 	
 	<scm>
@@ -283,10 +284,23 @@
                                 want ${version.log4javascript} to not have a '-1'
                                 in it. This is only if using 1.4.13-1 version.
                                 I don't think this needs to happen for any other
-                                version webjars has for this lib and it is probably
-                                a mistake on the part of webjars
+                                version webjars.
                                 -->
                                 
+                        </dependency>
+                        <dependency>
+                                <groupId>org.webjars</groupId>
+                                <artifactId>modernizr</artifactId>
+                                <version>${version.modernizr}-1</version>
+                                <!--
+                                Adding the '-1' here is required because inside
+                                the webjar, the versioned folder does not contain
+                                the '-1' so everywhere besides on this line we
+                                want ${version.modernizr} to not have a '-1'
+                                in it. This is only if using 2.6.2-1 version.
+                                I don't think this needs to happen for any other
+                                version webjars.
+                                -->
                         </dependency>
 			<dependency>
                                 <groupId>org.webjars</groupId>

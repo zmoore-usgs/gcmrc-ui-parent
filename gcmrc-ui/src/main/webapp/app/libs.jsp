@@ -14,12 +14,6 @@
         } catch (Exception e) {
             log.error("Could not read application.properties. Application will not function", e);
         }
-
-        try {
-            props = props.addJNDIContexts(new String[0]);
-        } catch (Exception e) {
-            log.error("Could not find JNDI");
-        }
     }
 
     private String getProp(String key) {
@@ -33,20 +27,25 @@
         String vJquery = getProp("version.jquery");
         String vLog4JavaScript = getProp("version.log4javascript");
         String vOpenLayers = getProp("version.openlayers");
+        String vModernizr = getProp("version.modernizr");
         String relPath = request.getContextPath();
 %>
 
 
-<script type="text/javascript" src="<%= relPath %>/webjars/log4javascript/<%=vLog4JavaScript%>/log4javascript<%= development ? "" : ".min"%>.js"></script>
+<script type="text/javascript" src="<%= relPath %>/webjars/log4javascript/<%=vLog4JavaScript%>/log4javascript<%= development ? "_uncompressed" : ""%>.js"></script>
 <script type="text/javascript">
     var LOG;
     /**
-     * http://log4javascript.org/
+     * Initializes the log4javascript framework
+     * 
+     * @see http://log4javascript.org/
+     * @param {type} params
+     * @returns {undefined}
      */
     function initializeLogging(params) {
-		if (!params) {
-			params = {};
-		}
+        if (!params) {
+                params = {};
+        }
         LOG = log4javascript.getLogger();
     
         var LOG4JS_PATTERN_LAYOUT = params.LOG4JS_PATTERN_LAYOUT || '' || "%rms - %-5p - %m%n";
@@ -56,45 +55,41 @@
     
         appender.setLayout(new log4javascript.PatternLayout(LOG4JS_PATTERN_LAYOUT));
         var logLevel;
-		switch (LOG4JS_LOG_THRESHOLD) {
-			case "trace" :
-				logLevel = log4javascript.Level.TRACE;
-				break;
-			case "debug" :
-				logLevel = log4javascript.Level.DEBUG;
-				break;
-			case "info" :
-				logLevel = log4javascript.Level.INFO;
-				break; 
-			case "warn" :
-				logLevel = log4javascript.Level.WARN;
-				break;
-			case "error" :
-				logLevel = log4javascript.Level.ERROR;
-				break; 
-			case "fatal" :
-				logLevel = log4javascript.Level.FATAL;
-				break; 
-			case "off" :
-				logLevel = log4javascript.Level.OFF;
-				break; 
-			default:
-				logLevel = log4javascript.Level.INFO;
-		}
+                switch (LOG4JS_LOG_THRESHOLD) {
+                        case "trace" :
+                                logLevel = log4javascript.Level.TRACE;
+                                break;
+                        case "debug" :
+                                logLevel = log4javascript.Level.DEBUG;
+                                break;
+                        case "info" :
+                                logLevel = log4javascript.Level.INFO;
+                                break; 
+                        case "warn" :
+                                logLevel = log4javascript.Level.WARN;
+                break;
+            case "error" :
+                logLevel = log4javascript.Level.ERROR;
+                break;
+            case "fatal" :
+                logLevel = log4javascript.Level.FATAL;
+                break;
+            case "off" :
+                logLevel = log4javascript.Level.OFF;
+                break;
+            default:
+                logLevel = log4javascript.Level.INFO;
+        }
         appender.setThreshold(logLevel);
-    
+
         LOG.addAppender(appender);
-    
-        LOG.info('Log4javascript v.'+log4javascript.version+' initialized.');
+
+        LOG.info('Log4javascript v.' + log4javascript.version + ' initialized.');
         LOG.info('Logging Appender Pattern Set to: ' + LOG4JS_PATTERN_LAYOUT);
         LOG.info('Logging Threshold Set To: ' + logLevel);
     }
 </script>
-<jsp:include page="../js/modernizr/package.jsp">
-	<jsp:param name="relPath" value="${relativePath}" />
-	<jsp:param name="debug-qualifier" value="${development}" />
-</jsp:include>
-
+<script type="text/javascript" src="<%= relPath %>/webjars/modernizr/<%=vModernizr%>/modernizr<%= development ? "" : ".min"%>.js"></script>
 <script type="text/javascript" src="<%= relPath %>/webjars/jquery/<%=vJquery%>/jquery<%= development ? "" : ".min"%>.js"></script>
 
 <jsp:include page="../js/bootstrap/package.jsp">

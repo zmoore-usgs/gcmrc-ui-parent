@@ -31,6 +31,7 @@
         String vBootstrap = getProp("version.bootstrap");
         String vJqueryUi = getProp("version.jqueryui");
         String vSugarJs = getProp("version.sugarjs");
+        String vClosure = getProp("version.closure");
         String relPath = request.getContextPath();
 %>
 
@@ -96,25 +97,26 @@
 <%-- Modernizr --%>
 <script type="text/javascript" src="<%= relPath %>/webjars/modernizr/<%=vModernizr%>/modernizr<%= development ? "" : ".min"%>.js"></script>
 
-
+<%-- JQuery --%>
 <script type="text/javascript" src="<%= relPath %>/webjars/jquery/<%=vJquery%>/jquery<%= development ? "" : ".min"%>.js"></script>
 
+<%-- Bootstrap --%>
 <link rel="stylesheet" href="<%= relPath %>/webjars/bootstrap/<%=vBootstrap%>/css/bootstrap<%= development ? "" : ".min" %>.css"/>
 <link rel="stylesheet" href="<%= relPath %>/webjars/bootstrap/<%=vBootstrap%>/css/bootstrap-responsive<%= development ? "" : ".min" %>.css"/>
 <script type="text/javascript" src="<%= relPath %>/webjars/bootstrap/<%=vBootstrap%>/js/bootstrap<%= development ? "" : ".min"%>.js"></script>
 
+<%-- JqueryUI --%>
 <link rel="stylesheet" href="<%= relPath %>/webjars/jquery-ui/<%=vJqueryUi%>/themes/base/<%= development ? "/" : "minified/"%>jquery-ui<%= development ? "" : ".min"%>.css"/>
 <script type="text/javascript" src="<%= relPath %>/webjars/jquery-ui/<%=vJqueryUi%>/ui/<%= development ? "/" : "minified/"%>jquery-ui<%= development ? "" : ".min"%>.js"></script>
 
+<%-- SugarJS --%>
 <script type="text/javascript" src="<%= relPath %>/webjars/sugar/<%=vSugarJs%>/sugar-full<%= development ? "" : ".min"%>.js"></script>
 
 <script type="text/javascript">
 	Object.extend();
 </script>
 
-<jsp:include page="../js/closure-library/package.jsp">
-	<jsp:param name="relPath" value="${relativePath}" />
-	<jsp:param name="debug-qualifier" value="${development}" />
-</jsp:include>
+<%-- Closure --%>
+<script type="text/javascript" src="<%= relPath %>/webjars/closure-library/<%=vClosure%>/goog/base.js"></script>
 
 <script type="text/javascript" src="<%= relPath %>/webjars/openlayers/<%=vOpenLayers%>/OpenLayers<%= development ? "" : ".debug"%>.js"></script>

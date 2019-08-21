@@ -100,6 +100,7 @@
                 <version.modernizr>2.6.2</version.modernizr>
                 <version.bootstrap>2.2.1</version.bootstrap>
                 <version.sugarjs>1.4.1</version.sugarjs>
+                <version.closure>20150412-848686a</version.closure>
 	</properties>
 	
 	<scm>
@@ -332,9 +333,14 @@
 				<type>war</type>
 			</dependency>
                         <dependency>
-                            <groupId>org.webjars</groupId>
-                            <artifactId>bootstrap</artifactId>
-                            <version>${version.bootstrap}</version>
+                                <groupId>org.webjars</groupId>
+                                <artifactId>bootstrap</artifactId>
+                                <version>${version.bootstrap}</version>
+                        </dependency>
+                        <dependency>
+                                <groupId>org.webjars</groupId>
+                                <artifactId>closure-library</artifactId>
+                                <version>${version.closure}</version>
                         </dependency>
 			<dependency>
 				<groupId>gov.usgs.cida.jslibs</groupId>

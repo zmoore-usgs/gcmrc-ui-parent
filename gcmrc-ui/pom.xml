@@ -77,6 +77,10 @@
                         <groupId>org.webjars</groupId>
                         <artifactId>sugar</artifactId>
                 </dependency>
+                <dependency>
+                        <groupId>org.webjars</groupId>
+                        <artifactId>closure-library</artifactId>
+                </dependency>
 		<dependency>
 			<groupId>gov.usgs.cida.jslibs</groupId>
 			<artifactId>dygraphs-core</artifactId>

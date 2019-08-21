@@ -9,7 +9,7 @@ importScripts("../../js/closure-library/goog/base.js",
 );
 
 importScripts("../../js/sugar/sugar-1.3.9.min.js");
-importScripts("../../js/js-utils/binary-search.min.js");
+importScripts("../../js/js-utils/binary-search.js");
 
 importScripts("../../app/graphing/MatrixWorker.js");
 

@@ -94,6 +94,7 @@
 		<war.dir>src/main/webapp</war.dir>
 		<java.version>1.8</java.version>
                 <version.jquery>1.7.2</version.jquery>
+                <version.jqueryui>1.10.3</version.jqueryui>
                 <version.log4javascript>1.4.13</version.log4javascript>
                 <version.openlayers>2.13</version.openlayers>
                 <version.modernizr>2.6.2</version.modernizr>
@@ -273,6 +274,11 @@
                                 <groupId>org.webjars</groupId>
                                 <artifactId>jquery</artifactId>
                                 <version>${version.jquery}</version>
+                        </dependency>
+                        <dependency>
+                                <groupId>org.webjars</groupId>
+                                <artifactId>jquery-ui</artifactId>
+                                <version>${version.jqueryui}</version>
                         </dependency>
 			<dependency>
                                 <groupId>org.webjars</groupId>

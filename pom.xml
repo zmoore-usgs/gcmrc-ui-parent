@@ -101,6 +101,9 @@
                 <version.bootstrap>2.2.1</version.bootstrap>
                 <version.sugarjs>1.4.1</version.sugarjs>
                 <version.closure>20150412-848686a</version.closure>
+                <version.angularjs>1.0.7</version.angularjs>
+                <version.angular_ui_sortable>0.13.0</version.angular_ui_sortable>
+                <version.angular_ui_bootstrap>0.6.0</version.angular_ui_bootstrap>
 	</properties>
 	
 	<scm>
@@ -272,6 +275,18 @@
 				<scope>provided</scope>
 			</dependency>
 			<!-- JS Templates -->
+                        <!-- 
+                        Adding the '-1' to some of these webjars dependencies is
+                        required because for some releases, the webjars project had 
+                        made point releases (tacking '-1' to the artifact version,
+                        but the version within the artifact, which includes the 
+                        path to the javascript remains the x.y.z version without 
+                        the '-1'. I put the Maven property to the x.y.z version above
+                        and add the '-1' only in the version section in these 
+                        dependency nodes. This allows me to still use the maven
+                        property to pick up the correct path to the javascript source
+                        during runtime
+                        -->
 			<dependency>
                                 <groupId>org.webjars</groupId>
                                 <artifactId>jquery</artifactId>
@@ -286,29 +301,11 @@
                                 <groupId>org.webjars</groupId>
                                 <artifactId>log4javascript</artifactId>
                                 <version>${version.log4javascript}-1</version>
-                                <!-- 
-                                Adding the '-1' here is required because inside
-                                the webjar, the versioned folder does not contain
-                                the '-1' so everywhere besides on this line we
-                                want ${version.log4javascript} to not have a '-1'
-                                in it. This is only if using 1.4.13-1 version.
-                                I don't think this needs to happen for any other
-                                version webjars.
-                                -->
                         </dependency>
                         <dependency>
                                 <groupId>org.webjars</groupId>
                                 <artifactId>modernizr</artifactId>
                                 <version>${version.modernizr}-1</version>
-                                <!--
-                                Adding the '-1' here is required because inside
-                                the webjar, the versioned folder does not contain
-                                the '-1' so everywhere besides on this line we
-                                want ${version.modernizr} to not have a '-1'
-                                in it. This is only if using 2.6.2-1 version.
-                                I don't think this needs to happen for any other
-                                version webjars.
-                                -->
                         </dependency>
 			<dependency>
                                 <groupId>org.webjars</groupId>
@@ -341,6 +338,21 @@
                                 <groupId>org.webjars</groupId>
                                 <artifactId>closure-library</artifactId>
                                 <version>${version.closure}</version>
+                        </dependency>
+                        <dependency>
+                                <groupId>org.webjars</groupId>
+                                <artifactId>angularjs</artifactId>
+                                <version>${version.angularjs}</version>
+                        </dependency>
+                        <dependency>
+                                <groupId>org.webjars</groupId>
+                                <artifactId>angular-ui-sortable</artifactId>
+                                <version>${version.angular_ui_sortable}-1</version>
+                        </dependency>
+                        <dependency>
+                                <groupId>org.webjars</groupId>
+                                <artifactId>angular-ui-bootstrap</artifactId>
+                                <version>${version.angular_ui_bootstrap}-1</version>
                         </dependency>
 			<dependency>
 				<groupId>gov.usgs.cida.jslibs</groupId>

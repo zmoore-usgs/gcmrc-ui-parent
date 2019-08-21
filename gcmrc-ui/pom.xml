@@ -65,11 +65,10 @@
 			<artifactId>openlayers-decluster</artifactId>
 			<type>war</type>
 		</dependency>
-		<dependency>
-			<groupId>gov.usgs.cida.jslibs</groupId>
-			<artifactId>bootstrap-core</artifactId>
-			<type>war</type>
-		</dependency>
+                <dependency>
+                        <groupId>org.webjars</groupId>
+                        <artifactId>bootstrap</artifactId>
+                </dependency>
 		<dependency>
 			<groupId>gov.usgs.cida.jslibs</groupId>
 			<artifactId>dygraphs-core</artifactId>

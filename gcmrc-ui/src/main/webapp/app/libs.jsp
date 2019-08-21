@@ -28,6 +28,7 @@
         String vLog4JavaScript = getProp("version.log4javascript");
         String vOpenLayers = getProp("version.openlayers");
         String vModernizr = getProp("version.modernizr");
+        String vBootstrap = getProp("version.bootstrap");
         String relPath = request.getContextPath();
 %>
 
@@ -89,13 +90,14 @@
         LOG.info('Logging Threshold Set To: ' + logLevel);
     }
 </script>
+
 <script type="text/javascript" src="<%= relPath %>/webjars/modernizr/<%=vModernizr%>/modernizr<%= development ? "" : ".min"%>.js"></script>
+
 <script type="text/javascript" src="<%= relPath %>/webjars/jquery/<%=vJquery%>/jquery<%= development ? "" : ".min"%>.js"></script>
 
-<jsp:include page="../js/bootstrap/package.jsp">
-	<jsp:param name="relPath" value="${relativePath}" />
-	<jsp:param name="debug-qualifier" value="${development}" />
-</jsp:include>
+<link rel="stylesheet" href="<%= relPath %>/webjars/bootstrap/<%=vBootstrap%>/css/bootstrap<%= development ? "" : ".min" %>.css"/>
+<link rel="stylesheet" href="<%= relPath %>/webjars/bootstrap/<%=vBootstrap%>/css/bootstrap-responsive<%= development ? "" : ".min" %>.css"/>
+<script type="text/javascript" src="<%= relPath %>/webjars/bootstrap/<%=vBootstrap%>/js/bootstrap<%= development ? "" : ".min"%>.js"></script>
 
 <jsp:include page="../js/slider/package.jsp">
 	<jsp:param name="relPath" value="${relativePath}" />

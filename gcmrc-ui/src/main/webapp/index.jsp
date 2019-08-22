@@ -1,3 +1,4 @@
+<%@page import="java.io.File"%>
 <%@page import="java.util.Collections"%>
 <%@page import="java.util.Map"%>
 <%@page import="java.util.HashMap"%>
@@ -11,7 +12,7 @@
 
 	{
 		try {
-			props = props.addJNDIContexts(new String[0]);
+                        props = props.addJNDIContexts(new String[0]);
 		} catch (Exception e) {
 			log.error("Could not find JNDI");
 		}
@@ -50,12 +51,10 @@
 			<jsp:param name="expires" value="never" />
 			<jsp:param name="development" value="${development}" />
 		</jsp:include>
-		<jsp:include page="app/libs.jsp"></jsp:include>
+		<jsp:include page="app/libs.jsp">
+                    <jsp:param name="development" value="${development}" />
+                </jsp:include>
 
-		<jsp:include page="js/openlayers/openlayers.jsp">
-			<jsp:param name="relPath" value="${relativePath}" />
-			<jsp:param name="debug-qualifier" value="<%= development%>" />
-		</jsp:include>
 		<script src="${relativePath}js/openlayers/extension/Renderer/DeclusterCanvas.js" type="text/javascript"></script>
 		<script type="text/javascript">
 			var CONFIG = {};

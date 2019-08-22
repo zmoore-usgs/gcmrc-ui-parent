@@ -85,14 +85,8 @@
 			<jsp:param name="debug-qualifier" value="<%= development%>" />
 		</jsp:include>
 
-		<script src="${relativePath}js/proj4js/proj4js.js" type="text/javascript"></script>
-		<script type="text/javascript">
-			Proj4js.defs["EPSG:26949"] = "+proj=tmerc +lat_0=31 +lon_0=-111.9166666666667 +k=0.9999 +x_0=213360 +y_0=0 +ellps=GRS80 +datum=NAD83 +units=m +no_defs";
-		</script>
-		<jsp:include page="js/openlayers/openlayers.jsp">
-			<jsp:param name="relPath" value="${relativePath}" />
-			<jsp:param name="debug-qualifier" value="${development}" />
-		</jsp:include>
+                <jsp:include page="js/proj4js/package.jsp"></jsp:include>
+
 		<script src="${relativePath}js/openlayers/extension/Renderer/DeclusterCanvas.js" type="text/javascript"></script>
 			
 		<jsp:include page="js/dygraphs/dygraphs.jsp">

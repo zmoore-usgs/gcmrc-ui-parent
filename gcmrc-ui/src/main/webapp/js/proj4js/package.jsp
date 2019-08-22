@@ -7,7 +7,7 @@
     private static final Logger log = LoggerFactory.getLogger("package_jsp");
     protected DynamicReadOnlyProperties props = new DynamicReadOnlyProperties();
 
-{
+    {
         try {
             File propsFile = new File(getClass().getClassLoader().getResource("application.properties").toURI());
             props = new DynamicReadOnlyProperties(propsFile);
@@ -24,11 +24,10 @@
 
 %>
 <%
-        String vAngularJs = getProp("version.angularjs");
-        String vAngularUiSortable = getProp("version.angular_ui_sortable");
-        String vAngularUiBootstrap = getProp("version.angular_ui_bootstrap");
-        String relPath = request.getContextPath();
+    String vPro4JS = getProp("version.proj4js");
+    String relPath = request.getContextPath();
 %>
-<script type="text/javascript" src="<%= relPath %>/webjars/angularjs/<%=vAngularJs%>/angular<%= development ? "" : ".min"%>.js"></script>
-<script type="text/javascript" src="<%= relPath %>/webjars/angular-ui-sortable/<%=vAngularUiSortable%>/sortable<%= development ? "" : ".min"%>.js"></script>
-<script type="text/javascript" src="<%= relPath %>/webjars/angular-ui-bootstrap/<%=vAngularUiBootstrap%>/ui-bootstrap-tpls<%= development ? "" : ".min"%>.js"></script>
+<script src="<%= relPath%>/webjars/proj4js/<%= vPro4JS%>/proj4.js" type="text/javascript"></script>
+<script type="text/javascript">
+    proj4.defs["EPSG:26949"] = "+proj=tmerc +lat_0=31 +lon_0=-111.9166666666667 +k=0.9999 +x_0=213360 +y_0=0 +ellps=GRS80 +datum=NAD83 +units=m +no_defs";
+</script>

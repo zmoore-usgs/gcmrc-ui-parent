@@ -20,12 +20,11 @@
         return props.getProperty(key, "");
     }
 
-    protected boolean development = Boolean.parseBoolean(props.getProperty("all.development")) || Boolean.parseBoolean(props.getProperty("${project.artifactId}.development"));
-
 %>
 <%
         String vFontAwesome = getProp("version.fontawesome");
         String relPath = request.getContextPath();
+        boolean development = Boolean.parseBoolean(request.getParameter("development"));
 %>
 <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
 <meta charset="utf-8"/>
@@ -42,7 +41,7 @@
 <%--<meta name="expires" content="${param['expires']}">--%>
 
 <link type="text/css" media="screen" rel="stylesheet" href="${param['relPath']}template/common.css" title="default"/>
-<link type="text/css" media="screen" rel="stylesheet" href="<%=relPath%>/webjars/font-awesome/<%=vFontAwesome%>/css/font-awesome<%= development ? "" : ".min"%>.css" />
+<link type="text/css" media="screen" rel="stylesheet" href="<%= relPath %>/webjars/font-awesome/<%= vFontAwesome %>/css/font-awesome<%= development ? "" : ".min"%>.css" />
 <link type="text/css" media="screen" rel="stylesheet" href="${param['relPath']}template/custom.css" title="default"/>
 <link rel="alternate stylesheet" media="screen" type="text/css" href="${param['relPath']}template/none.css" title="no_style" />
 <link rel="stylesheet" media="print" type="text/css" href="${param['relPath']}template/print.css" />
@@ -64,7 +63,6 @@
 <% 
     String gaAccountCode = request.getParameter("google-analytics-account-code");
     String[] gaCommandList = request.getParameterValues("google-analytics-command-set");
-    Boolean development = Boolean.parseBoolean(request.getParameter("development"));
     
     if (gaAccountCode != null && !gaAccountCode.trim().isEmpty()) { 
 %>

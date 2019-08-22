@@ -1,3 +1,32 @@
+<%@page import="gov.usgs.cida.path.PathUtil"%>
+<%@page import="java.io.File"%>
+<%@page import="gov.usgs.cida.config.DynamicReadOnlyProperties"%>
+<%@page import="org.slf4j.Logger"%>
+<%@page import="org.slf4j.LoggerFactory"%>
+<%!
+    private static final Logger log = LoggerFactory.getLogger("package_jsp");
+    protected DynamicReadOnlyProperties props = new DynamicReadOnlyProperties();
+
+{
+        try {
+            File propsFile = new File(getClass().getClassLoader().getResource("application.properties").toURI());
+            props = new DynamicReadOnlyProperties(propsFile);
+        } catch (Exception e) {
+            log.error("Could not read application.properties. Application will not function", e);
+        }
+    }
+
+    private String getProp(String key) {
+        return props.getProperty(key, "");
+    }
+
+    protected boolean development = Boolean.parseBoolean(props.getProperty("all.development")) || Boolean.parseBoolean(props.getProperty("${project.artifactId}.development"));
+
+%>
+<%
+        String vFontAwesome = getProp("version.fontawesome");
+        String relPath = request.getContextPath();
+%>
 <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
 <meta charset="utf-8"/>
 <title>${param['shortName']}</title>
@@ -13,6 +42,7 @@
 <%--<meta name="expires" content="${param['expires']}">--%>
 
 <link type="text/css" media="screen" rel="stylesheet" href="${param['relPath']}template/common.css" title="default"/>
+<link type="text/css" media="screen" rel="stylesheet" href="<%=relPath%>/webjars/font-awesome/<%=vFontAwesome%>/css/font-awesome<%= development ? "" : ".min"%>.css" />
 <link type="text/css" media="screen" rel="stylesheet" href="${param['relPath']}template/custom.css" title="default"/>
 <link rel="alternate stylesheet" media="screen" type="text/css" href="${param['relPath']}template/none.css" title="no_style" />
 <link rel="stylesheet" media="print" type="text/css" href="${param['relPath']}template/print.css" />
@@ -21,6 +51,12 @@
 	#usgstitle p {
 		padding : 4px;
 	}
+</style>
+<%-- Additional FontAwesome styling not in base css --%>
+<style type="text/css">
+        .fa-wrapper {
+                position: relative
+        }
 </style>
 <script type="text/javascript" src="${param['relPath']}template/styleswitch.js"></script>
 <script type="text/javascript" src="${param['relPath']}template/external.js"></script>

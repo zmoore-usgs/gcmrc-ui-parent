@@ -81,7 +81,7 @@
 
 		<jsp:include page="js/proj4js/package.jsp"></jsp:include>
                 
-		<script src="${relativePath}js/openlayers/extension/Renderer/DeclusterCanvas.js" type="text/javascript"></script>
+		<script src="${relativePath}app/DeclusterCanvas.js" type="text/javascript"></script>
 
 		<jsp:include page="js/dygraphs/dygraphs.jsp">
 			<jsp:param name="relPath" value="${relativePath}" />

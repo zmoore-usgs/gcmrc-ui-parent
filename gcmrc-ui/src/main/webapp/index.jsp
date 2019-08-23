@@ -55,7 +55,7 @@
                     <jsp:param name="development" value="${development}" />
                 </jsp:include>
 
-		<script src="${relativePath}js/openlayers/extension/Renderer/DeclusterCanvas.js" type="text/javascript"></script>
+		<script src="${relativePath}app/DeclusterCanvas.js" type="text/javascript"></script>
 		<script type="text/javascript">
 			var CONFIG = {};
 

@@ -60,7 +60,7 @@
 		</jsp:include>
 		<jsp:include page="app/libs.jsp"></jsp:include>
 				
-		<script src="${relativePath}js/openlayers/extension/Renderer/DeclusterCanvas.js" type="text/javascript"></script>
+		<script src="${relativePath}app/DeclusterCanvas.js" type="text/javascript"></script>
 		<script type="text/javascript">
 			var CONFIG = {};
 			
@@ -70,7 +70,6 @@
 		</script>
 
 		<jsp:include page="app/gcmrc.jsp"></jsp:include>
-		<script src="${relativePath}services/rest/station/site/${networkName}?jsonp_callback=GCMRC.StationLoad"></script>
 		<jsp:include page="pages/page.jsp">
 			<jsp:param name="relPath" value="${relativePath}" />
 			<jsp:param name="pageName" value="${pageName}" />

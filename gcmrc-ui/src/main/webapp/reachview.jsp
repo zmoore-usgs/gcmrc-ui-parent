@@ -87,7 +87,7 @@
 
                 <jsp:include page="js/proj4js/package.jsp"></jsp:include>
 
-		<script src="${relativePath}js/openlayers/extension/Renderer/DeclusterCanvas.js" type="text/javascript"></script>
+		<script src="${relativePath}app/DeclusterCanvas.js" type="text/javascript"></script>
 			
 		<jsp:include page="js/dygraphs/dygraphs.jsp">
 			<jsp:param name="relPath" value="${relativePath}" />
@@ -111,7 +111,6 @@
 			<jsp:param name="relPath" value="${relativePath}" />
 			<jsp:param name="debug-qualifier" value="${development}" />
 		</jsp:include>
-		<script src="${relativePath}services/rest/station/allsite/${networkName}?jsonp_callback=GCMRC.StationLoad"></script>
 		<jsp:include page="app/graphing/package.jsp">
 			<jsp:param name="relPath" value="${relativePath}" />
 			<jsp:param name="debug-qualifier" value="${development}" />

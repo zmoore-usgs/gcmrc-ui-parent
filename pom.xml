@@ -93,20 +93,20 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<war.dir>src/main/webapp</war.dir>
 		<java.version>1.8</java.version>
-                <version.jquery>1.7.2</version.jquery>
-                <version.jqueryui>1.10.3</version.jqueryui>
-                <version.log4javascript>1.4.13</version.log4javascript>
-                <version.openlayers>2.13</version.openlayers>
-                <version.modernizr>2.6.2</version.modernizr>
-                <version.bootstrap>2.2.1</version.bootstrap>
-                <version.sugarjs>1.4.1</version.sugarjs>
-                <version.closure>20150412-848686a</version.closure>
-                <version.angularjs>1.0.7</version.angularjs>
-                <version.angular_ui_sortable>0.13.0</version.angular_ui_sortable>
-                <version.angular_ui_bootstrap>0.6.0</version.angular_ui_bootstrap>
-                <version.bootstrap_datepicker>1.9.0</version.bootstrap_datepicker>
-                <version.proj4js>2.2.1</version.proj4js>
-                <version.fontawesome>4.7.0</version.fontawesome>
+		<version.jquery>1.7.2</version.jquery>
+		<version.jqueryui>1.10.3</version.jqueryui>
+		<version.log4javascript>1.4.13</version.log4javascript>
+		<version.openlayers>2.13</version.openlayers>
+		<version.modernizr>2.6.2</version.modernizr>
+		<version.bootstrap>2.2.1</version.bootstrap>
+		<version.sugarjs>1.4.1</version.sugarjs>
+		<version.closure>20150412-848686a</version.closure>
+		<version.angularjs>1.0.7</version.angularjs>
+		<version.angular_ui_sortable>0.13.0</version.angular_ui_sortable>
+		<version.angular_ui_bootstrap>0.6.0</version.angular_ui_bootstrap>
+		<version.bootstrap_datepicker>1.9.0</version.bootstrap_datepicker>
+		<version.proj4js>2.2.1</version.proj4js>
+		<version.fontawesome>4.7.0</version.fontawesome>
 	</properties>
 	
 	<scm>
@@ -278,99 +278,93 @@
 				<scope>provided</scope>
 			</dependency>
 			<!-- JS Templates -->
-                        <!-- 
-                        Adding the '-1' to some of these webjars dependencies is
-                        required because for some releases, the webjars project had 
-                        made point releases (tacking '-1' to the artifact version,
-                        but the version within the artifact, which includes the 
-                        path to the javascript remains the x.y.z version without 
-                        the '-1'. I put the Maven property to the x.y.z version above
-                        and add the '-1' only in the version section in these 
-                        dependency nodes. This allows me to still use the maven
-                        property to pick up the correct path to the javascript source
-                        during runtime
-                        -->
+			<!-- 
+			Adding the '-1' to some of these webjars dependencies is
+			required because for some releases, the webjars project had 
+			made point releases (tacking '-1' to the artifact version,
+			but the version within the artifact, which includes the 
+			path to the javascript remains the x.y.z version without 
+			the '-1'. I put the Maven property to the x.y.z version above
+			and add the '-1' only in the version section in these 
+			dependency nodes. This allows me to still use the maven
+			property to pick up the correct path to the javascript source
+			during runtime
+			-->
 			<dependency>
-                                <groupId>org.webjars</groupId>
-                                <artifactId>jquery</artifactId>
-                                <version>${version.jquery}</version>
-                        </dependency>
-                        <dependency>
-                                <groupId>org.webjars</groupId>
-                                <artifactId>jquery-ui</artifactId>
-                                <version>${version.jqueryui}</version>
-                        </dependency>
+				<groupId>org.webjars</groupId>
+				<artifactId>jquery</artifactId>
+				<version>${version.jquery}</version>
+			</dependency>
 			<dependency>
-                                <groupId>org.webjars</groupId>
-                                <artifactId>log4javascript</artifactId>
-                                <version>${version.log4javascript}-1</version>
-                        </dependency>
-                        <dependency>
-                                <groupId>org.webjars</groupId>
-                                <artifactId>modernizr</artifactId>
-                                <version>${version.modernizr}-1</version>
-                        </dependency>
+				<groupId>org.webjars</groupId>
+				<artifactId>jquery-ui</artifactId>
+				<version>${version.jqueryui}</version>
+			</dependency>
 			<dependency>
-                                <groupId>org.webjars</groupId>
-                                <artifactId>openlayers</artifactId>
-                                <version>${version.openlayers}</version>
-                        </dependency>
-                        <dependency>
-                                <groupId>org.webjars</groupId>
-                                <artifactId>sugar</artifactId>
-                                <version>${version.sugarjs}</version>
-                        </dependency>
+				<groupId>org.webjars</groupId>
+				<artifactId>log4javascript</artifactId>
+				<version>${version.log4javascript}-1</version>
+			</dependency>
+			<dependency>
+				<groupId>org.webjars</groupId>
+				<artifactId>modernizr</artifactId>
+				<version>${version.modernizr}-1</version>
+			</dependency>
+			<dependency>
+				<groupId>org.webjars</groupId>
+				<artifactId>openlayers</artifactId>
+				<version>${version.openlayers}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.webjars</groupId>
+				<artifactId>sugar</artifactId>
+				<version>${version.sugarjs}</version>
+			</dependency>
 			<dependency>
 				<groupId>gov.usgs.cida.jslibs</groupId>
 				<artifactId>dygraphs-core</artifactId>
 				<version>20130314-1</version>
 				<type>war</type>
 			</dependency>
-                        <dependency>
-                                <groupId>org.webjars</groupId>
-                                <artifactId>bootstrap</artifactId>
-                                <version>${version.bootstrap}</version>
-                        </dependency>
-                        <dependency>
-                                <groupId>org.webjars</groupId>
-                                <artifactId>closure-library</artifactId>
-                                <version>${version.closure}</version>
-                        </dependency>
-                        <dependency>
-                                <groupId>org.webjars</groupId>
-                                <artifactId>angularjs</artifactId>
-                                <version>${version.angularjs}</version>
-                        </dependency>
-                        <dependency>
-                                <groupId>org.webjars</groupId>
-                                <artifactId>angular-ui-sortable</artifactId>
-                                <version>${version.angular_ui_sortable}-1</version>
-                        </dependency>
-                        <dependency>
-                                <groupId>org.webjars</groupId>
-                                <artifactId>angular-ui-bootstrap</artifactId>
-                                <version>${version.angular_ui_bootstrap}-1</version>
-                        </dependency>
-                        <dependency>
-                                <groupId>org.webjars</groupId>
-                                <artifactId>bootstrap-datepicker</artifactId>
-                                <version>${version.bootstrap_datepicker}</version>
-                        </dependency>
-                        <dependency>
-                                <groupId>org.webjars</groupId>
-                                <artifactId>proj4js</artifactId>
-                                <version>${version.proj4js}-1</version>
-                        </dependency>
-                        <dependency>
-                                <groupId>org.webjars</groupId>
-                                <artifactId>font-awesome</artifactId>
-                                <version>${version.fontawesome}</version>
-                        </dependency>
 			<dependency>
-				<groupId>gov.usgs.cida.jslibs</groupId>
-				<artifactId>usgs-template</artifactId>
-				<version>1.1</version>
-				<type>war</type>
+				<groupId>org.webjars</groupId>
+				<artifactId>bootstrap</artifactId>
+				<version>${version.bootstrap}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.webjars</groupId>
+				<artifactId>closure-library</artifactId>
+				<version>${version.closure}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.webjars</groupId>
+				<artifactId>angularjs</artifactId>
+				<version>${version.angularjs}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.webjars</groupId>
+				<artifactId>angular-ui-sortable</artifactId>
+				<version>${version.angular_ui_sortable}-1</version>
+			</dependency>
+			<dependency>
+				<groupId>org.webjars</groupId>
+				<artifactId>angular-ui-bootstrap</artifactId>
+				<version>${version.angular_ui_bootstrap}-1</version>
+			</dependency>
+			<dependency>
+				<groupId>org.webjars</groupId>
+				<artifactId>bootstrap-datepicker</artifactId>
+				<version>${version.bootstrap_datepicker}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.webjars</groupId>
+				<artifactId>proj4js</artifactId>
+				<version>${version.proj4js}-1</version>
+			</dependency>
+			<dependency>
+				<groupId>org.webjars</groupId>
+				<artifactId>font-awesome</artifactId>
+				<version>${version.fontawesome}</version>
 			</dependency>
 		</dependencies>
 	</dependencyManagement>

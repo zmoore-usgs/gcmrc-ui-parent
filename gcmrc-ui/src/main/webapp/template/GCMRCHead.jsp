@@ -4,25 +4,14 @@
 <%@page import="java.util.Properties"%>
 <%@page import="org.slf4j.Logger"%>
 <%@page import="org.slf4j.LoggerFactory"%>
+<%@page import="gov.usgs.cida.gcmrc.util.PropertiesLoader"%>
 <%!
     private static final Logger log = LoggerFactory.getLogger("package_jsp");
-	protected Properties props = new Properties();
-	{
-		try {
-			File propsFile = new File(getClass().getClassLoader().getResource("application.properties").toURI());
-			props.load(new FileReader(propsFile));
-		} catch (Exception e) {
-			log.error("Could not read application.properties. Application will not function", e);
-		}
-	}
-
-	private String getProp(String key) {
-		return props.getProperty(key, "");
-	}
-
+	protected PropertiesLoader propertiesLoader = new PropertiesLoader();
+	protected Properties properties = propertiesLoader.getProperties();
 %>
 <%
-		String vFontAwesome = getProp("version.fontawesome");
+		String vFontAwesome = propertiesLoader.getProp(properties, "version.fontawesome");
 		String relPath = request.getContextPath();
 		boolean development = Boolean.parseBoolean(request.getParameter("development"));
 %>

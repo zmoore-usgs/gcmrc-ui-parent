@@ -4,18 +4,17 @@
 <%@page import="java.util.HashMap"%>
 <%@page import="java.util.Properties"%>
 <%@page import="javax.naming.Context"%>
-<%@page import="gov.usgs.cida.gcmrc.util.ContextLoader"%>
+<%@page import="gov.usgs.cida.gcmrc.util.PropertiesLoader"%>
 <%@page import="gov.usgs.cida.path.PathUtil"%>
 <%@page import="org.slf4j.Logger"%>
 <%@page import="org.slf4j.LoggerFactory"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
-<%!	private static final Logger log = LoggerFactory.getLogger("index_jsp");
-	protected ContextLoader contextLoader = new ContextLoader();
-	protected Context context = contextLoader.getContextProps();
+<%!private static final Logger log = LoggerFactory.getLogger("index_jsp");
+	protected PropertiesLoader propertiesLoader = new PropertiesLoader();
+	protected Context context = propertiesLoader.getContextProps();
 	
-	boolean development = Boolean.parseBoolean(contextLoader.getProp(context, "all.development")) || Boolean.parseBoolean(contextLoader.getProp(context, "${project.artifactId}.development"));
-	protected String warningMessage = contextLoader.getProp(context, "gcmrc.site.warning.message", "");
-%>
+	boolean development = Boolean.parseBoolean(propertiesLoader.getProp(context, "all.development")) || Boolean.parseBoolean(propertiesLoader.getProp(context, "${project.artifactId}.development"));
+	protected String warningMessage = propertiesLoader.getProp(context, "gcmrc.site.warning.message", "");%>
 
 <%
 	request.setAttribute("development", development);

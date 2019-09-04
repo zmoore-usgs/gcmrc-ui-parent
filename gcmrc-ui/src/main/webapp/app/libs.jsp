@@ -1,34 +1,24 @@
 <%@page import="gov.usgs.cida.path.PathUtil"%>
 <%@page import="java.io.File"%>
-<%@page import="gov.usgs.cida.config.DynamicReadOnlyProperties"%>
+<%@page import="java.io.FileReader" %>
+<%@page import="java.util.Properties"%>
 <%@page import="org.slf4j.Logger"%>
 <%@page import="org.slf4j.LoggerFactory"%>
+<%@page import="gov.usgs.cida.gcmrc.util.PropertiesLoader"%>
 <%!
     private static final Logger log = LoggerFactory.getLogger("libs_jsp");
-    protected DynamicReadOnlyProperties props = new DynamicReadOnlyProperties();
-
-    {
-        try {
-            File propsFile = new File(getClass().getClassLoader().getResource("application.properties").toURI());
-            props = new DynamicReadOnlyProperties(propsFile);
-        } catch (Exception e) {
-            log.error("Could not read application.properties. Application will not function", e);
-        }
-    }
-
-    private String getProp(String key) {
-        return props.getProperty(key, "");
-    }
+	protected PropertiesLoader propertiesLoader = new PropertiesLoader();
+	protected Properties properties = propertiesLoader.getProperties();
 %>
 <%
-    String vJquery = getProp("version.jquery");
-    String vLog4JavaScript = getProp("version.log4javascript");
-    String vOpenLayers = getProp("version.openlayers");
-    String vModernizr = getProp("version.modernizr");
-    String vBootstrap = getProp("version.bootstrap");
-    String vJqueryUi = getProp("version.jqueryui");
-    String vSugarJs = getProp("version.sugarjs");
-    String vClosure = getProp("version.closure");
+    String vJquery = propertiesLoader.getProp(properties, "version.jquery");
+    String vLog4JavaScript = propertiesLoader.getProp(properties, "version.log4javascript");
+    String vOpenLayers = propertiesLoader.getProp(properties, "version.openlayers");
+    String vModernizr = propertiesLoader.getProp(properties, "version.modernizr");
+    String vBootstrap = propertiesLoader.getProp(properties, "version.bootstrap");
+    String vJqueryUi = propertiesLoader.getProp(properties, "version.jqueryui");
+    String vSugarJs = propertiesLoader.getProp(properties, "version.sugarjs");
+    String vClosure = propertiesLoader.getProp(properties, "version.closure");
     String relPath = request.getContextPath();
     boolean development = Boolean.parseBoolean(request.getParameter("development"));
 %>

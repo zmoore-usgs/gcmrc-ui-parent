@@ -1,30 +1,19 @@
 <%@page import="gov.usgs.cida.path.PathUtil"%>
 <%@page import="java.io.File"%>
-<%@page import="gov.usgs.cida.config.DynamicReadOnlyProperties"%>
+<%@page import="java.io.FileReader" %>
+<%@page import="java.util.Properties"%>
 <%@page import="org.slf4j.Logger"%>
 <%@page import="org.slf4j.LoggerFactory"%>
+<%@page import="gov.usgs.cida.gcmrc.util.PropertiesLoader"%>
 <%!
     private static final Logger log = LoggerFactory.getLogger("package_jsp");
-    protected DynamicReadOnlyProperties props = new DynamicReadOnlyProperties();
-
-{
-        try {
-            File propsFile = new File(getClass().getClassLoader().getResource("application.properties").toURI());
-            props = new DynamicReadOnlyProperties(propsFile);
-        } catch (Exception e) {
-            log.error("Could not read application.properties. Application will not function", e);
-        }
-    }
-
-    private String getProp(String key) {
-        return props.getProperty(key, "");
-    }
-
+	protected PropertiesLoader propertiesLoader = new PropertiesLoader();
+	protected Properties properties = propertiesLoader.getProperties();
 %>
 <%
-        String vFontAwesome = getProp("version.fontawesome");
-        String relPath = request.getContextPath();
-        boolean development = Boolean.parseBoolean(request.getParameter("development"));
+		String vFontAwesome = propertiesLoader.getProp(properties, "version.fontawesome");
+		String relPath = request.getContextPath();
+		boolean development = Boolean.parseBoolean(request.getParameter("development"));
 %>
 <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
 <meta charset="utf-8"/>

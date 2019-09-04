@@ -1,30 +1,19 @@
 <%@page import="gov.usgs.cida.path.PathUtil"%>
-<%@page import="java.io.File"%>
-<%@page import="gov.usgs.cida.config.DynamicReadOnlyProperties"%>
 <%@page import="org.slf4j.Logger"%>
 <%@page import="org.slf4j.LoggerFactory"%>
+<%@page import="javax.naming.Context"%>
+<%@page import="java.util.Properties"%>
+<%@page import="gov.usgs.cida.gcmrc.util.PropertiesLoader"%>
 <%!
-    private static final Logger log = LoggerFactory.getLogger("package_jsp");
-    protected DynamicReadOnlyProperties props = new DynamicReadOnlyProperties();
+	private static final Logger log = LoggerFactory.getLogger("package_jsp");
+	protected PropertiesLoader propertiesLoader = new PropertiesLoader();
+	protected Properties properties = propertiesLoader.getProperties();
+	protected Context context = propertiesLoader.getContextProps();
 
-    {
-        try {
-            File propsFile = new File(getClass().getClassLoader().getResource("application.properties").toURI());
-            props = new DynamicReadOnlyProperties(propsFile);
-        } catch (Exception e) {
-            log.error("Could not read application.properties. Application will not function", e);
-        }
-    }
-
-    private String getProp(String key) {
-        return props.getProperty(key, "");
-    }
-
-    protected boolean development = Boolean.parseBoolean(props.getProperty("all.development")) || Boolean.parseBoolean(props.getProperty("${project.artifactId}.development"));
-
+	protected boolean development = Boolean.parseBoolean(propertiesLoader.getProp(context, "all.development")) || Boolean.parseBoolean(propertiesLoader.getProp(context, "${project.artifactId}.development"));
 %>
 <%
-    String vBootstrapDatepicker = getProp("version.bootstrap_datepicker");
+    String vBootstrapDatepicker = propertiesLoader.getProp(properties, "version.bootstrap_datepicker");
     String relPath = request.getContextPath();
 %>
 <link rel="stylesheet" href="<%= relPath %>/webjars/bootstrap-datepicker/<%=vBootstrapDatepicker%>/css/bootstrap-datepicker<%= development ? "" : ".min"%>.css"/>

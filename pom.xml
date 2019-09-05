@@ -154,12 +154,6 @@
 	</pluginRepositories>
 	
 	<dependencies>
-		<!-- CIDA JAVA LIBS -->
-		<dependency>
-			<groupId>gov.usgs.cida</groupId>
-			<artifactId>tomcat-utilities</artifactId>
-			<version>1.0.3</version>
-		</dependency>
 		<!-- LOGGING -->
 		<dependency>
 			<groupId>org.slf4j</groupId>
@@ -191,10 +185,6 @@
 					<exclusion>
 						<groupId>log4j</groupId>
 						<artifactId>log4j</artifactId>
-					</exclusion>
-					<exclusion>
-						<groupId>commons-lang</groupId>
-						<artifactId>commons-lang</artifactId>
 					</exclusion>
 				</exclusions>
 			</dependency>

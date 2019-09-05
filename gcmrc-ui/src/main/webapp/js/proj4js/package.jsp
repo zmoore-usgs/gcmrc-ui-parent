@@ -1,4 +1,4 @@
-<%@page import="gov.usgs.cida.path.PathUtil"%>
+<%@page import="gov.usgs.cida.gcmrc.util.PathUtil"%>
 <%@page import="javax.naming.Context"%>
 <%@page import="java.util.Properties"%>
 <%@page import="org.slf4j.Logger"%>

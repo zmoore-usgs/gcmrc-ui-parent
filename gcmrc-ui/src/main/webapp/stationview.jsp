@@ -1,5 +1,5 @@
 <%@page import="gov.usgs.cida.gcmrc.util.PropertiesLoader"%>
-<%@page import="gov.usgs.cida.path.PathUtil"%>
+<%@page import="gov.usgs.cida.gcmrc.util.PathUtil"%>
 <%@page import="org.apache.commons.lang.StringUtils"%>
 <%@page import="java.util.Map"%>
 <%@page import="javax.naming.Context"%>
@@ -25,6 +25,7 @@
 	request.setAttribute("relativePath", relativePath);
 
 	String basePath = "station";
+	String rURI = request.getRequestURI();
 	Map<String, String> restOfPath = PathUtil.calculateRestOfURI(request.getRequestURI(), basePath, "networkName", "stationName");
 	String networkName = restOfPath.get("networkName");
 	if (StringUtils.isEmpty(networkName)) {

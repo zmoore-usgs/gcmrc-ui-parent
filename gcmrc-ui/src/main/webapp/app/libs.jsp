@@ -1,4 +1,4 @@
-<%@page import="gov.usgs.cida.path.PathUtil"%>
+<%@page import="gov.usgs.cida.gcmrc.util.PathUtil"%>
 <%@page import="java.io.File"%>
 <%@page import="java.io.FileReader" %>
 <%@page import="java.util.Properties"%>

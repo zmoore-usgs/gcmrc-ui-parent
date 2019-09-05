@@ -25,7 +25,6 @@
 	request.setAttribute("relativePath", relativePath);
 
 	String basePath = "station";
-	String rURI = request.getRequestURI();
 	Map<String, String> restOfPath = PathUtil.calculateRestOfURI(request.getRequestURI(), basePath, "networkName", "stationName");
 	String networkName = restOfPath.get("networkName");
 	if (StringUtils.isEmpty(networkName)) {

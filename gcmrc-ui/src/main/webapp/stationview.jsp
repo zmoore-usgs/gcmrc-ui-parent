@@ -1,6 +1,6 @@
 <%@page import="gov.usgs.cida.gcmrc.util.PropertiesLoader"%>
 <%@page import="gov.usgs.cida.gcmrc.util.PathUtil"%>
-<%@page import="org.apache.commons.lang.StringUtils"%>
+<%@page import="org.apache.commons.lang3.StringUtils"%>
 <%@page import="java.util.Map"%>
 <%@page import="javax.naming.Context"%>
 <%@page import="org.slf4j.Logger"%>

@@ -87,13 +87,6 @@ public class AlternateProxyServlet extends HttpServlet {
     @Override
     public void init() throws ServletException {
         super.init();
-/*
-        try {
-            props = new DynamicReadOnlyProperties().addJNDIContexts(new String[0]);
-        } catch (NamingException e) {
-            log.warn("Error occured during initProps()", e);
-        }
-*/
         int maxTotalConns = getIntParam("max-total-connections", "max-total-connections-param", CONNECTIONS_MAX_TOTAL);
         int maxPerRouteConns = getIntParam("max-per-route-connections", "max-per-route-connections-param", CONNECTIONS_MAX_ROUTE);
         int connectionTtl = getIntParam("connection-ttl", "connection-ttl-param", CONNECTION_TTL);
@@ -269,10 +262,8 @@ public class AlternateProxyServlet extends HttpServlet {
                 }
             }
 
-        } catch (MalformedURLException e) {
+        } catch (MalformedURLException|URISyntaxException e) {
             throw new ProxyException("Syntax error parsing server URL", e);
-        } catch (URISyntaxException e) {
-            throw new ProxyException("Syntax error parsing server URI", e);
         }
 
         return serverRequest;

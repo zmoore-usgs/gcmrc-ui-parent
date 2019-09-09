@@ -2,7 +2,6 @@ var closureLocation = "../../webjars/closure-library/${version.closure}/goog";
 importScripts(
         closureLocation + "/base.js",
         closureLocation + "/deps.js",
-        closureLocation + "/deps.js",
         closureLocation + "/debug/error.js",
         closureLocation + "/string/string.js",
         closureLocation + "/asserts/asserts.js",

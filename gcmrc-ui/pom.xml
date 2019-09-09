@@ -129,10 +129,23 @@
 		</resources>
 		<pluginManagement>
 		<plugins>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-war-plugin</artifactId>
-			</plugin>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-war-plugin</artifactId>
+                        <version>3.2.3</version>
+                        <configuration>
+                            <webResources>
+                                <resource>
+                                    <directory>src/main/webapp</directory>
+                                    <filtering>true</filtering>
+                                    <includes>
+                                        <include>app/graphing/matrixFinesWorker.js</include>
+                                        <include>app/graphing/matrixSandWorker.js</include>
+                                    </includes>
+                                </resource>
+                            </webResources>
+                        </configuration>
+                    </plugin>
                         <plugin>
                             <groupId>com.github.klieber</groupId>
                             <artifactId>phantomjs-maven-plugin</artifactId>

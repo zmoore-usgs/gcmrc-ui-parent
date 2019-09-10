@@ -52,7 +52,7 @@
 			<jsp:param name="development" value="${development}" />
 		</jsp:include>
 		<jsp:include page="app/libs.jsp"></jsp:include>
-				
+                <script src="${relativePath}app/CanvasOverride.js" type="text/javascript"></script>
 		<script src="${relativePath}app/DeclusterCanvas.js" type="text/javascript"></script>
 		<script type="text/javascript">
 			var CONFIG = {};

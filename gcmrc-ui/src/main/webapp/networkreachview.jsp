@@ -63,6 +63,7 @@
 		</script>
 
 		<jsp:include page="app/gcmrc.jsp"></jsp:include>
+                <script src="${relativePath}services/rest/station/site/${networkName}?jsonp_callback=GCMRC.StationLoad"></script>
 		<jsp:include page="pages/page.jsp">
 			<jsp:param name="relPath" value="${relativePath}" />
 			<jsp:param name="pageName" value="${pageName}" />

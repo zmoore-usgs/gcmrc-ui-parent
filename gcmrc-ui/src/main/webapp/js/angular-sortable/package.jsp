@@ -17,8 +17,8 @@
         String vAngularJs = propertiesLoader.getProp(properties, "version.angularjs");
         String vAngularUiSortable = propertiesLoader.getProp(properties, "version.angular_ui_sortable");
         String vAngularUiBootstrap = propertiesLoader.getProp(properties, "version.angular_ui_bootstrap");
-        String relPath = request.getContextPath();
+        String relPath = request.getParameter("relativePath");
 %>
-<script type="text/javascript" src="<%= relPath %>/webjars/angularjs/<%=vAngularJs%>/angular<%= development ? "" : ".min"%>.js"></script>
-<script type="text/javascript" src="<%= relPath %>/webjars/angular-ui-sortable/<%=vAngularUiSortable%>/sortable<%= development ? "" : ".min"%>.js"></script>
-<script type="text/javascript" src="<%= relPath %>/webjars/angular-ui-bootstrap/<%=vAngularUiBootstrap%>/ui-bootstrap-tpls<%= development ? "" : ".min"%>.js"></script>
+<script type="text/javascript" src="<%= relPath %>webjars/angularjs/<%=vAngularJs%>/angular<%= development ? "" : ".min"%>.js"></script>
+<script type="text/javascript" src="<%= relPath %>webjars/angular-ui-sortable/<%=vAngularUiSortable%>/sortable<%= development ? "" : ".min"%>.js"></script>
+<script type="text/javascript" src="<%= relPath %>webjars/angular-ui-bootstrap/<%=vAngularUiBootstrap%>/ui-bootstrap-tpls<%= development ? "" : ".min"%>.js"></script>

@@ -1,14 +1,14 @@
-<%@page import="gov.usgs.cida.gcmrc.util.PathUtil"%>
 <%@page import="java.io.File"%>
 <%@page import="java.io.FileReader" %>
 <%@page import="java.util.Properties"%>
 <%@page import="org.slf4j.Logger"%>
 <%@page import="org.slf4j.LoggerFactory"%>
 <%@page import="gov.usgs.cida.gcmrc.util.PropertiesLoader"%>
+<%@page import="gov.usgs.cida.gcmrc.util.PathUtil"%>
 <%!
     private static final Logger log = LoggerFactory.getLogger("libs_jsp");
-	protected PropertiesLoader propertiesLoader = new PropertiesLoader();
-	protected Properties properties = propertiesLoader.getProperties();
+    protected PropertiesLoader propertiesLoader = new PropertiesLoader();
+    protected Properties properties = propertiesLoader.getProperties();
 %>
 <%
     String vJquery = propertiesLoader.getProp(properties, "version.jquery");
@@ -19,12 +19,12 @@
     String vJqueryUi = propertiesLoader.getProp(properties, "version.jqueryui");
     String vSugarJs = propertiesLoader.getProp(properties, "version.sugarjs");
     String vClosure = propertiesLoader.getProp(properties, "version.closure");
-    String relPath = request.getContextPath();
+    String relPath = request.getParameter("relativePath");
     boolean development = Boolean.parseBoolean(request.getParameter("development"));
 %>
 
 <%-- Log4JavaScript --%>
-<script type="text/javascript" src="<%= relPath%>/webjars/log4javascript/<%= vLog4JavaScript%>/log4javascript<%= development ? "_uncompressed" : ""%>.js"></script>
+<script type="text/javascript" src="<%= relPath%>webjars/log4javascript/<%= vLog4JavaScript%>/log4javascript<%= development ? "_uncompressed" : ""%>.js"></script>
 <%-- The code below was originally part of the initialization convenience method in
     the CIDA LIBS log4javascript package but since we've switched to webjars, it 
     should be included here --%>
@@ -86,29 +86,29 @@
 </script>
 
 <%-- Modernizr --%>
-<script type="text/javascript" src="<%= relPath%>/webjars/modernizr/<%=vModernizr%>/modernizr<%= development ? "" : ".min"%>.js"></script>
+<script type="text/javascript" src="<%= relPath%>webjars/modernizr/<%=vModernizr%>/modernizr<%= development ? "" : ".min"%>.js"></script>
 
 <%-- JQuery --%>
-<script type="text/javascript" src="<%= relPath%>/webjars/jquery/<%=vJquery%>/jquery<%= development ? "" : ".min"%>.js"></script>
+<script type="text/javascript" src="<%= relPath%>webjars/jquery/<%=vJquery%>/jquery<%= development ? "" : ".min"%>.js"></script>
 
 <%-- Bootstrap --%>
-<link rel="stylesheet" href="<%= relPath%>/webjars/bootstrap/<%=vBootstrap%>/css/bootstrap<%= development ? "" : ".min"%>.css"/>
-<link rel="stylesheet" href="<%= relPath%>/webjars/bootstrap/<%=vBootstrap%>/css/bootstrap-responsive<%= development ? "" : ".min"%>.css"/>
-<script type="text/javascript" src="<%= relPath%>/webjars/bootstrap/<%=vBootstrap%>/js/bootstrap<%= development ? "" : ".min"%>.js"></script>
+<link rel="stylesheet" href="<%= relPath%>webjars/bootstrap/<%=vBootstrap%>/css/bootstrap<%= development ? "" : ".min"%>.css"/>
+<link rel="stylesheet" href="<%= relPath%>webjars/bootstrap/<%=vBootstrap%>/css/bootstrap-responsive<%= development ? "" : ".min"%>.css"/>
+<script type="text/javascript" src="<%= relPath%>webjars/bootstrap/<%=vBootstrap%>/js/bootstrap<%= development ? "" : ".min"%>.js"></script>
 
 <%-- JqueryUI --%>
-<link rel="stylesheet" href="<%= relPath%>/webjars/jquery-ui/<%=vJqueryUi%>/themes/base/<%= development ? "/" : "minified/"%>jquery-ui<%= development ? "" : ".min"%>.css"/>
-<script type="text/javascript" src="<%= relPath%>/webjars/jquery-ui/<%=vJqueryUi%>/ui/<%= development ? "/" : "minified/"%>jquery-ui<%= development ? "" : ".min"%>.js"></script>
+<link rel="stylesheet" href="<%= relPath%>webjars/jquery-ui/<%=vJqueryUi%>/themes/base/<%= development ? "/" : "minified/"%>jquery-ui<%= development ? "" : ".min"%>.css"/>
+<script type="text/javascript" src="<%= relPath%>webjars/jquery-ui/<%=vJqueryUi%>/ui/<%= development ? "/" : "minified/"%>jquery-ui<%= development ? "" : ".min"%>.js"></script>
 
 <%-- SugarJS --%>
-<script type="text/javascript" src="<%= relPath%>/webjars/sugar/<%=vSugarJs%>/sugar-full<%= development ? ".development" : ".min"%>.js"></script>
+<script type="text/javascript" src="<%= relPath%>webjars/sugar/<%=vSugarJs%>/sugar-full<%= development ? ".development" : ".min"%>.js"></script>
 
 <script type="text/javascript">
     Object.extend();
 </script>
 
 <%-- Closure --%>
-<script type="text/javascript" src="<%= relPath%>/webjars/closure-library/<%=vClosure%>/goog/base.js"></script>
+<script type="text/javascript" src="<%= relPath%>webjars/closure-library/<%=vClosure%>/goog/base.js"></script>
 
 <%-- OpenLayers --%>
-<script type="text/javascript" src="<%= relPath%>/webjars/openlayers/<%=vOpenLayers%>/OpenLayers<%= development ? ".debug" : ""%>.js"></script>
+<script type="text/javascript" src="<%= relPath%>webjars/openlayers/<%=vOpenLayers%>/OpenLayers<%= development ? ".debug" : ""%>.js"></script>

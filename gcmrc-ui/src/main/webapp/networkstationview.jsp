@@ -39,7 +39,7 @@
 <!--[if gt IE 8]><!--> <html lang="en" class="no-js"> <!--<![endif]-->
     <head>
         <jsp:include page="template/GCMRCHead.jsp">
-			<jsp:param name="relPath" value="${relativePath}" />
+			<jsp:param name="relativePath" value="${relativePath}" />
 			<jsp:param name="shortName" value="GCMRC" />
 			<jsp:param name="title" value="" />
 			<jsp:param name="description" value="" />
@@ -51,7 +51,9 @@
 			<jsp:param name="expires" value="never" />
 			<jsp:param name="development" value="${development}" />
 		</jsp:include>
-		<jsp:include page="app/libs.jsp"></jsp:include>
+		<jsp:include page="app/libs.jsp">
+                    <jsp:param name="relativePath" value="${relativePath}" />
+                </jsp:include>
 
 		<script src="${relativePath}app/CanvasOverride.js" type="text/javascript"></script>
 		<script src="${relativePath}app/DeclusterCanvas.js" type="text/javascript"></script>
@@ -66,7 +68,7 @@
 
 		<jsp:include page="app/gcmrc.jsp"></jsp:include>
 		<jsp:include page="js/angular-sortable/package.jsp">
-			<jsp:param name="relPath" value="${relativePath}" />
+			<jsp:param name="relativePath" value="${relativePath}" />
 			<jsp:param name="debug-qualifier" value="${development}" />
 		</jsp:include>
 		<script type="text/javascript">
@@ -74,7 +76,7 @@
 		</script>
 		<script src="${relativePath}services/rest/station/site/${networkName}?jsonp_callback=GCMRC.StationLoad"></script>
 		<jsp:include page="pages/page.jsp">
-			<jsp:param name="relPath" value="${relativePath}" />
+			<jsp:param name="relativePath" value="${relativePath}" />
 			<jsp:param name="pageName" value="${pageName}" />
 		</jsp:include>
 
@@ -82,7 +84,7 @@
     <body ng-app="gcmrc">
 		<div class="container-fluid">
 			<jsp:include page="template/GCMRCHeader.jsp">
-				<jsp:param name="relPath" value="${relativePath}" />
+				<jsp:param name="relativePath" value="${relativePath}" />
 				<jsp:param name="header-class" value="" />
 			</jsp:include>
 				<!--[if lt IE 7]>
@@ -147,7 +149,6 @@
 				</div>
 			</div>
 			<jsp:include page="template/GCMRCFooter.jsp">
-				<jsp:param name="relPath" value="${relativePath}" />
 				<jsp:param name="header-class" value="" />
 				<jsp:param name="contact-info" value="" />
 			</jsp:include>

@@ -58,7 +58,7 @@
 <!--[if gt IE 8]><!--> <html lang="en" class="no-js"> <!--<![endif]-->
     <head>
         <jsp:include page="template/GCMRCHead.jsp">
-			<jsp:param name="relPath" value="${relativePath}" />
+			<jsp:param name="relativePath" value="${relativePath}" />
 			<jsp:param name="shortName" value="GCMRC" />
 			<jsp:param name="title" value="" />
 			<jsp:param name="description" value="" />
@@ -71,14 +71,18 @@
 			<jsp:param name="development" value="${development}" />
 		</jsp:include>
 
-		<jsp:include page="app/libs.jsp"></jsp:include>
+		<jsp:include page="app/libs.jsp">
+                    <jsp:param name="relativePath" value="${relativePath}" />
+                </jsp:include>
 
 		<jsp:include page="js/bootstrap-datepicker/package.jsp">
-			<jsp:param name="relPath" value="${relativePath}" />
+			<jsp:param name="relativePath" value="${relativePath}" />
 			<jsp:param name="debug-qualifier" value="<%= development%>" />
 		</jsp:include>
 
-                <jsp:include page="js/proj4js/package.jsp"></jsp:include>
+                <jsp:include page="js/proj4js/package.jsp">
+                    <jsp:param name="relativePath" value="${relativePath}" />
+                </jsp:include>
 		<script src="${relativePath}app/DeclusterCanvas.js" type="text/javascript"></script>
 			
 		<jsp:include page="js/dygraphs/dygraphs.jsp">
@@ -101,15 +105,15 @@
 		<jsp:include page="app/gcmrc.jsp"></jsp:include>
                 <script src="${relativePath}services/rest/station/allsite/${networkName}?jsonp_callback=GCMRC.StationLoad"></script>
 		<jsp:include page="js/angular-sortable/package.jsp">
-			<jsp:param name="relPath" value="${relativePath}" />
+			<jsp:param name="relativePath" value="${relativePath}" />
 			<jsp:param name="debug-qualifier" value="${development}" />
 		</jsp:include>
 		<jsp:include page="app/graphing/package.jsp">
-			<jsp:param name="relPath" value="${relativePath}" />
+			<jsp:param name="relativePath" value="${relativePath}" />
 			<jsp:param name="debug-qualifier" value="${development}" />
 		</jsp:include>
 		<jsp:include page="pages/page.jsp">
-			<jsp:param name="relPath" value="${relativePath}" />
+			<jsp:param name="relativePath" value="${relativePath}" />
 			<jsp:param name="pageName" value="${pageName}" />
 		</jsp:include>
 		<script src="${relativePath}services/rest/reach/${networkName}/${upstreamStationName}/${downstreamStationName}?jsonp_callback=GCMRC.Page.reachLoad"></script>
@@ -154,7 +158,7 @@
     <body>
 		<div class="container-fluid">
 			<jsp:include page="template/GCMRCHeader.jsp">
-				<jsp:param name="relPath" value="${relativePath}" />
+				<jsp:param name="relativePath" value="${relativePath}" />
 				<jsp:param name="header-class" value="" />
 			</jsp:include>
 			<div>
@@ -264,7 +268,6 @@
 				</div>
 			</div>
 			<jsp:include page="template/GCMRCFooter.jsp">
-				<jsp:param name="relPath" value="${relativePath}" />
 				<jsp:param name="header-class" value="" />
 				<jsp:param name="contact-info" value="" />
 			</jsp:include>

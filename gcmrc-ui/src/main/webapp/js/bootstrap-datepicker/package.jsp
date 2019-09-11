@@ -14,7 +14,7 @@
 %>
 <%
     String vBootstrapDatepicker = propertiesLoader.getProp(properties, "version.bootstrap_datepicker");
-    String relPath = request.getContextPath();
+    String relPath = request.getParameter("relativePath");
 %>
-<link rel="stylesheet" href="<%= relPath %>/webjars/bootstrap-datepicker/<%=vBootstrapDatepicker%>/css/bootstrap-datepicker<%= development ? "" : ".min"%>.css"/>
-<script src="<%= relPath %>/webjars/bootstrap-datepicker/<%=vBootstrapDatepicker%>/js/bootstrap-datepicker<%= development ? "" : ".min"%>.js"></script>
+<link rel="stylesheet" href="<%= relPath %>webjars/bootstrap-datepicker/<%=vBootstrapDatepicker%>/css/bootstrap-datepicker<%= development ? "" : ".min"%>.css"/>
+<script src="<%= relPath %>webjars/bootstrap-datepicker/<%=vBootstrapDatepicker%>/js/bootstrap-datepicker<%= development ? "" : ".min"%>.js"></script>

@@ -12,7 +12,7 @@
 %>
 <%
 		String vFontAwesome = propertiesLoader.getProp(properties, "version.fontawesome");
-		String relPath = request.getContextPath();
+		String relPath = request.getParameter("relativePath");
 		boolean development = Boolean.parseBoolean(request.getParameter("development"));
 %>
 <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
@@ -29,11 +29,11 @@
 <meta name="review" content="${param['nextReview']}">
 <%--<meta name="expires" content="${param['expires']}">--%>
 
-<link type="text/css" media="screen" rel="stylesheet" href="${param['relPath']}template/common.css" title="default"/>
-<link type="text/css" media="screen" rel="stylesheet" href="<%= relPath %>/webjars/font-awesome/<%= vFontAwesome %>/css/font-awesome<%= development ? "" : ".min"%>.css" />
-<link type="text/css" media="screen" rel="stylesheet" href="${param['relPath']}template/custom.css" title="default"/>
-<link rel="alternate stylesheet" media="screen" type="text/css" href="${param['relPath']}template/none.css" title="no_style" />
-<link rel="stylesheet" media="print" type="text/css" href="${param['relPath']}template/print.css" />
+<link type="text/css" media="screen" rel="stylesheet" href="${param['relativePath']}template/common.css" title="default"/>
+<link type="text/css" media="screen" rel="stylesheet" href="<%= relPath %>webjars/font-awesome/<%= vFontAwesome %>/css/font-awesome<%= development ? "" : ".min"%>.css" />
+<link type="text/css" media="screen" rel="stylesheet" href="${param['relativePath']}template/custom.css" title="default"/>
+<link rel="alternate stylesheet" media="screen" type="text/css" href="${param['relativePath']}template/none.css" title="no_style" />
+<link rel="stylesheet" media="print" type="text/css" href="${param['relativePath']}template/print.css" />
 <%-- fix for macs --%>
 <style type="text/css">
 	#usgstitle p {
@@ -46,8 +46,8 @@
                 position: relative
         }
 </style>
-<script type="text/javascript" src="${param['relPath']}template/styleswitch.js"></script>
-<script type="text/javascript" src="${param['relPath']}template/external.js"></script>
+<script type="text/javascript" src="${param['relativePath']}template/styleswitch.js"></script>
+<script type="text/javascript" src="${param['relativePath']}template/external.js"></script>
 
 <% 
     String gaAccountCode = request.getParameter("google-analytics-account-code");
